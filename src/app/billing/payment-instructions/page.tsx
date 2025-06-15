@@ -18,8 +18,8 @@ export default function PaymentInstructionsPage() {
   const planDetails = {
     basic: {
       name: 'Basic',
-      price: '$9',
-      priceIQD: '13,500 IQD',
+      price: '5,000 IQD',
+      priceIQD: '5,000 IQD',
       features: [
         '5 Resumes',
         'All Template Options',
@@ -30,8 +30,8 @@ export default function PaymentInstructionsPage() {
     },
     pro: {
       name: 'Pro',
-      price: '$19',
-      priceIQD: '28,500 IQD',
+      price: '10,000 IQD',
+      priceIQD: '10,000 IQD',
       features: [
         'Unlimited Resumes',
         'All Premium Templates',
@@ -48,7 +48,7 @@ export default function PaymentInstructionsPage() {
   const paymentInfo = {
     bankName: 'First Iraqi Bank (FIB)',
     accountName: 'Alan Jaf',
-    accountNumber: 'YOUR_FIB_NUMBER_HERE', // TODO: Replace with your actual FIB number
+    accountNumber: '07504910348',
     notes: `ResumeAI ${selectedPlan.name} - ${user?.emailAddresses[0]?.emailAddress}`
   }
 
@@ -95,7 +95,6 @@ export default function PaymentInstructionsPage() {
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold text-gray-900">{selectedPlan.price}/mo</div>
-              <div className="text-sm text-gray-600">{selectedPlan.priceIQD}/month</div>
             </div>
           </div>
           <div className="space-y-2">

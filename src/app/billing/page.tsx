@@ -32,7 +32,7 @@ export default function BillingPage() {
     },
     {
       name: 'Basic',
-      price: '$9',
+      price: '5,000 IQD',
       period: 'month',
       description: 'Great for job seekers',
       features: [
@@ -52,7 +52,7 @@ export default function BillingPage() {
     },
     {
       name: 'Pro',
-      price: '$19',
+      price: '10,000 IQD',
       period: 'month', 
       description: 'For professionals and agencies',
       features: [

@@ -219,7 +219,7 @@ export function UserManagement() {
                   disabled={upgrading || selectedUser.subscription?.plan === 'BASIC'}
                 >
                   {selectedUser.subscription?.plan === 'BASIC' && <Check className="h-4 w-4 mr-2" />}
-                  Basic Plan ($9/mo)
+                  Basic Plan (5,000 IQD/mo)
                 </Button>
                 
                 <Button
@@ -229,7 +229,7 @@ export function UserManagement() {
                   disabled={upgrading || selectedUser.subscription?.plan === 'PRO'}
                 >
                   {selectedUser.subscription?.plan === 'PRO' && <Check className="h-4 w-4 mr-2" />}
-                  Pro Plan ($19/mo)
+                  Pro Plan (10,000 IQD/mo)
                 </Button>
               </div>
 
