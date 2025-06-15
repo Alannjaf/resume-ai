@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { getCurrentUser, getResumeById, updateResume, deleteResume } from '@/lib/db'
+import { SectionType } from '@prisma/client'
 
 // GET - Get a specific resume
 export async function GET(
@@ -98,7 +99,7 @@ export async function PUT(
       if (formData.experience?.length > 0) {
         sections.push({
           resumeId: id,
-          type: 'WORK_EXPERIENCE',
+          type: SectionType.WORK_EXPERIENCE,
           title: 'Work Experience',
           content: formData.experience,
           order: order++
@@ -108,7 +109,7 @@ export async function PUT(
       if (formData.education?.length > 0) {
         sections.push({
           resumeId: id,
-          type: 'EDUCATION',
+          type: SectionType.EDUCATION,
           title: 'Education',
           content: formData.education,
           order: order++
@@ -118,7 +119,7 @@ export async function PUT(
       if (formData.skills?.length > 0) {
         sections.push({
           resumeId: id,
-          type: 'SKILLS',
+          type: SectionType.SKILLS,
           title: 'Skills',
           content: formData.skills,
           order: order++
@@ -128,7 +129,7 @@ export async function PUT(
       if (formData.languages?.length > 0) {
         sections.push({
           resumeId: id,
-          type: 'LANGUAGES',
+          type: SectionType.LANGUAGES,
           title: 'Languages',
           content: formData.languages,
           order: order++

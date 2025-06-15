@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { getCurrentUser, getUserResumes, createResume } from '@/lib/db'
+import { SectionType } from '@prisma/client'
 
 // GET - List all resumes for the current user
 export async function GET() {
@@ -83,7 +84,7 @@ export async function POST(req: Request) {
         if (formData.experience?.length > 0) {
           sections.push({
             resumeId: resume.id,
-            type: 'WORK_EXPERIENCE',
+            type: SectionType.WORK_EXPERIENCE,
             title: 'Work Experience',
             content: formData.experience,
             order: order++
@@ -93,7 +94,7 @@ export async function POST(req: Request) {
         if (formData.education?.length > 0) {
           sections.push({
             resumeId: resume.id,
-            type: 'EDUCATION',
+            type: SectionType.EDUCATION,
             title: 'Education',
             content: formData.education,
             order: order++
@@ -103,7 +104,7 @@ export async function POST(req: Request) {
         if (formData.skills?.length > 0) {
           sections.push({
             resumeId: resume.id,
-            type: 'SKILLS',
+            type: SectionType.SKILLS,
             title: 'Skills',
             content: formData.skills,
             order: order++
@@ -113,7 +114,7 @@ export async function POST(req: Request) {
         if (formData.languages?.length > 0) {
           sections.push({
             resumeId: resume.id,
-            type: 'LANGUAGES',
+            type: SectionType.LANGUAGES,
             title: 'Languages',
             content: formData.languages,
             order: order++
