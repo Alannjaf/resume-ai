@@ -6,17 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, Calendar, MapPin } from 'lucide-react'
 import { AIJobDescriptionEnhancer } from '@/components/ai/AIJobDescriptionEnhancer'
-
-interface WorkExperience {
-  id: string
-  jobTitle: string
-  company: string
-  location: string
-  startDate: string
-  endDate: string
-  current: boolean
-  description: string
-}
+import { WorkExperience } from '@/types/resume'
 
 interface WorkExperienceFormProps {
   experiences: WorkExperience[]

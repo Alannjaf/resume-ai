@@ -14,42 +14,7 @@ import { PreviewModal } from '@/components/resume-builder/PreviewModal'
 import { TemplateGallery } from '@/components/resume-templates/TemplateGallery'
 import { AIProfessionalSummary } from '@/components/ai/AIProfessionalSummary'
 import { getTemplate } from '@/lib/templates'
-
-// Type definitions
-interface WorkExperience {
-  id?: string
-  jobTitle: string
-  company: string
-  location: string
-  startDate: string
-  endDate: string
-  current: boolean
-  description: string
-}
-
-interface Education {
-  id?: string
-  degree: string
-  field: string
-  school: string
-  location: string
-  startDate: string
-  endDate: string
-  gpa?: string
-  achievements?: string
-}
-
-interface Skill {
-  id?: string
-  name: string
-  level?: string
-}
-
-interface Language {
-  id?: string
-  name: string
-  proficiency: string
-}
+import { WorkExperience, Education, Skill, Language, ResumeData } from '@/types/resume'
 
 // Form sections
 const FORM_SECTIONS = [
@@ -72,21 +37,7 @@ export default function ResumeBuilder() {
   const [isLoading, setIsLoading] = useState(false)
   const [resumeId, setResumeId] = useState<string | null>(null)
   const [resumeTitle, setResumeTitle] = useState('My Resume')
-  const [formData, setFormData] = useState<{
-    personal: {
-      fullName: string
-      email: string
-      phone: string
-      location: string
-      linkedin: string
-      website: string
-    }
-    summary: string
-    experience: WorkExperience[]
-    education: Education[]
-    skills: Skill[]
-    languages: Language[]
-  }>({
+  const [formData, setFormData] = useState<ResumeData>({
     personal: {
       fullName: '',
       email: '',
@@ -172,7 +123,29 @@ export default function ResumeBuilder() {
         setResumeId(resume.id)
         setResumeTitle(resume.title)
         setSelectedTemplate(resume.template || 'modern')
-        setFormData(resume.formData)
+        
+        // Ensure all items have IDs
+        const formDataWithIds: ResumeData = {
+          ...resume.formData,
+          experience: resume.formData.experience.map((exp: any) => ({
+            ...exp,
+            id: exp.id || Date.now().toString() + Math.random().toString(36).substr(2, 9)
+          })),
+          education: resume.formData.education.map((edu: any) => ({
+            ...edu,
+            id: edu.id || Date.now().toString() + Math.random().toString(36).substr(2, 9)
+          })),
+          skills: resume.formData.skills.map((skill: any) => ({
+            ...skill,
+            id: skill.id || Date.now().toString() + Math.random().toString(36).substr(2, 9)
+          })),
+          languages: resume.formData.languages.map((lang: any) => ({
+            ...lang,
+            id: lang.id || Date.now().toString() + Math.random().toString(36).substr(2, 9)
+          }))
+        }
+        
+        setFormData(formDataWithIds)
         
         // Check if preview should be opened automatically
         const shouldPreview = searchParams.get('preview')

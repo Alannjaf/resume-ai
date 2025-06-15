@@ -5,12 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, Zap } from 'lucide-react'
 import { AISkillsSuggester } from '@/components/ai/AISkillsSuggester'
-
-interface Skill {
-  id: string
-  name: string
-  level?: string
-}
+import { Skill } from '@/types/resume'
 
 interface SkillsFormProps {
   skills: Skill[]

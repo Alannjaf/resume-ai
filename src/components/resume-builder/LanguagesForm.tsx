@@ -4,12 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, Globe } from 'lucide-react'
-
-interface Language {
-  id: string
-  name: string
-  proficiency: string
-}
+import { Language } from '@/types/resume'
 
 interface LanguagesFormProps {
   languages: Language[]

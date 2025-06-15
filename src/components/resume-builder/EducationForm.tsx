@@ -4,18 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, GraduationCap, Calendar } from 'lucide-react'
-
-interface Education {
-  id: string
-  degree: string
-  field: string
-  school: string
-  location: string
-  startDate: string
-  endDate: string
-  gpa?: string
-  achievements?: string
-}
+import { Education } from '@/types/resume'
 
 interface EducationFormProps {
   education: Education[]
