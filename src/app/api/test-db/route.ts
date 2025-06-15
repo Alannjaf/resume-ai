@@ -1,38 +1,49 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@clerk/nextjs/server'
-import { getCurrentUser } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 
 export async function GET() {
   try {
-    const { userId } = await auth()
+    console.log('🔍 Testing database connection...')
     
-    if (!userId) {
-      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
-    }
-
-    const user = await getCurrentUser()
+    // Test database connection
+    await prisma.$connect()
+    console.log('✅ Database connected successfully')
     
-    if (!user) {
-      return NextResponse.json({ 
-        message: 'User not found in database. Please sign out and sign in again to sync.',
-        clerkId: userId 
-      }, { status: 404 })
-    }
-
+    // Count users
+    const userCount = await prisma.user.count()
+    console.log('👥 Total users in database:', userCount)
+    
+    // Get recent users
+    const recentUsers = await prisma.user.findMany({
+      take: 5,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        clerkId: true,
+        email: true,
+        name: true,
+        createdAt: true
+      }
+    })
+    console.log('📋 Recent users:', recentUsers)
+    
     return NextResponse.json({
-      message: 'Database connection successful!',
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        subscription: user.subscription,
+      success: true,
+      message: 'Database connection successful',
+      data: {
+        userCount,
+        recentUsers,
+        timestamp: new Date().toISOString()
       }
     })
   } catch (error) {
-    console.error('Database test error:', error)
-    return NextResponse.json({ 
-      error: 'Database connection failed',
-      details: error instanceof Error ? error.message : 'Unknown error'
+    console.error('❌ Database connection error:', error)
+    return NextResponse.json({
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
     }, { status: 500 })
+  } finally {
+    await prisma.$disconnect()
   }
 }
