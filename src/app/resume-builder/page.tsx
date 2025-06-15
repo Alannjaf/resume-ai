@@ -15,6 +15,42 @@ import { TemplateGallery } from '@/components/resume-templates/TemplateGallery'
 import { AIProfessionalSummary } from '@/components/ai/AIProfessionalSummary'
 import { getTemplate } from '@/lib/templates'
 
+// Type definitions
+interface WorkExperience {
+  id?: string
+  jobTitle: string
+  company: string
+  location: string
+  startDate: string
+  endDate: string
+  current: boolean
+  description: string
+}
+
+interface Education {
+  id?: string
+  degree: string
+  field: string
+  school: string
+  location: string
+  startDate: string
+  endDate: string
+  gpa?: string
+  achievements?: string
+}
+
+interface Skill {
+  id?: string
+  name: string
+  level?: string
+}
+
+interface Language {
+  id?: string
+  name: string
+  proficiency: string
+}
+
 // Form sections
 const FORM_SECTIONS = [
   { id: 'personal', title: 'Personal Information', icon: '👤' },
@@ -36,7 +72,21 @@ export default function ResumeBuilder() {
   const [isLoading, setIsLoading] = useState(false)
   const [resumeId, setResumeId] = useState<string | null>(null)
   const [resumeTitle, setResumeTitle] = useState('My Resume')
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    personal: {
+      fullName: string
+      email: string
+      phone: string
+      location: string
+      linkedin: string
+      website: string
+    }
+    summary: string
+    experience: WorkExperience[]
+    education: Education[]
+    skills: Skill[]
+    languages: Language[]
+  }>({
     personal: {
       fullName: '',
       email: '',
