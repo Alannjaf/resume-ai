@@ -52,7 +52,7 @@ export async function POST(req: Request) {
     }
 
     try {
-      await prisma.user.upsert({
+      const user = await prisma.user.upsert({
         where: { clerkId: id },
         update: {
           email,
@@ -67,13 +67,20 @@ export async function POST(req: Request) {
 
       // Create a free subscription for new users
       if (eventType === 'user.created') {
-        await prisma.subscription.create({
-          data: {
-            userId: id,
-            plan: 'FREE',
-            status: 'ACTIVE',
-          },
+        // Check if subscription already exists
+        const existingSubscription = await prisma.subscription.findUnique({
+          where: { userId: user.id }
         })
+
+        if (!existingSubscription) {
+          await prisma.subscription.create({
+            data: {
+              userId: user.id, // Use database user ID, not Clerk ID
+              plan: 'FREE',
+              status: 'ACTIVE',
+            },
+          })
+        }
       }
     } catch (error) {
       console.error('Error syncing user to database:', error)
