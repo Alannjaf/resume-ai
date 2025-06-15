@@ -166,7 +166,6 @@ export function AISkillsSuggester({
               placeholder="e.g. Software Engineer"
               value={formData.jobTitle}
               onChange={(e) => setFormData({ ...formData, jobTitle: e.target.value })}
-              size="sm"
             />
           </div>
           <div>
@@ -177,7 +176,6 @@ export function AISkillsSuggester({
               placeholder="e.g. Technology"
               value={formData.industry}
               onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-              size="sm"
             />
           </div>
         </div>

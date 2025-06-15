@@ -5,45 +5,9 @@ import { ModernTemplate } from './ModernTemplate'
 import { ClassicTemplate } from './ClassicTemplate'
 import { MinimalTemplate } from './MinimalTemplate'
 import { CreativeTemplate } from './CreativeTemplate'
+import type { ResumeData } from '@/types/resume'
 
-export interface ResumeData {
-  personal: {
-    fullName: string
-    email: string
-    phone: string
-    location: string
-    linkedin: string
-    website: string
-  }
-  summary: string
-  experience: Array<{
-    jobTitle: string
-    company: string
-    location: string
-    startDate: string
-    endDate: string
-    current: boolean
-    description: string
-  }>
-  education: Array<{
-    degree: string
-    field: string
-    school: string
-    location: string
-    startDate: string
-    endDate: string
-    gpa: string
-    achievements: string
-  }>
-  skills: Array<{
-    name: string
-    level: string
-  }>
-  languages: Array<{
-    name: string
-    proficiency: string
-  }>
-}
+export type { ResumeData }
 
 interface TemplateRendererProps {
   template: string

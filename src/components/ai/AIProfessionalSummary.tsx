@@ -133,7 +133,6 @@ export function AIProfessionalSummary({
               placeholder="e.g. Software Engineer"
               value={formData.jobTitle}
               onChange={(e) => setFormData({ ...formData, jobTitle: e.target.value })}
-              size="sm"
             />
           </div>
           <div>
@@ -144,7 +143,6 @@ export function AIProfessionalSummary({
               placeholder="e.g. Technology"
               value={formData.industry}
               onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-              size="sm"
             />
           </div>
           <div>
@@ -155,7 +153,6 @@ export function AIProfessionalSummary({
               placeholder="e.g. 3 years"
               value={formData.experienceLevel}
               onChange={(e) => setFormData({ ...formData, experienceLevel: e.target.value })}
-              size="sm"
             />
           </div>
         </div>

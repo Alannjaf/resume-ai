@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -26,7 +26,7 @@ const FORM_SECTIONS = [
   { id: 'languages', title: 'Languages', icon: '🌐' },
 ]
 
-export default function ResumeBuilder() {
+function ResumeBuilderContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [currentSection, setCurrentSection] = useState(0)
@@ -512,5 +512,24 @@ export default function ResumeBuilder() {
         template={selectedTemplate}
       />
     </div>
+  )
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+        <p>Loading resume builder...</p>
+      </div>
+    </div>
+  )
+}
+
+export default function ResumeBuilder() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <ResumeBuilderContent />
+    </Suspense>
   )
 }
