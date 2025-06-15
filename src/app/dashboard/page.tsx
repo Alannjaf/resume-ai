@@ -3,9 +3,10 @@
 import { UserButton } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Plus, FileText, Settings, Edit, Trash2, Calendar, MoreVertical } from 'lucide-react'
+import { Plus, FileText, Settings, Edit, Trash2, Calendar, MoreVertical, Shield } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import { useAdmin } from '@/hooks/useAdmin'
 
 interface Resume {
   id: string
@@ -23,6 +24,7 @@ export default function Dashboard() {
   const [resumes, setResumes] = useState<Resume[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const { isAdmin } = useAdmin()
 
   // Fetch user's resumes
   useEffect(() => {
@@ -89,7 +91,20 @@ export default function Dashboard() {
               </div>
               <span className="text-xl font-bold">ResumeAI</span>
             </div>
-            <UserButton />
+            <div className="flex items-center space-x-4">
+              {isAdmin && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => router.push('/admin')}
+                  className="flex items-center gap-2"
+                >
+                  <Shield className="h-4 w-4" />
+                  Admin
+                </Button>
+              )}
+              <UserButton />
+            </div>
           </div>
         </div>
       </header>
