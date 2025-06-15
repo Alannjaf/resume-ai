@@ -1,0 +1,132 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "windows", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String         @id @default(cuid())
+  clerkId        String         @unique
+  email          String         @unique
+  name           String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  
+  resumes        Resume[]
+  subscription   Subscription?
+  
+  @@index([clerkId])
+  @@index([email])
+}
+
+model Resume {
+  id             String         @id @default(cuid())
+  userId         String
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  title          String
+  template       String         @default("modern")
+  status         ResumeStatus   @default(DRAFT)
+  isPublic       Boolean        @default(false)
+  publicSlug     String?        @unique
+  
+  personalInfo   Json?          // Name, email, phone, address, etc.
+  summary        String?        @db.Text
+  
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  
+  sections       ResumeSection[]
+  
+  @@index([userId])
+  @@index([publicSlug])
+}
+
+model ResumeSection {
+  id             String         @id @default(cuid())
+  resumeId       String
+  resume         Resume         @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  
+  type           SectionType
+  title          String
+  content        Json           // Flexible JSON for different section types
+  order          Int
+  isVisible      Boolean        @default(true)
+  
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  
+  @@index([resumeId])
+  @@unique([resumeId, order])
+}
+
+model Subscription {
+  id             String         @id @default(cuid())
+  userId         String         @unique
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  plan           SubscriptionPlan @default(FREE)
+  status         SubscriptionStatus @default(ACTIVE)
+  
+  // Payment details
+  paymentMethod  String?        // FIB or Nasspay
+  paymentId      String?        // External payment ID
+  
+  // Subscription dates
+  startDate      DateTime       @default(now())
+  endDate        DateTime?
+  cancelledAt    DateTime?
+  
+  // Usage limits
+  resumeCount    Int            @default(0)
+  aiUsageCount   Int            @default(0)
+  exportCount    Int            @default(0)
+  
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  
+  @@index([userId])
+  @@index([status])
+}
+
+// Enums
+enum ResumeStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum SectionType {
+  WORK_EXPERIENCE
+  EDUCATION
+  SKILLS
+  LANGUAGES
+  CERTIFICATIONS
+  PROJECTS
+  ACHIEVEMENTS
+  REFERENCES
+  CUSTOM
+}
+
+enum SubscriptionPlan {
+  FREE
+  BASIC
+  PRO
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  SUSPENDED
+}

@@ -1,0 +1,53 @@
+{
+  "header": {
+    "features": "Features",
+    "pricing": "Pricing", 
+    "templates": "Templates",
+    "contact": "Contact",
+    "signIn": "Sign In",
+    "getStarted": "Get Started"
+  },
+  "hero": {
+    "badge": "AI-Powered Resume Builder",
+    "title": "Create Professional Resumes with {aiMagic}",
+    "aiMagic": "AI Magic",
+    "subtitle": "Build stunning resumes in minutes with AI assistance. Support for Kurdish, Arabic, and English. Stand out from the crowd with professional templates and smart content suggestions.",
+    "multiLanguage": "Multi-language Support",
+    "professionalTemplates": "Professional Templates", 
+    "aiContent": "AI-Enhanced Content",
+    "startBuilding": "Start Building Now",
+    "viewTemplates": "View Templates",
+    "trustedBy": "Trusted by professionals worldwide",
+    "resumesCreated": "Resumes Created",
+    "successRate": "Success Rate",
+    "languages": "Languages"
+  },
+  "features": {
+    "title": "Powerful Features for Every Professional",
+    "subtitle": "Everything you need to create a standout resume that gets you noticed by employers",
+    "aiPowered": {
+      "title": "AI-Powered Content",
+      "description": "Generate and enhance your resume content with advanced AI that understands your industry and role."
+    },
+    "multiLanguage": {
+      "title": "Multi-Language Support", 
+      "description": "Create resumes in Kurdish Sorani, Arabic, and English with proper RTL text support."
+    },
+    "templates": {
+      "title": "Professional Templates",
+      "description": "Choose from dozens of modern, ATS-friendly templates designed by professionals."
+    },
+    "export": {
+      "title": "Export Options",
+      "description": "Download your resume in PDF, DOCX formats, or share via direct link."
+    },
+    "privacy": {
+      "title": "Privacy Focused", 
+      "description": "Your data is encrypted and secure. We never share your personal information."
+    },
+    "realtime": {
+      "title": "Real-time Preview",
+      "description": "See changes instantly as you build your resume with live preview functionality."
+    }
+  }
+}
