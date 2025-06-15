@@ -106,15 +106,15 @@ export default function BillingPage() {
           <p className="text-gray-600">Choose the plan that works best for you</p>
         </div>
 
-        {/* Coming Soon Banner */}
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6 mb-8">
+        {/* Manual Payment Banner */}
+        <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-6 mb-8">
           <div className="flex items-center justify-center space-x-3">
-            <Clock className="h-6 w-6 text-blue-600" />
+            <CreditCard className="h-6 w-6 text-green-600" />
             <div className="text-center">
-              <h2 className="text-lg font-semibold text-blue-900">Payment Integration Coming Soon!</h2>
-              <p className="text-blue-700 mt-1">
-                We're working on integrating FIB and Nasspay payment methods for Iraqi users. 
-                Stay tuned for updates!
+              <h2 className="text-lg font-semibold text-green-900">Manual Payment Available!</h2>
+              <p className="text-green-700 mt-1">
+                You can upgrade your plan by sending payment through FIB. 
+                We'll activate your subscription manually within 24 hours.
               </p>
             </div>
           </div>
@@ -185,10 +185,10 @@ export default function BillingPage() {
                 <Button 
                   className="w-full" 
                   variant={plan.popular ? "default" : "outline"}
-                  disabled
+                  onClick={() => router.push(`/billing/payment-instructions?plan=${plan.name.toLowerCase()}`)}
                 >
                   <CreditCard className="h-4 w-4 mr-2" />
-                  Coming Soon
+                  Upgrade Now
                 </Button>
               )}
             </Card>
