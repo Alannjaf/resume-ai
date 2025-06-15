@@ -9,14 +9,21 @@ export async function GET() {
       return NextResponse.json({ isAdmin: false })
     }
 
-    const user = await prisma.user.findUnique({
-      where: { clerkId: userId },
-      select: { role: true }
-    })
+    // Try to get user with role, fallback to checking if column exists
+    try {
+      const user = await prisma.$queryRaw`
+        SELECT "role" FROM "User" 
+        WHERE "clerkId" = ${userId}
+        LIMIT 1
+      ` as any[]
 
-    return NextResponse.json({ 
-      isAdmin: user?.role === 'ADMIN' 
-    })
+      return NextResponse.json({ 
+        isAdmin: user?.[0]?.role === 'ADMIN' 
+      })
+    } catch (e) {
+      // Role column might not exist yet
+      return NextResponse.json({ isAdmin: false })
+    }
   } catch (error) {
     console.error('Error checking admin status:', error)
     return NextResponse.json({ isAdmin: false })

@@ -22,27 +22,54 @@ export async function POST(req: Request) {
     try {
       await prisma.$executeRaw`
         ALTER TABLE "User" 
-        ADD COLUMN IF NOT EXISTS "role" TEXT NOT NULL DEFAULT 'USER'
+        ADD COLUMN IF NOT EXISTS "role" TEXT DEFAULT 'USER'
       `
+      console.log('Role column added successfully')
     } catch (e) {
-      // Column might already exist
-      console.log('Role column might already exist')
+      console.log('Error adding role column:', e)
     }
 
-    // Make alann.jaf@gmail.com an admin
-    const adminUser = await prisma.user.update({
-      where: { email: 'alann.jaf@gmail.com' },
-      data: { role: 'ADMIN' as any }
-    })
+    // Add the constraint after column exists
+    try {
+      await prisma.$executeRaw`
+        ALTER TABLE "User" 
+        ALTER COLUMN "role" SET NOT NULL
+      `
+    } catch (e) {
+      console.log('Error setting NOT NULL constraint:', e)
+    }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Admin user created successfully',
-      admin: {
-        email: adminUser.email,
-        role: adminUser.role
+    // Make alann.jaf@gmail.com an admin using raw SQL to bypass Prisma schema validation
+    try {
+      await prisma.$executeRaw`
+        UPDATE "User" 
+        SET "role" = 'ADMIN' 
+        WHERE "email" = 'alann.jaf@gmail.com'
+      `
+      
+      // Fetch the updated user
+      const adminUser = await prisma.$queryRaw`
+        SELECT * FROM "User" 
+        WHERE "email" = 'alann.jaf@gmail.com'
+        LIMIT 1
+      `
+      
+      if (!adminUser || !Array.isArray(adminUser) || adminUser.length === 0) {
+        throw new Error('User not found')
       }
-    })
+
+      return NextResponse.json({
+        success: true,
+        message: 'Admin user created successfully',
+        admin: {
+          email: adminUser[0].email,
+          role: adminUser[0].role
+        }
+      })
+    } catch (updateError) {
+      console.error('Error updating user:', updateError)
+      throw updateError
+    }
   } catch (error) {
     console.error('Error setting up admin:', error)
     return NextResponse.json({ 
