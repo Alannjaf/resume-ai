@@ -29,17 +29,28 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
         throw new Error('Preview element not found')
       }
 
-      // Check if this is Executive or Tech template and reduce spacing temporarily
+      // Check if this is Executive, Tech, or Modern Yellow template and reduce spacing temporarily
       const isExecutive = template === 'executive'
       const isTech = template === 'tech'
+      const isModernYellow = template === 'modern-yellow'
       let modifiedElements: Array<{element: HTMLElement, property: string, originalValue: string}> = []
 
-      if (isExecutive || isTech) {
+      if (isExecutive || isTech || isModernYellow) {
         // Find elements with large spacing and temporarily reduce them
         const elementsToModify = previewElement.querySelectorAll('.mb-16, .mb-12, .mb-10, .pb-8, .p-10, .p-8')
         
         elementsToModify.forEach((el) => {
           const element = el as HTMLElement
+          
+          // Skip elements that contain yellow circles (to preserve emoji positioning)
+          if (isModernYellow && (
+            element.querySelector('.bg-yellow-400.rounded-full') || 
+            element.classList.contains('bg-yellow-400') ||
+            element.closest('.bg-yellow-400')
+          )) {
+            return // Don't modify yellow circle elements
+          }
+          
           const originalMarginBottom = element.style.marginBottom
           const originalPaddingBottom = element.style.paddingBottom
           const originalPadding = element.style.padding
@@ -69,6 +80,37 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
             modifiedElements.push({element, property: 'padding', originalValue: originalPadding})
           }
         })
+
+        // For Modern Yellow template, ensure full height layout for PDF
+        if (isModernYellow) {
+          // Don't modify min-height for this template - we want it to extend
+          
+          // Fix emoji positioning in yellow circles for PDF
+          const yellowCircles = previewElement.querySelectorAll('.bg-yellow-400.rounded-full')
+          yellowCircles.forEach((circle) => {
+            const element = circle as HTMLElement
+            const span = circle.querySelector('span')
+            if (span) {
+              const originalLineHeight = span.style.lineHeight
+              const originalDisplay = span.style.display
+              const originalTransform = span.style.transform
+              const originalAlignItems = span.style.alignItems
+              const originalJustifyContent = span.style.justifyContent
+              
+              span.style.lineHeight = '1'
+              span.style.display = 'flex'
+              span.style.alignItems = 'center'
+              span.style.justifyContent = 'center'
+              span.style.transform = 'translateY(-4px)' // Even stronger upward adjustment for PDF
+              
+              modifiedElements.push({element: span, property: 'lineHeight', originalValue: originalLineHeight})
+              modifiedElements.push({element: span, property: 'display', originalValue: originalDisplay})
+              modifiedElements.push({element: span, property: 'transform', originalValue: originalTransform})
+              modifiedElements.push({element: span, property: 'alignItems', originalValue: originalAlignItems})
+              modifiedElements.push({element: span, property: 'justifyContent', originalValue: originalJustifyContent})
+            }
+          })
+        }
       }
 
       // Configure html2pdf options

@@ -62,6 +62,15 @@ export const templates: Template[] = [
     category: 'modern',
     isPopular: false,
     isPremium: true
+  },
+  {
+    id: 'modern-yellow',
+    name: 'Modern Yellow',
+    description: 'Contemporary design with yellow accents and sidebar layout',
+    preview: '/templates/modern-yellow-preview.png',
+    category: 'modern',
+    isPopular: true,
+    isPremium: true
   }
 ]
 
