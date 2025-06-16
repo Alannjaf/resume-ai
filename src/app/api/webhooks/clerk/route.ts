@@ -4,14 +4,19 @@ import { WebhookEvent } from '@clerk/nextjs/server'
 import { prisma } from '@/lib/prisma'
 
 export async function POST(req: Request) {
+  console.log('Webhook POST request received')
+  
   // Get the headers
   const headerPayload = await headers()
   const svix_id = headerPayload.get("svix-id")
   const svix_timestamp = headerPayload.get("svix-timestamp")
   const svix_signature = headerPayload.get("svix-signature")
 
+  console.log('Webhook headers:', { svix_id, svix_timestamp, svix_signature })
+
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
+    console.error('Missing webhook headers')
     return new Response('Error occured -- no svix headers', {
       status: 400
     })
@@ -20,6 +25,13 @@ export async function POST(req: Request) {
   // Get the body
   const payload = await req.json()
   const body = JSON.stringify(payload)
+  console.log('Webhook payload received:', payload)
+
+  // Check environment variables
+  if (!process.env.CLERK_WEBHOOK_SECRET) {
+    console.error('CLERK_WEBHOOK_SECRET not set')
+    return new Response('Server configuration error', { status: 500 })
+  }
 
   // Create a new Svix instance with your secret.
   const wh = new Webhook(process.env.CLERK_WEBHOOK_SECRET!)
@@ -33,6 +45,7 @@ export async function POST(req: Request) {
       "svix-timestamp": svix_timestamp,
       "svix-signature": svix_signature,
     }) as WebhookEvent
+    console.log('Webhook verification successful')
   } catch (err) {
     console.error('Error verifying webhook:', err)
     return new Response('Error occured', {
@@ -55,6 +68,11 @@ export async function POST(req: Request) {
     }
 
     try {
+      // Test database connection
+      console.log('Testing database connection...')
+      await prisma.$connect()
+      console.log('Database connection successful')
+
       console.log('Attempting to upsert user:', { clerkId: id, email })
       const user = await prisma.user.upsert({
         where: { clerkId: id },
