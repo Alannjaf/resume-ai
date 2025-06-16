@@ -196,9 +196,10 @@ export function UserManagement() {
               
               <div className="mb-4">
                 <p className="text-sm text-gray-600">User: {selectedUser.email}</p>
-                <p className="text-sm text-gray-600">
-                  Current Plan: <Badge variant="outline">{selectedUser.subscription?.plan || 'NONE'}</Badge>
-                </p>
+                <div className="text-sm text-gray-600 flex items-center gap-2">
+                  <span>Current Plan:</span>
+                  <Badge variant="outline">{selectedUser.subscription?.plan || 'NONE'}</Badge>
+                </div>
               </div>
 
               <div className="space-y-3 mb-6">
