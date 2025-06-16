@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { initializeDatabase } from '@/lib/init-db'
 
 async function getSystemSettings() {
   try {
+    // Ensure database is initialized
+    await initializeDatabase()
     const settingsRecord = await prisma.$queryRawUnsafe(`
       SELECT 
         "maxFreeResumes",
@@ -62,9 +65,9 @@ export async function GET() {
         priceIQD: 0,
         description: 'Perfect for getting started',
         features: [
-          `${settings.maxFreeResumes || 10} resumes per month`,
-          `${settings.maxFreeAIUsage || 100} AI suggestions per month`,
-          `${settings.maxFreeExports || 20} exports per month`,
+          `${settings.maxFreeResumes !== null && settings.maxFreeResumes !== undefined ? settings.maxFreeResumes : 10} resumes per month`,
+          `${settings.maxFreeAIUsage !== null && settings.maxFreeAIUsage !== undefined ? settings.maxFreeAIUsage : 100} AI suggestions per month`,
+          `${settings.maxFreeExports !== null && settings.maxFreeExports !== undefined ? settings.maxFreeExports : 20} exports per month`,
           'Basic templates',
           'PDF export'
         ],
@@ -78,9 +81,9 @@ export async function GET() {
         priceIQD: settings.basicPlanPrice || 5000,
         description: 'Great for job seekers',
         features: [
-          `${settings.maxBasicResumes || 50} resumes per month`,
-          `${settings.maxBasicAIUsage || 500} AI suggestions per month`,
-          `${settings.maxBasicExports || 100} exports per month`,
+          `${settings.maxBasicResumes !== null && settings.maxBasicResumes !== undefined ? settings.maxBasicResumes : 50} resumes per month`,
+          `${settings.maxBasicAIUsage !== null && settings.maxBasicAIUsage !== undefined ? settings.maxBasicAIUsage : 500} AI suggestions per month`,
+          `${settings.maxBasicExports !== null && settings.maxBasicExports !== undefined ? settings.maxBasicExports : 100} exports per month`,
           'All template options',
           'Advanced AI enhancement',
           'PDF & DOCX export',

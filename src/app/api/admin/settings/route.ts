@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin'
 import { prisma } from '@/lib/prisma'
+import { initializeDatabase } from '@/lib/init-db'
 
 // Default settings
 const DEFAULT_SETTINGS = {
@@ -27,6 +28,9 @@ const DEFAULT_SETTINGS = {
 
 async function getSettings() {
   try {
+    // Ensure database is initialized
+    await initializeDatabase()
+    
     // Try to get settings from database using explicit column selection to avoid cache issues
     const settingsRecord = await prisma.$queryRawUnsafe(`
       SELECT 
@@ -53,18 +57,18 @@ async function getSettings() {
       
       // Convert to the expected format
       const cleanSettings = {
-        maxFreeResumes: dbSettings.maxFreeResumes || DEFAULT_SETTINGS.maxFreeResumes,
-        maxFreeAIUsage: dbSettings.maxFreeAIUsage || DEFAULT_SETTINGS.maxFreeAIUsage,
-        maxFreeExports: dbSettings.maxFreeExports || DEFAULT_SETTINGS.maxFreeExports,
-        maxBasicResumes: dbSettings.maxBasicResumes || DEFAULT_SETTINGS.maxBasicResumes,
-        maxBasicAIUsage: dbSettings.maxBasicAIUsage || DEFAULT_SETTINGS.maxBasicAIUsage,
-        maxBasicExports: dbSettings.maxBasicExports || DEFAULT_SETTINGS.maxBasicExports,
-        maxProResumes: dbSettings.maxProResumes !== undefined ? dbSettings.maxProResumes : DEFAULT_SETTINGS.maxProResumes,
-        maxProAIUsage: dbSettings.maxProAIUsage !== undefined ? dbSettings.maxProAIUsage : DEFAULT_SETTINGS.maxProAIUsage,
-        maxProExports: dbSettings.maxProExports !== undefined ? dbSettings.maxProExports : DEFAULT_SETTINGS.maxProExports,
-        basicPlanPrice: dbSettings.basicPlanPrice || DEFAULT_SETTINGS.basicPlanPrice,
-        proPlanPrice: dbSettings.proPlanPrice || DEFAULT_SETTINGS.proPlanPrice,
-        maintenanceMode: dbSettings.maintenanceMode !== undefined ? dbSettings.maintenanceMode : DEFAULT_SETTINGS.maintenanceMode
+        maxFreeResumes: dbSettings.maxFreeResumes !== null && dbSettings.maxFreeResumes !== undefined ? dbSettings.maxFreeResumes : DEFAULT_SETTINGS.maxFreeResumes,
+        maxFreeAIUsage: dbSettings.maxFreeAIUsage !== null && dbSettings.maxFreeAIUsage !== undefined ? dbSettings.maxFreeAIUsage : DEFAULT_SETTINGS.maxFreeAIUsage,
+        maxFreeExports: dbSettings.maxFreeExports !== null && dbSettings.maxFreeExports !== undefined ? dbSettings.maxFreeExports : DEFAULT_SETTINGS.maxFreeExports,
+        maxBasicResumes: dbSettings.maxBasicResumes !== null && dbSettings.maxBasicResumes !== undefined ? dbSettings.maxBasicResumes : DEFAULT_SETTINGS.maxBasicResumes,
+        maxBasicAIUsage: dbSettings.maxBasicAIUsage !== null && dbSettings.maxBasicAIUsage !== undefined ? dbSettings.maxBasicAIUsage : DEFAULT_SETTINGS.maxBasicAIUsage,
+        maxBasicExports: dbSettings.maxBasicExports !== null && dbSettings.maxBasicExports !== undefined ? dbSettings.maxBasicExports : DEFAULT_SETTINGS.maxBasicExports,
+        maxProResumes: dbSettings.maxProResumes !== null && dbSettings.maxProResumes !== undefined ? dbSettings.maxProResumes : DEFAULT_SETTINGS.maxProResumes,
+        maxProAIUsage: dbSettings.maxProAIUsage !== null && dbSettings.maxProAIUsage !== undefined ? dbSettings.maxProAIUsage : DEFAULT_SETTINGS.maxProAIUsage,
+        maxProExports: dbSettings.maxProExports !== null && dbSettings.maxProExports !== undefined ? dbSettings.maxProExports : DEFAULT_SETTINGS.maxProExports,
+        basicPlanPrice: dbSettings.basicPlanPrice !== null && dbSettings.basicPlanPrice !== undefined ? dbSettings.basicPlanPrice : DEFAULT_SETTINGS.basicPlanPrice,
+        proPlanPrice: dbSettings.proPlanPrice !== null && dbSettings.proPlanPrice !== undefined ? dbSettings.proPlanPrice : DEFAULT_SETTINGS.proPlanPrice,
+        maintenanceMode: dbSettings.maintenanceMode !== null && dbSettings.maintenanceMode !== undefined ? dbSettings.maintenanceMode : DEFAULT_SETTINGS.maintenanceMode
       }
       return cleanSettings
     }
