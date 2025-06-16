@@ -42,6 +42,7 @@ export interface PersonalInfo {
   location: string
   linkedin: string
   website: string
+  title?: string
 }
 
 export interface ResumeData {
