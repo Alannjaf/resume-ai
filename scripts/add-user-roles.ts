@@ -17,7 +17,7 @@ async function addUserRoles() {
     
     const adminUser = await prisma.user.update({
       where: { email: 'alann.jaf@gmail.com' },
-      data: { role: 'ADMIN' }
+      data: { role: 'ADMIN' as const }
     })
     
     console.log('✅ Admin role set for:', adminUser.email)

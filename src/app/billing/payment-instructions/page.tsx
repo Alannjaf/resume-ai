@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -19,7 +19,7 @@ interface Plan {
   available: boolean
 }
 
-export default function PaymentInstructionsPage() {
+function PaymentInstructionsContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user } = useUser()
@@ -307,5 +307,17 @@ export default function PaymentInstructionsPage() {
         )}
       </main>
     </div>
+  )
+}
+
+export default function PaymentInstructionsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full" />
+      </div>
+    }>
+      <PaymentInstructionsContent />
+    </Suspense>
   )
 }
