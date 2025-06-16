@@ -35,6 +35,21 @@ export interface Language {
   proficiency: string
 }
 
+export interface Project {
+  id: string
+  name: string
+  description?: string
+  technologies?: string
+  link?: string
+}
+
+export interface Certification {
+  id: string
+  name: string
+  issuer: string
+  date?: string
+}
+
 export interface PersonalInfo {
   fullName: string
   email: string
@@ -52,4 +67,6 @@ export interface ResumeData {
   education: Education[]
   skills: Skill[]
   languages: Language[]
+  projects?: Project[]
+  certifications?: Certification[]
 }
