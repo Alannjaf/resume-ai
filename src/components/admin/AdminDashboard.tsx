@@ -238,6 +238,7 @@ export function AdminDashboard() {
                   <label className="block text-sm font-medium mb-2">Max Resumes</label>
                   <Input
                     type="number"
+                    min="0"
                     value={settings.maxFreeResumes}
                     onChange={(e) => setSettings({
                       ...settings,
@@ -249,6 +250,7 @@ export function AdminDashboard() {
                   <label className="block text-sm font-medium mb-2">Max AI Usage</label>
                   <Input
                     type="number"
+                    min="0"
                     value={settings.maxFreeAIUsage}
                     onChange={(e) => setSettings({
                       ...settings,
@@ -260,11 +262,18 @@ export function AdminDashboard() {
                   <label className="block text-sm font-medium mb-2">Max Exports</label>
                   <Input
                     type="number"
-                    value={settings.maxFreeExports}
-                    onChange={(e) => setSettings({
-                      ...settings,
-                      maxFreeExports: e.target.value === '' ? 0 : parseInt(e.target.value) || 0
-                    })}
+                    min="0"
+                    value={settings.maxFreeExports.toString()}
+                    onChange={(e) => {
+                      const value = e.target.value === '' ? '0' : e.target.value;
+                      const numValue = parseInt(value, 10);
+                      if (!isNaN(numValue) && numValue >= 0) {
+                        setSettings({
+                          ...settings,
+                          maxFreeExports: numValue
+                        });
+                      }
+                    }}
                   />
                 </div>
               </div>
@@ -278,6 +287,7 @@ export function AdminDashboard() {
                   <label className="block text-sm font-medium mb-2">Max Resumes</label>
                   <Input
                     type="number"
+                    min="0"
                     value={settings.maxBasicResumes}
                     onChange={(e) => setSettings({
                       ...settings,
@@ -289,6 +299,7 @@ export function AdminDashboard() {
                   <label className="block text-sm font-medium mb-2">Max AI Usage</label>
                   <Input
                     type="number"
+                    min="0"
                     value={settings.maxBasicAIUsage}
                     onChange={(e) => setSettings({
                       ...settings,
@@ -300,6 +311,7 @@ export function AdminDashboard() {
                   <label className="block text-sm font-medium mb-2">Max Exports</label>
                   <Input
                     type="number"
+                    min="0"
                     value={settings.maxBasicExports}
                     onChange={(e) => setSettings({
                       ...settings,
@@ -318,6 +330,7 @@ export function AdminDashboard() {
                   <label className="block text-sm font-medium mb-2">Max Resumes (-1 = Unlimited)</label>
                   <Input
                     type="number"
+                    min="-1"
                     value={settings.maxProResumes}
                     onChange={(e) => setSettings({
                       ...settings,
@@ -329,6 +342,7 @@ export function AdminDashboard() {
                   <label className="block text-sm font-medium mb-2">Max AI Usage (-1 = Unlimited)</label>
                   <Input
                     type="number"
+                    min="-1"
                     value={settings.maxProAIUsage}
                     onChange={(e) => setSettings({
                       ...settings,
@@ -340,6 +354,7 @@ export function AdminDashboard() {
                   <label className="block text-sm font-medium mb-2">Max Exports (-1 = Unlimited)</label>
                   <Input
                     type="number"
+                    min="-1"
                     value={settings.maxProExports}
                     onChange={(e) => setSettings({
                       ...settings,
@@ -358,6 +373,7 @@ export function AdminDashboard() {
                   <label className="block text-sm font-medium mb-2">Basic Plan Price (IQD)</label>
                   <Input
                     type="number"
+                    min="0"
                     value={settings.basicPlanPrice}
                     onChange={(e) => setSettings({
                       ...settings,
@@ -369,6 +385,7 @@ export function AdminDashboard() {
                   <label className="block text-sm font-medium mb-2">Pro Plan Price (IQD)</label>
                   <Input
                     type="number"
+                    min="0"
                     value={settings.proPlanPrice}
                     onChange={(e) => setSettings({
                       ...settings,

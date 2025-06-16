@@ -49,27 +49,54 @@ export default function Dashboard() {
   }, [])
 
   const handleDeleteResume = async (resumeId: string) => {
-    if (!confirm('Are you sure you want to delete this resume? This action cannot be undone.')) {
-      return
-    }
+    // Show a warning toast with confirmation
+    const toastId = toast(
+      (t) => (
+        <div>
+          <p className="font-medium mb-2">Delete Resume?</p>
+          <p className="text-sm text-gray-600 mb-3">This action cannot be undone.</p>
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              variant="destructive"
+              onClick={async () => {
+                toast.dismiss(t.id)
+                setDeletingId(resumeId)
+                try {
+                  const response = await fetch(`/api/resumes/${resumeId}`, {
+                    method: 'DELETE'
+                  })
 
-    setDeletingId(resumeId)
-    try {
-      const response = await fetch(`/api/resumes/${resumeId}`, {
-        method: 'DELETE'
-      })
-
-      if (response.ok) {
-        setResumes(resumes.filter(resume => resume.id !== resumeId))
-        toast.success('Resume deleted successfully')
-      } else {
-        toast.error('Failed to delete resume. Please try again.')
+                  if (response.ok) {
+                    setResumes(resumes.filter(resume => resume.id !== resumeId))
+                    toast.success('Resume deleted successfully')
+                  } else {
+                    toast.error('Failed to delete resume. Please try again.')
+                  }
+                } catch (error) {
+                  toast.error('Error deleting resume. Please try again.')
+                } finally {
+                  setDeletingId(null)
+                }
+              }}
+            >
+              Delete
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => toast.dismiss(t.id)}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      ),
+      {
+        duration: 10000,
+        position: 'top-center',
       }
-    } catch (error) {
-      toast.error('Error deleting resume. Please try again.')
-    } finally {
-      setDeletingId(null)
-    }
+    )
   }
 
   const formatDate = (dateString: string) => {
