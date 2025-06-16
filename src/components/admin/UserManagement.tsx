@@ -17,6 +17,7 @@ import {
   Check,
   X
 } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 interface UserData {
   id: string
@@ -70,16 +71,15 @@ export function UserManagement() {
       })
 
       if (response.ok) {
-        alert('User plan upgraded successfully!')
+        toast.success('User plan upgraded successfully!')
         setShowUpgradeModal(false)
         setSelectedUser(null)
         fetchUsers()
       } else {
-        alert('Failed to upgrade user plan')
+        toast.error('Failed to upgrade user plan')
       }
     } catch (error) {
-      console.error('Error upgrading user:', error)
-      alert('Error upgrading user plan')
+      toast.error('Error upgrading user plan')
     } finally {
       setUpgrading(false)
     }

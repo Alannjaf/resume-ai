@@ -15,6 +15,7 @@ import { TemplateGallery } from '@/components/resume-templates/TemplateGallery'
 import { AIProfessionalSummary } from '@/components/ai/AIProfessionalSummary'
 import { getTemplate } from '@/lib/templates'
 import { WorkExperience, Education, Skill, Language, ResumeData } from '@/types/resume'
+import toast from 'react-hot-toast'
 
 // Form sections
 const FORM_SECTIONS = [
@@ -153,8 +154,7 @@ function ResumeBuilderContent() {
           setShowPreview(true)
         }
       } catch (error) {
-        console.error('Error loading resume:', error)
-        alert('Failed to load resume')
+        toast.error('Failed to load resume')
         router.push('/dashboard')
       } finally {
         setIsLoading(false)

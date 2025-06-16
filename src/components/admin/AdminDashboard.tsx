@@ -12,6 +12,7 @@ import {
   Save,
   RefreshCw
 } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 interface Stats {
   totalUsers: number
@@ -79,7 +80,7 @@ export function AdminDashboard() {
       const data = await response.json()
       setStats(data)
     } catch (error) {
-      console.error('Error fetching stats:', error)
+      // Silent error handling
     }
   }
 
@@ -87,7 +88,6 @@ export function AdminDashboard() {
     try {
       const response = await fetch('/api/admin/settings')
       const data = await response.json()
-      console.log('Admin dashboard received data:', data)
       
       // Ensure all fields are defined with fallback values
       const newSettings = {
@@ -111,10 +111,9 @@ export function AdminDashboard() {
         proPlanPrice: data.proPlanPrice ?? 10000,
         maintenanceMode: data.maintenanceMode ?? false
       }
-      console.log('Admin dashboard setting state to:', newSettings)
       setSettings(newSettings)
     } catch (error) {
-      console.error('Error fetching settings:', error)
+      // Silent error handling
     } finally {
       setLoading(false)
     }
@@ -129,11 +128,12 @@ export function AdminDashboard() {
         body: JSON.stringify(settings)
       })
       if (response.ok) {
-        alert('Settings saved successfully!')
+        toast.success('Settings saved successfully!')
+      } else {
+        toast.error('Failed to save settings')
       }
     } catch (error) {
-      console.error('Error saving settings:', error)
-      alert('Failed to save settings')
+      toast.error('Failed to save settings')
     } finally {
       setSaving(false)
     }

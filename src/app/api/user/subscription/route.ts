@@ -5,7 +5,6 @@ import { prisma } from '@/lib/prisma'
 
 async function getSystemSettings() {
   try {
-    console.log('User subscription API: Fetching settings from database...')
     const settingsRecord = await prisma.$queryRawUnsafe(`
       SELECT 
         "maxFreeResumes",
@@ -24,12 +23,10 @@ async function getSystemSettings() {
     `) as any[]
 
     if (settingsRecord && settingsRecord.length > 0) {
-      console.log('User subscription API: Found settings:', settingsRecord[0])
       return settingsRecord[0]
     }
-    console.log('User subscription API: No settings found, using defaults')
   } catch (error) {
-    console.log('User subscription API: Error fetching settings:', error)
+    // Silent error handling
   }
   
   const defaults = {

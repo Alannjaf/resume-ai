@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { ResumePreview } from './ResumePreview'
 import { X, Download, FileText, Loader2, ChevronDown } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 interface PreviewModalProps {
   isOpen: boolean
@@ -36,7 +37,6 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
   if (!isOpen) return null
 
   const generatePDF = async () => {
-    console.log('generatePDF function called')
     setIsGenerating(true)
     try {
       const { jsPDF } = await import('jspdf')
@@ -96,10 +96,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       element.style.boxShadow = originalStyle.boxShadow
       element.style.overflow = originalStyle.overflow
 
-      console.log('Canvas dimensions:', canvas.width, canvas.height)
-
       const imgData = canvas.toDataURL('image/png')
-      console.log('Image data length:', imgData.length)
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
@@ -138,15 +135,13 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       const fileName = data.personal.fullName || 'Resume'
       pdf.save(`${fileName}_Resume.pdf`)
     } catch (error) {
-      console.error('Error generating PDF:', error)
-      alert('Error generating PDF. Please try again.')
+      toast.error('Error generating PDF. Please try again.')
     } finally {
       setIsGenerating(false)
     }
   }
 
   const generateDOC = async () => {
-    console.log('generateDOC function called')
     setIsGenerating(true)
     try {
       const { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } = await import('docx')

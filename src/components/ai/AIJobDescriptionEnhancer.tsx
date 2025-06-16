@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { AISuggestionButton } from './AISuggestionButton'
 import { Button } from '@/components/ui/button'
 import { Check, X, RefreshCw } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 interface AIJobDescriptionEnhancerProps {
   currentDescription: string
@@ -22,7 +23,7 @@ export function AIJobDescriptionEnhancer({
 
   const enhanceDescription = async () => {
     if (!currentDescription.trim()) {
-      alert('Please enter a job description first')
+      toast.error('Please enter a job description first')
       return
     }
 
@@ -47,8 +48,7 @@ export function AIJobDescriptionEnhancer({
       setEnhancedDescription(data.enhancedDescription)
       setShowSuggestion(true)
     } catch (error) {
-      console.error('Error enhancing description:', error)
-      alert(error instanceof Error ? error.message : 'Failed to enhance description')
+      toast.error(error instanceof Error ? error.message : 'Failed to enhance description')
     } finally {
       setIsEnhancing(false)
     }

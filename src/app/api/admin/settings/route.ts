@@ -28,7 +28,6 @@ const DEFAULT_SETTINGS = {
 async function getSettings() {
   try {
     // Try to get settings from database using explicit column selection to avoid cache issues
-    console.log('Attempting to fetch settings from database...')
     const settingsRecord = await prisma.$queryRawUnsafe(`
       SELECT 
         id,
@@ -49,11 +48,7 @@ async function getSettings() {
       ORDER BY id LIMIT 1
     `) as any[]
 
-    console.log('Settings query result:', settingsRecord)
-    console.log('Settings record length:', settingsRecord?.length)
-
     if (settingsRecord && settingsRecord.length > 0) {
-      console.log('Found settings in database:', settingsRecord[0])
       const dbSettings = settingsRecord[0]
       
       // Convert to the expected format
@@ -71,18 +66,12 @@ async function getSettings() {
         proPlanPrice: dbSettings.proPlanPrice || DEFAULT_SETTINGS.proPlanPrice,
         maintenanceMode: dbSettings.maintenanceMode !== undefined ? dbSettings.maintenanceMode : DEFAULT_SETTINGS.maintenanceMode
       }
-      console.log('Clean settings:', cleanSettings)
       return cleanSettings
-    } else {
-      console.log('No settings found in database, using defaults')
     }
   } catch (error) {
     // Table might not exist, use defaults
-    console.log('Settings table error:', error)
-    console.log('Error details:', error)
   }
   
-  console.log('Returning default settings:', DEFAULT_SETTINGS)
   return DEFAULT_SETTINGS
 }
 

@@ -5,6 +5,7 @@ import { AISuggestionButton } from './AISuggestionButton'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Check, X, RefreshCw } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 interface AIProfessionalSummaryProps {
   currentSummary: string
@@ -62,8 +63,7 @@ export function AIProfessionalSummary({
       setGeneratedSummary(data.summary)
       setShowSuggestion(true)
     } catch (error) {
-      console.error('Error generating summary:', error)
-      alert(error instanceof Error ? error.message : 'Failed to generate summary')
+      toast.error(error instanceof Error ? error.message : 'Failed to generate summary')
     } finally {
       setIsGenerating(false)
     }

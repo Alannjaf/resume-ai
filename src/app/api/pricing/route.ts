@@ -3,7 +3,6 @@ import { prisma } from '@/lib/prisma'
 
 async function getSystemSettings() {
   try {
-    console.log('Pricing API: Fetching settings from database...')
     const settingsRecord = await prisma.$queryRawUnsafe(`
       SELECT 
         "maxFreeResumes",
@@ -23,12 +22,10 @@ async function getSystemSettings() {
     `) as any[]
 
     if (settingsRecord && settingsRecord.length > 0) {
-      console.log('Pricing API: Found settings:', settingsRecord[0])
       return settingsRecord[0]
     }
-    console.log('Pricing API: No settings found, using defaults')
   } catch (error) {
-    console.log('Pricing API: Error fetching settings:', error)
+    // Silent fail to defaults
   }
   
   const defaults = {
@@ -51,7 +48,6 @@ async function getSystemSettings() {
     basicPlanPrice: 5000, // IQD
     proPlanPrice: 10000   // IQD
   }
-  console.log('Pricing API: Returning defaults:', defaults)
   return defaults
 }
 
@@ -117,7 +113,6 @@ export async function GET() {
 
     return NextResponse.json({ plans })
   } catch (error) {
-    console.error('Error fetching pricing:', error)
     
     // Return default pricing on error
     const defaultPlans = [

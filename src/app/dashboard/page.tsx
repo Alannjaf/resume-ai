@@ -7,6 +7,7 @@ import { Plus, FileText, Settings, Edit, Trash2, Calendar, MoreVertical, Shield 
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useAdmin } from '@/hooks/useAdmin'
+import toast from 'react-hot-toast'
 
 interface Resume {
   id: string
@@ -60,12 +61,12 @@ export default function Dashboard() {
 
       if (response.ok) {
         setResumes(resumes.filter(resume => resume.id !== resumeId))
+        toast.success('Resume deleted successfully')
       } else {
-        alert('Failed to delete resume. Please try again.')
+        toast.error('Failed to delete resume. Please try again.')
       }
     } catch (error) {
-      console.error('Error deleting resume:', error)
-      alert('Error deleting resume. Please try again.')
+      toast.error('Error deleting resume. Please try again.')
     } finally {
       setDeletingId(null)
     }

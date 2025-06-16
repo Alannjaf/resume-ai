@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Check, X, Plus } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 interface AISkillsSuggesterProps {
   currentSkills: Array<{ id?: string; name: string; level?: string }>
@@ -53,8 +54,7 @@ export function AISkillsSuggester({
       setSelectedSkills(new Set())
       setShowSuggestions(true)
     } catch (error) {
-      console.error('Error generating skills:', error)
-      alert(error instanceof Error ? error.message : 'Failed to generate skills')
+      toast.error(error instanceof Error ? error.message : 'Failed to generate skills')
     } finally {
       setIsGenerating(false)
     }
