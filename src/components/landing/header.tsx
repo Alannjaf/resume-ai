@@ -31,7 +31,7 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <div 
-          className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity"
+          className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
           onClick={() => window.location.href = '/'}
         >
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
@@ -41,7 +41,7 @@ export function Header() {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-8">
+        <nav className="hidden md:flex items-center gap-8 rtl:gap-8">
           <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">
             {t('nav.features')}
           </a>
@@ -57,14 +57,14 @@ export function Header() {
         </nav>
 
         {/* Desktop Actions */}
-        <div className="hidden md:flex items-center space-x-4">
+        <div className="hidden md:flex items-center gap-4">
           {/* Language Selector */}
           <div className="relative">
             <Button
               variant="ghost"
               size="sm"
               onClick={toggleLangMenu}
-              className="flex items-center space-x-2"
+              className="flex items-center gap-2"
             >
               <Globe className="h-4 w-4" />
               <span>{languages.find(lang => lang.code === language)?.nativeName}</span>
