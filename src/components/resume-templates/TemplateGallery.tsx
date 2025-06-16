@@ -136,7 +136,11 @@ export function TemplateGallery({
                       className={`p-4 cursor-pointer transition-all hover:shadow-lg ${
                         selectedTemplate === template.id ? 'ring-2 ring-primary' : ''
                       }`}
-                      onClick={() => setSelectedTemplate(template.id)}
+                      onClick={() => {
+                        setSelectedTemplate(template.id)
+                        onSelectTemplate(template.id)
+                        onClose()
+                      }}
                     >
                       <div className="aspect-[3/4] bg-gray-100 rounded-md mb-3 overflow-hidden relative">
                         {/* Template Preview Thumbnail */}
@@ -193,18 +197,10 @@ export function TemplateGallery({
 
         {/* Footer */}
         {!previewTemplate && (
-          <div className="p-6 border-t flex justify-between items-center">
-            <div className="text-sm text-gray-600">
-              Selected: {templates.find(t => t.id === selectedTemplate)?.name}
-            </div>
-            <div className="flex space-x-2">
-              <Button variant="outline" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button onClick={handleSelectTemplate}>
-                Apply Template
-              </Button>
-            </div>
+          <div className="p-6 border-t flex justify-end items-center">
+            <Button variant="outline" onClick={onClose}>
+              Close
+            </Button>
           </div>
         )}
       </div>

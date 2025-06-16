@@ -43,8 +43,8 @@
         "description": "See changes instantly as you build your resume"
       },
       "export": {
-        "title": "Multiple Export Formats",
-        "description": "Export your resume as PDF, DOCX, or share online"
+        "title": "PDF Export",
+        "description": "Export your resume as PDF or share online"
       },
       "languages": {
         "title": "Multi-language Support",

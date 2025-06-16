@@ -2,18 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Prevent FOUC (Flash of Unstyled Content) */
-html {
-  visibility: hidden;
-  opacity: 0;
-}
-
-html.ready {
-  visibility: visible;
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out;
-}
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -95,5 +83,67 @@ html {
   }
   .safe-right {
     padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* PDF Export Page Break Control */
+.keep-together {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.no-break {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.page-break-before {
+  page-break-before: always;
+  break-before: page;
+}
+
+.page-break-after {
+  page-break-after: always;
+  break-after: page;
+}
+
+/* PDF-specific spacing adjustments for Executive and Tech templates */
+@media print {
+  /* Executive Template - Reduce large margins and padding */
+  .executive-template .mb-16 {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .executive-template .pb-8 {
+    padding-bottom: 0.5rem !important;
+  }
+  
+  .executive-template .p-10 {
+    padding: 1rem !important;
+  }
+  
+  .executive-template .mb-12 {
+    margin-bottom: 1rem !important;
+  }
+  
+  /* Tech Template - Reduce large margins and padding */
+  .tech-template .mb-12 {
+    margin-bottom: 1rem !important;
+  }
+  
+  .tech-template .pb-8 {
+    padding-bottom: 0.5rem !important;
+  }
+  
+  .tech-template .p-8 {
+    padding: 1rem !important;
+  }
+  
+  .tech-template .mb-6 {
+    margin-bottom: 0.75rem !important;
+  }
+  
+  .tech-template .mb-10 {
+    margin-bottom: 1rem !important;
   }
 }

@@ -81,12 +81,6 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
   }, [language, isRTL])
 
-  // Mark document as ready when translations are loaded
-  useEffect(() => {
-    if (typeof document !== 'undefined' && Object.keys(messages).length > 0) {
-      document.documentElement.classList.add('ready')
-    }
-  }, [messages])
 
   const value = {
     language,

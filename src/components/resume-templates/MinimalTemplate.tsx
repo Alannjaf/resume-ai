@@ -108,7 +108,7 @@ export function MinimalTemplate({ data }: MinimalTemplateProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Skills */}
         {data.skills.length > 0 && (
-          <div>
+          <div className="keep-together">
             <h2 className="text-sm font-medium text-gray-900 mb-3 uppercase tracking-wider">
               Skills
             </h2>
@@ -124,7 +124,7 @@ export function MinimalTemplate({ data }: MinimalTemplateProps) {
 
         {/* Languages */}
         {data.languages.length > 0 && (
-          <div>
+          <div className="keep-together">
             <h2 className="text-sm font-medium text-gray-900 mb-3 uppercase tracking-wider">
               Languages
             </h2>

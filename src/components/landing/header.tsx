@@ -71,14 +71,14 @@ export function Header() {
             </Button>
             
             {isLangMenuOpen && (
-              <div className="absolute right-0 mt-2 w-48 rounded-md border bg-background shadow-lg">
+              <div className="absolute right-0 rtl:right-auto rtl:left-0 mt-2 w-48 rounded-md border bg-background shadow-lg z-50">
                 <div className="py-1">
                   {languages.map((lang) => (
                     <button
                       key={lang.code}
                       onClick={() => changeLanguage(lang.code as 'en' | 'ar' | 'ckb')}
                       className={cn(
-                        "block w-full px-4 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground",
+                        "block w-full px-4 py-2 text-start text-sm hover:bg-accent hover:text-accent-foreground",
                         language === lang.code && "bg-accent text-accent-foreground"
                       )}
                     >
