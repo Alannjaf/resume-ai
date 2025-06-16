@@ -21,8 +21,22 @@ interface Stats {
 }
 
 interface SystemSettings {
+  // Free Plan Limits
   maxFreeResumes: number
   maxFreeAIUsage: number
+  maxFreeExports: number
+  
+  // Basic Plan Limits
+  maxBasicResumes: number
+  maxBasicAIUsage: number
+  maxBasicExports: number
+  
+  // Pro Plan Limits
+  maxProResumes: number
+  maxProAIUsage: number
+  maxProExports: number
+  
+  // Pricing
   basicPlanPrice: number
   proPlanPrice: number
   maintenanceMode: boolean
@@ -31,10 +45,24 @@ interface SystemSettings {
 export function AdminDashboard() {
   const [stats, setStats] = useState<Stats | null>(null)
   const [settings, setSettings] = useState<SystemSettings>({
-    maxFreeResumes: 3,
-    maxFreeAIUsage: 10,
-    basicPlanPrice: 9.99,
-    proPlanPrice: 19.99,
+    // Free Plan Limits
+    maxFreeResumes: 10,
+    maxFreeAIUsage: 100,
+    maxFreeExports: 20,
+    
+    // Basic Plan Limits
+    maxBasicResumes: 50,
+    maxBasicAIUsage: 500,
+    maxBasicExports: 100,
+    
+    // Pro Plan Limits
+    maxProResumes: -1,
+    maxProAIUsage: -1,
+    maxProExports: -1,
+    
+    // Pricing
+    basicPlanPrice: 5000,
+    proPlanPrice: 10000,
     maintenanceMode: false
   })
   const [loading, setLoading] = useState(true)
@@ -59,7 +87,32 @@ export function AdminDashboard() {
     try {
       const response = await fetch('/api/admin/settings')
       const data = await response.json()
-      setSettings(data)
+      console.log('Admin dashboard received data:', data)
+      
+      // Ensure all fields are defined with fallback values
+      const newSettings = {
+        // Free Plan Limits
+        maxFreeResumes: data.maxFreeResumes ?? 10,
+        maxFreeAIUsage: data.maxFreeAIUsage ?? 100,
+        maxFreeExports: data.maxFreeExports ?? 20,
+        
+        // Basic Plan Limits
+        maxBasicResumes: data.maxBasicResumes ?? 50,
+        maxBasicAIUsage: data.maxBasicAIUsage ?? 500,
+        maxBasicExports: data.maxBasicExports ?? 100,
+        
+        // Pro Plan Limits
+        maxProResumes: data.maxProResumes ?? -1,
+        maxProAIUsage: data.maxProAIUsage ?? -1,
+        maxProExports: data.maxProExports ?? -1,
+        
+        // Pricing
+        basicPlanPrice: data.basicPlanPrice ?? 5000,
+        proPlanPrice: data.proPlanPrice ?? 10000,
+        maintenanceMode: data.maintenanceMode ?? false
+      }
+      console.log('Admin dashboard setting state to:', newSettings)
+      setSettings(newSettings)
     } catch (error) {
       console.error('Error fetching settings:', error)
     } finally {
@@ -162,79 +215,176 @@ export function AdminDashboard() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-8">
+            {/* Free Plan Settings */}
             <div>
-              <label className="block text-sm font-medium mb-2">
-                Max Free Resumes
-              </label>
-              <Input
-                type="number"
-                value={settings.maxFreeResumes}
-                onChange={(e) => setSettings({
-                  ...settings,
-                  maxFreeResumes: parseInt(e.target.value) || 0
-                })}
-              />
+              <h3 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Free Plan Limits</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Max Resumes</label>
+                  <Input
+                    type="number"
+                    value={settings.maxFreeResumes}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      maxFreeResumes: e.target.value === '' ? 0 : parseInt(e.target.value) || 0
+                    })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Max AI Usage</label>
+                  <Input
+                    type="number"
+                    value={settings.maxFreeAIUsage}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      maxFreeAIUsage: e.target.value === '' ? 0 : parseInt(e.target.value) || 0
+                    })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Max Exports</label>
+                  <Input
+                    type="number"
+                    value={settings.maxFreeExports}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      maxFreeExports: e.target.value === '' ? 0 : parseInt(e.target.value) || 0
+                    })}
+                  />
+                </div>
+              </div>
             </div>
 
+            {/* Basic Plan Settings */}
             <div>
-              <label className="block text-sm font-medium mb-2">
-                Max Free AI Usage
-              </label>
-              <Input
-                type="number"
-                value={settings.maxFreeAIUsage}
-                onChange={(e) => setSettings({
-                  ...settings,
-                  maxFreeAIUsage: parseInt(e.target.value) || 0
-                })}
-              />
+              <h3 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Basic Plan Limits</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Max Resumes</label>
+                  <Input
+                    type="number"
+                    value={settings.maxBasicResumes}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      maxBasicResumes: e.target.value === '' ? 0 : parseInt(e.target.value) || 0
+                    })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Max AI Usage</label>
+                  <Input
+                    type="number"
+                    value={settings.maxBasicAIUsage}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      maxBasicAIUsage: e.target.value === '' ? 0 : parseInt(e.target.value) || 0
+                    })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Max Exports</label>
+                  <Input
+                    type="number"
+                    value={settings.maxBasicExports}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      maxBasicExports: e.target.value === '' ? 0 : parseInt(e.target.value) || 0
+                    })}
+                  />
+                </div>
+              </div>
             </div>
 
+            {/* Pro Plan Settings */}
             <div>
-              <label className="block text-sm font-medium mb-2">
-                Basic Plan Price (IQD)
-              </label>
-              <Input
-                type="number"
-                value={settings.basicPlanPrice}
-                onChange={(e) => setSettings({
-                  ...settings,
-                  basicPlanPrice: parseInt(e.target.value) || 0
-                })}
-              />
+              <h3 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Pro Plan Limits</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Max Resumes (-1 = Unlimited)</label>
+                  <Input
+                    type="number"
+                    value={settings.maxProResumes}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      maxProResumes: e.target.value === '' ? 0 : parseInt(e.target.value) || 0
+                    })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Max AI Usage (-1 = Unlimited)</label>
+                  <Input
+                    type="number"
+                    value={settings.maxProAIUsage}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      maxProAIUsage: e.target.value === '' ? 0 : parseInt(e.target.value) || 0
+                    })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Max Exports (-1 = Unlimited)</label>
+                  <Input
+                    type="number"
+                    value={settings.maxProExports}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      maxProExports: e.target.value === '' ? 0 : parseInt(e.target.value) || 0
+                    })}
+                  />
+                </div>
+              </div>
             </div>
 
+            {/* Pricing Settings */}
             <div>
-              <label className="block text-sm font-medium mb-2">
-                Pro Plan Price (IQD)
-              </label>
-              <Input
-                type="number"
-                value={settings.proPlanPrice}
-                onChange={(e) => setSettings({
-                  ...settings,
-                  proPlanPrice: parseInt(e.target.value) || 0
-                })}
-              />
+              <h3 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Pricing Settings</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Basic Plan Price (IQD)</label>
+                  <Input
+                    type="number"
+                    value={settings.basicPlanPrice}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      basicPlanPrice: e.target.value === '' ? 0 : parseInt(e.target.value) || 0
+                    })}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Pro Plan Price (IQD)</label>
+                  <Input
+                    type="number"
+                    value={settings.proPlanPrice}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      proPlanPrice: e.target.value === '' ? 0 : parseInt(e.target.value) || 0
+                    })}
+                  />
+                </div>
+              </div>
             </div>
 
-            <div className="md:col-span-2">
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={settings.maintenanceMode}
-                  onChange={(e) => setSettings({
-                    ...settings,
-                    maintenanceMode: e.target.checked
-                  })}
-                  className="rounded"
-                />
-                <span className="text-sm font-medium">Maintenance Mode</span>
-              </label>
-              <p className="text-xs text-gray-500 mt-1">
-                When enabled, only admins can access the site
-              </p>
+            {/* System Settings */}
+            <div>
+              <h3 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">System Settings</h3>
+              <div>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={settings.maintenanceMode}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      maintenanceMode: e.target.checked
+                    })}
+                    className="rounded"
+                  />
+                  <span className="text-sm font-medium">Maintenance Mode</span>
+                </label>
+                <p className="text-xs text-gray-500 mt-1">
+                  When enabled, only admins can access the site
+                </p>
+              </div>
             </div>
           </div>
 

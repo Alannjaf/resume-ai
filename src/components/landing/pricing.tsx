@@ -1,70 +1,42 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import { Check, Star, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 
-const plans = [
-  {
-    name: 'Free',
-    price: 0,
-    description: 'Perfect for getting started',
-    features: [
-      '3 resumes per month',
-      'Basic templates',
-      'AI content suggestions',
-      'PDF export',
-      'Watermark included'
-    ],
-    limitations: [
-      'Limited templates',
-      'Basic AI features',
-      'ResumeAI watermark'
-    ],
-    buttonText: 'Get Started Free',
-    buttonVariant: 'outline' as const,
-    popular: false,
-    comingSoon: false
-  },
-  {
-    name: 'Basic',
-    price: 9.99,
-    description: 'Great for job seekers',
-    features: [
-      '10 resumes per month',
-      'Premium templates',
-      'Advanced AI enhancement',
-      'PDF & DOCX export',
-      'No watermark',
-      'Email support'
-    ],
-    limitations: [],
-    buttonText: 'Coming Soon',
-    buttonVariant: 'outline' as const,
-    popular: false,
-    comingSoon: true
-  },
-  {
-    name: 'Pro',
-    price: 19.99,
-    description: 'Best for professionals',
-    features: [
-      'Unlimited resumes',
-      'All premium templates',
-      'Priority AI processing',
-      'Multiple export formats',
-      'Cover letter generator',
-      'Priority support',
-      'Resume analytics',
-      'Version history'
-    ],
-    limitations: [],
-    buttonText: 'Coming Soon',
-    buttonVariant: 'outline' as const,
-    popular: true,
-    comingSoon: true
-  }
-]
+interface Plan {
+  name: string
+  price: number
+  priceIQD: number
+  description: string
+  features: string[]
+  buttonText: string
+  popular: boolean
+  available: boolean
+}
 
 export function Pricing() {
+  const [plans, setPlans] = useState<Plan[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchPricing = async () => {
+      try {
+        const response = await fetch('/api/pricing')
+        if (response.ok) {
+          const data = await response.json()
+          setPlans(data.plans)
+        }
+      } catch (error) {
+        console.error('Error fetching pricing:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPricing()
+  }, [])
   return (
     <section id="pricing" className="py-20 bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -77,70 +49,82 @@ export function Pricing() {
             Start free and upgrade as you grow. All plans include multi-language support.
           </p>
           
-          {/* Coming Soon Banner */}
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-4 max-w-2xl mx-auto">
+          {/* Payment Available Banner */}
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4 max-w-2xl mx-auto">
             <div className="flex items-center justify-center space-x-2">
-              <Clock className="h-5 w-5 text-blue-600" />
-              <span className="text-blue-800 font-medium">Premium plans coming soon with FIB & Nasspay integration!</span>
+              <Check className="h-5 w-5 text-green-600" />
+              <span className="text-green-800 font-medium">Manual payment available via FIB transfer!</span>
             </div>
           </div>
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan, index) => (
-            <Card key={index} className={`relative ${plan.popular ? 'border-primary shadow-xl scale-105' : 'border-gray-200'}`}>
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <div className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium flex items-center">
-                    <Star className="h-3 w-3 mr-1 fill-current" />
-                    Most Popular
-                  </div>
-                </div>
-              )}
-              
-              <CardHeader className="text-center pb-4">
-                <CardTitle className="text-2xl font-bold text-gray-900">
-                  {plan.name}
-                </CardTitle>
-                <div className="mt-4">
-                  <span className="text-4xl font-bold text-gray-900">
-                    ${plan.price}
-                  </span>
-                  <span className="text-gray-600 ml-1">
-                    {plan.price > 0 ? '/month' : ''}
-                  </span>
-                </div>
-                <CardDescription className="mt-2 text-base">
-                  {plan.description}
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  {plan.features.map((feature, featureIndex) => (
-                    <div key={featureIndex} className="flex items-start">
-                      <Check className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-700">{feature}</span>
+        {loading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+            <p>Loading pricing...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {plans.map((plan, index) => (
+              <Card key={index} className={`relative ${plan.popular ? 'border-primary shadow-xl scale-105' : 'border-gray-200'}`}>
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                    <div className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium flex items-center">
+                      <Star className="h-3 w-3 mr-1 fill-current" />
+                      Most Popular
                     </div>
-                  ))}
-                </div>
-              </CardContent>
+                  </div>
+                )}
+                
+                <CardHeader className="text-center pb-4">
+                  <CardTitle className="text-2xl font-bold text-gray-900">
+                    {plan.name}
+                  </CardTitle>
+                  <div className="mt-4">
+                    <span className="text-4xl font-bold text-gray-900">
+                      {plan.price === 0 ? 'Free' : `${plan.priceIQD.toLocaleString()} IQD`}
+                    </span>
+                    <span className="text-gray-600 ml-1">
+                      {plan.price > 0 ? '/month' : ''}
+                    </span>
+                  </div>
+                  <CardDescription className="mt-2 text-base">
+                    {plan.description}
+                  </CardDescription>
+                </CardHeader>
 
-              <CardFooter className="pt-4">
-                <Button 
-                  variant={plan.buttonVariant}
-                  size="lg"
-                  className="w-full"
-                  disabled={plan.comingSoon}
-                >
-                  {plan.comingSoon && <Clock className="h-4 w-4 mr-2" />}
-                  {plan.buttonText}
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    {plan.features.map((feature, featureIndex) => (
+                      <div key={featureIndex} className="flex items-start">
+                        <Check className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+
+                <CardFooter className="pt-4">
+                  <Button 
+                    variant={plan.name === 'Free' ? 'outline' : 'default'}
+                    size="lg"
+                    className="w-full"
+                    onClick={() => {
+                      if (plan.name === 'Free') {
+                        window.location.href = '/sign-up'
+                      } else {
+                        window.location.href = '/billing'
+                      }
+                    }}
+                  >
+                    {plan.buttonText}
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        )}
 
         {/* Payment Methods */}
         <div className="text-center mt-12">

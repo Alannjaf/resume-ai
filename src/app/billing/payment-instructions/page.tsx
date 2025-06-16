@@ -8,48 +8,51 @@ import { Badge } from '@/components/ui/badge'
 import { ArrowLeft, Copy, CheckCircle, Clock, Info, CreditCard } from 'lucide-react'
 import { useUser } from '@clerk/nextjs'
 
+interface Plan {
+  name: string
+  price: number
+  priceIQD: number
+  description: string
+  features: string[]
+  buttonText: string
+  popular: boolean
+  available: boolean
+}
+
 export default function PaymentInstructionsPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user } = useUser()
   const [copied, setCopied] = useState<string | null>(null)
-  const plan = searchParams.get('plan') || 'basic'
+  const [plans, setPlans] = useState<Plan[]>([])
+  const [loading, setLoading] = useState(true)
+  const planType = searchParams.get('plan') || 'basic'
 
-  const planDetails = {
-    basic: {
-      name: 'Basic',
-      price: '5,000 IQD',
-      priceIQD: '5,000 IQD',
-      features: [
-        '5 Resumes',
-        'All Template Options',
-        'AI-Powered Content Generation',
-        'PDF & DOC Export',
-        'Priority Support'
-      ]
-    },
-    pro: {
-      name: 'Pro',
-      price: '10,000 IQD',
-      priceIQD: '10,000 IQD',
-      features: [
-        'Unlimited Resumes',
-        'All Premium Templates',
-        'Unlimited AI Generation',
-        'Advanced Export Options',
-        'Custom Branding',
-        '24/7 Priority Support'
-      ]
+  useEffect(() => {
+    const fetchPricing = async () => {
+      try {
+        const response = await fetch('/api/pricing')
+        if (response.ok) {
+          const data = await response.json()
+          setPlans(data.plans)
+        }
+      } catch (error) {
+        console.error('Error fetching pricing:', error)
+      } finally {
+        setLoading(false)
+      }
     }
-  }
 
-  const selectedPlan = planDetails[plan as keyof typeof planDetails] || planDetails.basic
+    fetchPricing()
+  }, [])
+
+  const selectedPlan = plans.find(p => p.name.toLowerCase() === planType) || plans.find(p => p.name === 'Basic')
 
   const paymentInfo = {
     bankName: 'First Iraqi Bank (FIB)',
     accountName: 'Alan Jaf',
     accountNumber: '07504910348',
-    notes: `ResumeAI ${selectedPlan.name} - ${user?.emailAddresses[0]?.emailAddress}`
+    notes: `ResumeAI ${selectedPlan?.name || 'Basic'} - ${user?.emailAddresses[0]?.emailAddress}`
   }
 
   const copyToClipboard = (text: string, field: string) => {
@@ -83,29 +86,36 @@ export default function PaymentInstructionsPage() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Instructions</h1>
-          <p className="text-gray-600">Complete your {selectedPlan.name} plan upgrade</p>
+          <p className="text-gray-600">Complete your {selectedPlan?.name || 'Basic'} plan upgrade</p>
         </div>
 
-        {/* Selected Plan */}
-        <Card className="p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-xl font-semibold">{selectedPlan.name} Plan</h2>
-              <p className="text-gray-600">Monthly subscription</p>
-            </div>
-            <div className="text-right">
-              <div className="text-2xl font-bold text-gray-900">{selectedPlan.price}/mo</div>
-            </div>
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+            <p className="text-gray-600">Loading plan details...</p>
           </div>
-          <div className="space-y-2">
-            {selectedPlan.features.map((feature, i) => (
-              <div key={i} className="flex items-center text-sm text-gray-700">
-                <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
-                {feature}
+        ) : selectedPlan ? (
+          <>
+            {/* Selected Plan */}
+            <Card className="p-6 mb-6">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h2 className="text-xl font-semibold">{selectedPlan.name} Plan</h2>
+                  <p className="text-gray-600">Monthly subscription</p>
+                </div>
+                <div className="text-right">
+                  <div className="text-2xl font-bold text-gray-900">{selectedPlan.priceIQD.toLocaleString()} IQD/mo</div>
+                </div>
               </div>
-            ))}
-          </div>
-        </Card>
+              <div className="space-y-2">
+                {selectedPlan.features.map((feature, i) => (
+                  <div key={i} className="flex items-center text-sm text-gray-700">
+                    <CheckCircle className="h-4 w-4 text-green-500 mr-2" />
+                    {feature}
+                  </div>
+                ))}
+              </div>
+            </Card>
 
         {/* Payment Steps */}
         <Card className="p-6 mb-6">
@@ -118,7 +128,7 @@ export default function PaymentInstructionsPage() {
               <div className="flex-1">
                 <h4 className="font-medium">Send Payment via FIB</h4>
                 <p className="text-sm text-gray-600 mt-1">
-                  Transfer {selectedPlan.priceIQD} to the account details below
+                  Transfer {selectedPlan.priceIQD.toLocaleString()} IQD to the account details below
                 </p>
               </div>
             </div>
@@ -209,12 +219,12 @@ export default function PaymentInstructionsPage() {
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-sm text-gray-600">Amount</p>
-                  <p className="font-medium text-lg text-primary">{selectedPlan.priceIQD}</p>
+                  <p className="font-medium text-lg text-primary">{selectedPlan.priceIQD.toLocaleString()} IQD</p>
                 </div>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => copyToClipboard(selectedPlan.priceIQD, 'amount')}
+                  onClick={() => copyToClipboard(`${selectedPlan.priceIQD.toLocaleString()} IQD`, 'amount')}
                 >
                   {copied === 'amount' ? <CheckCircle className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                 </Button>
@@ -283,6 +293,18 @@ export default function PaymentInstructionsPage() {
             I've Completed Payment
           </Button>
         </div>
+          </>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-600">Plan not found. Please go back and select a valid plan.</p>
+            <Button 
+              className="mt-4"
+              onClick={() => router.push('/billing')}
+            >
+              Back to Billing
+            </Button>
+          </div>
+        )}
       </main>
     </div>
   )

@@ -139,9 +139,20 @@ export async function getUserSubscription(userId: string) {
 
 async function getSystemSettings() {
   try {
-    const settingsRecord = await prisma.$queryRaw`
-      SELECT * FROM "SystemSettings" LIMIT 1
-    ` as any[]
+    const settingsRecord = await prisma.$queryRawUnsafe(`
+      SELECT 
+        "maxFreeResumes",
+        "maxFreeAIUsage", 
+        "maxFreeExports",
+        "maxBasicResumes",
+        "maxBasicAIUsage",
+        "maxBasicExports", 
+        "maxProResumes",
+        "maxProAIUsage",
+        "maxProExports"
+      FROM "SystemSettings" 
+      ORDER BY id LIMIT 1
+    `) as any[]
 
     if (settingsRecord && settingsRecord.length > 0) {
       return settingsRecord[0]
@@ -151,8 +162,20 @@ async function getSystemSettings() {
   }
   
   return {
+    // Free Plan Limits
     maxFreeResumes: 10,
-    maxFreeAIUsage: 100
+    maxFreeAIUsage: 100,
+    maxFreeExports: 20,
+    
+    // Basic Plan Limits
+    maxBasicResumes: 50,
+    maxBasicAIUsage: 500,
+    maxBasicExports: 100,
+    
+    // Pro Plan Limits
+    maxProResumes: -1,
+    maxProAIUsage: -1,
+    maxProExports: -1
   }
 }
 
@@ -170,10 +193,18 @@ export async function checkUserLimits(userId: string) {
     FREE: { 
       resumes: systemSettings.maxFreeResumes || 10, 
       ai: systemSettings.maxFreeAIUsage || 100, 
-      exports: 20 
+      exports: systemSettings.maxFreeExports || 20 
     },
-    BASIC: { resumes: 50, ai: 500, exports: 100 },
-    PRO: { resumes: -1, ai: -1, exports: -1 }, // -1 means unlimited
+    BASIC: { 
+      resumes: systemSettings.maxBasicResumes || 50, 
+      ai: systemSettings.maxBasicAIUsage || 500, 
+      exports: systemSettings.maxBasicExports || 100 
+    },
+    PRO: { 
+      resumes: systemSettings.maxProResumes || -1, 
+      ai: systemSettings.maxProAIUsage || -1, 
+      exports: systemSettings.maxProExports || -1 
+    }, // -1 means unlimited
   }
 
   const userLimits = limits[subscription.plan]

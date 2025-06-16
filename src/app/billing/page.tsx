@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { UserButton } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -7,70 +8,77 @@ import { Badge } from '@/components/ui/badge'
 import { ArrowLeft, Check, Clock, Crown, Star, CreditCard } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
+interface Plan {
+  name: string
+  price: number
+  priceIQD: number
+  description: string
+  features: string[]
+  buttonText: string
+  popular: boolean
+  available: boolean
+  current?: boolean
+  period?: string
+  limitations?: string[]
+}
+
+interface UserStats {
+  currentPlan: string
+  resumesUsed: number
+  resumesLimit: number
+  aiUsageCount: number
+  aiUsageLimit: number
+  exportCount: number
+  exportLimit: number
+}
+
 export default function BillingPage() {
   const router = useRouter()
+  const [plans, setPlans] = useState<Plan[]>([])
+  const [userStats, setUserStats] = useState<UserStats | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const plans = [
-    {
-      name: 'Free',
-      price: '$0',
-      period: 'forever',
-      description: 'Perfect for getting started',
-      features: [
-        '1 Resume',
-        '3 Template Options', 
-        'Basic Export (PDF)',
-        'Standard Support'
-      ],
-      limitations: [
-        'Limited AI suggestions',
-        'Basic templates only',
-        'No premium features'
-      ],
-      current: true,
-      popular: false
-    },
-    {
-      name: 'Basic',
-      price: '5,000 IQD',
-      period: 'month',
-      description: 'Great for job seekers',
-      features: [
-        '5 Resumes',
-        'All Template Options',
-        'AI-Powered Content Generation',
-        'PDF & DOC Export',
-        'Priority Support',
-        'Resume Analytics'
-      ],
-      limitations: [
-        'Limited AI usage (50/month)',
-        'Standard export options'
-      ],
-      current: false,
-      popular: true
-    },
-    {
-      name: 'Pro',
-      price: '10,000 IQD',
-      period: 'month', 
-      description: 'For professionals and agencies',
-      features: [
-        'Unlimited Resumes',
-        'All Premium Templates',
-        'Unlimited AI Generation',
-        'Advanced Export Options',
-        'Custom Branding',
-        'Resume Sharing Links',
-        '24/7 Priority Support',
-        'Advanced Analytics',
-        'Version History'
-      ],
-      limitations: [],
-      current: false,
-      popular: false
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch pricing plans
+        const pricingResponse = await fetch('/api/pricing')
+        if (pricingResponse.ok) {
+          const pricingData = await pricingResponse.json()
+          // Enhance API data with billing-specific properties
+          const enhancedPlans = pricingData.plans.map((plan: Plan) => ({
+            ...plan,
+            period: plan.price === 0 ? 'forever' : 'month',
+            limitations: plan.name === 'Free' 
+              ? ['Limited AI suggestions', 'Basic templates only', 'No premium features']
+              : plan.name === 'Basic'
+              ? ['Limited AI usage per month', 'Standard export options']
+              : []
+          }))
+          setPlans(enhancedPlans)
+        }
+
+        // Fetch user subscription data
+        const userResponse = await fetch('/api/user/subscription')
+        if (userResponse.ok) {
+          const userData = await userResponse.json()
+          setUserStats(userData)
+          
+          // Update current plan in plans array
+          setPlans(prev => prev.map(plan => ({
+            ...plan,
+            current: plan.name === userData.currentPlan
+          })))
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      } finally {
+        setLoading(false)
+      }
     }
-  ]
+
+    fetchData()
+  }, [])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -121,79 +129,120 @@ export default function BillingPage() {
         </div>
 
         {/* Current Plan Status */}
-        <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900">Current Plan</h3>
-              <p className="text-gray-600">You are currently on the Free plan</p>
+        {userStats && (
+          <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Current Plan</h3>
+                <p className="text-gray-600">You are currently on the {userStats.currentPlan} plan</p>
+              </div>
+              <Badge variant="secondary" className="px-3 py-1">
+                {userStats.currentPlan} Plan
+              </Badge>
             </div>
-            <Badge variant="secondary" className="px-3 py-1">
-              Free Plan
-            </Badge>
+            
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <div className="text-2xl font-bold text-gray-900">
+                  {userStats.resumesUsed}/{userStats.resumesLimit === -1 ? '∞' : userStats.resumesLimit}
+                </div>
+                <div className="text-sm text-gray-600">Resumes Used</div>
+                {userStats.resumesLimit !== -1 && (
+                  <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full" 
+                      style={{ width: `${Math.min((userStats.resumesUsed / userStats.resumesLimit) * 100, 100)}%` }}
+                    ></div>
+                  </div>
+                )}
+              </div>
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <div className="text-2xl font-bold text-gray-900">
+                  {userStats.aiUsageCount}/{userStats.aiUsageLimit === -1 ? '∞' : userStats.aiUsageLimit}
+                </div>
+                <div className="text-sm text-gray-600">AI Usage</div>
+                {userStats.aiUsageLimit !== -1 && (
+                  <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-green-600 h-2 rounded-full" 
+                      style={{ width: `${Math.min((userStats.aiUsageCount / userStats.aiUsageLimit) * 100, 100)}%` }}
+                    ></div>
+                  </div>
+                )}
+              </div>
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <div className="text-2xl font-bold text-gray-900">
+                  {userStats.exportCount}/{userStats.exportLimit === -1 ? '∞' : userStats.exportLimit}
+                </div>
+                <div className="text-sm text-gray-600">Exports Used</div>
+                {userStats.exportLimit !== -1 && (
+                  <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+                    <div 
+                      className="bg-purple-600 h-2 rounded-full" 
+                      style={{ width: `${Math.min((userStats.exportCount / userStats.exportLimit) * 100, 100)}%` }}
+                    ></div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-          
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-gray-900">1/1</div>
-              <div className="text-sm text-gray-600">Resumes Used</div>
-            </div>
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-gray-900">3</div>
-              <div className="text-sm text-gray-600">Templates Available</div>
-            </div>
-            <div className="text-center p-4 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-gray-900">∞</div>
-              <div className="text-sm text-gray-600">Export Downloads</div>
-            </div>
-          </div>
-        </div>
+        )}
 
         {/* Pricing Plans */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {plans.map((plan, index) => (
-            <Card key={index} className={`p-6 relative ${plan.popular ? 'ring-2 ring-primary' : ''}`}>
-              {plan.popular && (
-                <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <Star className="h-3 w-3 mr-1" />
-                  Most Popular
-                </Badge>
-              )}
-              
-              <div className="text-center mb-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                <div className="mb-2">
-                  <span className="text-3xl font-bold text-gray-900">{plan.price}</span>
-                  {plan.period !== 'forever' && <span className="text-gray-600">/{plan.period}</span>}
-                </div>
-                <p className="text-gray-600 text-sm">{plan.description}</p>
-              </div>
-
-              <div className="space-y-3 mb-6">
-                {plan.features.map((feature, i) => (
-                  <div key={i} className="flex items-center">
-                    <Check className="h-4 w-4 text-green-500 mr-3 flex-shrink-0" />
-                    <span className="text-sm text-gray-700">{feature}</span>
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4" />
+            <p className="text-gray-600">Loading pricing plans...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {plans.map((plan, index) => (
+              <Card key={index} className={`p-6 relative ${plan.popular ? 'ring-2 ring-primary' : ''}`}>
+                {plan.popular && (
+                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <Star className="h-3 w-3 mr-1" />
+                    Most Popular
+                  </Badge>
+                )}
+                
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+                  <div className="mb-2">
+                    <span className="text-3xl font-bold text-gray-900">
+                      {plan.price === 0 ? 'Free' : `${plan.priceIQD.toLocaleString()} IQD`}
+                    </span>
+                    {plan.period !== 'forever' && <span className="text-gray-600">/{plan.period}</span>}
                   </div>
-                ))}
-              </div>
+                  <p className="text-gray-600 text-sm">{plan.description}</p>
+                </div>
 
-              {plan.current ? (
-                <Button variant="outline" className="w-full" disabled>
-                  Current Plan
-                </Button>
-              ) : (
-                <Button 
-                  className="w-full" 
-                  variant={plan.popular ? "default" : "outline"}
-                  onClick={() => router.push(`/billing/payment-instructions?plan=${plan.name.toLowerCase()}`)}
-                >
-                  <CreditCard className="h-4 w-4 mr-2" />
-                  Upgrade Now
-                </Button>
-              )}
-            </Card>
-          ))}
-        </div>
+                <div className="space-y-3 mb-6">
+                  {plan.features.map((feature, i) => (
+                    <div key={i} className="flex items-center">
+                      <Check className="h-4 w-4 text-green-500 mr-3 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {plan.current ? (
+                  <Button variant="outline" className="w-full" disabled>
+                    Current Plan
+                  </Button>
+                ) : (
+                  <Button 
+                    className="w-full" 
+                    variant={plan.popular ? "default" : "outline"}
+                    onClick={() => router.push(`/billing/payment-instructions?plan=${plan.name.toLowerCase()}`)}
+                  >
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    Upgrade Now
+                  </Button>
+                )}
+              </Card>
+            ))}
+          </div>
+        )}
 
         {/* Payment Methods Section */}
         <div className="bg-white rounded-lg shadow-sm border p-6">
