@@ -46,11 +46,10 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       const previewElement = document.querySelector('.resume-preview-content')
       if (!previewElement) {
         console.error('Preview element not found')
-        alert('Could not find resume content to export')
+        toast.error('Could not find resume content to export')
         return
       }
 
-      console.log('Found preview element:', previewElement)
 
       // Wait for fonts and images to load
       await document.fonts.ready
@@ -322,7 +321,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       downloadBlob(blob, `${fileName}_Resume.docx`)
     } catch (error) {
       console.error('Error generating DOC:', error)
-      alert('Error generating DOC. Please try again.')
+      toast.error('Error generating DOC. Please try again.')
     } finally {
       setIsGenerating(false)
     }
@@ -361,7 +360,6 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
-                      console.log('PDF button clicked')
                       generatePDF()
                       setShowDropdown(false)
                     }}
@@ -374,7 +372,6 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
-                      console.log('DOC button clicked')
                       generateDOC()
                       setShowDropdown(false)
                     }}

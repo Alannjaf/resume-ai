@@ -57,7 +57,7 @@ export function Hero() {
             <SignedIn>
               <Link href="/dashboard">
                 <Button size="lg" className="text-base px-8 py-3 h-auto">
-                  {t('hero.cta.primary')}
+                  {t('nav.dashboard')}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>

@@ -3,7 +3,7 @@
 import { UserButton } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Plus, FileText, Settings, Edit, Trash2, Calendar, MoreVertical, Shield } from 'lucide-react'
+import { Plus, FileText, Settings, Edit, Trash2, Calendar, MoreVertical, Shield, ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useAdmin } from '@/hooks/useAdmin'
@@ -86,11 +86,25 @@ export default function Dashboard() {
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                <span className="text-sm font-bold">RA</span>
+            <div className="flex items-center space-x-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => router.push('/')}
+                className="flex items-center gap-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Home
+              </Button>
+              <div 
+                className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity"
+                onClick={() => router.push('/')}
+              >
+                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
+                  <span className="text-sm font-bold">RA</span>
+                </div>
+                <span className="text-xl font-bold">ResumeAI</span>
               </div>
-              <span className="text-xl font-bold">ResumeAI</span>
             </div>
             <div className="flex items-center space-x-4">
               {isAdmin && (

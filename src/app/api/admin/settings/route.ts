@@ -113,7 +113,6 @@ async function saveSettings(settings: any) {
         await prisma.$executeRawUnsafe(statement)
       } catch (error) {
         // Column might already exist, continue
-        console.log(`Column might already exist: ${error}`)
       }
     }
 
@@ -161,7 +160,6 @@ export async function GET() {
   try {
     await requireAdmin()
     const settings = await getSettings()
-    console.log('Admin settings API returning:', settings)
     return NextResponse.json(settings)
   } catch (error) {
     console.error('Admin settings API error:', error)

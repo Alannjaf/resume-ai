@@ -96,10 +96,9 @@ function ResumeBuilderContent() {
       }
 
       // Show success message
-      alert('Resume saved successfully!')
+      toast.success('Resume saved successfully!')
     } catch (error) {
-      console.error('Error saving resume:', error)
-      alert(error instanceof Error ? error.message : 'Failed to save resume')
+      toast.error(error instanceof Error ? error.message : 'Failed to save resume')
     } finally {
       setIsSaving(false)
     }

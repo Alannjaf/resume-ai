@@ -45,7 +45,6 @@ async function getSystemSettings() {
     maxProAIUsage: -1,
     maxProExports: -1
   }
-  console.log('User subscription API: Returning defaults:', defaults)
   return defaults
 }
 
