@@ -1,58 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
-import { initializeDatabase } from '@/lib/init-db'
-
-async function getSystemSettings() {
-  try {
-    // Ensure database is initialized
-    await initializeDatabase()
-    const settingsRecord = await prisma.$queryRawUnsafe(`
-      SELECT 
-        "maxFreeResumes",
-        "maxFreeAIUsage", 
-        "maxFreeExports",
-        "maxBasicResumes",
-        "maxBasicAIUsage",
-        "maxBasicExports", 
-        "maxProResumes",
-        "maxProAIUsage",
-        "maxProExports",
-        "basicPlanPrice",
-        "proPlanPrice",
-        "maintenanceMode"
-      FROM "SystemSettings" 
-      ORDER BY id LIMIT 1
-    `) as any[]
-
-    if (settingsRecord && settingsRecord.length > 0) {
-      return settingsRecord[0]
-    }
-  } catch (error) {
-    // Silent fail to defaults
-  }
-  
-  const defaults = {
-    // Free Plan Limits
-    maxFreeResumes: 10,
-    maxFreeAIUsage: 100,
-    maxFreeExports: 20,
-    
-    // Basic Plan Limits
-    maxBasicResumes: 50,
-    maxBasicAIUsage: 500,
-    maxBasicExports: 100,
-    
-    // Pro Plan Limits
-    maxProResumes: -1,
-    maxProAIUsage: -1,
-    maxProExports: -1,
-    
-    // Pricing
-    basicPlanPrice: 5000, // IQD
-    proPlanPrice: 10000   // IQD
-  }
-  return defaults
-}
+import { getSystemSettings } from '@/lib/system-settings'
 
 export async function GET() {
   try {

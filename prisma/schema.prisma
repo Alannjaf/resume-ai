@@ -100,6 +100,34 @@ model Subscription {
   @@index([status])
 }
 
+model SystemSettings {
+  id             Int            @id @default(autoincrement())
+  
+  // Free Plan Limits
+  maxFreeResumes Int            @default(10)
+  maxFreeAIUsage Int            @default(100)
+  maxFreeExports Int            @default(20)
+  
+  // Basic Plan Limits
+  maxBasicResumes Int           @default(50)
+  maxBasicAIUsage Int           @default(500)
+  maxBasicExports Int           @default(100)
+  
+  // Pro Plan Limits (-1 means unlimited)
+  maxProResumes  Int            @default(-1)
+  maxProAIUsage  Int            @default(-1)
+  maxProExports  Int            @default(-1)
+  
+  // Pricing (in IQD)
+  basicPlanPrice Int            @default(5000)
+  proPlanPrice   Int            @default(10000)
+  
+  // System Settings
+  maintenanceMode Boolean       @default(false)
+  
+  updatedAt      DateTime       @updatedAt @default(now())
+}
+
 // Enums
 enum UserRole {
   USER
