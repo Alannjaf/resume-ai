@@ -1,6 +1,10 @@
+'use client'
+
 import { Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 export function Footer() {
+  const { t } = useLanguage()
   return (
     <footer className="bg-gray-900 text-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -15,8 +19,7 @@ export function Footer() {
               <span className="text-xl font-bold">ResumeAI</span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Create professional resumes with AI assistance in Kurdish, Arabic, and English. 
-              Stand out from the crowd with our smart resume builder.
+              {t('metadata.description')}
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
@@ -36,16 +39,16 @@ export function Footer() {
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Quick Links</h3>
+            <h3 className="text-lg font-semibold">{t('nav.features')}</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <a href="#features" className="text-gray-400 hover:text-white transition-colors">
-                  Features
+                  {t('nav.features')}
                 </a>
               </li>
               <li>
                 <a href="#pricing" className="text-gray-400 hover:text-white transition-colors">
-                  Pricing
+                  {t('nav.pricing')}
                 </a>
               </li>
               <li>
@@ -68,7 +71,7 @@ export function Footer() {
 
           {/* Support */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Support</h3>
+            <h3 className="text-lg font-semibold">{t('nav.contact')}</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <a href="/help" className="text-gray-400 hover:text-white transition-colors">
@@ -100,7 +103,7 @@ export function Footer() {
 
           {/* Contact */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Contact</h3>
+            <h3 className="text-lg font-semibold">{t('nav.contact')}</h3>
             <ul className="space-y-3 text-sm">
               <li className="flex items-center space-x-2 text-gray-400">
                 <Mail className="h-4 w-4" />

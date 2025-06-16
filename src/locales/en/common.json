@@ -1,53 +1,99 @@
 {
-  "header": {
+  "metadata": {
+    "title": "ResumeAI - AI-Powered Resume Builder",
+    "description": "Create professional resumes with AI assistance in multiple languages"
+  },
+  "nav": {
     "features": "Features",
-    "pricing": "Pricing", 
-    "templates": "Templates",
+    "pricing": "Pricing",
+    "about": "About", 
     "contact": "Contact",
     "signIn": "Sign In",
-    "getStarted": "Get Started"
+    "signUp": "Sign Up",
+    "dashboard": "Dashboard",
+    "signOut": "Sign Out"
   },
   "hero": {
-    "badge": "AI-Powered Resume Builder",
-    "title": "Create Professional Resumes with {aiMagic}",
-    "aiMagic": "AI Magic",
-    "subtitle": "Build stunning resumes in minutes with AI assistance. Support for Kurdish, Arabic, and English. Stand out from the crowd with professional templates and smart content suggestions.",
-    "multiLanguage": "Multi-language Support",
-    "professionalTemplates": "Professional Templates", 
-    "aiContent": "AI-Enhanced Content",
-    "startBuilding": "Start Building Now",
-    "viewTemplates": "View Templates",
-    "trustedBy": "Trusted by professionals worldwide",
-    "resumesCreated": "Resumes Created",
-    "successRate": "Success Rate",
-    "languages": "Languages"
+    "title": "Create Your Perfect Resume with AI",
+    "subtitle": "Build professional resumes in minutes with our AI-powered platform. Stand out from the crowd and land your dream job.",
+    "cta": {
+      "primary": "Get Started Free",
+      "secondary": "View Templates"
+    },
+    "features": {
+      "ai": "AI-Powered",
+      "templates": "Professional Templates",
+      "languages": "Multi-language Support"
+    }
   },
   "features": {
-    "title": "Powerful Features for Every Professional",
-    "subtitle": "Everything you need to create a standout resume that gets you noticed by employers",
-    "aiPowered": {
-      "title": "AI-Powered Content",
-      "description": "Generate and enhance your resume content with advanced AI that understands your industry and role."
-    },
-    "multiLanguage": {
-      "title": "Multi-Language Support", 
-      "description": "Create resumes in Kurdish Sorani, Arabic, and English with proper RTL text support."
-    },
-    "templates": {
-      "title": "Professional Templates",
-      "description": "Choose from dozens of modern, ATS-friendly templates designed by professionals."
-    },
-    "export": {
-      "title": "Export Options",
-      "description": "Download your resume in PDF, DOCX formats, or share via direct link."
-    },
-    "privacy": {
-      "title": "Privacy Focused", 
-      "description": "Your data is encrypted and secure. We never share your personal information."
-    },
-    "realtime": {
-      "title": "Real-time Preview",
-      "description": "See changes instantly as you build your resume with live preview functionality."
+    "title": "Everything You Need to Create a Winning Resume",
+    "subtitle": "Our platform combines AI technology with professional design to help you create the perfect resume",
+    "items": {
+      "ai": {
+        "title": "AI Content Generation",
+        "description": "Let AI help you write compelling content for your resume"
+      },
+      "templates": {
+        "title": "Professional Templates", 
+        "description": "Choose from a variety of ATS-friendly templates"
+      },
+      "realtime": {
+        "title": "Real-time Preview",
+        "description": "See changes instantly as you build your resume"
+      },
+      "export": {
+        "title": "Multiple Export Formats",
+        "description": "Export your resume as PDF, DOCX, or share online"
+      },
+      "languages": {
+        "title": "Multi-language Support",
+        "description": "Create resumes in English, Arabic, or Kurdish"
+      },
+      "ats": {
+        "title": "ATS Optimization",
+        "description": "Ensure your resume passes applicant tracking systems"
+      }
     }
+  },
+  "pricing": {
+    "title": "Choose the Right Plan for You",
+    "subtitle": "Start free and upgrade as you grow",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "save": "Save 20%",
+    "currency": "USD"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back, {name}",
+    "actions": {
+      "newResume": "Create New Resume",
+      "viewTemplates": "View Templates",
+      "upgrade": "Upgrade Plan"
+    }
+  },
+  "resumeBuilder": {
+    "title": "Resume Builder",
+    "progress": "Step {current} of {total}",
+    "autosaved": "Autosaved",
+    "saving": "Saving..."
+  },
+  "billing": {
+    "title": "Billing & Subscription",
+    "currentPlan": "Current Plan"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try Again",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit"
   }
 }

@@ -1,61 +1,67 @@
+'use client'
+
 import { Sparkles, Languages, Palette, Download, Shield, Zap } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useLanguage } from '@/contexts/LanguageContext'
 
-const features = [
+const getFeatures = (t: (key: string) => string) => [
   {
     icon: Sparkles,
-    title: 'AI-Powered Content',
-    description: 'Generate and enhance your resume content with advanced AI that understands your industry and role.',
+    title: t('features.items.ai.title'),
+    description: t('features.items.ai.description'),
     color: 'text-blue-600',
     bgColor: 'bg-blue-100',
   },
   {
     icon: Languages,
-    title: 'Multi-Language Support',
-    description: 'Create resumes in Kurdish Sorani, Arabic, and English with proper RTL text support.',
+    title: t('features.items.languages.title'),
+    description: t('features.items.languages.description'),
     color: 'text-green-600',
     bgColor: 'bg-green-100',
   },
   {
     icon: Palette,
-    title: 'Professional Templates',
-    description: 'Choose from dozens of modern, ATS-friendly templates designed by professionals.',
+    title: t('features.items.templates.title'),
+    description: t('features.items.templates.description'),
     color: 'text-purple-600',
     bgColor: 'bg-purple-100',
   },
   {
     icon: Download,
-    title: 'Export Options',
-    description: 'Download your resume in PDF, DOCX formats, or share via direct link.',
+    title: t('features.items.export.title'),
+    description: t('features.items.export.description'),
     color: 'text-orange-600',
     bgColor: 'bg-orange-100',
   },
   {
-    icon: Shield,
-    title: 'Privacy Focused',
-    description: 'Your data is encrypted and secure. We never share your personal information.',
-    color: 'text-red-600',
-    bgColor: 'bg-red-100',
-  },
-  {
     icon: Zap,
-    title: 'Real-time Preview',
-    description: 'See changes instantly as you build your resume with live preview functionality.',
+    title: t('features.items.realtime.title'),
+    description: t('features.items.realtime.description'),
     color: 'text-yellow-600',
     bgColor: 'bg-yellow-100',
+  },
+  {
+    icon: Shield,
+    title: t('features.items.ats.title'),
+    description: t('features.items.ats.description'),
+    color: 'text-red-600',
+    bgColor: 'bg-red-100',
   },
 ]
 
 export function Features() {
+  const { t } = useLanguage()
+  const features = getFeatures(t)
+  
   return (
     <section id="features" className="py-20 bg-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Powerful Features for Every Professional
+            {t('features.title')}
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Everything you need to create a standout resume that gets you noticed by employers
+            {t('features.subtitle')}
           </p>
         </div>
 

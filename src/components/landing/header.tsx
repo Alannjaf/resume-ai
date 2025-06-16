@@ -5,20 +5,26 @@ import { Menu, X, Globe } from 'lucide-react'
 import { SignInButton, SignUpButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 const languages = [
   { code: 'en', name: 'English', nativeName: 'English' },
   { code: 'ar', name: 'Arabic', nativeName: 'العربية' },
   { code: 'ckb', name: 'Kurdish', nativeName: 'کوردی' },
-]
+] as const
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [currentLang, setCurrentLang] = useState('en')
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
+  const { language, setLanguage, t } = useLanguage()
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
   const toggleLangMenu = () => setIsLangMenuOpen(!isLangMenuOpen)
+  
+  const changeLanguage = (languageCode: 'en' | 'ar' | 'ckb') => {
+    setLanguage(languageCode)
+    setIsLangMenuOpen(false)
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -34,16 +40,16 @@ export function Header() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
           <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">
-            Features
+            {t('nav.features')}
           </a>
           <a href="#pricing" className="text-sm font-medium hover:text-primary transition-colors">
-            Pricing
+            {t('nav.pricing')}
           </a>
-          <a href="#templates" className="text-sm font-medium hover:text-primary transition-colors">
-            Templates
+          <a href="#about" className="text-sm font-medium hover:text-primary transition-colors">
+            {t('nav.about')}
           </a>
           <a href="#contact" className="text-sm font-medium hover:text-primary transition-colors">
-            Contact
+            {t('nav.contact')}
           </a>
         </nav>
 
@@ -58,7 +64,7 @@ export function Header() {
               className="flex items-center space-x-2"
             >
               <Globe className="h-4 w-4" />
-              <span>{languages.find(lang => lang.code === currentLang)?.nativeName}</span>
+              <span>{languages.find(lang => lang.code === language)?.nativeName}</span>
             </Button>
             
             {isLangMenuOpen && (
@@ -67,13 +73,10 @@ export function Header() {
                   {languages.map((lang) => (
                     <button
                       key={lang.code}
-                      onClick={() => {
-                        setCurrentLang(lang.code)
-                        setIsLangMenuOpen(false)
-                      }}
+                      onClick={() => changeLanguage(lang.code as 'en' | 'ar' | 'ckb')}
                       className={cn(
                         "block w-full px-4 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground",
-                        currentLang === lang.code && "bg-accent text-accent-foreground"
+                        language === lang.code && "bg-accent text-accent-foreground"
                       )}
                     >
                       {lang.nativeName}
@@ -87,12 +90,12 @@ export function Header() {
           <SignedOut>
             <SignInButton>
               <Button variant="ghost" size="sm">
-                Sign In
+                {t('nav.signIn')}
               </Button>
             </SignInButton>
             <SignUpButton>
               <Button size="sm">
-                Get Started
+                {t('nav.signUp')}
               </Button>
             </SignUpButton>
           </SignedOut>
@@ -118,16 +121,16 @@ export function Header() {
           <div className="container mx-auto px-4 py-4 space-y-4">
             <nav className="space-y-4">
               <a href="#features" className="block text-sm font-medium hover:text-primary transition-colors">
-                Features
+                {t('nav.features')}
               </a>
               <a href="#pricing" className="block text-sm font-medium hover:text-primary transition-colors">
-                Pricing
+                {t('nav.pricing')}
               </a>
-              <a href="#templates" className="block text-sm font-medium hover:text-primary transition-colors">
-                Templates
+              <a href="#about" className="block text-sm font-medium hover:text-primary transition-colors">
+                {t('nav.about')}
               </a>
               <a href="#contact" className="block text-sm font-medium hover:text-primary transition-colors">
-                Contact
+                {t('nav.contact')}
               </a>
             </nav>
             
@@ -139,10 +142,10 @@ export function Header() {
                   {languages.map((lang) => (
                     <button
                       key={lang.code}
-                      onClick={() => setCurrentLang(lang.code)}
+                      onClick={() => changeLanguage(lang.code as 'en' | 'ar' | 'ckb')}
                       className={cn(
                         "block w-full text-left px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground",
-                        currentLang === lang.code && "bg-accent text-accent-foreground"
+                        language === lang.code && "bg-accent text-accent-foreground"
                       )}
                     >
                       {lang.nativeName}
@@ -155,12 +158,12 @@ export function Header() {
                 <SignedOut>
                   <SignInButton>
                     <Button variant="ghost" size="sm" className="w-full justify-start">
-                      Sign In
+                      {t('nav.signIn')}
                     </Button>
                   </SignInButton>
                   <SignUpButton>
                     <Button size="sm" className="w-full">
-                      Get Started
+                      {t('nav.signUp')}
                     </Button>
                   </SignUpButton>
                 </SignedOut>

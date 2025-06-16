@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Check, Star, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Plan {
   name: string
@@ -17,6 +18,7 @@ interface Plan {
 }
 
 export function Pricing() {
+  const { t } = useLanguage()
   const [plans, setPlans] = useState<Plan[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -43,10 +45,10 @@ export function Pricing() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Choose Your Plan
+            {t('pricing.title')}
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
-            Start free and upgrade as you grow. All plans include multi-language support.
+            {t('pricing.subtitle')}
           </p>
           
           {/* Payment Available Banner */}
@@ -62,7 +64,7 @@ export function Pricing() {
         {loading ? (
           <div className="text-center py-8">
             <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4" />
-            <p>Loading pricing...</p>
+            <p>{t('common.loading')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -86,7 +88,7 @@ export function Pricing() {
                       {plan.price === 0 ? 'Free' : `${plan.priceIQD.toLocaleString()} IQD`}
                     </span>
                     <span className="text-gray-600 ml-1">
-                      {plan.price > 0 ? '/month' : ''}
+                      {plan.price > 0 ? `/${t('pricing.monthly')}` : ''}
                     </span>
                   </div>
                   <CardDescription className="mt-2 text-base">
