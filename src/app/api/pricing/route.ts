@@ -33,7 +33,7 @@ export async function GET() {
           `${settings.maxBasicExports !== null && settings.maxBasicExports !== undefined ? settings.maxBasicExports : 100} exports per month`,
           'All template options',
           'Advanced AI enhancement',
-          'PDF & DOCX export',
+          'PDF export',
           'Priority support'
         ],
         buttonText: 'Upgrade Now',
@@ -81,7 +81,7 @@ export async function GET() {
         price: 5000,
         priceIQD: 5000,
         description: 'Great for job seekers',
-        features: ['50 resumes per month', '500 AI suggestions per month', '100 exports per month', 'All template options', 'Advanced AI enhancement', 'PDF & DOCX export', 'Priority support'],
+        features: ['50 resumes per month', '500 AI suggestions per month', '100 exports per month', 'All template options', 'Advanced AI enhancement', 'PDF export', 'Priority support'],
         buttonText: 'Upgrade Now',
         popular: false,
         available: true

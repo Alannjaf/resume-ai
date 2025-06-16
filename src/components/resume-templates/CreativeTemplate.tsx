@@ -60,7 +60,7 @@ export function CreativeTemplate({ data }: CreativeTemplateProps) {
 
           {/* Skills */}
           {data.skills.length > 0 && (
-            <div className="mb-8">
+            <div className="mb-8 keep-together">
               <h2 className="text-lg font-bold mb-4">Skills</h2>
               <div className="space-y-3">
                 {data.skills.map((skill, index) => (
@@ -87,7 +87,7 @@ export function CreativeTemplate({ data }: CreativeTemplateProps) {
 
           {/* Languages */}
           {data.languages.length > 0 && (
-            <div>
+            <div className="keep-together">
               <h2 className="text-lg font-bold mb-4">Languages</h2>
               <div className="space-y-2">
                 {data.languages.map((lang, index) => (

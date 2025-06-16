@@ -24,10 +24,12 @@ export function ResumePreview({ data, template = 'modern' }: ResumePreviewProps)
   }
 
   return (
-    <TemplateRenderer 
-      template={template} 
-      data={transformedData}
-      className="resume-preview-content"
-    />
+    <div data-resume-preview>
+      <TemplateRenderer 
+        template={template} 
+        data={transformedData}
+        className="resume-preview-content"
+      />
+    </div>
   )
 }

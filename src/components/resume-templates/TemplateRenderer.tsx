@@ -5,6 +5,9 @@ import { ModernTemplate } from './ModernTemplate'
 import { ClassicTemplate } from './ClassicTemplate'
 import { MinimalTemplate } from './MinimalTemplate'
 import { CreativeTemplate } from './CreativeTemplate'
+import { ExecutiveTemplate } from './ExecutiveTemplate'
+import { TechTemplate } from './TechTemplate'
+import { ModernYellowTemplate } from './ModernYellowTemplate'
 import type { ResumeData } from '@/types/resume'
 
 export type { ResumeData }
@@ -27,9 +30,11 @@ export function TemplateRenderer({ template, data, className = '' }: TemplateRen
       case 'creative':
         return <CreativeTemplate data={data} />
       case 'executive':
-        return <ClassicTemplate data={data} /> // Fallback to classic for now
+        return <ExecutiveTemplate data={data} />
       case 'tech':
-        return <ModernTemplate data={data} /> // Fallback to modern for now
+        return <TechTemplate data={data} />
+      case 'modern-yellow':
+        return <ModernYellowTemplate data={data} />
       default:
         return <ModernTemplate data={data} />
     }

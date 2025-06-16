@@ -114,7 +114,7 @@ export function ClassicTemplate({ data }: ClassicTemplateProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Skills */}
         {data.skills.length > 0 && (
-          <div>
+          <div className="keep-together">
             <h2 className="text-lg font-bold text-gray-900 mb-3 uppercase tracking-wide border-b border-gray-400 pb-1">
               Skills
             </h2>
@@ -131,7 +131,7 @@ export function ClassicTemplate({ data }: ClassicTemplateProps) {
 
         {/* Languages */}
         {data.languages.length > 0 && (
-          <div>
+          <div className="keep-together">
             <h2 className="text-lg font-bold text-gray-900 mb-3 uppercase tracking-wide border-b border-gray-400 pb-1">
               Languages
             </h2>

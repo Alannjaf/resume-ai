@@ -52,7 +52,7 @@ export function ModernTemplate({ data }: ModernTemplateProps) {
 
       {/* Professional Summary */}
       {data.summary && (
-        <div className="mb-6">
+        <div className="mb-6" data-section="summary">
           <h2 className="text-xl font-semibold text-blue-600 mb-3 border-b border-gray-200 pb-1">
             Professional Summary
           </h2>
@@ -62,13 +62,13 @@ export function ModernTemplate({ data }: ModernTemplateProps) {
 
       {/* Work Experience */}
       {data.experience.length > 0 && (
-        <div className="mb-6">
+        <div className="mb-8" data-section="experience">
           <h2 className="text-xl font-semibold text-blue-600 mb-4 border-b border-gray-200 pb-1">
             Work Experience
           </h2>
-          <div className="space-y-4">
+          <div className="space-y-6">
             {data.experience.map((exp, index) => (
-              <div key={index} className="border-l-2 border-blue-100 pl-4">
+              <div key={index} className="border-l-2 border-blue-100 pl-4 mb-6" data-section="experience-item">
                 <div className="flex justify-between items-start mb-1">
                   <h3 className="font-semibold text-gray-900">{exp.jobTitle}</h3>
                   <span className="text-sm text-gray-500 whitespace-nowrap ml-4">
@@ -93,13 +93,13 @@ export function ModernTemplate({ data }: ModernTemplateProps) {
 
       {/* Education */}
       {data.education.length > 0 && (
-        <div className="mb-6">
+        <div className="mb-8" data-section="education">
           <h2 className="text-xl font-semibold text-blue-600 mb-4 border-b border-gray-200 pb-1">
             Education
           </h2>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {data.education.map((edu, index) => (
-              <div key={index} className="border-l-2 border-blue-100 pl-4">
+              <div key={index} className="border-l-2 border-blue-100 pl-4 mb-4" data-section="education-item">
                 <div className="flex justify-between items-start mb-1">
                   <h3 className="font-semibold text-gray-900">
                     {edu.degree} {edu.field && `in ${edu.field}`}
@@ -130,7 +130,7 @@ export function ModernTemplate({ data }: ModernTemplateProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Skills */}
         {data.skills.length > 0 && (
-          <div>
+          <div data-section="skills" className="keep-together">
             <h2 className="text-xl font-semibold text-blue-600 mb-3 border-b border-gray-200 pb-1">
               Skills
             </h2>
@@ -149,7 +149,7 @@ export function ModernTemplate({ data }: ModernTemplateProps) {
 
         {/* Languages */}
         {data.languages.length > 0 && (
-          <div>
+          <div data-section="languages" className="keep-together">
             <h2 className="text-xl font-semibold text-blue-600 mb-3 border-b border-gray-200 pb-1">
               Languages
             </h2>
