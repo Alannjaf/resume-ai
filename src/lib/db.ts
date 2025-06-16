@@ -137,6 +137,25 @@ export async function getUserSubscription(userId: string) {
   return subscription
 }
 
+async function getSystemSettings() {
+  try {
+    const settingsRecord = await prisma.$queryRaw`
+      SELECT * FROM "SystemSettings" LIMIT 1
+    ` as any[]
+
+    if (settingsRecord && settingsRecord.length > 0) {
+      return settingsRecord[0]
+    }
+  } catch (error) {
+    // Table might not exist, use defaults
+  }
+  
+  return {
+    maxFreeResumes: 10,
+    maxFreeAIUsage: 100
+  }
+}
+
 export async function checkUserLimits(userId: string) {
   const subscription = await getUserSubscription(userId)
   
@@ -144,9 +163,16 @@ export async function checkUserLimits(userId: string) {
     return { canCreateResume: false, canUseAI: false, canExport: false }
   }
 
+  // Get admin-configurable settings
+  const systemSettings = await getSystemSettings()
+
   const limits = {
-    FREE: { resumes: 10, ai: 100, exports: 20 }, // Increased for development/testing
-    BASIC: { resumes: 5, ai: 50, exports: 20 },
+    FREE: { 
+      resumes: systemSettings.maxFreeResumes || 10, 
+      ai: systemSettings.maxFreeAIUsage || 100, 
+      exports: 20 
+    },
+    BASIC: { resumes: 50, ai: 500, exports: 100 },
     PRO: { resumes: -1, ai: -1, exports: -1 }, // -1 means unlimited
   }
 

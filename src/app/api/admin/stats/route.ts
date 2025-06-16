@@ -15,14 +15,27 @@ export async function GET() {
       })
     ])
 
-    // Calculate revenue (simplified - you'd calculate from actual payments)
-    const revenue = activeSubscriptions * 9.99 // Placeholder calculation
+    // Calculate revenue based on current IQD pricing
+    const basicSubs = await prisma.subscription.count({
+      where: { status: 'ACTIVE', plan: 'BASIC' }
+    })
+    const proSubs = await prisma.subscription.count({
+      where: { status: 'ACTIVE', plan: 'PRO' }
+    })
+    
+    // Revenue in IQD (Basic: 5,000 IQD, Pro: 10,000 IQD)
+    const revenueIQD = (basicSubs * 5000) + (proSubs * 10000)
 
     return NextResponse.json({
       totalUsers,
       totalResumes,
       activeSubscriptions,
-      revenue
+      revenue: revenueIQD,
+      breakdown: {
+        basicSubscriptions: basicSubs,
+        proSubscriptions: proSubs,
+        freeUsers: totalUsers - activeSubscriptions
+      }
     })
   } catch (error) {
     console.error('Error fetching admin stats:', error)

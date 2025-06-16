@@ -137,8 +137,8 @@ export function AdminDashboard() {
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Total Revenue</p>
-                <p className="text-2xl font-bold">${stats?.revenue || 0}</p>
+                <p className="text-sm text-gray-600">Monthly Revenue</p>
+                <p className="text-2xl font-bold">{(stats?.revenue || 0).toLocaleString()} IQD</p>
               </div>
               <DollarSign className="h-8 w-8 text-yellow-500" />
             </div>
@@ -193,30 +193,28 @@ export function AdminDashboard() {
 
             <div>
               <label className="block text-sm font-medium mb-2">
-                Basic Plan Price ($)
+                Basic Plan Price (IQD)
               </label>
               <Input
                 type="number"
-                step="0.01"
                 value={settings.basicPlanPrice}
                 onChange={(e) => setSettings({
                   ...settings,
-                  basicPlanPrice: parseFloat(e.target.value) || 0
+                  basicPlanPrice: parseInt(e.target.value) || 0
                 })}
               />
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-2">
-                Pro Plan Price ($)
+                Pro Plan Price (IQD)
               </label>
               <Input
                 type="number"
-                step="0.01"
                 value={settings.proPlanPrice}
                 onChange={(e) => setSettings({
                   ...settings,
-                  proPlanPrice: parseFloat(e.target.value) || 0
+                  proPlanPrice: parseInt(e.target.value) || 0
                 })}
               />
             </div>
