@@ -9,6 +9,7 @@ interface LanguageContextType {
   setLanguage: (lang: Language) => void
   t: (key: string) => string
   isRTL: boolean
+  isLoading: boolean
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
@@ -20,19 +21,34 @@ const translations = {
   ckb: () => import('@/locales/ckb/common.json').then(m => m.default),
 }
 
+// Pre-import English translations for faster initial load
+import enTranslations from '@/locales/en/common.json'
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>('en')
-  const [messages, setMessages] = useState<any>({})
+  const [messages, setMessages] = useState<any>(enTranslations)
+  const [isLoading, setIsLoading] = useState(false)
 
   // Load translations when language changes
   useEffect(() => {
     const loadTranslations = async () => {
+      // Skip loading for English since it's pre-loaded
+      if (language === 'en') {
+        setMessages(enTranslations)
+        return
+      }
+      
+      setIsLoading(true)
       try {
         const translationLoader = translations[language]
         const loadedMessages = await translationLoader()
         setMessages(loadedMessages)
       } catch (error) {
         console.error('Failed to load translations:', error)
+        // Fallback to English on error
+        setMessages(enTranslations)
+      } finally {
+        setIsLoading(false)
       }
     }
 
@@ -65,11 +81,19 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
   }, [language, isRTL])
 
+  // Mark document as ready when translations are loaded
+  useEffect(() => {
+    if (typeof document !== 'undefined' && Object.keys(messages).length > 0) {
+      document.documentElement.classList.add('ready')
+    }
+  }, [messages])
+
   const value = {
     language,
     setLanguage,
     t,
-    isRTL
+    isRTL,
+    isLoading
   }
 
   return (

@@ -20,6 +20,18 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                // Fallback to show content after 500ms if translations haven't loaded
+                setTimeout(function() {
+                  document.documentElement.classList.add('ready');
+                }, 500);
+              `,
+            }}
+          />
+        </head>
         <body className={inter.className}>
           <LanguageProvider>
             {children}

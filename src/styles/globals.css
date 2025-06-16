@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Prevent FOUC (Flash of Unstyled Content) */
+html {
+  visibility: hidden;
+  opacity: 0;
+}
+
+html.ready {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
