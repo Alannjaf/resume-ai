@@ -42,16 +42,20 @@ export async function POST(req: Request) {
 
   // Handle the webhook
   const eventType = evt.type
+  console.log('Webhook event type:', eventType)
 
   if (eventType === 'user.created' || eventType === 'user.updated') {
     const { id, email_addresses, first_name, last_name } = evt.data
+    console.log('Processing user event:', { id, email_addresses, first_name, last_name })
 
     const email = email_addresses[0]?.email_address
     if (!email) {
+      console.error('No email found in webhook payload')
       return new Response('No email found', { status: 400 })
     }
 
     try {
+      console.log('Attempting to upsert user:', { clerkId: id, email })
       const user = await prisma.user.upsert({
         where: { clerkId: id },
         update: {
@@ -64,26 +68,32 @@ export async function POST(req: Request) {
           name: `${first_name || ''} ${last_name || ''}`.trim() || null,
         },
       })
+      console.log('User upserted successfully:', user)
 
       // Create a free subscription for new users
       if (eventType === 'user.created') {
+        console.log('Creating subscription for new user')
         // Check if subscription already exists
         const existingSubscription = await prisma.subscription.findUnique({
           where: { userId: user.id }
         })
 
         if (!existingSubscription) {
-          await prisma.subscription.create({
+          const subscription = await prisma.subscription.create({
             data: {
               userId: user.id, // Use database user ID, not Clerk ID
               plan: 'FREE',
               status: 'ACTIVE',
             },
           })
+          console.log('Subscription created:', subscription)
+        } else {
+          console.log('Subscription already exists')
         }
       }
     } catch (error) {
       console.error('Error syncing user to database:', error)
+      console.error('Error details:', JSON.stringify(error, null, 2))
       return new Response('Error syncing user', { status: 500 })
     }
   }
