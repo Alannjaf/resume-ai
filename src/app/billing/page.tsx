@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { UserButton } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, Check, Clock, Crown, Star, CreditCard } from 'lucide-react'
+import { AppHeader } from '@/components/shared/AppHeader'
+import { Check, Clock, Crown, Star, CreditCard } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 interface Plan {
@@ -82,30 +82,12 @@ export default function BillingPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => router.push('/dashboard')}
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Dashboard
-              </Button>
-              <div className="flex items-center space-x-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                  <span className="text-sm font-bold">RA</span>
-                </div>
-                <span className="text-xl font-bold">ResumeAI</span>
-              </div>
-            </div>
-            <UserButton />
-          </div>
-        </div>
-      </header>
+      <AppHeader 
+        title="Subscription & Billing"
+        showBackButton={true}
+        backButtonText="Back to Dashboard"
+        backButtonHref="/dashboard"
+      />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

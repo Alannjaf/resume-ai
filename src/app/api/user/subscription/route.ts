@@ -68,17 +68,17 @@ export async function GET() {
     let resumesLimit, aiUsageLimit, exportLimit
     
     if (plan === 'FREE') {
-      resumesLimit = settings.maxFreeResumes || 10
-      aiUsageLimit = settings.maxFreeAIUsage || 100
-      exportLimit = settings.maxFreeExports || 20
+      resumesLimit = settings.maxFreeResumes !== null && settings.maxFreeResumes !== undefined ? settings.maxFreeResumes : 10
+      aiUsageLimit = settings.maxFreeAIUsage !== null && settings.maxFreeAIUsage !== undefined ? settings.maxFreeAIUsage : 100
+      exportLimit = settings.maxFreeExports !== null && settings.maxFreeExports !== undefined ? settings.maxFreeExports : 20
     } else if (plan === 'BASIC') {
-      resumesLimit = settings.maxBasicResumes || 50
-      aiUsageLimit = settings.maxBasicAIUsage || 500
-      exportLimit = settings.maxBasicExports || 100
+      resumesLimit = settings.maxBasicResumes !== null && settings.maxBasicResumes !== undefined ? settings.maxBasicResumes : 50
+      aiUsageLimit = settings.maxBasicAIUsage !== null && settings.maxBasicAIUsage !== undefined ? settings.maxBasicAIUsage : 500
+      exportLimit = settings.maxBasicExports !== null && settings.maxBasicExports !== undefined ? settings.maxBasicExports : 100
     } else { // PRO
-      resumesLimit = settings.maxProResumes || -1
-      aiUsageLimit = settings.maxProAIUsage || -1
-      exportLimit = settings.maxProExports || -1
+      resumesLimit = settings.maxProResumes !== null && settings.maxProResumes !== undefined ? settings.maxProResumes : -1
+      aiUsageLimit = settings.maxProAIUsage !== null && settings.maxProAIUsage !== undefined ? settings.maxProAIUsage : -1
+      exportLimit = settings.maxProExports !== null && settings.maxProExports !== undefined ? settings.maxProExports : -1
     }
     
     return NextResponse.json({

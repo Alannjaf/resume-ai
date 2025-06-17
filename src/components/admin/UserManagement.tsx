@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { AppHeader } from '@/components/shared/AppHeader'
 import { 
   Search, 
   RefreshCw, 
@@ -15,8 +16,7 @@ import {
   CreditCard,
   MoreVertical,
   Check,
-  X,
-  ArrowLeft
+  X
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
@@ -95,19 +95,15 @@ export function UserManagement() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <AppHeader 
+        title="User Management"
+        showBackButton={true}
+        backButtonText="Back to Admin Dashboard"
+        backButtonHref="/admin"
+      />
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => router.push('/admin')}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Admin Dashboard
-            </Button>
-          </div>
           <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
           <p className="text-gray-600 mt-2">Manage users and their subscriptions</p>
         </div>
