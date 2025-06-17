@@ -124,7 +124,7 @@ function ResumeBuilderContent() {
           toast.success('Resume data imported. You can now edit and save.')
           return
         } catch (error) {
-          console.error('Error parsing imported data:', error)
+          // Error parsing imported data
         }
       }
 

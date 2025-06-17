@@ -35,11 +35,8 @@ export default function Dashboard() {
         if (response.ok) {
           const data = await response.json()
           setResumes(data.resumes || [])
-        } else {
-          console.error('Failed to fetch resumes')
         }
       } catch (error) {
-        console.error('Error fetching resumes:', error)
       } finally {
         setIsLoading(false)
       }

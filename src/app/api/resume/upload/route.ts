@@ -65,9 +65,10 @@ export async function POST(request: NextRequest) {
         const dataUrl = `data:application/pdf;base64,${base64Pdf}`
 
         // Single API call approach - extract structured data directly
-        const messages = [
+        // Use 'any' type to bypass OpenAI SDK's strict typing for OpenRouter's file format
+        const messages: any = [
           {
-            role: 'system' as const,
+            role: 'system',
             content: `You are a resume data extractor. Your ONLY job is to read the PDF document provided and extract the REAL information from it.
 
 CRITICAL INSTRUCTIONS:
@@ -78,7 +79,7 @@ CRITICAL INSTRUCTIONS:
 - The PDF contains a real person's resume - extract their actual details`
           },
           {
-            role: 'user' as const,
+            role: 'user',
             content: [
               {
                 type: 'text',
@@ -125,12 +126,7 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
 
         const aiText = completion.choices[0]?.message?.content?.trim() || ''
         
-        // Debug: Log the raw AI response
-        console.log('=== SINGLE CALL AI RESPONSE ===')
-        console.log('Raw AI response:', aiText)
-        console.log('Response length:', aiText.length)
-        console.log('First 500 chars:', aiText.slice(0, 500))
-        console.log('================================')
+        // AI response received
         
         // Clean the response to ensure valid JSON
         let cleanedText = aiText
@@ -149,6 +145,22 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
         // Parse the JSON
         const aiData = JSON.parse(cleanedText) as any
 
+        // Helper function to convert date format from MM/YYYY to YYYY-MM
+        const convertDateFormat = (date: string): string => {
+          if (!date || date.trim() === '') return ''
+          
+          // Handle MM/YYYY format
+          if (date.includes('/') && date.length <= 7) {
+            const [month, year] = date.split('/')
+            if (month && year && month.length <= 2 && year.length === 4) {
+              return `${year}-${month.padStart(2, '0')}`
+            }
+          }
+          
+          // Return as-is if already in correct format or unrecognized
+          return date
+        }
+
         // Transform the data to match our ResumeData interface
         const transformedData: ResumeData = {
           personal: {
@@ -166,8 +178,8 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
             jobTitle: exp.title || exp.jobTitle || '',
             company: exp.company || '',
             location: exp.location || '',
-            startDate: exp.startDate || '',
-            endDate: exp.endDate || '',
+            startDate: convertDateFormat(exp.startDate || ''),
+            endDate: convertDateFormat(exp.endDate || ''),
             current: exp.endDate === 'Present' || exp.current || false,
             description: Array.isArray(exp.description) ? exp.description.join('\n• ') : (exp.description || ''),
           })),
@@ -177,8 +189,8 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
             field: edu.field || edu.major || '',
             school: edu.school || edu.university || '',
             location: edu.location || '',
-            startDate: edu.startDate || '',
-            endDate: edu.endDate || edu.graduationDate || '',
+            startDate: convertDateFormat(edu.startDate || ''),
+            endDate: convertDateFormat(edu.endDate || edu.graduationDate || ''),
             gpa: edu.gpa || '',
             achievements: edu.achievements || '',
           })),
@@ -187,11 +199,23 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
             name: typeof skill === 'string' ? skill : (skill.name || ''),
             level: typeof skill === 'object' ? (skill.level || '') : '',
           })),
-          languages: (aiData.languages || []).map((lang: any, index: number) => ({
-            id: lang.id || `lang_${index + 1}`,
-            name: lang.name || '',
-            proficiency: lang.proficiency || '',
-          })),
+          languages: (aiData.languages || []).map((lang: any, index: number) => {
+            if (typeof lang === 'string') {
+              // If language is a string, create object with name and default proficiency
+              return {
+                id: `lang_${index + 1}`,
+                name: lang,
+                proficiency: 'Fluent', // Default proficiency for simple string languages
+              }
+            } else {
+              // If language is already an object
+              return {
+                id: lang.id || `lang_${index + 1}`,
+                name: lang.name || '',
+                proficiency: lang.proficiency || '',
+              }
+            }
+          }),
           projects: (aiData.projects || []).map((proj: any, index: number) => ({
             id: proj.id || `proj_${index + 1}`,
             name: proj.name || '',
@@ -210,16 +234,10 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
         return NextResponse.json({
           success: true,
           data: transformedData,
-          extractedText: 'PDF processed with single API call',
-          debug: {
-            rawResponse: aiText.slice(0, 1000), // First 1000 chars for debugging
-            fileSize: buffer.length,
-            base64Length: base64Pdf.length,
-          }
+          extractedText: 'PDF processed with single API call'
         })
 
       } catch (pdfError: any) {
-        console.error('PDF AI processing failed:', pdfError)
         return NextResponse.json(
           { error: 'Failed to process PDF. Please try again or convert to DOCX format.' },
           { status: 400 }
@@ -304,8 +322,6 @@ Return valid JSON only, no explanations.`
         })
 
       } catch (aiError: any) {
-        console.error('AI extraction failed:', aiError)
-        
         // Return basic extraction if AI fails
         const basicData = ResumeParser.basicExtraction(await ResumeParser.extractText(buffer, file.type))
         return NextResponse.json({
@@ -318,7 +334,6 @@ Return valid JSON only, no explanations.`
     }
 
   } catch (error) {
-    console.error('Error processing resume:', error)
     return NextResponse.json(
       { error: 'Failed to process resume. Please try again.' },
       { status: 500 }

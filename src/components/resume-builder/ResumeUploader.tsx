@@ -86,7 +86,6 @@ export function ResumeUploader({ onUploadComplete, onCancel }: ResumeUploaderPro
       toast.success('Resume uploaded successfully!')
       onUploadComplete(result.data)
     } catch (error) {
-      console.error('Upload error:', error)
       toast.error(error instanceof Error ? error.message : 'Failed to upload resume')
     } finally {
       setIsUploading(false)
