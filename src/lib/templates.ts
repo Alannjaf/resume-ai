@@ -71,6 +71,15 @@ export const templates: Template[] = [
     category: 'modern',
     isPopular: true,
     isPremium: true
+  },
+  {
+    id: 'clean-modern',
+    name: 'Clean & Modern',
+    description: 'Professional sidebar layout with clean typography and blue accents',
+    preview: '/templates/clean-modern-preview.png',
+    category: 'professional',
+    isPopular: true,
+    isPremium: true
   }
 ]
 
