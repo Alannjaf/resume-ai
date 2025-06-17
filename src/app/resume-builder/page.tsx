@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { AppHeader } from '@/components/shared/AppHeader'
 import { ArrowLeft, ArrowRight, Save, Eye, Palette } from 'lucide-react'
 import { WorkExperienceForm } from '@/components/resume-builder/WorkExperienceForm'
 import { EducationForm } from '@/components/resume-builder/EducationForm'
@@ -104,9 +105,30 @@ function ResumeBuilderContent() {
     }
   }
 
-  // Load resume data if editing existing resume
+  // Load resume data if editing existing resume or importing
   useEffect(() => {
     const loadResume = async () => {
+      // Check for imported resume data first
+      const importedData = sessionStorage.getItem('importedResumeData')
+      const importedTitle = sessionStorage.getItem('importedResumeTitle')
+      
+      if (importedData && !searchParams.get('id')) {
+        try {
+          const parsedData = JSON.parse(importedData) as ResumeData
+          setFormData(parsedData)
+          setResumeTitle(importedTitle || 'Imported Resume')
+          
+          // Clear session storage
+          sessionStorage.removeItem('importedResumeData')
+          sessionStorage.removeItem('importedResumeTitle')
+          
+          toast.success('Resume data imported. You can now edit and save.')
+          return
+        } catch (error) {
+          // Error parsing imported data
+        }
+      }
+
       const id = searchParams.get('id')
       if (!id) return
 
@@ -185,38 +207,42 @@ function ResumeBuilderContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => router.push('/dashboard')}
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Dashboard
-              </Button>
-              <div className="flex items-center space-x-4">
-                <h1 className="text-xl font-semibold">Resume Builder</h1>
-                <input
-                  type="text"
-                  value={resumeTitle}
-                  onChange={(e) => setResumeTitle(e.target.value)}
-                  className="px-3 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-primary"
-                  placeholder="Resume Title"
-                />
-              </div>
+      <AppHeader 
+        title="Resume Builder"
+        showBackButton={true}
+        backButtonText="Back to Dashboard"
+        backButtonHref="/dashboard"
+      />
+      
+      {/* Resume Controls Section */}
+      <div className="bg-white border-b shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            {/* Resume Title */}
+            <div className="flex flex-col">
+              <label htmlFor="resume-title" className="text-sm font-medium text-gray-700 mb-1">
+                Resume Title
+              </label>
+              <input
+                id="resume-title"
+                type="text"
+                value={resumeTitle}
+                onChange={(e) => setResumeTitle(e.target.value)}
+                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                placeholder="Enter resume title"
+              />
             </div>
-            <div className="flex items-center space-x-2">
+            
+            {/* Action Buttons */}
+            <div className="flex items-center space-x-3">
               <Button 
-                variant="outline" 
+                variant="default" 
                 size="sm"
                 onClick={() => setShowTemplateGallery(true)}
+                className="bg-blue-600 hover:bg-blue-700"
               >
                 <Palette className="h-4 w-4 mr-2" />
-                {getTemplate(selectedTemplate)?.name || 'Template'}
+                Choose Template ({getTemplate(selectedTemplate)?.name || 'Modern'})
               </Button>
               <Button 
                 variant="outline" 
@@ -246,7 +272,7 @@ function ResumeBuilderContent() {
             </div>
           </div>
         </div>
-      </header>
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

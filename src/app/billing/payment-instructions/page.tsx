@@ -5,7 +5,8 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ArrowLeft, Copy, CheckCircle, Clock, Info, CreditCard } from 'lucide-react'
+import { AppHeader } from '@/components/shared/AppHeader'
+import { Copy, CheckCircle, Clock, Info, CreditCard } from 'lucide-react'
 import { useUser } from '@clerk/nextjs'
 
 interface Plan {
@@ -63,24 +64,16 @@ function PaymentInstructionsContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => router.push('/billing')}
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Billing
-            </Button>
-            <Badge variant="secondary">
-              Manual Payment
-            </Badge>
-          </div>
-        </div>
-      </header>
+      <AppHeader 
+        title="Payment Instructions"
+        showBackButton={true}
+        backButtonText="Back to Billing"
+        backButtonHref="/billing"
+      >
+        <Badge variant="secondary">
+          Manual Payment
+        </Badge>
+      </AppHeader>
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

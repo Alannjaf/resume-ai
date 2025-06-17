@@ -8,6 +8,7 @@ import { CreativeTemplate } from './CreativeTemplate'
 import { ExecutiveTemplate } from './ExecutiveTemplate'
 import { TechTemplate } from './TechTemplate'
 import { ModernYellowTemplate } from './ModernYellowTemplate'
+import { CleanModernTemplate } from './CleanModernTemplate'
 import type { ResumeData } from '@/types/resume'
 
 export type { ResumeData }
@@ -35,6 +36,8 @@ export function TemplateRenderer({ template, data, className = '' }: TemplateRen
         return <TechTemplate data={data} />
       case 'modern-yellow':
         return <ModernYellowTemplate data={data} />
+      case 'clean-modern':
+        return <CleanModernTemplate data={data} />
       default:
         return <ModernTemplate data={data} />
     }

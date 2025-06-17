@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "title": "ResumeAI - AI-Powered Resume Builder",
+    "title": "Works.krd - AI-Powered Resume Builder",
     "description": "Create professional resumes with AI assistance in multiple languages"
   },
   "nav": {
@@ -17,7 +17,7 @@
     "title": "Create Your Perfect Resume with AI",
     "subtitle": "Build professional resumes in minutes with our AI-powered platform. Stand out from the crowd and land your dream job.",
     "cta": {
-      "primary": "Get Started Free",
+      "primary": "Create Resume Now",
       "secondary": "View Templates"
     },
     "features": {

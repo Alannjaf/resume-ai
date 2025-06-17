@@ -94,9 +94,16 @@ export function TemplateGallery({
               /* Full Preview */
               <div className="h-full flex flex-col">
                 <div className="p-4 border-b flex justify-between items-center">
-                  <h3 className="font-semibold">
-                    {templates.find(t => t.id === previewTemplate)?.name} Preview
-                  </h3>
+                  <div className="flex items-center space-x-3">
+                    <h3 className="font-semibold">
+                      {templates.find(t => t.id === previewTemplate)?.name} Preview
+                    </h3>
+                    {currentTemplate === previewTemplate && (
+                      <Badge variant="outline" className="text-green-600 border-green-600">
+                        Currently Active
+                      </Badge>
+                    )}
+                  </div>
                   <div className="flex space-x-2">
                     <Button
                       variant="outline"
@@ -108,8 +115,8 @@ export function TemplateGallery({
                     <Button
                       size="sm"
                       onClick={() => {
-                        setSelectedTemplate(previewTemplate)
-                        handleSelectTemplate()
+                        onSelectTemplate(previewTemplate)
+                        onClose()
                       }}
                     >
                       Use This Template
@@ -134,15 +141,18 @@ export function TemplateGallery({
                     <Card 
                       key={template.id} 
                       className={`p-4 cursor-pointer transition-all hover:shadow-lg ${
-                        selectedTemplate === template.id ? 'ring-2 ring-primary' : ''
+                        currentTemplate === template.id 
+                          ? 'ring-2 ring-green-500 bg-green-50' 
+                          : selectedTemplate === template.id 
+                          ? 'ring-2 ring-primary bg-blue-50' 
+                          : 'hover:ring-1 hover:ring-gray-300'
                       }`}
                       onClick={() => {
-                        setSelectedTemplate(template.id)
                         onSelectTemplate(template.id)
                         onClose()
                       }}
                     >
-                      <div className="aspect-[3/4] bg-gray-100 rounded-md mb-3 overflow-hidden relative">
+                      <div className="aspect-[3/4] bg-gray-100 rounded-md mb-3 overflow-hidden relative group">
                         {/* Template Preview Thumbnail */}
                         <div className="transform scale-25 origin-top-left">
                           <TemplateRenderer 
@@ -151,12 +161,12 @@ export function TemplateGallery({
                           />
                         </div>
                         
-                        {/* Overlay */}
-                        <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 transition-all flex items-center justify-center">
+                        {/* Overlay - Now appears on entire card hover */}
+                        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center">
                           <Button
                             variant="secondary"
                             size="sm"
-                            className="opacity-0 hover:opacity-100 transition-opacity"
+                            className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 transform translate-y-2 group-hover:translate-y-0"
                             onClick={(e) => {
                               e.stopPropagation()
                               setPreviewTemplate(template.id)
@@ -165,6 +175,13 @@ export function TemplateGallery({
                             Full Preview
                           </Button>
                         </div>
+
+                        {/* Active Template Indicator */}
+                        {currentTemplate === template.id && (
+                          <div className="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                            Active
+                          </div>
+                        )}
                       </div>
 
                       <div className="space-y-2">

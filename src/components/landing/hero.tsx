@@ -57,14 +57,11 @@ export function Hero() {
             <SignedIn>
               <Link href="/dashboard">
                 <Button size="lg" className="text-base px-8 py-3 h-auto">
-                  {t('nav.dashboard')}
+                  {t('hero.cta.primary')}
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </SignedIn>
-            <Button variant="outline" size="lg" className="text-base px-8 py-3 h-auto">
-              {t('hero.cta.secondary')}
-            </Button>
           </div>
 
           {/* Social proof */}
@@ -81,41 +78,90 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Preview mockup */}
-        <div className="mt-16 max-w-5xl mx-auto">
-          <div className="relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl transform rotate-1 opacity-10"></div>
-            <div className="relative bg-white rounded-2xl shadow-2xl border p-8 sm:p-12">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                <div className="space-y-4">
-                  <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                  <div className="h-3 bg-gray-100 rounded w-full"></div>
-                  <div className="h-3 bg-gray-100 rounded w-5/6"></div>
-                  <div className="h-3 bg-gray-100 rounded w-4/5"></div>
-                  
-                  <div className="pt-4">
-                    <div className="h-3 bg-blue-200 rounded w-1/3 mb-2"></div>
-                    <div className="space-y-2">
-                      <div className="h-2 bg-gray-100 rounded w-full"></div>
-                      <div className="h-2 bg-gray-100 rounded w-4/5"></div>
+        {/* 3D Resume Preview */}
+        <div className="mt-16 max-w-6xl mx-auto perspective-1000">
+          <div className="flex flex-wrap justify-center items-center gap-8 -space-x-4">
+            {/* Resume Card 1 */}
+            <div className="relative transform rotate-12 hover:rotate-6 transition-transform duration-300">
+              <div className="w-64 h-80 bg-white rounded-lg shadow-2xl border border-gray-200 p-6 transform-gpu">
+                <div className="space-y-3">
+                  <div className="h-3 bg-blue-600 rounded w-2/3"></div>
+                  <div className="h-2 bg-gray-300 rounded w-1/2"></div>
+                  <div className="space-y-1 pt-2">
+                    <div className="h-1.5 bg-gray-200 rounded w-full"></div>
+                    <div className="h-1.5 bg-gray-200 rounded w-4/5"></div>
+                    <div className="h-1.5 bg-gray-200 rounded w-3/4"></div>
+                  </div>
+                  <div className="pt-3">
+                    <div className="h-2 bg-indigo-500 rounded w-1/3 mb-1"></div>
+                    <div className="space-y-1">
+                      <div className="h-1.5 bg-gray-200 rounded w-full"></div>
+                      <div className="h-1.5 bg-gray-200 rounded w-5/6"></div>
+                    </div>
+                  </div>
+                  <div className="pt-2">
+                    <div className="h-2 bg-green-500 rounded w-2/5 mb-1"></div>
+                    <div className="space-y-1">
+                      <div className="h-1.5 bg-gray-200 rounded w-full"></div>
+                      <div className="h-1.5 bg-gray-200 rounded w-3/4"></div>
                     </div>
                   </div>
                 </div>
-                
-                <div className="space-y-4">
-                  <div className="h-3 bg-blue-200 rounded w-1/2"></div>
-                  <div className="space-y-2">
-                    <div className="h-2 bg-gray-100 rounded w-full"></div>
-                    <div className="h-2 bg-gray-100 rounded w-3/4"></div>
-                    <div className="h-2 bg-gray-100 rounded w-5/6"></div>
+              </div>
+            </div>
+
+            {/* Resume Card 2 - Center */}
+            <div className="relative transform hover:scale-105 transition-transform duration-300 z-10">
+              <div className="w-64 h-80 bg-white rounded-lg shadow-2xl border border-gray-200 p-6 transform-gpu">
+                <div className="space-y-3">
+                  <div className="h-4 bg-purple-600 rounded w-3/4"></div>
+                  <div className="h-2 bg-gray-300 rounded w-1/2"></div>
+                  <div className="space-y-1 pt-2">
+                    <div className="h-1.5 bg-gray-200 rounded w-full"></div>
+                    <div className="h-1.5 bg-gray-200 rounded w-5/6"></div>
+                    <div className="h-1.5 bg-gray-200 rounded w-4/5"></div>
                   </div>
-                  
+                  <div className="pt-3">
+                    <div className="h-2 bg-orange-500 rounded w-2/5 mb-1"></div>
+                    <div className="space-y-1">
+                      <div className="h-1.5 bg-gray-200 rounded w-full"></div>
+                      <div className="h-1.5 bg-gray-200 rounded w-4/5"></div>
+                    </div>
+                  </div>
                   <div className="pt-2">
-                    <div className="h-3 bg-indigo-200 rounded w-2/5 mb-2"></div>
-                    <div className="space-y-2">
-                      <div className="h-2 bg-gray-100 rounded w-full"></div>
-                      <div className="h-2 bg-gray-100 rounded w-2/3"></div>
+                    <div className="h-2 bg-teal-500 rounded w-1/3 mb-1"></div>
+                    <div className="space-y-1">
+                      <div className="h-1.5 bg-gray-200 rounded w-full"></div>
+                      <div className="h-1.5 bg-gray-200 rounded w-2/3"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Resume Card 3 */}
+            <div className="relative transform -rotate-12 hover:-rotate-6 transition-transform duration-300">
+              <div className="w-64 h-80 bg-white rounded-lg shadow-2xl border border-gray-200 p-6 transform-gpu">
+                <div className="space-y-3">
+                  <div className="h-3 bg-red-600 rounded w-1/2"></div>
+                  <div className="h-2 bg-gray-300 rounded w-2/3"></div>
+                  <div className="space-y-1 pt-2">
+                    <div className="h-1.5 bg-gray-200 rounded w-full"></div>
+                    <div className="h-1.5 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-1.5 bg-gray-200 rounded w-5/6"></div>
+                  </div>
+                  <div className="pt-3">
+                    <div className="h-2 bg-pink-500 rounded w-1/4 mb-1"></div>
+                    <div className="space-y-1">
+                      <div className="h-1.5 bg-gray-200 rounded w-full"></div>
+                      <div className="h-1.5 bg-gray-200 rounded w-3/4"></div>
+                    </div>
+                  </div>
+                  <div className="pt-2">
+                    <div className="h-2 bg-cyan-500 rounded w-2/5 mb-1"></div>
+                    <div className="space-y-1">
+                      <div className="h-1.5 bg-gray-200 rounded w-full"></div>
+                      <div className="h-1.5 bg-gray-200 rounded w-4/5"></div>
                     </div>
                   </div>
                 </div>

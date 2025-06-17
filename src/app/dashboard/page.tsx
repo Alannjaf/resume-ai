@@ -1,12 +1,11 @@
 'use client'
 
-import { UserButton } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Plus, FileText, Settings, Edit, Trash2, Calendar, MoreVertical, Shield, ArrowLeft } from 'lucide-react'
+import { AppHeader } from '@/components/shared/AppHeader'
+import { Plus, FileText, Settings, Edit, Trash2, Calendar, Upload } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
-import { useAdmin } from '@/hooks/useAdmin'
 import toast from 'react-hot-toast'
 
 interface Resume {
@@ -25,7 +24,6 @@ export default function Dashboard() {
   const [resumes, setResumes] = useState<Resume[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [deletingId, setDeletingId] = useState<string | null>(null)
-  const { isAdmin } = useAdmin()
 
   // Fetch user's resumes
   useEffect(() => {
@@ -35,11 +33,8 @@ export default function Dashboard() {
         if (response.ok) {
           const data = await response.json()
           setResumes(data.resumes || [])
-        } else {
-          console.error('Failed to fetch resumes')
         }
       } catch (error) {
-        console.error('Error fetching resumes:', error)
       } finally {
         setIsLoading(false)
       }
@@ -124,47 +119,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => router.push('/')}
-                className="flex items-center gap-2"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Home
-              </Button>
-              <div 
-                className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity"
-                onClick={() => router.push('/')}
-              >
-                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                  <span className="text-sm font-bold">RA</span>
-                </div>
-                <span className="text-xl font-bold">ResumeAI</span>
-              </div>
-            </div>
-            <div className="flex items-center space-x-4">
-              {isAdmin && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => router.push('/admin')}
-                  className="flex items-center gap-2"
-                >
-                  <Shield className="h-4 w-4" />
-                  Admin
-                </Button>
-              )}
-              <UserButton />
-            </div>
-          </div>
-        </div>
-      </header>
+      <AppHeader title="Dashboard" />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -174,13 +129,22 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Button 
             className="h-32 flex flex-col items-center justify-center space-y-2"
             onClick={() => router.push('/resume-builder')}
           >
             <Plus className="h-8 w-8" />
             <span className="text-lg font-medium">Create New Resume</span>
+          </Button>
+
+          <Button 
+            variant="outline"
+            className="h-32 flex flex-col items-center justify-center space-y-2"
+            onClick={() => router.push('/resume-builder/import')}
+          >
+            <Upload className="h-8 w-8" />
+            <span className="text-lg font-medium">Import Resume</span>
           </Button>
           
           <Button variant="outline" className="h-32 flex flex-col items-center justify-center space-y-2">

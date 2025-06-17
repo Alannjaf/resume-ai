@@ -8,7 +8,7 @@ import '@/styles/globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'ResumeAI - Create Professional Resumes with AI',
+  title: 'Works.krd - Create Professional Resumes with AI',
   description: 'Build stunning resumes with AI assistance in multiple languages including Kurdish, Arabic, and English.',
 }
 

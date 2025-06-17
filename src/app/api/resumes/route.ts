@@ -21,7 +21,6 @@ export async function GET() {
     
     return NextResponse.json({ resumes })
   } catch (error) {
-    console.error('Error fetching resumes:', error)
     return NextResponse.json({ 
       error: 'Failed to fetch resumes' 
     }, { status: 500 })
@@ -44,6 +43,7 @@ export async function POST(req: Request) {
 
     const body = await req.json()
     const { title, formData, template } = body
+
 
     if (!title) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 })
@@ -134,7 +134,6 @@ export async function POST(req: Request) {
       message: 'Resume created successfully' 
     })
   } catch (error) {
-    console.error('Error creating resume:', error)
     return NextResponse.json({ 
       error: 'Failed to create resume' 
     }, { status: 500 })

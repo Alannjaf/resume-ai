@@ -4,14 +4,14 @@ import { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { AppHeader } from '@/components/shared/AppHeader'
 import { 
   Users, 
   FileText, 
   Settings, 
   DollarSign,
   Save,
-  RefreshCw,
-  ArrowLeft
+  RefreshCw
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
@@ -152,21 +152,17 @@ export function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <AppHeader 
+        title="Admin Dashboard"
+        showBackButton={true}
+        backButtonText="Back to Dashboard"
+        backButtonHref="/dashboard"
+      />
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => router.push('/dashboard')}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Dashboard
-            </Button>
-          </div>
           <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-gray-600 mt-2">Manage your ResumeAI platform</p>
+          <p className="text-gray-600 mt-2">Manage your Works.krd platform</p>
         </div>
 
         {/* Stats Grid */}
