@@ -3,7 +3,7 @@
 import { UserButton } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Plus, FileText, Settings, Edit, Trash2, Calendar, MoreVertical, Shield, ArrowLeft } from 'lucide-react'
+import { Plus, FileText, Settings, Edit, Trash2, Calendar, MoreVertical, Shield, ArrowLeft, Upload } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { useAdmin } from '@/hooks/useAdmin'
@@ -174,13 +174,22 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Button 
             className="h-32 flex flex-col items-center justify-center space-y-2"
             onClick={() => router.push('/resume-builder')}
           >
             <Plus className="h-8 w-8" />
             <span className="text-lg font-medium">Create New Resume</span>
+          </Button>
+
+          <Button 
+            variant="outline"
+            className="h-32 flex flex-col items-center justify-center space-y-2"
+            onClick={() => router.push('/resume-builder/import')}
+          >
+            <Upload className="h-8 w-8" />
+            <span className="text-lg font-medium">Import Resume</span>
           </Button>
           
           <Button variant="outline" className="h-32 flex flex-col items-center justify-center space-y-2">

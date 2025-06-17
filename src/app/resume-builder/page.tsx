@@ -104,9 +104,30 @@ function ResumeBuilderContent() {
     }
   }
 
-  // Load resume data if editing existing resume
+  // Load resume data if editing existing resume or importing
   useEffect(() => {
     const loadResume = async () => {
+      // Check for imported resume data first
+      const importedData = sessionStorage.getItem('importedResumeData')
+      const importedTitle = sessionStorage.getItem('importedResumeTitle')
+      
+      if (importedData && !searchParams.get('id')) {
+        try {
+          const parsedData = JSON.parse(importedData) as ResumeData
+          setFormData(parsedData)
+          setResumeTitle(importedTitle || 'Imported Resume')
+          
+          // Clear session storage
+          sessionStorage.removeItem('importedResumeData')
+          sessionStorage.removeItem('importedResumeTitle')
+          
+          toast.success('Resume data imported. You can now edit and save.')
+          return
+        } catch (error) {
+          console.error('Error parsing imported data:', error)
+        }
+      }
+
       const id = searchParams.get('id')
       if (!id) return
 
