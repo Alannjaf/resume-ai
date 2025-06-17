@@ -14,7 +14,7 @@ export function CleanModernTemplate({ data }: CleanModernTemplateProps) {
     return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
   }
 
-  const getSkillLevel = (level: string) => {
+  const getSkillLevel = (level: string | undefined) => {
     switch(level?.toLowerCase()) {
       case 'expert': 
       case 'native': 
