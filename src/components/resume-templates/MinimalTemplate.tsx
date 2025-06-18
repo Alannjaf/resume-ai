@@ -18,15 +18,30 @@ export function MinimalTemplate({ data }: MinimalTemplateProps) {
     <div className="max-w-4xl mx-auto bg-white p-8 shadow-lg" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-light text-gray-900 mb-3">
-          {data.personal.fullName || 'Your Name'}
-        </h1>
-        <div className="text-gray-600 text-sm space-y-1">
-          {data.personal.email && <div>{data.personal.email}</div>}
-          {data.personal.phone && <div>{data.personal.phone}</div>}
-          {data.personal.location && <div>{data.personal.location}</div>}
-          {data.personal.linkedin && <div>{data.personal.linkedin}</div>}
-          {data.personal.website && <div>{data.personal.website}</div>}
+        <div className="flex items-start gap-6">
+          <div className="flex-1">
+            <h1 className="text-2xl font-light text-gray-900 mb-3">
+              {data.personal.fullName || 'Your Name'}
+            </h1>
+            <div className="text-gray-600 text-sm space-y-1">
+              {data.personal.email && <div>{data.personal.email}</div>}
+              {data.personal.phone && <div>{data.personal.phone}</div>}
+              {data.personal.location && <div>{data.personal.location}</div>}
+              {data.personal.linkedin && <div>{data.personal.linkedin}</div>}
+              {data.personal.website && <div>{data.personal.website}</div>}
+            </div>
+          </div>
+          
+          {/* Profile Picture */}
+          {data.personal.profilePictureUrl && (
+            <div className="flex-shrink-0">
+              <img
+                src={data.personal.profilePictureUrl}
+                alt="Profile"
+                className="w-28 h-28 rounded-full object-cover border border-gray-300"
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -108,7 +123,7 @@ export function MinimalTemplate({ data }: MinimalTemplateProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Skills */}
         {data.skills.length > 0 && (
-          <div className="keep-together">
+          <div className="">
             <h2 className="text-sm font-medium text-gray-900 mb-3 uppercase tracking-wider">
               Skills
             </h2>
@@ -124,7 +139,7 @@ export function MinimalTemplate({ data }: MinimalTemplateProps) {
 
         {/* Languages */}
         {data.languages.length > 0 && (
-          <div className="keep-together">
+          <div className="">
             <h2 className="text-sm font-medium text-gray-900 mb-3 uppercase tracking-wider">
               Languages
             </h2>

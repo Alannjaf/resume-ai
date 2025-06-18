@@ -18,6 +18,17 @@ export function ClassicTemplate({ data }: ClassicTemplateProps) {
     <div className="max-w-4xl mx-auto bg-white p-8 shadow-lg" style={{ fontFamily: 'Times, serif' }}>
       {/* Header */}
       <div className="text-center border-b-2 border-gray-800 pb-4 mb-6">
+        {/* Profile Picture */}
+        {data.personal.profilePictureUrl && (
+          <div className="mb-4">
+            <img
+              src={data.personal.profilePictureUrl}
+              alt="Profile"
+              className="w-32 h-32 rounded-full object-cover border-4 border-gray-800 mx-auto"
+            />
+          </div>
+        )}
+        
         <h1 className="text-4xl font-bold text-gray-900 mb-3">
           {data.personal.fullName || 'Your Name'}
         </h1>
@@ -114,7 +125,7 @@ export function ClassicTemplate({ data }: ClassicTemplateProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Skills */}
         {data.skills.length > 0 && (
-          <div className="keep-together">
+          <div className="">
             <h2 className="text-lg font-bold text-gray-900 mb-3 uppercase tracking-wide border-b border-gray-400 pb-1">
               Skills
             </h2>
@@ -131,7 +142,7 @@ export function ClassicTemplate({ data }: ClassicTemplateProps) {
 
         {/* Languages */}
         {data.languages.length > 0 && (
-          <div className="keep-together">
+          <div className="">
             <h2 className="text-lg font-bold text-gray-900 mb-3 uppercase tracking-wide border-b border-gray-400 pb-1">
               Languages
             </h2>

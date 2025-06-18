@@ -17,42 +17,57 @@ export function ModernTemplate({ data }: ModernTemplateProps) {
   return (
     <div className="max-w-4xl mx-auto bg-white p-8 shadow-lg" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       {/* Header */}
-      <div className="border-b-2 border-blue-600 pb-6 mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          {data.personal.fullName || 'Your Name'}
-        </h1>
-        <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-          {data.personal.email && (
-            <span className="flex items-center">
-              📧 {data.personal.email}
-            </span>
-          )}
-          {data.personal.phone && (
-            <span className="flex items-center">
-              📞 {data.personal.phone}
-            </span>
-          )}
-          {data.personal.location && (
-            <span className="flex items-center">
-              📍 {data.personal.location}
-            </span>
-          )}
-          {data.personal.linkedin && (
-            <span className="flex items-center">
-              💼 {data.personal.linkedin}
-            </span>
-          )}
-          {data.personal.website && (
-            <span className="flex items-center">
-              🌐 {data.personal.website}
-            </span>
+      <div className="border-b-2 border-blue-600 pb-6 mb-6" >
+        <div className="flex items-start gap-6">
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {data.personal.fullName || 'Your Name'}
+            </h1>
+            <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+              {data.personal.email && (
+                <span className="flex items-center">
+                  📧 {data.personal.email}
+                </span>
+              )}
+              {data.personal.phone && (
+                <span className="flex items-center">
+                  📞 {data.personal.phone}
+                </span>
+              )}
+              {data.personal.location && (
+                <span className="flex items-center">
+                  📍 {data.personal.location}
+                </span>
+              )}
+              {data.personal.linkedin && (
+                <span className="flex items-center">
+                  💼 {data.personal.linkedin}
+                </span>
+              )}
+              {data.personal.website && (
+                <span className="flex items-center">
+                  🌐 {data.personal.website}
+                </span>
+              )}
+            </div>
+          </div>
+          
+          {/* Profile Picture */}
+          {data.personal.profilePictureUrl && (
+            <div className="flex-shrink-0">
+              <img
+                src={data.personal.profilePictureUrl}
+                alt="Profile"
+                className="w-24 h-24 rounded-full object-cover border-2 border-blue-600"
+              />
+            </div>
           )}
         </div>
       </div>
 
       {/* Professional Summary */}
       {data.summary && (
-        <div className="mb-6" data-section="summary">
+        <div className="mb-6  " >
           <h2 className="text-xl font-semibold text-blue-600 mb-3 border-b border-gray-200 pb-1">
             Professional Summary
           </h2>
@@ -62,13 +77,13 @@ export function ModernTemplate({ data }: ModernTemplateProps) {
 
       {/* Work Experience */}
       {data.experience.length > 0 && (
-        <div className="mb-8" data-section="experience">
+        <div className="mb-8" >
           <h2 className="text-xl font-semibold text-blue-600 mb-4 border-b border-gray-200 pb-1">
             Work Experience
           </h2>
           <div className="space-y-6">
             {data.experience.map((exp, index) => (
-              <div key={index} className="border-l-2 border-blue-100 pl-4 mb-6" data-section="experience-item">
+              <div key={index} className="border-l-2 border-blue-100 pl-4 mb-6">
                 <div className="flex justify-between items-start mb-1">
                   <h3 className="font-semibold text-gray-900">{exp.jobTitle}</h3>
                   <span className="text-sm text-gray-500 whitespace-nowrap ml-4">
@@ -93,13 +108,13 @@ export function ModernTemplate({ data }: ModernTemplateProps) {
 
       {/* Education */}
       {data.education.length > 0 && (
-        <div className="mb-8" data-section="education">
+        <div className="mb-8" >
           <h2 className="text-xl font-semibold text-blue-600 mb-4 border-b border-gray-200 pb-1">
             Education
           </h2>
           <div className="space-y-4">
             {data.education.map((edu, index) => (
-              <div key={index} className="border-l-2 border-blue-100 pl-4 mb-4" data-section="education-item">
+              <div key={index} className="border-l-2 border-blue-100 pl-4 mb-4">
                 <div className="flex justify-between items-start mb-1">
                   <h3 className="font-semibold text-gray-900">
                     {edu.degree} {edu.field && `in ${edu.field}`}
@@ -127,10 +142,10 @@ export function ModernTemplate({ data }: ModernTemplateProps) {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
         {/* Skills */}
         {data.skills.length > 0 && (
-          <div data-section="skills" className="keep-together">
+          <div  className=" ">
             <h2 className="text-xl font-semibold text-blue-600 mb-3 border-b border-gray-200 pb-1">
               Skills
             </h2>
@@ -149,7 +164,7 @@ export function ModernTemplate({ data }: ModernTemplateProps) {
 
         {/* Languages */}
         {data.languages.length > 0 && (
-          <div data-section="languages" className="keep-together">
+          <div  className="">
             <h2 className="text-xl font-semibold text-blue-600 mb-3 border-b border-gray-200 pb-1">
               Languages
             </h2>

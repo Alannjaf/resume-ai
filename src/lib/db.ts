@@ -116,6 +116,7 @@ export async function updateResume(
     personalInfo?: any
     summary?: string
     template?: string
+    profilePictureUrl?: string
   }
 ) {
   const resume = await prisma.resume.update({

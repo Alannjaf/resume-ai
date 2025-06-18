@@ -79,7 +79,10 @@ export async function PUT(
       title: title || existingResume.title,
       template: template || existingResume.template,
       personalInfo: formData?.personal || existingResume.personalInfo,
-      summary: formData?.summary || existingResume.summary
+      summary: formData?.summary || existingResume.summary,
+      profilePictureUrl: formData?.personal?.profilePictureUrl !== undefined 
+        ? formData.personal.profilePictureUrl 
+        : existingResume.profilePictureUrl
     })
 
     // Update sections if provided

@@ -65,7 +65,8 @@ export async function POST(req: Request) {
       const { updateResume } = await import('@/lib/db')
       await updateResume(resume.id, user.id, {
         personalInfo: formData.personal,
-        summary: formData.summary
+        summary: formData.summary,
+        profilePictureUrl: formData.personal?.profilePictureUrl || null
       })
 
       // Update sections if provided

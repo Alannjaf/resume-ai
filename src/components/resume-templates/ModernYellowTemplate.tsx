@@ -24,6 +24,23 @@ export function ModernYellowTemplate({ data }: ModernYellowTemplateProps) {
     }
   }
 
+  const getLatestJobTitle = () => {
+    if (!data.experience || data.experience.length === 0) return ''
+    
+    // First check for current job
+    const currentJob = data.experience.find(exp => exp.current)
+    if (currentJob) return currentJob.jobTitle
+    
+    // If no current job, find the most recent by end date
+    const sortedByEndDate = [...data.experience].sort((a, b) => {
+      const dateA = new Date(a.endDate + '-01')
+      const dateB = new Date(b.endDate + '-01')
+      return dateB.getTime() - dateA.getTime()
+    })
+    
+    return sortedByEndDate[0]?.jobTitle || ''
+  }
+
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-lg overflow-hidden modern-yellow-template" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       <div className="flex min-h-screen">
@@ -31,11 +48,22 @@ export function ModernYellowTemplate({ data }: ModernYellowTemplateProps) {
         <div className="w-1/3 bg-gray-800 text-white p-8">
           {/* Profile Header */}
           <div className="mb-8 text-center">
+            {/* Profile Picture */}
+            {data.personal.profilePictureUrl && (
+              <div className="mb-4">
+                <img
+                  src={data.personal.profilePictureUrl}
+                  alt="Profile"
+                  className="w-40 h-40 rounded-full object-cover border-4 border-yellow-400 mx-auto"
+                />
+              </div>
+            )}
+            
             <h1 className="text-3xl font-bold text-yellow-400 mb-2">
               {data.personal.fullName || 'Your Name'}
             </h1>
             <p className="text-gray-300 text-lg">
-              {data.personal.title || 'Your Title'}
+              {data.personal.title || getLatestJobTitle() || 'Your Title'}
             </p>
           </div>
 
@@ -79,7 +107,7 @@ export function ModernYellowTemplate({ data }: ModernYellowTemplateProps) {
 
           {/* Skills Section */}
           {data.skills.length > 0 && (
-            <div className="mb-8 keep-together">
+            <div className="mb-8">
               <div className="flex items-center mb-4">
                 <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center mr-3">
                   <span className="text-gray-800 text-sm">💡</span>
@@ -106,7 +134,7 @@ export function ModernYellowTemplate({ data }: ModernYellowTemplateProps) {
 
           {/* Languages Section */}
           {data.languages.length > 0 && (
-            <div className="keep-together">
+            <div className="">
               <div className="flex items-center mb-4">
                 <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center mr-3">
                   <span className="text-gray-800 text-sm">🌐</span>
@@ -155,7 +183,7 @@ export function ModernYellowTemplate({ data }: ModernYellowTemplateProps) {
               
               <div className="space-y-6">
                 {data.experience.map((exp, index) => (
-                  <div key={index} className="relative pl-6 keep-together">
+                  <div key={index} className="relative pl-6">
                     <div className="absolute left-0 top-2 w-3 h-3 bg-yellow-400 rounded-full"></div>
                     <div className="absolute left-1.5 top-6 w-0.5 h-full bg-gray-300"></div>
                     
@@ -180,7 +208,7 @@ export function ModernYellowTemplate({ data }: ModernYellowTemplateProps) {
 
           {/* Education Section */}
           {data.education.length > 0 && (
-            <div className="mb-8 page-break-before">
+            <div className="mb-8">
               <div className="flex items-center mb-4">
                 <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center mr-3">
                   <span className="text-gray-800 text-sm">🎓</span>
@@ -191,7 +219,7 @@ export function ModernYellowTemplate({ data }: ModernYellowTemplateProps) {
               
               <div className="space-y-4">
                 {data.education.map((edu, index) => (
-                  <div key={index} className="keep-together">
+                  <div key={index} className="">
                     <h3 className="text-lg font-bold text-gray-800">
                       {edu.degree} {edu.field && `in ${edu.field}`}
                     </h3>
@@ -223,7 +251,7 @@ export function ModernYellowTemplate({ data }: ModernYellowTemplateProps) {
               
               <div className="space-y-4">
                 {data.projects.map((project: any, index: number) => (
-                  <div key={index} className="keep-together">
+                  <div key={index} className="">
                     <h3 className="font-bold text-gray-800 mb-2">{project.name}</h3>
                     {project.description && (
                       <p className="text-gray-700 mb-2 italic">{project.description}</p>

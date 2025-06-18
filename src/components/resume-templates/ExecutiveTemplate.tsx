@@ -14,44 +14,76 @@ export function ExecutiveTemplate({ data }: ExecutiveTemplateProps) {
     return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
   }
 
+  const getLatestJobTitle = () => {
+    if (!data.experience || data.experience.length === 0) return ''
+    
+    // First check for current job
+    const currentJob = data.experience.find(exp => exp.current)
+    if (currentJob) return currentJob.jobTitle
+    
+    // If no current job, find the most recent by end date
+    const sortedByEndDate = [...data.experience].sort((a, b) => {
+      const dateA = new Date(a.endDate + '-01')
+      const dateB = new Date(b.endDate + '-01')
+      return dateB.getTime() - dateA.getTime()
+    })
+    
+    return sortedByEndDate[0]?.jobTitle || ''
+  }
+
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-xl executive-template" style={{ fontFamily: 'Garamond, Georgia, serif' }}>
       {/* Executive Header with Navy Blue accent */}
       <div className="bg-gradient-to-r from-slate-800 to-slate-700 text-white p-10">
-        <h1 className="text-5xl font-light mb-4 tracking-wide">
-          {data.personal.fullName || 'Executive Name'}
-        </h1>
-        <div className="h-0.5 w-24 bg-amber-400 mb-4"></div>
-        
-        {data.personal.title && (
-          <p className="text-xl font-light text-slate-200 mb-6 tracking-wide">
-            {data.personal.title}
-          </p>
-        )}
-        
-        <div className="flex flex-wrap gap-6 text-sm">
-          {data.personal.email && (
-            <div className="flex items-center gap-2">
-              <span className="text-amber-400">✉</span>
-              <span>{data.personal.email}</span>
+        <div className="flex items-start gap-8">
+          <div className="flex-1">
+            <h1 className="text-5xl font-light mb-4 tracking-wide">
+              {data.personal.fullName || 'Executive Name'}
+            </h1>
+            <div className="h-0.5 w-24 bg-amber-400 mb-4"></div>
+            
+            {(data.personal.title || getLatestJobTitle()) && (
+              <p className="text-xl font-light text-slate-200 mb-6 tracking-wide">
+                {data.personal.title || getLatestJobTitle()}
+              </p>
+            )}
+            
+            <div className="flex flex-wrap gap-6 text-sm">
+              {data.personal.email && (
+                <div className="flex items-center gap-2">
+                  <span className="text-amber-400">✉</span>
+                  <span>{data.personal.email}</span>
+                </div>
+              )}
+              {data.personal.phone && (
+                <div className="flex items-center gap-2">
+                  <span className="text-amber-400">☎</span>
+                  <span>{data.personal.phone}</span>
+                </div>
+              )}
+              {data.personal.location && (
+                <div className="flex items-center gap-2">
+                  <span className="text-amber-400">📍</span>
+                  <span>{data.personal.location}</span>
+                </div>
+              )}
+              {data.personal.linkedin && (
+                <div className="flex items-center gap-2">
+                  <span className="text-amber-400">in</span>
+                  <span>{data.personal.linkedin}</span>
+                </div>
+              )}
             </div>
-          )}
-          {data.personal.phone && (
-            <div className="flex items-center gap-2">
-              <span className="text-amber-400">☎</span>
-              <span>{data.personal.phone}</span>
-            </div>
-          )}
-          {data.personal.location && (
-            <div className="flex items-center gap-2">
-              <span className="text-amber-400">📍</span>
-              <span>{data.personal.location}</span>
-            </div>
-          )}
-          {data.personal.linkedin && (
-            <div className="flex items-center gap-2">
-              <span className="text-amber-400">in</span>
-              <span>{data.personal.linkedin}</span>
+          </div>
+          
+          {/* Profile Picture */}
+          {data.personal.profilePictureUrl && (
+            <div className="flex-shrink-0">
+              <img
+                src={data.personal.profilePictureUrl}
+                alt="Profile"
+                className="w-32 h-32 rounded-full object-cover border-4 border-amber-400"
+              />
             </div>
           )}
         </div>
@@ -62,7 +94,7 @@ export function ExecutiveTemplate({ data }: ExecutiveTemplateProps) {
         {/* Executive Summary */}
         {data.summary && (
           <>
-            <div className="mb-16 pb-8" data-section="summary">
+            <div className="mb-16 pb-8">
               <h2 className="text-2xl font-light text-slate-800 mb-6 flex items-center">
                 <span className="text-amber-500 mr-3">▸</span>
                 Executive Summary
@@ -79,7 +111,7 @@ export function ExecutiveTemplate({ data }: ExecutiveTemplateProps) {
         {/* Professional Experience */}
         {data.experience.length > 0 && (
           <>
-            <div className="mb-16 pb-8" data-section="experience">
+            <div className="mb-16 pb-8">
               <h2 className="text-2xl font-light text-slate-800 mb-8 flex items-center">
                 <span className="text-amber-500 mr-3">▸</span>
                 Professional Experience
@@ -88,7 +120,7 @@ export function ExecutiveTemplate({ data }: ExecutiveTemplateProps) {
                 {data.experience.map((exp, index) => (
                   <React.Fragment key={index}>
                     
-                    <div className="relative mb-12 pb-8 border-b border-slate-200 last:border-b-0" data-section="experience-item">
+                    <div className="relative mb-12 pb-8 border-b border-slate-200 last:border-b-0">
                       <div className="absolute -left-8 top-1 w-2 h-2 bg-amber-500 rounded-full"></div>
                       
                       <div className="mb-4">
@@ -126,7 +158,7 @@ export function ExecutiveTemplate({ data }: ExecutiveTemplateProps) {
         {/* Education */}
         {data.education.length > 0 && (
           <>
-            <div className="mb-16 pb-8" data-section="education">
+            <div className="mb-16 pb-8">
               <h2 className="text-2xl font-light text-slate-800 mb-8 flex items-center">
                 <span className="text-amber-500 mr-3">▸</span>
                 Education
@@ -135,7 +167,7 @@ export function ExecutiveTemplate({ data }: ExecutiveTemplateProps) {
                 {data.education.map((edu, index) => (
                   <React.Fragment key={index}>
                     
-                    <div className="relative mb-10 pb-6 border-b border-slate-200 last:border-b-0" data-section="education-item">
+                    <div className="relative mb-10 pb-6 border-b border-slate-200 last:border-b-0">
                       <div className="absolute -left-8 top-1 w-2 h-2 bg-amber-500 rounded-full"></div>
                       
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
@@ -176,7 +208,7 @@ export function ExecutiveTemplate({ data }: ExecutiveTemplateProps) {
         {/* Skills Section - Executive Style */}
         {data.skills.length > 0 && (
           <>
-            <div className="mb-16 pb-8 keep-together" data-section="skills">
+            <div className="mb-16 pb-8">
               <h2 className="text-2xl font-light text-slate-800 mb-8 flex items-center">
                 <span className="text-amber-500 mr-3">▸</span>
                 Core Competencies
@@ -203,7 +235,7 @@ export function ExecutiveTemplate({ data }: ExecutiveTemplateProps) {
         {/* Languages */}
         {data.languages.length > 0 && (
           <>
-            <div className="mb-16 pb-8 keep-together" data-section="languages">
+            <div className="mb-16 pb-8">
               <h2 className="text-2xl font-light text-slate-800 mb-8 flex items-center">
                 <span className="text-amber-500 mr-3">▸</span>
                 Languages
@@ -228,7 +260,7 @@ export function ExecutiveTemplate({ data }: ExecutiveTemplateProps) {
         {/* Additional Sections */}
         {data.certifications && data.certifications.length > 0 && (
           <>
-            <div className="mb-16 pb-8" data-section="certifications">
+            <div className="mb-16 pb-8">
               <h2 className="text-2xl font-light text-slate-800 mb-8 flex items-center">
                 <span className="text-amber-500 mr-3">▸</span>
                 Professional Certifications
@@ -251,7 +283,7 @@ export function ExecutiveTemplate({ data }: ExecutiveTemplateProps) {
 
         {data.projects && data.projects.length > 0 && (
           <>
-            <div className="mb-16 pb-8" data-section="projects">
+            <div className="mb-16 pb-8">
               <h2 className="text-2xl font-light text-slate-800 mb-8 flex items-center">
                 <span className="text-amber-500 mr-3">▸</span>
                 Key Projects

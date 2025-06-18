@@ -12,6 +12,7 @@ import { EducationForm } from '@/components/resume-builder/EducationForm'
 import { SkillsForm } from '@/components/resume-builder/SkillsForm'
 import { LanguagesForm } from '@/components/resume-builder/LanguagesForm'
 import { PreviewModal } from '@/components/resume-builder/PreviewModal'
+import { ProfilePictureUploader } from '@/components/resume-builder/ProfilePictureUploader'
 import { TemplateGallery } from '@/components/resume-templates/TemplateGallery'
 import { AIProfessionalSummary } from '@/components/ai/AIProfessionalSummary'
 import { getTemplate } from '@/lib/templates'
@@ -39,9 +40,12 @@ function ResumeBuilderContent() {
   const [isLoading, setIsLoading] = useState(false)
   const [resumeId, setResumeId] = useState<string | null>(null)
   const [resumeTitle, setResumeTitle] = useState('My Resume')
+  const [isProUser, setIsProUser] = useState(false)
+  const [profilePictureUrl, setProfilePictureUrl] = useState<string | null>(null)
   const [formData, setFormData] = useState<ResumeData>({
     personal: {
       fullName: '',
+      title: '',
       email: '',
       phone: '',
       location: '',
@@ -65,6 +69,22 @@ function ResumeBuilderContent() {
     if (currentSection > 0) {
       setCurrentSection(currentSection - 1)
     }
+  }
+
+  const handleProfilePictureUpdate = (url: string | null) => {
+    setProfilePictureUrl(url)
+    setFormData({
+      ...formData,
+      personal: {
+        ...formData.personal,
+        profilePictureUrl: url || undefined
+      }
+    })
+  }
+
+  const handleUpgradeClick = () => {
+    // Navigate to billing page
+    router.push('/billing')
   }
 
   const handleSave = async () => {
@@ -104,6 +124,26 @@ function ResumeBuilderContent() {
       setIsSaving(false)
     }
   }
+
+  // Load subscription status
+  useEffect(() => {
+    const checkSubscription = async () => {
+      try {
+        const response = await fetch('/api/user/subscription')
+        if (response.ok) {
+          const data = await response.json()
+          console.log('Subscription data:', data) // Debug log
+          setIsProUser(data.currentPlan === 'PRO')
+        } else {
+          console.error('Subscription API error:', response.status)
+        }
+      } catch (error) {
+        console.error('Failed to check subscription:', error)
+      }
+    }
+    
+    checkSubscription()
+  }, [])
 
   // Load resume data if editing existing resume or importing
   useEffect(() => {
@@ -145,10 +185,15 @@ function ResumeBuilderContent() {
         setResumeId(resume.id)
         setResumeTitle(resume.title)
         setSelectedTemplate(resume.template || 'modern')
+        setProfilePictureUrl(resume.profilePictureUrl || null)
         
         // Ensure all items have IDs
         const formDataWithIds: ResumeData = {
           ...resume.formData,
+          personal: {
+            ...resume.formData.personal,
+            profilePictureUrl: resume.profilePictureUrl || undefined
+          },
           experience: resume.formData.experience.map((exp: any) => ({
             ...exp,
             id: exp.id || Date.now().toString() + Math.random().toString(36).substr(2, 9)
@@ -310,7 +355,18 @@ function ResumeBuilderContent() {
 
               {/* Personal Information Section */}
               {currentSection === 0 && (
-                <div className="space-y-4">
+                <div className="space-y-6">
+                  {/* Profile Picture Section */}
+                  {resumeId && (
+                    <ProfilePictureUploader
+                      resumeId={resumeId}
+                      currentProfilePicture={profilePictureUrl || formData.personal.profilePictureUrl}
+                      onProfilePictureUpdate={handleProfilePictureUpdate}
+                      isProUser={isProUser}
+                      onUpgradeClick={handleUpgradeClick}
+                    />
+                  )}
+                  
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">
@@ -325,6 +381,24 @@ function ResumeBuilderContent() {
                             personal: {
                               ...formData.personal,
                               fullName: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        Professional Title
+                      </label>
+                      <Input
+                        placeholder="Software Engineer"
+                        value={formData.personal.title || ''}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            personal: {
+                              ...formData.personal,
+                              title: e.target.value,
                             },
                           })
                         }

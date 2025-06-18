@@ -58,6 +58,7 @@ export interface PersonalInfo {
   linkedin: string
   website: string
   title?: string
+  profilePictureUrl?: string
 }
 
 export interface ResumeData {

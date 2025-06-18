@@ -20,6 +20,17 @@ export function CreativeTemplate({ data }: CreativeTemplateProps) {
         {/* Left Sidebar */}
         <div className="w-1/3 bg-gradient-to-b from-purple-600 to-purple-800 text-white p-6">
           <div className="mb-8">
+            {/* Profile Picture */}
+            {data.personal.profilePictureUrl && (
+              <div className="mb-6 text-center">
+                <img
+                  src={data.personal.profilePictureUrl}
+                  alt="Profile"
+                  className="w-32 h-32 rounded-full object-cover border-4 border-yellow-400 mx-auto"
+                />
+              </div>
+            )}
+            
             <h1 className="text-2xl font-bold mb-2">
               {data.personal.fullName || 'Your Name'}
             </h1>
@@ -60,7 +71,7 @@ export function CreativeTemplate({ data }: CreativeTemplateProps) {
 
           {/* Skills */}
           {data.skills.length > 0 && (
-            <div className="mb-8 keep-together">
+            <div className="mb-8">
               <h2 className="text-lg font-bold mb-4">Skills</h2>
               <div className="space-y-3">
                 {data.skills.map((skill, index) => (
@@ -87,7 +98,7 @@ export function CreativeTemplate({ data }: CreativeTemplateProps) {
 
           {/* Languages */}
           {data.languages.length > 0 && (
-            <div className="keep-together">
+            <div>
               <h2 className="text-lg font-bold mb-4">Languages</h2>
               <div className="space-y-2">
                 {data.languages.map((lang, index) => (
@@ -136,7 +147,7 @@ export function CreativeTemplate({ data }: CreativeTemplateProps) {
               </h2>
               <div className="space-y-4">
                 {data.experience.map((exp, index) => (
-                  <div key={index} className="relative pl-4 border-l-2 border-purple-200">
+                  <div key={index} className="relative pl-4 border-l-2 border-purple-200 mb-4">
                     <div className="absolute -left-2 top-0 w-4 h-4 bg-purple-600 rounded-full"></div>
                     <div className="mb-1">
                       <h3 className="font-bold text-gray-900">{exp.jobTitle}</h3>
@@ -169,7 +180,7 @@ export function CreativeTemplate({ data }: CreativeTemplateProps) {
               </h2>
               <div className="space-y-3">
                 {data.education.map((edu, index) => (
-                  <div key={index} className="relative pl-4 border-l-2 border-purple-200">
+                  <div key={index} className="relative pl-4 border-l-2 border-purple-200 mb-3">
                     <div className="absolute -left-2 top-0 w-4 h-4 bg-purple-600 rounded-full"></div>
                     <h3 className="font-bold text-gray-900">
                       {edu.degree} {edu.field && `in ${edu.field}`}

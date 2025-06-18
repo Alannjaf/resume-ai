@@ -14,6 +14,23 @@ export function TechTemplate({ data }: TechTemplateProps) {
     return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
   }
 
+  const getLatestJobTitle = () => {
+    if (!data.experience || data.experience.length === 0) return ''
+    
+    // First check for current job
+    const currentJob = data.experience.find(exp => exp.current)
+    if (currentJob) return currentJob.jobTitle
+    
+    // If no current job, find the most recent by end date
+    const sortedByEndDate = [...data.experience].sort((a, b) => {
+      const dateA = new Date(a.endDate + '-01')
+      const dateB = new Date(b.endDate + '-01')
+      return dateB.getTime() - dateA.getTime()
+    })
+    
+    return sortedByEndDate[0]?.jobTitle || ''
+  }
+
   return (
     <div className="max-w-4xl mx-auto bg-white tech-template" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
       {/* Tech Header with Terminal-style design */}
@@ -27,39 +44,52 @@ export function TechTemplate({ data }: TechTemplateProps) {
           <span className="text-xs text-gray-400 font-mono">resume.js</span>
         </div>
         
-        <div className="font-mono">
-          <div className="text-green-400 text-sm mb-2">// Full Stack Developer</div>
-          <h1 className="text-4xl font-bold mb-4">
-            <span className="text-cyan-400">const</span> name = <span className="text-yellow-400">"{data.personal.fullName || 'Your Name'}"</span>;
-          </h1>
-          
-          <div className="space-y-1 text-sm">
-            {data.personal.email && (
-              <div>
-                <span className="text-purple-400">email:</span> <span className="text-green-400">"{data.personal.email}"</span>
-              </div>
-            )}
-            {data.personal.phone && (
-              <div>
-                <span className="text-purple-400">phone:</span> <span className="text-green-400">"{data.personal.phone}"</span>
-              </div>
-            )}
-            {data.personal.location && (
-              <div>
-                <span className="text-purple-400">location:</span> <span className="text-green-400">"{data.personal.location}"</span>
-              </div>
-            )}
-            {data.personal.linkedin && (
-              <div>
-                <span className="text-purple-400">linkedin:</span> <span className="text-blue-400">"{data.personal.linkedin}"</span>
-              </div>
-            )}
-            {data.personal.website && (
-              <div>
-                <span className="text-purple-400">portfolio:</span> <span className="text-blue-400">"{data.personal.website}"</span>
-              </div>
-            )}
+        <div className="flex items-center gap-6">
+          <div className="font-mono flex-1">
+            <div className="text-green-400 text-sm mb-2">// {data.personal.title || getLatestJobTitle() || 'Developer'}</div>
+            <h1 className="text-4xl font-bold mb-4">
+              <span className="text-cyan-400">const</span> name = <span className="text-yellow-400">"{data.personal.fullName || 'Your Name'}"</span>;
+            </h1>
+            
+            <div className="space-y-1 text-sm">
+              {data.personal.email && (
+                <div>
+                  <span className="text-purple-400">email:</span> <span className="text-green-400">"{data.personal.email}"</span>
+                </div>
+              )}
+              {data.personal.phone && (
+                <div>
+                  <span className="text-purple-400">phone:</span> <span className="text-green-400">"{data.personal.phone}"</span>
+                </div>
+              )}
+              {data.personal.location && (
+                <div>
+                  <span className="text-purple-400">location:</span> <span className="text-green-400">"{data.personal.location}"</span>
+                </div>
+              )}
+              {data.personal.linkedin && (
+                <div>
+                  <span className="text-purple-400">linkedin:</span> <span className="text-blue-400">"{data.personal.linkedin}"</span>
+                </div>
+              )}
+              {data.personal.website && (
+                <div>
+                  <span className="text-purple-400">portfolio:</span> <span className="text-blue-400">"{data.personal.website}"</span>
+                </div>
+              )}
+            </div>
           </div>
+          
+          {/* Profile Picture */}
+          {data.personal.profilePictureUrl && (
+            <div className="flex-shrink-0 flex items-center">
+              <img
+                src={data.personal.profilePictureUrl}
+                alt="Profile"
+                className="w-32 h-32 rounded-lg object-cover border-2 border-green-400"
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -68,7 +98,7 @@ export function TechTemplate({ data }: TechTemplateProps) {
         {/* Summary */}
         {data.summary && (
           <>
-            <div className="mb-12 pb-8" data-section="summary">
+            <div className="mb-12 pb-8" >
               <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
                 <span className="text-cyan-600 mr-2 font-mono">&lt;</span>
                 About
@@ -84,7 +114,7 @@ export function TechTemplate({ data }: TechTemplateProps) {
         {/* Technical Skills - Featured Section */}
         {data.skills.length > 0 && (
           <>
-            <div className="mb-12 pb-8 keep-together" data-section="skills">
+            <div className="mb-12 pb-8 " >
               <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
                 <span className="text-cyan-600 mr-2 font-mono">&lt;</span>
                 Tech Stack
@@ -118,7 +148,7 @@ export function TechTemplate({ data }: TechTemplateProps) {
         {/* Work Experience */}
         {data.experience.length > 0 && (
           <>
-            <div className="mb-12 pb-8" data-section="experience">
+            <div className="mb-12 pb-8" >
               <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
                 <span className="text-cyan-600 mr-2 font-mono">&lt;</span>
                 Experience
@@ -128,7 +158,7 @@ export function TechTemplate({ data }: TechTemplateProps) {
                 {data.experience.map((exp, index) => (
                   <React.Fragment key={index}>
                     
-                    <div className="border-l-2 border-gray-300 pl-6 relative mb-10 pb-8 border-b border-gray-100 last:border-b-0" data-section="experience-item">
+                    <div className="border-l-2 border-gray-300 pl-6 relative mb-10 pb-8 border-b border-gray-100 last:border-b-0" >
                       <div className="absolute -left-2 top-0 w-4 h-4 bg-cyan-600 rounded-full"></div>
                       
                       <div className="mb-3">
@@ -174,7 +204,7 @@ export function TechTemplate({ data }: TechTemplateProps) {
         {/* Projects Section */}
         {data.projects && data.projects.length > 0 && (
           <>
-            <div className="mb-12 pb-8" data-section="projects">
+            <div className="mb-12 pb-8" >
               <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
                 <span className="text-cyan-600 mr-2 font-mono">&lt;</span>
                 Projects
@@ -211,7 +241,7 @@ export function TechTemplate({ data }: TechTemplateProps) {
         {/* Education */}
         {data.education.length > 0 && (
           <>
-            <div className="mb-12 pb-8" data-section="education">
+            <div className="mb-12 pb-8" >
               <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
                 <span className="text-cyan-600 mr-2 font-mono">&lt;</span>
                 Education
@@ -221,7 +251,7 @@ export function TechTemplate({ data }: TechTemplateProps) {
                 {data.education.map((edu, index) => (
                   <React.Fragment key={index}>
                     
-                    <div className="bg-gray-50 p-6 rounded-lg mb-6 last:mb-0" data-section="education-item">
+                    <div className="bg-gray-50 p-6 rounded-lg mb-6 last:mb-0" >
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
                         <div>
                           <h3 className="font-bold text-gray-800 text-lg">
@@ -259,7 +289,7 @@ export function TechTemplate({ data }: TechTemplateProps) {
         {/* Certifications */}
         {data.certifications && data.certifications.length > 0 && (
           <>
-            <div className="mb-12 pb-8" data-section="certifications">
+            <div className="mb-12 pb-8" >
               <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
                 <span className="text-cyan-600 mr-2 font-mono">&lt;</span>
                 Certifications
@@ -285,7 +315,7 @@ export function TechTemplate({ data }: TechTemplateProps) {
         {/* Languages */}
         {data.languages.length > 0 && (
           <>
-            <div className="mb-12 pb-8 keep-together" data-section="languages">
+            <div className="mb-12 pb-8 " >
               <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
                 <span className="text-cyan-600 mr-2 font-mono">&lt;</span>
                 Languages
