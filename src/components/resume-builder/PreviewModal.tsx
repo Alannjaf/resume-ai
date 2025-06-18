@@ -18,6 +18,138 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
 
   if (!isOpen) return null
 
+  const identifyResumeGroups = (previewElement: HTMLElement) => {
+    const groups: Array<{ type: string; element: HTMLElement }> = []
+    
+    // 1. Personal Info Group
+    const personalInfoSelectors = [
+      'header', // Common header tag
+      '[data-section="personal"]', // Data attribute
+      '.personal-info', // Class-based
+      // Template-specific selectors
+      '.text-center.mb-8', // Classic template header
+      '.bg-gradient-to-r', // Executive/Creative templates with gradient headers
+      '.bg-gray-900', // Tech template header
+      '.border-b-2.border-blue-600', // Modern template header (border-bottom)
+      '.border-l-4.border-blue-600' // Other templates with border-left
+    ]
+    
+    for (const selector of personalInfoSelectors) {
+      const personalInfo = previewElement.querySelector(selector) as HTMLElement
+      if (personalInfo && personalInfo.textContent?.includes(data.personal?.fullName)) {
+        groups.push({ type: 'Personal Info', element: personalInfo })
+        break
+      }
+    }
+    
+    // 2. Experience Items (each experience as separate group, but NOT the entire section)
+    const experienceSection = previewElement.querySelector('[data-section="experience"]') || 
+                            previewElement.querySelector('.experience-section') ||
+                            Array.from(previewElement.querySelectorAll('h2')).find(h => 
+                              h.textContent?.toLowerCase().includes('experience') || 
+                              h.textContent?.toLowerCase().includes('تجربه') ||
+                              h.textContent?.toLowerCase().includes('خبرة')
+                            )?.parentElement
+    
+    if (experienceSection) {
+      // Find individual experience items only (don't group the entire section)
+      const experienceItems = experienceSection.querySelectorAll('[data-section="experience-item"]') ||
+                             experienceSection.querySelectorAll('.space-y-4 > div, .space-y-6 > div')
+      
+      experienceItems.forEach((item) => {
+        const element = item as HTMLElement
+        // Verify it's an experience item by checking for job title or company
+        if (element.textContent?.match(/\d{4}/) || // Contains year
+            element.querySelector('h3, .font-semibold, .text-lg')) { // Has title structure
+          groups.push({ type: 'Experience Item', element })
+        }
+      })
+    }
+    
+    // 3. Education Items (each education as separate group, but NOT the entire section)
+    const educationSection = previewElement.querySelector('[data-section="education"]') ||
+                            previewElement.querySelector('.education-section') ||
+                            Array.from(previewElement.querySelectorAll('h2')).find(h => 
+                              h.textContent?.toLowerCase().includes('education') || 
+                              h.textContent?.toLowerCase().includes('خوێندن') ||
+                              h.textContent?.toLowerCase().includes('تعليم')
+                            )?.parentElement
+    
+    if (educationSection) {
+      // Find individual education items only (don't group the entire section)
+      const educationItems = educationSection.querySelectorAll('[data-section="education-item"]') ||
+                            educationSection.querySelectorAll('.space-y-4 > div, .space-y-6 > div')
+      
+      educationItems.forEach((item) => {
+        const element = item as HTMLElement
+        // Verify it's an education item
+        if (element.textContent?.match(/\d{4}/) || // Contains year
+            element.querySelector('h3, .font-semibold, .text-lg')) { // Has title structure
+          groups.push({ type: 'Education Item', element })
+        }
+      })
+    }
+    
+    // 4. Skills Group
+    const skillsSection = previewElement.querySelector('[data-section="skills"]') ||
+                         previewElement.querySelector('.skills-section') ||
+                         Array.from(previewElement.querySelectorAll('h2')).find(h => 
+                           h.textContent?.toLowerCase().includes('skill') || 
+                           h.textContent?.toLowerCase().includes('لێهاتوویی') ||
+                           h.textContent?.toLowerCase().includes('مهارات')
+                         )?.parentElement
+    
+    if (skillsSection) {
+      groups.push({ type: 'Skills', element: skillsSection as HTMLElement })
+    }
+    
+    // 5. Languages Group
+    const languagesSection = previewElement.querySelector('[data-section="languages"]') ||
+                           previewElement.querySelector('.languages-section') ||
+                           Array.from(previewElement.querySelectorAll('h2')).find(h => 
+                             h.textContent?.toLowerCase().includes('language') || 
+                             h.textContent?.toLowerCase().includes('زمان') ||
+                             h.textContent?.toLowerCase().includes('لغات')
+                           )?.parentElement
+    
+    if (languagesSection) {
+      groups.push({ type: 'Languages', element: languagesSection as HTMLElement })
+    }
+    
+    // Check if Skills and Languages are in a grid container
+    // For Modern template, they're often in a grid together
+    const gridContainer = previewElement.querySelector('.grid.grid-cols-1.md\\:grid-cols-2') ||
+                         previewElement.querySelector('.grid.grid-cols-2') ||
+                         previewElement.querySelector('.grid')
+    
+    if (gridContainer && (skillsSection || languagesSection)) {
+      // Check if this grid contains skills/languages
+      const containsSkillsOrLangs = gridContainer.contains(skillsSection as Node) || 
+                                   gridContainer.contains(languagesSection as Node)
+      
+      if (containsSkillsOrLangs) {
+        // Add the entire grid as a group to keep skills and languages together
+        groups.push({ type: 'Skills & Languages Grid', element: gridContainer as HTMLElement })
+      }
+    }
+    
+    // 6. Summary/About Group (if exists)
+    const summarySection = previewElement.querySelector('[data-section="summary"]') ||
+                          previewElement.querySelector('.summary-section') ||
+                          Array.from(previewElement.querySelectorAll('h2')).find(h => 
+                            h.textContent?.toLowerCase().includes('summary') || 
+                            h.textContent?.toLowerCase().includes('about') ||
+                            h.textContent?.toLowerCase().includes('پوختە') ||
+                            h.textContent?.toLowerCase().includes('ملخص')
+                          )?.parentElement
+    
+    if (summarySection) {
+      groups.push({ type: 'Summary', element: summarySection as HTMLElement })
+    }
+    
+    return groups
+  }
+
   const generatePDF = async () => {
     setIsGenerating(true)
     try {
@@ -28,6 +160,62 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       if (!previewElement) {
         throw new Error('Preview element not found')
       }
+      
+      // Identify all resume groups
+      const groups = identifyResumeGroups(previewElement)
+      
+      // Console log the groups for verification
+      console.log('=== Resume Groups Identified ===')
+      console.log(`Total groups found: ${groups.length}`)
+      groups.forEach((group, index) => {
+        console.log(`${index + 1}. ${group.type}:`, {
+          element: group.element,
+          text: group.element.textContent?.substring(0, 100) + '...',
+          height: group.element.offsetHeight + 'px',
+          classes: group.element.className,
+          computedStyle: {
+            marginBottom: window.getComputedStyle(group.element).marginBottom,
+            paddingBottom: window.getComputedStyle(group.element).paddingBottom,
+            pageBreakAfter: window.getComputedStyle(group.element).pageBreakAfter,
+            pageBreakBefore: window.getComputedStyle(group.element).pageBreakBefore
+          }
+        })
+      })
+      console.log('==============================')
+      
+      // Find experience section to check its positioning
+      const experienceSection = groups.find(g => g.type === 'Experience Item' || g.type.includes('Experience'))
+      if (experienceSection) {
+        console.log('Experience Section Analysis:', {
+          offsetTop: (experienceSection.element as any).offsetTop,
+          parentOffsetTop: experienceSection.element.parentElement?.offsetTop,
+          boundingRect: experienceSection.element.getBoundingClientRect()
+        })
+      }
+      
+      // Add page-break-inside: avoid to each group to prevent text cutoff
+      const modifiedGroups: Array<{element: HTMLElement, originalPageBreakInside: string, originalBreakInside: string}> = []
+      
+      groups.forEach((group) => {
+        const originalPageBreakInside = group.element.style.pageBreakInside
+        const originalBreakInside = group.element.style.breakInside
+        
+        // Apply page break avoidance
+        group.element.style.pageBreakInside = 'avoid'
+        group.element.style.breakInside = 'avoid'
+        
+        // Store for later restoration
+        modifiedGroups.push({
+          element: group.element,
+          originalPageBreakInside,
+          originalBreakInside
+        })
+        
+        // Add a class for html2pdf to recognize
+        group.element.classList.add('pdf-no-break')
+      })
+      
+      // Continue with PDF generation after applying page break rules
 
       // Check if this is Executive, Tech, or Modern Yellow template and reduce spacing temporarily
       const isExecutive = template === 'executive'
@@ -113,9 +301,10 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
         }
       }
 
+
       // Configure html2pdf options
       const options = {
-        margin: 0,
+        margin: [10, 10, 10, 10], // Add small margins to prevent content from being too close to edges
         filename: `${data.personal?.fullName?.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_') || 'Resume'}_Resume.pdf`,
         image: { 
           type: 'jpeg', 
@@ -126,17 +315,22 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
-          logging: false
+          logging: false,
+          windowHeight: previewElement.scrollHeight // Capture full height
         },
         jsPDF: { 
           unit: 'mm', 
           format: 'a4', 
-          orientation: 'portrait'
+          orientation: 'portrait',
+          compress: true
         },
         pagebreak: { 
-          mode: ['avoid-all', 'css'],
-          avoid: ['.keep-together']
-        }
+          mode: ['css', 'legacy'],
+          avoid: ['.keep-together', '.pdf-no-break', '.grid'],
+          before: '.page-break-before',
+          after: '.page-break-after'
+        },
+        enableLinks: false // Disable links to prevent layout issues
       }
 
       // Generate and download PDF
@@ -149,6 +343,13 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
         } else {
           (element.style as any)[property] = ''
         }
+      })
+      
+      // Restore group styles and remove added classes
+      modifiedGroups.forEach(({element, originalPageBreakInside, originalBreakInside}) => {
+        element.style.pageBreakInside = originalPageBreakInside || ''
+        element.style.breakInside = originalBreakInside || ''
+        element.classList.remove('pdf-no-break')
       })
       
       toast.success('Resume exported as PDF successfully!', {

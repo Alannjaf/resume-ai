@@ -98,6 +98,9 @@ cat .env.local
 - For auth issues, check .env.local has correct Clerk keys
 - Always restart dev server after environment changes
 
+## 💡 Development Workflow Memories
+- I always run the server and run the build in my windows cmd
+
 ---
 
 **Remember:** Always check PROJECT_STATUS.md for the most current todo list and progress!

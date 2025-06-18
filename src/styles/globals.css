@@ -106,6 +106,11 @@ html {
   break-inside: avoid;
 }
 
+.pdf-no-break {
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+}
+
 .page-break-before {
   page-break-before: always;
   break-before: page;
@@ -118,6 +123,37 @@ html {
 
 /* PDF-specific spacing adjustments for Executive and Tech templates */
 @media print {
+  /* Ensure PDF page break rules are applied */
+  .pdf-no-break {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  
+  .keep-together {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  
+  /* Grid containers should not break */
+  .grid {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  
+  /* Modern template specific adjustments */
+  [data-section="summary"] {
+    page-break-after: avoid !important;
+  }
+  
+  [data-section="experience"]:first-of-type {
+    page-break-before: avoid !important;
+  }
+  
+  /* Prevent orphaned headers */
+  h2 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
   /* Executive Template - Reduce large margins and padding */
   .executive-template .mb-16 {
     margin-bottom: 1.5rem !important;
