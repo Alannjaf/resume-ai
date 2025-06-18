@@ -86,16 +86,12 @@ export function ExecutiveTemplate({ data }: ExecutiveTemplateProps) {
               </h2>
               <div className="pl-8">
                 {data.experience.map((exp, index) => (
-                  <React.Fragment key={index}>
-                    
-                    <div className="relative mb-12 pb-8 border-b border-slate-200 last:border-b-0" data-section="experience-item">
-                      <div className="absolute -left-8 top-1 w-2 h-2 bg-amber-500 rounded-full"></div>
-                      
-                      <div className="mb-4">
-                        <h3 className="text-xl font-semibold text-slate-800 mb-2">
-                          {exp.jobTitle}
+                    <div key={index} className="mb-6 pb-4 border-b border-slate-200 last:border-b-0 keep-together" data-section="experience-item">
+                      <div className="mb-3">
+                        <h3 className="text-xl font-semibold text-slate-800 mb-1">
+                          <span className="text-amber-500 mr-2">▸</span>{exp.jobTitle}
                         </h3>
-                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
                           <p className="text-lg text-slate-600">
                             {exp.company} {exp.location && `• ${exp.location}`}
                           </p>
@@ -106,17 +102,13 @@ export function ExecutiveTemplate({ data }: ExecutiveTemplateProps) {
                       </div>
                       
                       {exp.description && (
-                        <div className="mt-4 space-y-3">
+                        <div className="text-gray-700 leading-relaxed">
                           {exp.description.split('\n').map((line, i) => (
-                            <div key={i} className="flex items-start">
-                              <span className="text-amber-500 mr-3 mt-1">•</span>
-                              <p className="text-gray-700 flex-1 leading-relaxed">{line}</p>
-                            </div>
+                            <p key={i} className="mb-1">• {line}</p>
                           ))}
                         </div>
                       )}
                     </div>
-                  </React.Fragment>
                 ))}
               </div>
             </div>
@@ -133,15 +125,11 @@ export function ExecutiveTemplate({ data }: ExecutiveTemplateProps) {
               </h2>
               <div className="pl-8">
                 {data.education.map((edu, index) => (
-                  <React.Fragment key={index}>
-                    
-                    <div className="relative mb-10 pb-6 border-b border-slate-200 last:border-b-0" data-section="education-item">
-                      <div className="absolute -left-8 top-1 w-2 h-2 bg-amber-500 rounded-full"></div>
-                      
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
+                    <div key={index} className="mb-4 pb-3 border-b border-slate-200 last:border-b-0 keep-together" data-section="education-item">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
                         <div>
                           <h3 className="text-lg font-semibold text-slate-800 mb-1">
-                            {edu.degree} {edu.field && `in ${edu.field}`}
+                            <span className="text-amber-500 mr-2">▸</span>{edu.degree} {edu.field && `in ${edu.field}`}
                           </h3>
                           <p className="text-slate-600">
                             {edu.school} {edu.location && `• ${edu.location}`}
@@ -156,17 +144,13 @@ export function ExecutiveTemplate({ data }: ExecutiveTemplateProps) {
                       </div>
                       
                       {edu.achievements && (
-                        <div className="mt-3 space-y-2">
+                        <div className="mt-2 text-gray-600">
                           {edu.achievements.split('\n').map((achievement, i) => (
-                            <div key={i} className="flex items-start">
-                              <span className="text-amber-500 mr-3 mt-1">•</span>
-                              <p className="text-gray-600 flex-1">{achievement}</p>
-                            </div>
+                            <p key={i} className="mb-1">• {achievement}</p>
                           ))}
                         </div>
                       )}
                     </div>
-                  </React.Fragment>
                 ))}
               </div>
             </div>

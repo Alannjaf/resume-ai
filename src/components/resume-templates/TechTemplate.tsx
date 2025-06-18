@@ -126,16 +126,13 @@ export function TechTemplate({ data }: TechTemplateProps) {
               </h2>
               <div>
                 {data.experience.map((exp, index) => (
-                  <React.Fragment key={index}>
-                    
-                    <div className="border-l-2 border-gray-300 pl-6 relative mb-10 pb-8 border-b border-gray-100 last:border-b-0" data-section="experience-item">
-                      <div className="absolute -left-2 top-0 w-4 h-4 bg-cyan-600 rounded-full"></div>
-                      
+                    <div key={index} className="mb-6 pb-4 border-b border-gray-200 last:border-b-0 keep-together" data-section="experience-item">
                       <div className="mb-3">
-                        <h3 className="text-xl font-bold text-gray-800 mb-1">
+                        <h3 className="text-xl font-bold text-gray-800 mb-1 flex items-center">
+                          <span className="w-3 h-3 bg-cyan-600 rounded-full mr-2"></span>
                           {exp.jobTitle}
                         </h3>
-                        <div className="flex flex-wrap gap-4 text-gray-600 text-sm font-mono mb-2">
+                        <div className="flex flex-wrap gap-4 text-gray-600 text-sm font-mono mb-2 ml-5">
                           <span className="flex items-center gap-1">
                             <span className="text-cyan-600">@</span>
                             {exp.company}
@@ -154,17 +151,13 @@ export function TechTemplate({ data }: TechTemplateProps) {
                       </div>
                       
                       {exp.description && (
-                        <div className="space-y-2 mt-4">
+                        <div className="ml-5 text-gray-700">
                           {exp.description.split('\n').map((line, i) => (
-                            <div key={i} className="flex items-start">
-                              <span className="text-cyan-600 mr-2 font-mono mt-1">▸</span>
-                              <p className="text-gray-700 flex-1">{line}</p>
-                            </div>
+                            <p key={i} className="mb-1">▸ {line}</p>
                           ))}
                         </div>
                       )}
                     </div>
-                  </React.Fragment>
                 ))}
               </div>
             </div>
@@ -219,10 +212,8 @@ export function TechTemplate({ data }: TechTemplateProps) {
               </h2>
               <div>
                 {data.education.map((edu, index) => (
-                  <React.Fragment key={index}>
-                    
-                    <div className="bg-gray-50 p-6 rounded-lg mb-6 last:mb-0" data-section="education-item">
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 mb-3">
+                    <div key={index} className="bg-gray-50 p-4 rounded-lg mb-4 last:mb-0 keep-together" data-section="education-item">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-2">
                         <div>
                           <h3 className="font-bold text-gray-800 text-lg">
                             {edu.degree} {edu.field && `in ${edu.field}`}
@@ -239,17 +230,13 @@ export function TechTemplate({ data }: TechTemplateProps) {
                         </span>
                       </div>
                       {edu.achievements && (
-                        <div className="space-y-1">
+                        <div className="text-sm text-gray-600">
                           {edu.achievements.split('\n').map((achievement, i) => (
-                            <p key={i} className="text-sm text-gray-600 flex items-start">
-                              <span className="text-cyan-600 mr-2">▸</span>
-                              {achievement}
-                            </p>
+                            <p key={i} className="mb-1">▸ {achievement}</p>
                           ))}
                         </div>
                       )}
                     </div>
-                  </React.Fragment>
                 ))}
               </div>
             </div>

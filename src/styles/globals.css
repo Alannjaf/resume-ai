@@ -97,18 +97,20 @@ html {
 
 /* PDF Export Page Break Control */
 .keep-together {
-  page-break-inside: avoid;
-  break-inside: avoid;
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  display: block !important;
 }
 
 .no-break {
-  page-break-inside: avoid;
-  break-inside: avoid;
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
 }
 
 .pdf-no-break {
   page-break-inside: avoid !important;
   break-inside: avoid !important;
+  display: block !important;
 }
 
 .page-break-before {
@@ -127,11 +129,28 @@ html {
   .pdf-no-break {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+    display: block !important;
   }
   
   .keep-together {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+    display: block !important;
+  }
+  
+  /* Experience and education items must never break */
+  [data-section="experience-item"] {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    display: block !important;
+    position: relative !important;
+  }
+  
+  [data-section="education-item"] {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    display: block !important;
+    position: relative !important;
   }
   
   /* Grid containers should not break */
@@ -151,6 +170,17 @@ html {
   
   /* Prevent orphaned headers */
   h2 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+  
+  /* Force all flex containers to be block for PDF */
+  .flex {
+    display: block !important;
+  }
+  
+  /* Ensure job titles and company info stay together */
+  h3 {
     page-break-after: avoid !important;
     break-after: avoid !important;
   }

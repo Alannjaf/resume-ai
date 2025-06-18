@@ -36,7 +36,7 @@ export function ClassicTemplate({ data }: ClassicTemplateProps) {
 
       {/* Professional Summary */}
       {data.summary && (
-        <div className="mb-6">
+        <div className="mb-6" data-section="summary">
           <h2 className="text-lg font-bold text-gray-900 mb-3 uppercase tracking-wide border-b border-gray-400 pb-1">
             Professional Summary
           </h2>
@@ -46,13 +46,13 @@ export function ClassicTemplate({ data }: ClassicTemplateProps) {
 
       {/* Work Experience */}
       {data.experience.length > 0 && (
-        <div className="mb-6">
+        <div className="mb-6" data-section="experience">
           <h2 className="text-lg font-bold text-gray-900 mb-4 uppercase tracking-wide border-b border-gray-400 pb-1">
             Professional Experience
           </h2>
           <div className="space-y-4">
             {data.experience.map((exp, index) => (
-              <div key={index}>
+              <div key={index} className="keep-together" data-section="experience-item">
                 <div className="flex justify-between items-baseline mb-1">
                   <h3 className="font-bold text-gray-900 text-base">{exp.jobTitle}</h3>
                   <span className="text-sm text-gray-600 italic">
@@ -77,13 +77,13 @@ export function ClassicTemplate({ data }: ClassicTemplateProps) {
 
       {/* Education */}
       {data.education.length > 0 && (
-        <div className="mb-6">
+        <div className="mb-6" data-section="education">
           <h2 className="text-lg font-bold text-gray-900 mb-4 uppercase tracking-wide border-b border-gray-400 pb-1">
             Education
           </h2>
           <div className="space-y-3">
             {data.education.map((edu, index) => (
-              <div key={index}>
+              <div key={index} className="keep-together" data-section="education-item">
                 <div className="flex justify-between items-baseline mb-1">
                   <h3 className="font-bold text-gray-900">
                     {edu.degree} {edu.field && `in ${edu.field}`}
@@ -114,7 +114,7 @@ export function ClassicTemplate({ data }: ClassicTemplateProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Skills */}
         {data.skills.length > 0 && (
-          <div className="keep-together">
+          <div className="keep-together" data-section="skills">
             <h2 className="text-lg font-bold text-gray-900 mb-3 uppercase tracking-wide border-b border-gray-400 pb-1">
               Skills
             </h2>
@@ -131,7 +131,7 @@ export function ClassicTemplate({ data }: ClassicTemplateProps) {
 
         {/* Languages */}
         {data.languages.length > 0 && (
-          <div className="keep-together">
+          <div className="keep-together" data-section="languages">
             <h2 className="text-lg font-bold text-gray-900 mb-3 uppercase tracking-wide border-b border-gray-400 pb-1">
               Languages
             </h2>

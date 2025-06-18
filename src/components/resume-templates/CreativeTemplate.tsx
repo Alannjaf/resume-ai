@@ -60,7 +60,7 @@ export function CreativeTemplate({ data }: CreativeTemplateProps) {
 
           {/* Skills */}
           {data.skills.length > 0 && (
-            <div className="mb-8 keep-together">
+            <div className="mb-8 keep-together" data-section="skills">
               <h2 className="text-lg font-bold mb-4">Skills</h2>
               <div className="space-y-3">
                 {data.skills.map((skill, index) => (
@@ -87,7 +87,7 @@ export function CreativeTemplate({ data }: CreativeTemplateProps) {
 
           {/* Languages */}
           {data.languages.length > 0 && (
-            <div className="keep-together">
+            <div className="keep-together" data-section="languages">
               <h2 className="text-lg font-bold mb-4">Languages</h2>
               <div className="space-y-2">
                 {data.languages.map((lang, index) => (
@@ -118,7 +118,7 @@ export function CreativeTemplate({ data }: CreativeTemplateProps) {
         <div className="w-2/3 p-6">
           {/* Professional Summary */}
           {data.summary && (
-            <div className="mb-6">
+            <div className="mb-6" data-section="summary">
               <h2 className="text-xl font-bold text-purple-600 mb-3 flex items-center">
                 <div className="w-4 h-4 bg-yellow-400 rounded-full mr-3"></div>
                 About Me
@@ -129,26 +129,28 @@ export function CreativeTemplate({ data }: CreativeTemplateProps) {
 
           {/* Work Experience */}
           {data.experience.length > 0 && (
-            <div className="mb-6">
+            <div className="mb-6" data-section="experience">
               <h2 className="text-xl font-bold text-purple-600 mb-4 flex items-center">
                 <div className="w-4 h-4 bg-yellow-400 rounded-full mr-3"></div>
                 Experience
               </h2>
               <div className="space-y-4">
                 {data.experience.map((exp, index) => (
-                  <div key={index} className="relative pl-4 border-l-2 border-purple-200">
-                    <div className="absolute -left-2 top-0 w-4 h-4 bg-purple-600 rounded-full"></div>
-                    <div className="mb-1">
-                      <h3 className="font-bold text-gray-900">{exp.jobTitle}</h3>
-                      <div className="text-purple-600 font-semibold">
+                  <div key={index} className="mb-4 pb-3 border-b border-purple-200 last:border-b-0 keep-together" data-section="experience-item">
+                    <div className="mb-2">
+                      <h3 className="font-bold text-gray-900 flex items-center">
+                        <div className="w-3 h-3 bg-purple-600 rounded-full mr-2"></div>
+                        {exp.jobTitle}
+                      </h3>
+                      <div className="text-purple-600 font-semibold ml-5">
                         {exp.company} {exp.location && `• ${exp.location}`}
                       </div>
-                      <div className="text-gray-500 text-sm">
+                      <div className="text-gray-500 text-sm ml-5">
                         {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
                       </div>
                     </div>
                     {exp.description && (
-                      <div className="text-gray-700 text-sm">
+                      <div className="text-gray-700 text-sm ml-5">
                         {exp.description.split('\n').map((line, i) => (
                           <p key={i} className="mb-1">• {line}</p>
                         ))}
@@ -162,29 +164,29 @@ export function CreativeTemplate({ data }: CreativeTemplateProps) {
 
           {/* Education */}
           {data.education.length > 0 && (
-            <div>
+            <div data-section="education">
               <h2 className="text-xl font-bold text-purple-600 mb-4 flex items-center">
                 <div className="w-4 h-4 bg-yellow-400 rounded-full mr-3"></div>
                 Education
               </h2>
               <div className="space-y-3">
                 {data.education.map((edu, index) => (
-                  <div key={index} className="relative pl-4 border-l-2 border-purple-200">
-                    <div className="absolute -left-2 top-0 w-4 h-4 bg-purple-600 rounded-full"></div>
-                    <h3 className="font-bold text-gray-900">
+                  <div key={index} className="mb-3 pb-2 border-b border-purple-200 last:border-b-0 keep-together" data-section="education-item">
+                    <h3 className="font-bold text-gray-900 flex items-center">
+                      <div className="w-3 h-3 bg-purple-600 rounded-full mr-2"></div>
                       {edu.degree} {edu.field && `in ${edu.field}`}
                     </h3>
-                    <div className="text-purple-600 font-semibold">
+                    <div className="text-purple-600 font-semibold ml-5">
                       {edu.school} {edu.location && `• ${edu.location}`}
                     </div>
-                    <div className="text-gray-500 text-sm">
+                    <div className="text-gray-500 text-sm ml-5">
                       {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
                     </div>
                     {edu.gpa && (
-                      <div className="text-sm text-gray-600">GPA: {edu.gpa}</div>
+                      <div className="text-sm text-gray-600 ml-5">GPA: {edu.gpa}</div>
                     )}
                     {edu.achievements && (
-                      <div className="text-gray-700 text-sm mt-1">
+                      <div className="text-gray-700 text-sm mt-1 ml-5">
                         {edu.achievements.split('\n').map((line, i) => (
                           <p key={i} className="mb-1">• {line}</p>
                         ))}

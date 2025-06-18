@@ -32,7 +32,7 @@ export function MinimalTemplate({ data }: MinimalTemplateProps) {
 
       {/* Professional Summary */}
       {data.summary && (
-        <div className="mb-8">
+        <div className="mb-8" data-section="summary">
           <h2 className="text-sm font-medium text-gray-900 mb-3 uppercase tracking-wider">
             Summary
           </h2>
@@ -42,24 +42,22 @@ export function MinimalTemplate({ data }: MinimalTemplateProps) {
 
       {/* Work Experience */}
       {data.experience.length > 0 && (
-        <div className="mb-8">
+        <div className="mb-8" data-section="experience">
           <h2 className="text-sm font-medium text-gray-900 mb-4 uppercase tracking-wider">
             Experience
           </h2>
           <div className="space-y-6">
             {data.experience.map((exp, index) => (
-              <div key={index}>
-                <div className="mb-1">
-                  <h3 className="font-medium text-gray-900">{exp.jobTitle}</h3>
-                  <div className="text-gray-700 text-sm">
-                    {exp.company} {exp.location && `• ${exp.location}`}
-                  </div>
-                  <div className="text-gray-500 text-xs mt-1">
-                    {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
-                  </div>
+              <div key={index} className="keep-together" data-section="experience-item">
+                <h3 className="font-medium text-gray-900 mb-1">{exp.jobTitle}</h3>
+                <div className="text-gray-700 text-sm">
+                  {exp.company} {exp.location && `• ${exp.location}`}
+                </div>
+                <div className="text-gray-500 text-xs mt-1 mb-2">
+                  {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
                 </div>
                 {exp.description && (
-                  <div className="text-gray-700 text-sm mt-2">
+                  <div className="text-gray-700 text-sm">
                     {exp.description.split('\n').map((line, i) => (
                       <p key={i} className="mb-1">{line}</p>
                     ))}
@@ -73,13 +71,13 @@ export function MinimalTemplate({ data }: MinimalTemplateProps) {
 
       {/* Education */}
       {data.education.length > 0 && (
-        <div className="mb-8">
+        <div className="mb-8" data-section="education">
           <h2 className="text-sm font-medium text-gray-900 mb-4 uppercase tracking-wider">
             Education
           </h2>
           <div className="space-y-4">
             {data.education.map((edu, index) => (
-              <div key={index}>
+              <div key={index} className="keep-together" data-section="education-item">
                 <h3 className="font-medium text-gray-900">
                   {edu.degree} {edu.field && `in ${edu.field}`}
                 </h3>
@@ -93,7 +91,7 @@ export function MinimalTemplate({ data }: MinimalTemplateProps) {
                   <div className="text-sm text-gray-600 mt-1">GPA: {edu.gpa}</div>
                 )}
                 {edu.achievements && (
-                  <div className="text-gray-700 text-sm mt-2">
+                  <div className="text-gray-700 text-sm mt-1">
                     {edu.achievements.split('\n').map((line, i) => (
                       <p key={i} className="mb-1">{line}</p>
                     ))}
@@ -108,7 +106,7 @@ export function MinimalTemplate({ data }: MinimalTemplateProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Skills */}
         {data.skills.length > 0 && (
-          <div className="keep-together">
+          <div className="keep-together" data-section="skills">
             <h2 className="text-sm font-medium text-gray-900 mb-3 uppercase tracking-wider">
               Skills
             </h2>
@@ -124,7 +122,7 @@ export function MinimalTemplate({ data }: MinimalTemplateProps) {
 
         {/* Languages */}
         {data.languages.length > 0 && (
-          <div className="keep-together">
+          <div className="keep-together" data-section="languages">
             <h2 className="text-sm font-medium text-gray-900 mb-3 uppercase tracking-wider">
               Languages
             </h2>

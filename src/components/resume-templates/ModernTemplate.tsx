@@ -68,7 +68,7 @@ export function ModernTemplate({ data }: ModernTemplateProps) {
           </h2>
           <div className="space-y-6">
             {data.experience.map((exp, index) => (
-              <div key={index} className="border-l-2 border-blue-100 pl-4 mb-6" data-section="experience-item">
+              <div key={index} className="border-l-2 border-blue-100 pl-4 mb-6 keep-together" data-section="experience-item">
                 <div className="flex justify-between items-start mb-1">
                   <h3 className="font-semibold text-gray-900">{exp.jobTitle}</h3>
                   <span className="text-sm text-gray-500 whitespace-nowrap ml-4">
@@ -99,7 +99,7 @@ export function ModernTemplate({ data }: ModernTemplateProps) {
           </h2>
           <div className="space-y-4">
             {data.education.map((edu, index) => (
-              <div key={index} className="border-l-2 border-blue-100 pl-4 mb-4" data-section="education-item">
+              <div key={index} className="border-l-2 border-blue-100 pl-4 mb-4 keep-together" data-section="education-item">
                 <div className="flex justify-between items-start mb-1">
                   <h3 className="font-semibold text-gray-900">
                     {edu.degree} {edu.field && `in ${edu.field}`}

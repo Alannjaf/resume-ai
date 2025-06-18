@@ -53,8 +53,12 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     
     if (experienceSection) {
       // Find individual experience items only (don't group the entire section)
-      const experienceItems = experienceSection.querySelectorAll('[data-section="experience-item"]') ||
-                             experienceSection.querySelectorAll('.space-y-4 > div, .space-y-6 > div')
+      let experienceItems = experienceSection.querySelectorAll('[data-section="experience-item"]')
+      
+      // If no items found with data attributes, use fallback selectors
+      if (experienceItems.length === 0) {
+        experienceItems = experienceSection.querySelectorAll('.space-y-4 > div, .space-y-6 > div')
+      }
       
       experienceItems.forEach((item) => {
         const element = item as HTMLElement
@@ -77,8 +81,12 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     
     if (educationSection) {
       // Find individual education items only (don't group the entire section)
-      const educationItems = educationSection.querySelectorAll('[data-section="education-item"]') ||
-                            educationSection.querySelectorAll('.space-y-4 > div, .space-y-6 > div')
+      let educationItems = educationSection.querySelectorAll('[data-section="education-item"]')
+      
+      // If no items found with data attributes, use fallback selectors
+      if (educationItems.length === 0) {
+        educationItems = educationSection.querySelectorAll('.space-y-4 > div, .space-y-6 > div')
+      }
       
       educationItems.forEach((item) => {
         const element = item as HTMLElement
@@ -194,25 +202,53 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       }
       
       // Add page-break-inside: avoid to each group to prevent text cutoff
-      const modifiedGroups: Array<{element: HTMLElement, originalPageBreakInside: string, originalBreakInside: string}> = []
+      const modifiedGroups: Array<{element: HTMLElement, originalPageBreakInside: string, originalBreakInside: string, originalDisplay: string}> = []
       
       groups.forEach((group) => {
         const originalPageBreakInside = group.element.style.pageBreakInside
         const originalBreakInside = group.element.style.breakInside
+        const originalDisplay = group.element.style.display
         
-        // Apply page break avoidance
+        // Apply stronger page break avoidance
         group.element.style.pageBreakInside = 'avoid'
         group.element.style.breakInside = 'avoid'
+        group.element.style.display = 'block'
+        group.element.style.position = 'relative'
         
         // Store for later restoration
         modifiedGroups.push({
           element: group.element,
           originalPageBreakInside,
-          originalBreakInside
+          originalBreakInside,
+          originalDisplay
         })
         
         // Add a class for html2pdf to recognize
         group.element.classList.add('pdf-no-break')
+      })
+      
+      // Also apply stronger rules to all experience and education items specifically
+      const experienceItems = previewElement.querySelectorAll('[data-section="experience-item"]')
+      const educationItems = previewElement.querySelectorAll('[data-section="education-item"]')
+      
+      const allItems = [...experienceItems, ...educationItems]
+      const modifiedItems: Array<{element: HTMLElement, flexChildren: NodeListOf<Element>}> = []
+      
+      allItems.forEach((item) => {
+        const element = item as HTMLElement
+        element.style.pageBreakInside = 'avoid'
+        element.style.breakInside = 'avoid'
+        element.style.display = 'block'
+        element.classList.add('pdf-no-break')
+        
+        // Also apply to all child flex containers
+        const flexChildren = element.querySelectorAll('.flex')
+        flexChildren.forEach((flexChild) => {
+          const flexElement = flexChild as HTMLElement
+          flexElement.style.display = 'block'
+        })
+        
+        modifiedItems.push({ element, flexChildren })
       })
       
       // Continue with PDF generation after applying page break rules
@@ -326,7 +362,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
         },
         pagebreak: { 
           mode: ['css', 'legacy'],
-          avoid: ['.keep-together', '.pdf-no-break', '.grid'],
+          avoid: ['.keep-together', '.pdf-no-break', '.grid', '[data-section="experience-item"]', '[data-section="education-item"]', 'h3', '.flex'],
           before: '.page-break-before',
           after: '.page-break-after'
         },
@@ -346,10 +382,26 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       })
       
       // Restore group styles and remove added classes
-      modifiedGroups.forEach(({element, originalPageBreakInside, originalBreakInside}) => {
+      modifiedGroups.forEach(({element, originalPageBreakInside, originalBreakInside, originalDisplay}) => {
         element.style.pageBreakInside = originalPageBreakInside || ''
         element.style.breakInside = originalBreakInside || ''
+        element.style.display = originalDisplay || ''
+        element.style.position = ''
         element.classList.remove('pdf-no-break')
+      })
+      
+      // Restore experience and education items
+      modifiedItems.forEach(({element, flexChildren}) => {
+        element.style.pageBreakInside = ''
+        element.style.breakInside = ''
+        element.style.display = ''
+        element.classList.remove('pdf-no-break')
+        
+        // Restore flex children
+        flexChildren.forEach((flexChild) => {
+          const flexElement = flexChild as HTMLElement
+          flexElement.style.display = ''
+        })
       })
       
       toast.success('Resume exported as PDF successfully!', {
