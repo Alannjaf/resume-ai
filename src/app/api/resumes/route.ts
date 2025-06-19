@@ -49,8 +49,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Title is required' }, { status: 400 })
     }
 
-    // Check user limits
-    const { canCreateResume } = await import('@/lib/db').then(m => m.checkUserLimits(user.id))
+    // Check user limits using Clerk ID
+    const { canCreateResume } = await import('@/lib/db').then(m => m.checkUserLimits(userId))
     if (!canCreateResume) {
       return NextResponse.json({ 
         error: 'Resume limit reached. Please upgrade your plan.' 

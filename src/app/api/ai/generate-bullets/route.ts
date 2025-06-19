@@ -16,9 +16,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
 
-    // Check AI usage limits
-    const { canUseAI } = await checkUserLimits(user.id)
-    if (!canUseAI) {
+    // Check AI usage limits using Clerk ID
+    const limits = await checkUserLimits(userId)
+    if (!limits.canUseAI) {
       return NextResponse.json({ 
         error: 'AI usage limit reached. Please upgrade your plan.' 
       }, { status: 403 })
@@ -38,10 +38,10 @@ export async function POST(req: Request) {
       { language: language || 'en' }
     )
 
-    // Update AI usage count
+    // Update AI usage count using subscription ID
     const { prisma } = await import('@/lib/prisma')
     await prisma.subscription.update({
-      where: { userId: user.id },
+      where: { id: limits.subscription.id },
       data: { aiUsageCount: { increment: 1 } }
     })
 
