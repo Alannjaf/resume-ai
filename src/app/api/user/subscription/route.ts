@@ -65,20 +65,23 @@ export async function GET() {
     const plan = user.subscription.plan
     
     // Get limits based on plan and admin settings
-    let resumesLimit, aiUsageLimit, exportLimit
+    let resumesLimit, aiUsageLimit, exportLimit, importLimit
     
     if (plan === 'FREE') {
       resumesLimit = settings.maxFreeResumes !== null && settings.maxFreeResumes !== undefined ? settings.maxFreeResumes : 10
       aiUsageLimit = settings.maxFreeAIUsage !== null && settings.maxFreeAIUsage !== undefined ? settings.maxFreeAIUsage : 100
       exportLimit = settings.maxFreeExports !== null && settings.maxFreeExports !== undefined ? settings.maxFreeExports : 20
+      importLimit = settings.maxFreeImports !== null && settings.maxFreeImports !== undefined ? settings.maxFreeImports : 0
     } else if (plan === 'BASIC') {
       resumesLimit = settings.maxBasicResumes !== null && settings.maxBasicResumes !== undefined ? settings.maxBasicResumes : 50
       aiUsageLimit = settings.maxBasicAIUsage !== null && settings.maxBasicAIUsage !== undefined ? settings.maxBasicAIUsage : 500
       exportLimit = settings.maxBasicExports !== null && settings.maxBasicExports !== undefined ? settings.maxBasicExports : 100
+      importLimit = settings.maxBasicImports !== null && settings.maxBasicImports !== undefined ? settings.maxBasicImports : 0
     } else { // PRO
       resumesLimit = settings.maxProResumes !== null && settings.maxProResumes !== undefined ? settings.maxProResumes : -1
       aiUsageLimit = settings.maxProAIUsage !== null && settings.maxProAIUsage !== undefined ? settings.maxProAIUsage : -1
       exportLimit = settings.maxProExports !== null && settings.maxProExports !== undefined ? settings.maxProExports : -1
+      importLimit = settings.maxProImports !== null && settings.maxProImports !== undefined ? settings.maxProImports : -1
     }
     
     return NextResponse.json({
@@ -88,7 +91,9 @@ export async function GET() {
       aiUsageCount: user.subscription.aiUsageCount,
       aiUsageLimit,
       exportCount: user.subscription.exportCount || 0,
-      exportLimit
+      exportLimit,
+      importCount: user.subscription.importCount || 0,
+      importLimit
     })
   } catch (error) {
     console.error('Error fetching user subscription:', error)

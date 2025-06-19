@@ -179,12 +179,18 @@ async function getSystemSettings() {
   }
 }
 
-export async function checkUserLimits(userId: string) {
-  const subscription = await getUserSubscription(userId)
+export async function checkUserLimits(clerkUserId: string) {
+  // First get the database user from Clerk ID
+  const user = await prisma.user.findUnique({
+    where: { clerkId: clerkUserId },
+    include: { subscription: true }
+  })
   
-  if (!subscription) {
-    return { canCreateResume: false, canUseAI: false, canExport: false }
+  if (!user || !user.subscription) {
+    return { canCreateResume: false, canUseAI: false, canExport: false, canImport: false }
   }
+  
+  const subscription = user.subscription
 
   // Get admin-configurable settings
   const systemSettings = await getSystemSettings()
@@ -193,26 +199,31 @@ export async function checkUserLimits(userId: string) {
     FREE: { 
       resumes: systemSettings.maxFreeResumes || 10, 
       ai: systemSettings.maxFreeAIUsage || 100, 
-      exports: systemSettings.maxFreeExports || 20 
+      exports: systemSettings.maxFreeExports || 20,
+      imports: systemSettings.maxFreeImports || 0
     },
     BASIC: { 
       resumes: systemSettings.maxBasicResumes || 50, 
       ai: systemSettings.maxBasicAIUsage || 500, 
-      exports: systemSettings.maxBasicExports || 100 
+      exports: systemSettings.maxBasicExports || 100,
+      imports: systemSettings.maxBasicImports || 0
     },
     PRO: { 
       resumes: systemSettings.maxProResumes || -1, 
       ai: systemSettings.maxProAIUsage || -1, 
-      exports: systemSettings.maxProExports || -1 
+      exports: systemSettings.maxProExports || -1,
+      imports: systemSettings.maxProImports || -1
     }, // -1 means unlimited
   }
 
   const userLimits = limits[subscription.plan]
 
+
   return {
     canCreateResume: userLimits.resumes === -1 || subscription.resumeCount < userLimits.resumes,
     canUseAI: userLimits.ai === -1 || subscription.aiUsageCount < userLimits.ai,
-    canExport: userLimits.exports === -1 || subscription.exportCount < userLimits.exports,
+    canExport: userLimits.exports === -1 || (subscription.exportCount || 0) < userLimits.exports,
+    canImport: userLimits.imports === -1 || (subscription.importCount || 0) < userLimits.imports,
     subscription,
   }
 }

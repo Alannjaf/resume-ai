@@ -92,6 +92,7 @@ model Subscription {
   resumeCount    Int            @default(0)
   aiUsageCount   Int            @default(0)
   exportCount    Int            @default(0)
+  importCount    Int            @default(0)
   
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
@@ -107,16 +108,19 @@ model SystemSettings {
   maxFreeResumes Int            @default(10)
   maxFreeAIUsage Int            @default(100)
   maxFreeExports Int            @default(20)
+  maxFreeImports Int            @default(0)
   
   // Basic Plan Limits
   maxBasicResumes Int           @default(50)
   maxBasicAIUsage Int           @default(500)
   maxBasicExports Int           @default(100)
+  maxBasicImports Int           @default(0)
   
   // Pro Plan Limits (-1 means unlimited)
   maxProResumes  Int            @default(-1)
   maxProAIUsage  Int            @default(-1)
   maxProExports  Int            @default(-1)
+  maxProImports  Int            @default(-1)
   
   // Pricing (in IQD)
   basicPlanPrice Int            @default(5000)

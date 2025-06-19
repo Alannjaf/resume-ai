@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
+import { checkUserLimits } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,9 +11,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    // Check export limits before allowing download
+    const limits = await checkUserLimits(userId)
+    
+    if (!limits.canExport) {
+      return NextResponse.json({ 
+        error: 'Export limit reached. Please upgrade your plan.' 
+      }, { status: 403 })
+    }
+
     const { template, timestamp, userAgent } = await request.json()
 
-    // Log download event (you can store this in database)
+    // Update export count in database using the subscription ID from the limits check
+    await prisma.subscription.update({
+      where: { id: limits.subscription.id },
+      data: { exportCount: { increment: 1 } }
+    })
+
+    // Log download event
     console.log('PDF Download Event:', {
       userId,
       template,
@@ -19,17 +36,6 @@ export async function POST(request: NextRequest) {
       userAgent: userAgent?.substring(0, 200), // Truncate for storage
       ip: request.ip || request.headers.get('x-forwarded-for') || 'unknown'
     })
-
-    // TODO: Store in database when you have it set up
-    // await db.downloadLog.create({
-    //   data: {
-    //     userId,
-    //     template,
-    //     timestamp: new Date(timestamp),
-    //     userAgent,
-    //     ip: request.ip || request.headers.get('x-forwarded-for')
-    //   }
-    // })
 
     return NextResponse.json({ success: true })
   } catch (error) {

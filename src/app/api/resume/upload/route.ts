@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { ResumeParser } from '@/lib/resume-parser'
 import { ResumeData } from '@/types/resume'
+import { checkUserLimits } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import OpenAI from 'openai'
 
 // Initialize OpenRouter client
@@ -20,6 +22,14 @@ export async function POST(request: NextRequest) {
     const { userId } = await auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Check import limits (PRO feature)
+    const limits = await checkUserLimits(userId)
+    if (!limits.canImport) {
+      return NextResponse.json({ 
+        error: 'Resume import is a PRO feature. Please upgrade your plan to import resumes.' 
+      }, { status: 403 })
     }
 
     // Get form data
@@ -231,6 +241,12 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
           })),
         }
 
+        // Update import count
+        await prisma.subscription.update({
+          where: { id: limits.subscription.id },
+          data: { importCount: { increment: 1 } }
+        })
+
         return NextResponse.json({
           success: true,
           data: transformedData,
@@ -315,6 +331,12 @@ Return valid JSON only, no explanations.`
           certifications: aiData.certifications || [],
         }
 
+        // Update import count
+        await prisma.subscription.update({
+          where: { id: limits.subscription.id },
+          data: { importCount: { increment: 1 } }
+        })
+
         return NextResponse.json({
           success: true,
           data: mergedData,
@@ -324,6 +346,13 @@ Return valid JSON only, no explanations.`
       } catch (aiError: any) {
         // Return basic extraction if AI fails
         const basicData = ResumeParser.basicExtraction(await ResumeParser.extractText(buffer, file.type))
+        
+        // Update import count even for basic extraction
+        await prisma.subscription.update({
+          where: { userId },
+          data: { importCount: { increment: 1 } }
+        })
+        
         return NextResponse.json({
           success: true,
           data: basicData as ResumeData,

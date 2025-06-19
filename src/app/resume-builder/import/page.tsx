@@ -1,11 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { AppHeader } from '@/components/shared/AppHeader'
-import { CheckCircle, Edit, ArrowLeft } from 'lucide-react'
+import { CheckCircle, Edit, ArrowLeft, Crown } from 'lucide-react'
 import { ResumeUploader } from '@/components/resume-builder/ResumeUploader'
 import { ResumeData } from '@/types/resume'
 import toast from 'react-hot-toast'
@@ -16,6 +16,24 @@ export default function ImportResumePage() {
   const [extractedData, setExtractedData] = useState<ResumeData | null>(null)
   const [resumeTitle, setResumeTitle] = useState('Imported Resume')
   const [isSaving, setIsSaving] = useState(false)
+  const [canImport, setCanImport] = useState<boolean | null>(null)
+  const [userPlan, setUserPlan] = useState<string>('')
+
+  useEffect(() => {
+    // Check if user can import
+    const checkImportAccess = async () => {
+      try {
+        const response = await fetch('/api/user/subscription')
+        const data = await response.json()
+        setUserPlan(data.currentPlan)
+        setCanImport(data.currentPlan === 'PRO')
+      } catch (error) {
+        setCanImport(false)
+      }
+    }
+    
+    checkImportAccess()
+  }, [])
 
   const handleUploadComplete = (data: ResumeData) => {
     setExtractedData(data)
@@ -60,12 +78,44 @@ export default function ImportResumePage() {
     }
   }
 
-  const renderUploadStep = () => (
-    <ResumeUploader
-      onUploadComplete={handleUploadComplete}
-      onCancel={() => router.push('/dashboard')}
-    />
-  )
+  const renderUploadStep = () => {
+    if (canImport === null) {
+      return (
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full" />
+        </div>
+      )
+    }
+
+    if (!canImport) {
+      return (
+        <Card className="p-8 text-center">
+          <Crown className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold mb-4">PRO Feature</h2>
+          <p className="text-gray-600 mb-6">
+            Resume import is exclusively available for PRO users. 
+            Upgrade your plan to import existing resumes and convert them to our format.
+          </p>
+          <div className="space-x-4">
+            <Button onClick={() => router.push('/billing')}>
+              <Crown className="h-4 w-4 mr-2" />
+              Upgrade to PRO
+            </Button>
+            <Button variant="outline" onClick={() => router.push('/dashboard')}>
+              Back to Dashboard
+            </Button>
+          </div>
+        </Card>
+      )
+    }
+
+    return (
+      <ResumeUploader
+        onUploadComplete={handleUploadComplete}
+        onCancel={() => router.push('/dashboard')}
+      />
+    )
+  }
 
   const renderReviewStep = () => {
     if (!extractedData) return null

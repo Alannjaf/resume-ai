@@ -46,8 +46,8 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
 
     setIsGeneratingPDF(true)
     try {
-      // Track download event
-      await fetch('/api/analytics/download', {
+      // Track download event and check limits
+      const analyticsResponse = await fetch('/api/analytics/download', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -55,7 +55,16 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
           timestamp: new Date().toISOString(),
           userAgent: navigator.userAgent
         })
-      }).catch(() => {}) // Silent fail for analytics
+      })
+
+      if (!analyticsResponse.ok) {
+        const errorData = await analyticsResponse.json()
+        if (analyticsResponse.status === 403) {
+          toast.error(errorData.error || 'Export limit reached. Please upgrade your plan.')
+          return
+        }
+        throw new Error('Failed to track download')
+      }
 
       await generateResumePDF(data, undefined, template)
       toast.success('PDF downloaded successfully!')
