@@ -59,6 +59,8 @@ export const experienceStyles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 6,
     border: '1px solid #e5e7eb',
+    breakInside: 'avoid', // Keep education group together
+    keepTogether: true,   // Ensure all parts stay as one unit
   },
   
   degree: {

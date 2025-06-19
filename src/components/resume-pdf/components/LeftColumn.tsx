@@ -43,24 +43,28 @@ export const LeftColumn: React.FC<LeftColumnProps> = ({ data }) => {
       {/* Education Section */}
       {data.education && data.education.length > 0 && (
         <View style={styles.section}>
-          <Text style={styles.leftSectionTitle}>Education</Text>
-          {data.education.map((edu) => (
-            <View key={edu.id} style={experienceStyles.educationItem}>
-              <Text style={experienceStyles.degree}>{edu.degree}</Text>
-              {edu.field && <Text style={experienceStyles.fieldOfStudy}>{edu.field}</Text>}
-              <Text style={experienceStyles.school}>{edu.school}</Text>
-              <View style={experienceStyles.educationMeta}>
-                <Text>{edu.location}</Text>
-                <Text>{formatDateRange(edu.startDate, edu.endDate, false)}</Text>
+          {data.education.map((edu, index) => (
+            <View key={edu.id} wrap={false}>
+              {index === 0 && (
+                <Text style={styles.leftSectionTitle}>Education</Text>
+              )}
+              <View style={experienceStyles.educationItem}>
+                <Text style={experienceStyles.degree}>{edu.degree}</Text>
+                {edu.field && <Text style={experienceStyles.fieldOfStudy}>{edu.field}</Text>}
+                <Text style={experienceStyles.school}>{edu.school}</Text>
+                <View style={experienceStyles.educationMeta}>
+                  <Text>{edu.location}</Text>
+                  <Text>{formatDateRange(edu.startDate, edu.endDate, false)}</Text>
+                </View>
+                {edu.gpa && (
+                  <Text style={experienceStyles.gpa}>GPA: {edu.gpa}</Text>
+                )}
+                {edu.achievements && (
+                  <Text style={{ fontSize: 9, color: '#4b5563', marginTop: 4, lineHeight: 1.4 }}>
+                    {edu.achievements}
+                  </Text>
+                )}
               </View>
-              {edu.gpa && (
-                <Text style={experienceStyles.gpa}>GPA: {edu.gpa}</Text>
-              )}
-              {edu.achievements && (
-                <Text style={{ fontSize: 9, color: '#4b5563', marginTop: 4, lineHeight: 1.4 }}>
-                  {edu.achievements}
-                </Text>
-              )}
             </View>
           ))}
         </View>
@@ -69,16 +73,20 @@ export const LeftColumn: React.FC<LeftColumnProps> = ({ data }) => {
       {/* Certifications Section */}
       {data.certifications && data.certifications.length > 0 && (
         <View style={styles.section}>
-          <Text style={styles.leftSectionTitle}>Certifications</Text>
-          {data.certifications.map((cert) => (
-            <View key={cert.id} style={skillsStyles.certificationItem}>
-              <Text style={skillsStyles.certificationName}>{cert.name}</Text>
-              <Text style={skillsStyles.certificationIssuer}>{cert.issuer}</Text>
-              {cert.date && (
-                <Text style={skillsStyles.certificationDate}>
-                  {new Date(cert.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
-                </Text>
+          {data.certifications.map((cert, index) => (
+            <View key={cert.id} wrap={false}>
+              {index === 0 && (
+                <Text style={styles.leftSectionTitle}>Certifications</Text>
               )}
+              <View style={skillsStyles.certificationItem}>
+                <Text style={skillsStyles.certificationName}>{cert.name}</Text>
+                <Text style={skillsStyles.certificationIssuer}>{cert.issuer}</Text>
+                {cert.date && (
+                  <Text style={skillsStyles.certificationDate}>
+                    {new Date(cert.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                  </Text>
+                )}
+              </View>
             </View>
           ))}
         </View>

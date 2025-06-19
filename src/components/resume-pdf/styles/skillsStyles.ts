@@ -87,6 +87,7 @@ export const skillsStyles = StyleSheet.create({
     borderRadius: 6,
     border: '1px solid #e5e7eb',
     borderLeft: '3px solid #f59e0b',
+    breakInside: 'avoid', // Keep certification group together
   },
   
   certificationName: {
