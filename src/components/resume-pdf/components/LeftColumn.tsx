@@ -56,6 +56,11 @@ export const LeftColumn: React.FC<LeftColumnProps> = ({ data }) => {
               {edu.gpa && (
                 <Text style={experienceStyles.gpa}>GPA: {edu.gpa}</Text>
               )}
+              {edu.achievements && (
+                <Text style={{ fontSize: 9, color: '#4b5563', marginTop: 4, lineHeight: 1.4 }}>
+                  {edu.achievements}
+                </Text>
+              )}
             </View>
           ))}
         </View>

@@ -60,7 +60,7 @@ export const styles = StyleSheet.create({
   name: {
     fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 6,
+    marginBottom: 10, // Increased from 6 to 10
     color: '#ffffff',
   },
   
