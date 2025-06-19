@@ -39,6 +39,13 @@ function ResumeBuilderContent() {
   const [isLoading, setIsLoading] = useState(false)
   const [resumeId, setResumeId] = useState<string | null>(null)
   const [resumeTitle, setResumeTitle] = useState('My Resume')
+  const [userPermissions, setUserPermissions] = useState<{
+    canUploadPhoto: boolean
+    availableTemplates: string[]
+  }>({
+    canUploadPhoto: false,
+    availableTemplates: ['modern']
+  })
   const [formData, setFormData] = useState<ResumeData>({
     personal: {
       fullName: '',
@@ -104,6 +111,26 @@ function ResumeBuilderContent() {
       setIsSaving(false)
     }
   }
+
+  // Load user permissions
+  useEffect(() => {
+    const loadUserPermissions = async () => {
+      try {
+        const response = await fetch('/api/user/permissions')
+        if (response.ok) {
+          const permissions = await response.json()
+          setUserPermissions({
+            canUploadPhoto: permissions.canUploadPhoto || false,
+            availableTemplates: permissions.availableTemplates || ['modern']
+          })
+        }
+      } catch (error) {
+        console.error('Failed to load user permissions:', error)
+      }
+    }
+    
+    loadUserPermissions()
+  }, [])
 
   // Load resume data if editing existing resume or importing
   useEffect(() => {
@@ -302,30 +329,40 @@ function ResumeBuilderContent() {
               {/* Personal Information Section */}
               {currentSection === 0 && (
                 <div className="space-y-6">
-                  {/* Profile Image Upload */}
-                  <div className="flex justify-center">
-                    <ImageUploader
-                      currentImage={formData.personal.profileImage}
-                      onImageUpload={(imageDataUrl) =>
-                        setFormData({
-                          ...formData,
-                          personal: {
-                            ...formData.personal,
-                            profileImage: imageDataUrl,
-                          },
-                        })
-                      }
-                      onImageRemove={() =>
-                        setFormData({
-                          ...formData,
-                          personal: {
-                            ...formData.personal,
-                            profileImage: undefined,
-                          },
-                        })
-                      }
-                    />
-                  </div>
+                  {/* Profile Image Upload - Only show if user has permission */}
+                  {userPermissions.canUploadPhoto ? (
+                    <div className="flex justify-center">
+                      <ImageUploader
+                        currentImage={formData.personal.profileImage}
+                        onImageUpload={(imageDataUrl) =>
+                          setFormData({
+                            ...formData,
+                            personal: {
+                              ...formData.personal,
+                              profileImage: imageDataUrl,
+                            },
+                          })
+                        }
+                        onImageRemove={() =>
+                          setFormData({
+                            ...formData,
+                            personal: {
+                              ...formData.personal,
+                              profileImage: undefined,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex justify-center">
+                      <div className="text-center p-6 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                        <div className="text-gray-400 mb-2">📷</div>
+                        <p className="text-sm text-gray-600">Profile photo upload is available for BASIC and PRO plans</p>
+                        <p className="text-xs text-gray-500 mt-1">Upgrade your plan to add a professional profile photo</p>
+                      </div>
+                    </div>
+                  )}
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -533,6 +570,7 @@ function ResumeBuilderContent() {
                   <TemplateGallery
                     selectedTemplate={selectedTemplate}
                     onTemplateSelect={setSelectedTemplate}
+                    allowedTemplates={userPermissions.availableTemplates}
                   />
                 </div>
               )}

@@ -28,16 +28,27 @@ interface SystemSettings {
   maxFreeResumes: number
   maxFreeAIUsage: number
   maxFreeExports: number
+  maxFreeImports: number
   
   // Basic Plan Limits
   maxBasicResumes: number
   maxBasicAIUsage: number
   maxBasicExports: number
+  maxBasicImports: number
   
   // Pro Plan Limits
   maxProResumes: number
   maxProAIUsage: number
   maxProExports: number
+  maxProImports: number
+  
+  // Template Access Control
+  freeTemplates: string[]
+  basicTemplates: string[]
+  proTemplates: string[]
+  
+  // Profile Photo Upload Access Control
+  photoUploadPlans: string[]
   
   // Pricing
   basicPlanPrice: number
@@ -53,16 +64,27 @@ export function AdminDashboard() {
     maxFreeResumes: 10,
     maxFreeAIUsage: 100,
     maxFreeExports: 20,
+    maxFreeImports: 0,
     
     // Basic Plan Limits
     maxBasicResumes: 50,
     maxBasicAIUsage: 500,
     maxBasicExports: 100,
+    maxBasicImports: 0,
     
     // Pro Plan Limits
     maxProResumes: -1,
     maxProAIUsage: -1,
     maxProExports: -1,
+    maxProImports: -1,
+    
+    // Template Access Control
+    freeTemplates: ['modern'],
+    basicTemplates: ['modern', 'creative'],
+    proTemplates: ['modern', 'creative', 'executive'],
+    
+    // Profile Photo Upload Access Control
+    photoUploadPlans: ['BASIC', 'PRO'],
     
     // Pricing
     basicPlanPrice: 5000,
@@ -98,16 +120,31 @@ export function AdminDashboard() {
         maxFreeResumes: data.maxFreeResumes ?? 10,
         maxFreeAIUsage: data.maxFreeAIUsage ?? 100,
         maxFreeExports: data.maxFreeExports ?? 20,
+        maxFreeImports: data.maxFreeImports ?? 0,
         
         // Basic Plan Limits
         maxBasicResumes: data.maxBasicResumes ?? 50,
         maxBasicAIUsage: data.maxBasicAIUsage ?? 500,
         maxBasicExports: data.maxBasicExports ?? 100,
+        maxBasicImports: data.maxBasicImports ?? 0,
         
         // Pro Plan Limits
         maxProResumes: data.maxProResumes ?? -1,
         maxProAIUsage: data.maxProAIUsage ?? -1,
         maxProExports: data.maxProExports ?? -1,
+        maxProImports: data.maxProImports ?? -1,
+        
+        // Template Access Control
+        freeTemplates: Array.isArray(data.freeTemplates) ? data.freeTemplates : 
+          (data.freeTemplates ? JSON.parse(data.freeTemplates) : ['modern']),
+        basicTemplates: Array.isArray(data.basicTemplates) ? data.basicTemplates : 
+          (data.basicTemplates ? JSON.parse(data.basicTemplates) : ['modern', 'creative']),
+        proTemplates: Array.isArray(data.proTemplates) ? data.proTemplates : 
+          (data.proTemplates ? JSON.parse(data.proTemplates) : ['modern', 'creative', 'executive']),
+        
+        // Profile Photo Upload Access Control
+        photoUploadPlans: Array.isArray(data.photoUploadPlans) ? data.photoUploadPlans : 
+          (data.photoUploadPlans ? JSON.parse(data.photoUploadPlans) : ['BASIC', 'PRO']),
         
         // Pricing
         basicPlanPrice: data.basicPlanPrice ?? 5000,
@@ -229,7 +266,7 @@ export function AdminDashboard() {
             {/* Free Plan Settings */}
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Free Plan Limits</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">Max Resumes</label>
                   <Input
@@ -272,13 +309,25 @@ export function AdminDashboard() {
                     }}
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Max Imports</label>
+                  <Input
+                    type="number"
+                    min="0"
+                    value={settings.maxFreeImports}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      maxFreeImports: e.target.value === '' ? 0 : parseInt(e.target.value) || 0
+                    })}
+                  />
+                </div>
               </div>
             </div>
 
             {/* Basic Plan Settings */}
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Basic Plan Limits</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">Max Resumes</label>
                   <Input
@@ -315,13 +364,25 @@ export function AdminDashboard() {
                     })}
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Max Imports</label>
+                  <Input
+                    type="number"
+                    min="0"
+                    value={settings.maxBasicImports}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      maxBasicImports: e.target.value === '' ? 0 : parseInt(e.target.value) || 0
+                    })}
+                  />
+                </div>
               </div>
             </div>
 
             {/* Pro Plan Settings */}
             <div>
               <h3 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Pro Plan Limits</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">Max Resumes (-1 = Unlimited)</label>
                   <Input
@@ -358,6 +419,145 @@ export function AdminDashboard() {
                     })}
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Max Imports (-1 = Unlimited)</label>
+                  <Input
+                    type="number"
+                    min="-1"
+                    value={settings.maxProImports}
+                    onChange={(e) => setSettings({
+                      ...settings,
+                      maxProImports: e.target.value === '' ? 0 : parseInt(e.target.value) || 0
+                    })}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Template Access Control */}
+            <div>
+              <h3 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Template Access Control</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Free Plan Templates</label>
+                  <div className="space-y-2">
+                    {['modern', 'creative', 'executive'].map(template => (
+                      <label key={template} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={settings.freeTemplates.includes(template)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSettings({
+                                ...settings,
+                                freeTemplates: [...settings.freeTemplates, template]
+                              })
+                            } else {
+                              setSettings({
+                                ...settings,
+                                freeTemplates: settings.freeTemplates.filter(t => t !== template)
+                              })
+                            }
+                          }}
+                          className="rounded"
+                        />
+                        <span className="text-sm capitalize">{template}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Basic Plan Templates</label>
+                  <div className="space-y-2">
+                    {['modern', 'creative', 'executive'].map(template => (
+                      <label key={template} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={settings.basicTemplates.includes(template)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSettings({
+                                ...settings,
+                                basicTemplates: [...settings.basicTemplates, template]
+                              })
+                            } else {
+                              setSettings({
+                                ...settings,
+                                basicTemplates: settings.basicTemplates.filter(t => t !== template)
+                              })
+                            }
+                          }}
+                          className="rounded"
+                        />
+                        <span className="text-sm capitalize">{template}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Pro Plan Templates</label>
+                  <div className="space-y-2">
+                    {['modern', 'creative', 'executive'].map(template => (
+                      <label key={template} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={settings.proTemplates.includes(template)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSettings({
+                                ...settings,
+                                proTemplates: [...settings.proTemplates, template]
+                              })
+                            } else {
+                              setSettings({
+                                ...settings,
+                                proTemplates: settings.proTemplates.filter(t => t !== template)
+                              })
+                            }
+                          }}
+                          className="rounded"
+                        />
+                        <span className="text-sm capitalize">{template}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Profile Photo Upload Access Control */}
+            <div>
+              <h3 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">Profile Photo Upload Access</h3>
+              <div>
+                <label className="block text-sm font-medium mb-2">Plans with Photo Upload Access</label>
+                <div className="space-y-2">
+                  {['FREE', 'BASIC', 'PRO'].map(plan => (
+                    <label key={plan} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={settings.photoUploadPlans.includes(plan)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSettings({
+                              ...settings,
+                              photoUploadPlans: [...settings.photoUploadPlans, plan]
+                            })
+                          } else {
+                            setSettings({
+                              ...settings,
+                              photoUploadPlans: settings.photoUploadPlans.filter(p => p !== plan)
+                            })
+                          }
+                        }}
+                        className="rounded"
+                      />
+                      <span className="text-sm">{plan}</span>
+                    </label>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  Select which subscription plans can upload profile photos
+                </p>
               </div>
             </div>
 

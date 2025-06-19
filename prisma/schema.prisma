@@ -122,6 +122,14 @@ model SystemSettings {
   maxProExports  Int            @default(-1)
   maxProImports  Int            @default(-1)
   
+  // Template Access Control (JSON arrays of template IDs)
+  freeTemplates  Json           @default("[\"modern\"]")
+  basicTemplates Json           @default("[\"modern\", \"creative\"]")
+  proTemplates   Json           @default("[\"modern\", \"creative\", \"executive\"]")
+  
+  // Profile Photo Upload Access Control (JSON arrays of plan names)
+  photoUploadPlans Json         @default("[\"BASIC\", \"PRO\"]")
+  
   // Pricing (in IQD)
   basicPlanPrice Int            @default(5000)
   proPlanPrice   Int            @default(10000)
