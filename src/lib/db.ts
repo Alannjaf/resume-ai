@@ -144,38 +144,70 @@ async function getSystemSettings() {
         "maxFreeResumes",
         "maxFreeAIUsage", 
         "maxFreeExports",
+        "maxFreeImports",
         "maxBasicResumes",
         "maxBasicAIUsage",
-        "maxBasicExports", 
+        "maxBasicExports",
+        "maxBasicImports",
         "maxProResumes",
         "maxProAIUsage",
-        "maxProExports"
+        "maxProExports",
+        "maxProImports",
+        "freeTemplates",
+        "basicTemplates",
+        "proTemplates",
+        "photoUploadPlans"
       FROM "SystemSettings" 
       ORDER BY id LIMIT 1
     `) as any[]
 
     if (settingsRecord && settingsRecord.length > 0) {
-      return settingsRecord[0]
+      const settings = settingsRecord[0]
+      // Parse JSON fields
+      if (settings.freeTemplates && typeof settings.freeTemplates === 'string') {
+        settings.freeTemplates = JSON.parse(settings.freeTemplates)
+      }
+      if (settings.basicTemplates && typeof settings.basicTemplates === 'string') {
+        settings.basicTemplates = JSON.parse(settings.basicTemplates)
+      }
+      if (settings.proTemplates && typeof settings.proTemplates === 'string') {
+        settings.proTemplates = JSON.parse(settings.proTemplates)
+      }
+      if (settings.photoUploadPlans && typeof settings.photoUploadPlans === 'string') {
+        settings.photoUploadPlans = JSON.parse(settings.photoUploadPlans)
+      }
+      return settings
     }
   } catch (error) {
     // Table might not exist, use defaults
   }
   
   return {
-    // Free Plan Limits
-    maxFreeResumes: 10,
-    maxFreeAIUsage: 100,
-    maxFreeExports: 20,
+    // Free Plan Limits - Restrictive defaults to encourage upgrades
+    maxFreeResumes: 1,
+    maxFreeAIUsage: 10,
+    maxFreeExports: 0,
+    maxFreeImports: 0,
     
     // Basic Plan Limits
-    maxBasicResumes: 50,
-    maxBasicAIUsage: 500,
-    maxBasicExports: 100,
+    maxBasicResumes: 5,
+    maxBasicAIUsage: 100,
+    maxBasicExports: 10,
+    maxBasicImports: 0,
     
     // Pro Plan Limits
     maxProResumes: -1,
     maxProAIUsage: -1,
-    maxProExports: -1
+    maxProExports: -1,
+    maxProImports: -1,
+    
+    // Template Access Control
+    freeTemplates: ['modern'],
+    basicTemplates: ['modern', 'creative'],
+    proTemplates: ['modern', 'creative', 'executive'],
+    
+    // Profile Photo Upload Access Control
+    photoUploadPlans: ['BASIC', 'PRO']
   }
 }
 
@@ -197,33 +229,52 @@ export async function checkUserLimits(clerkUserId: string) {
 
   const limits = {
     FREE: { 
-      resumes: systemSettings.maxFreeResumes || 10, 
-      ai: systemSettings.maxFreeAIUsage || 100, 
-      exports: systemSettings.maxFreeExports || 20,
-      imports: systemSettings.maxFreeImports || 0
+      resumes: systemSettings.maxFreeResumes ?? 10, 
+      ai: systemSettings.maxFreeAIUsage ?? 100, 
+      exports: systemSettings.maxFreeExports ?? 0,
+      imports: systemSettings.maxFreeImports ?? 0
     },
     BASIC: { 
-      resumes: systemSettings.maxBasicResumes || 50, 
-      ai: systemSettings.maxBasicAIUsage || 500, 
-      exports: systemSettings.maxBasicExports || 100,
-      imports: systemSettings.maxBasicImports || 0
+      resumes: systemSettings.maxBasicResumes ?? 50, 
+      ai: systemSettings.maxBasicAIUsage ?? 500, 
+      exports: systemSettings.maxBasicExports ?? 100,
+      imports: systemSettings.maxBasicImports ?? 0
     },
     PRO: { 
-      resumes: systemSettings.maxProResumes || -1, 
-      ai: systemSettings.maxProAIUsage || -1, 
-      exports: systemSettings.maxProExports || -1,
-      imports: systemSettings.maxProImports || -1
+      resumes: systemSettings.maxProResumes ?? -1, 
+      ai: systemSettings.maxProAIUsage ?? -1, 
+      exports: systemSettings.maxProExports ?? -1,
+      imports: systemSettings.maxProImports ?? -1
     }, // -1 means unlimited
   }
 
   const userLimits = limits[subscription.plan]
 
 
+  // Check photo upload permission
+  const canUploadPhoto = systemSettings.photoUploadPlans.includes(subscription.plan)
+  
+  // Get available templates for user's plan
+  let availableTemplates: string[] = []
+  switch (subscription.plan) {
+    case 'FREE':
+      availableTemplates = systemSettings.freeTemplates || ['modern']
+      break
+    case 'BASIC':
+      availableTemplates = systemSettings.basicTemplates || ['modern', 'creative']
+      break
+    case 'PRO':
+      availableTemplates = systemSettings.proTemplates || ['modern', 'creative', 'executive']
+      break
+  }
+
   return {
     canCreateResume: userLimits.resumes === -1 || subscription.resumeCount < userLimits.resumes,
     canUseAI: userLimits.ai === -1 || subscription.aiUsageCount < userLimits.ai,
     canExport: userLimits.exports === -1 || (subscription.exportCount || 0) < userLimits.exports,
     canImport: userLimits.imports === -1 || (subscription.importCount || 0) < userLimits.imports,
+    canUploadPhoto,
+    availableTemplates,
     subscription,
   }
 }

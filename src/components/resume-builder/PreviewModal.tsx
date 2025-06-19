@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { generateResumePDF, getResumePDFBlob } from '@/lib/pdfGenerator'
-import { X, Download, RefreshCw } from 'lucide-react'
+import { X, Download, RefreshCw, Crown, ArrowUp } from 'lucide-react'
 import { ResumeData } from '@/types/resume'
 import toast from 'react-hot-toast'
 
@@ -18,6 +18,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
   const [isLoadingPreview, setIsLoadingPreview] = useState(false)
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
+  const [availableTemplates, setAvailableTemplates] = useState<string[]>(['modern'])
 
   const generatePDFPreview = async () => {
     if (!data.personal.fullName) {
@@ -60,7 +61,18 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       if (!analyticsResponse.ok) {
         const errorData = await analyticsResponse.json()
         if (analyticsResponse.status === 403) {
-          toast.error(errorData.error || 'Export limit reached. Please upgrade your plan.')
+          // Check if it's a template restriction or export limit
+          if (errorData.error?.includes('template')) {
+            toast.error('This template requires a premium plan. Upgrade to download!', {
+              duration: 5000,
+              style: {
+                background: '#f97316',
+                color: '#fff',
+              },
+            })
+          } else {
+            toast.error(errorData.error || 'Export limit reached. Please upgrade your plan.')
+          }
           return
         }
         throw new Error('Failed to track download')
@@ -75,6 +87,24 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       setIsGeneratingPDF(false)
     }
   }
+
+  // Load user permissions when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      const loadPermissions = async () => {
+        try {
+          const response = await fetch('/api/user/permissions')
+          if (response.ok) {
+            const permissions = await response.json()
+            setAvailableTemplates(permissions.availableTemplates || ['modern'])
+          }
+        } catch (error) {
+          console.error('Failed to load permissions:', error)
+        }
+      }
+      loadPermissions()
+    }
+  }, [isOpen])
 
   // Generate PDF preview when modal opens
   useEffect(() => {
@@ -92,12 +122,45 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
 
   if (!isOpen) return null
 
+  const isTemplateRestricted = !availableTemplates.includes(template)
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
+        {/* Upgrade Banner for Restricted Templates */}
+        {isTemplateRestricted && (
+          <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-white p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Crown className="h-5 w-5" />
+                <div>
+                  <p className="font-semibold">Premium Template Preview</p>
+                  <p className="text-sm opacity-90">This template requires a premium plan to download</p>
+                </div>
+              </div>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="bg-white text-orange-600 hover:bg-gray-100"
+                onClick={() => window.open('/pricing', '_blank')}
+              >
+                <ArrowUp className="h-4 w-4 mr-1" />
+                Upgrade Now
+              </Button>
+            </div>
+          </div>
+        )}
+        
         {/* Modal Header */}
         <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-xl font-semibold">Resume Preview</h2>
+          <div>
+            <h2 className="text-xl font-semibold">Resume Preview</h2>
+            {isTemplateRestricted && (
+              <p className="text-sm text-orange-600 mt-1">
+                Template: {template.charAt(0).toUpperCase() + template.slice(1)} (Premium)
+              </p>
+            )}
+          </div>
           <div className="flex items-center space-x-2">
             <Button 
               variant="outline"
@@ -119,13 +182,19 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
             </Button>
             <Button 
               onClick={handleDownloadPDF}
-              disabled={isGeneratingPDF}
+              disabled={isGeneratingPDF || isTemplateRestricted}
               size="sm"
+              className={isTemplateRestricted ? 'opacity-50 cursor-not-allowed' : ''}
             >
               {isGeneratingPDF ? (
                 <>
                   <div className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full" />
                   Downloading...
+                </>
+              ) : isTemplateRestricted ? (
+                <>
+                  <Crown className="h-4 w-4 mr-2" />
+                  Upgrade to Download
                 </>
               ) : (
                 <>

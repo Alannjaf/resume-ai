@@ -22,6 +22,13 @@ export async function POST(request: NextRequest) {
 
     const { template, timestamp, userAgent } = await request.json()
 
+    // Check if user can use the selected template
+    if (!limits.availableTemplates.includes(template)) {
+      return NextResponse.json({ 
+        error: 'This template is not available for your current plan. Please upgrade to access premium templates.' 
+      }, { status: 403 })
+    }
+
     // Update export count in database using the subscription ID from the limits check
     await prisma.subscription.update({
       where: { id: limits.subscription.id },
