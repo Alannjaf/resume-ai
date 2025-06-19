@@ -6,15 +6,14 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { AppHeader } from '@/components/shared/AppHeader'
-import { ArrowLeft, ArrowRight, Save, Eye, Palette } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Save, Eye } from 'lucide-react'
 import { WorkExperienceForm } from '@/components/resume-builder/WorkExperienceForm'
 import { EducationForm } from '@/components/resume-builder/EducationForm'
 import { SkillsForm } from '@/components/resume-builder/SkillsForm'
 import { LanguagesForm } from '@/components/resume-builder/LanguagesForm'
 import { PreviewModal } from '@/components/resume-builder/PreviewModal'
-import { TemplateGallery } from '@/components/resume-templates/TemplateGallery'
 import { AIProfessionalSummary } from '@/components/ai/AIProfessionalSummary'
-import { getTemplate } from '@/lib/templates'
+import ImageUploader from '@/components/resume-builder/ImageUploader'
 import { WorkExperience, Education, Skill, Language, ResumeData } from '@/types/resume'
 import toast from 'react-hot-toast'
 
@@ -33,7 +32,6 @@ function ResumeBuilderContent() {
   const searchParams = useSearchParams()
   const [currentSection, setCurrentSection] = useState(0)
   const [showPreview, setShowPreview] = useState(false)
-  const [showTemplateGallery, setShowTemplateGallery] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState('modern')
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -236,15 +234,6 @@ function ResumeBuilderContent() {
             {/* Action Buttons */}
             <div className="flex items-center space-x-3">
               <Button 
-                variant="default" 
-                size="sm"
-                onClick={() => setShowTemplateGallery(true)}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                <Palette className="h-4 w-4 mr-2" />
-                Choose Template ({getTemplate(selectedTemplate)?.name || 'Modern'})
-              </Button>
-              <Button 
                 variant="outline" 
                 size="sm"
                 onClick={() => setShowPreview(true)}
@@ -310,7 +299,32 @@ function ResumeBuilderContent() {
 
               {/* Personal Information Section */}
               {currentSection === 0 && (
-                <div className="space-y-4">
+                <div className="space-y-6">
+                  {/* Profile Image Upload */}
+                  <div className="flex justify-center">
+                    <ImageUploader
+                      currentImage={formData.personal.profileImage}
+                      onImageUpload={(imageDataUrl) =>
+                        setFormData({
+                          ...formData,
+                          personal: {
+                            ...formData.personal,
+                            profileImage: imageDataUrl,
+                          },
+                        })
+                      }
+                      onImageRemove={() =>
+                        setFormData({
+                          ...formData,
+                          personal: {
+                            ...formData.personal,
+                            profileImage: undefined,
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                  
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">
@@ -325,6 +339,24 @@ function ResumeBuilderContent() {
                             personal: {
                               ...formData.personal,
                               fullName: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        Professional Title
+                      </label>
+                      <Input
+                        placeholder="Software Engineer"
+                        value={formData.personal.title || ''}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            personal: {
+                              ...formData.personal,
+                              title: e.target.value,
                             },
                           })
                         }
@@ -519,15 +551,6 @@ function ResumeBuilderContent() {
           </div>
         </div>
       </div>
-
-      {/* Template Gallery */}
-      <TemplateGallery
-        isOpen={showTemplateGallery}
-        onClose={() => setShowTemplateGallery(false)}
-        currentTemplate={selectedTemplate}
-        onSelectTemplate={setSelectedTemplate}
-        resumeData={formData}
-      />
 
       {/* Preview Modal */}
       <PreviewModal
