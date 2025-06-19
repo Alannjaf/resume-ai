@@ -7,7 +7,7 @@ export default function Page() {
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900">Welcome back</h2>
           <p className="mt-2 text-sm text-gray-600">
-            Sign in to your ResumeAI account
+            Sign in to your Work.krd account
           </p>
         </div>
         <SignIn />

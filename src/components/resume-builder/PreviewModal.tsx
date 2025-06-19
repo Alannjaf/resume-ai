@@ -46,6 +46,17 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
 
     setIsGeneratingPDF(true)
     try {
+      // Track download event
+      await fetch('/api/analytics/download', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          template,
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent
+        })
+      }).catch(() => {}) // Silent fail for analytics
+
       await generateResumePDF(data, undefined, template)
       toast.success('PDF downloaded successfully!')
     } catch (error) {
@@ -131,7 +142,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
             </div>
           ) : pdfUrl ? (
             <iframe
-              src={pdfUrl}
+              src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
               className="w-full h-full border-0"
               title="Resume Preview"
             />

@@ -7,7 +7,7 @@ export default function Page() {
         <div className="text-center">
           <h2 className="text-3xl font-bold text-gray-900">Create your account</h2>
           <p className="mt-2 text-sm text-gray-600">
-            Join ResumeAI and start building professional resumes
+            Join Work.krd and start building professional resumes
           </p>
         </div>
         <SignUp />

@@ -197,52 +197,112 @@ export function TemplateGallery({ selectedTemplate, onTemplateSelect }) {
 }
 ```
 
-### 2. **Template Thumbnail Generation**
-Create CSS-based previews that mimic each template's design:
+### 2. **Template Thumbnail System**
+**IMPORTANT**: Every new template MUST have a corresponding thumbnail for the template gallery.
+
+#### 2.1 **Creating SVG Thumbnails**
+Create static SVG thumbnails that accurately represent your template design:
+
+**File Structure:**
+```
+public/thumbnails/
+├── modern.svg     # Modern template thumbnail
+├── creative.svg   # Creative template thumbnail
+└── [template-id].svg  # New template thumbnail
+```
+
+**SVG Template Guidelines:**
+- **Dimensions**: 300x400 (3:4 aspect ratio matching A4 proportions)
+- **ViewBox**: `viewBox="0 0 300 400"`
+- **Colors**: Use actual template colors and styling
+- **Layout**: Mirror the template's layout structure
+- **Elements**: Include key visual elements (sidebars, sections, decorative elements)
+
+**Example SVG Structure:**
+```svg
+<svg width="300" height="400" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Page background -->
+  <rect width="300" height="400" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+  
+  <!-- Template-specific layout elements -->
+  <!-- Sidebar, header, content sections, etc. -->
+  
+  <!-- Use template's actual colors and proportions -->
+</svg>
+```
+
+#### 2.2 **Thumbnail Component Implementation**
+The TemplateThumbnail component uses Next.js Image for optimal performance:
 
 ```tsx
-// TemplateThumbnail.tsx - Miniature template previews
-export function TemplateThumbnail({ templateId }) {
-  switch (templateId) {
-    case 'modern':
-      return (
-        <div className="bg-white border h-32">
-          {/* Left sidebar simulation */}
-          <div className="flex h-full">
-            <div className="w-1/3 bg-slate-600 p-1">
-              <div className="bg-white rounded-full w-4 h-4 mb-1"></div>
-              <div className="bg-slate-400 h-0.5 rounded mb-1"></div>
-            </div>
-            <div className="w-2/3 p-1">
-              <div className="bg-gray-300 h-1 rounded mb-1"></div>
-              <div className="bg-gray-200 h-0.5 rounded"></div>
-            </div>
-          </div>
-        </div>
-      )
-    
-    case 'creative':
-      return (
-        <div className="bg-gray-50 border relative h-32">
-          {/* Background elements */}
-          <div className="absolute top-0 right-0 w-8 h-8 bg-blue-100 rounded-full -mr-4 -mt-4"></div>
-          <div className="absolute left-0 top-0 w-0.5 h-full bg-blue-500"></div>
-          
-          <div className="p-1 relative">
-            <div className="flex items-center mb-1">
-              <div className="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
-              <div className="bg-gray-800 h-0.5 rounded w-8"></div>
-            </div>
-            {/* More creative elements */}
-          </div>
-        </div>
-      )
+// TemplateThumbnail.tsx - Static SVG thumbnails
+export function TemplateThumbnail({ templateId, className = '' }) {
+  const getThumbnailSrc = () => {
+    switch (templateId) {
+      case 'modern':
+        return '/thumbnails/modern.svg'
+      case 'creative':
+        return '/thumbnails/creative.svg'
+      case 'your-new-template':  // Add new template here
+        return '/thumbnails/your-new-template.svg'
+      default:
+        return '/thumbnails/modern.svg'
+    }
   }
+
+  return (
+    <div className={`relative overflow-hidden ${className}`}>
+      <Image
+        src={getThumbnailSrc()}
+        alt={`${templateId} template preview`}
+        width={300}
+        height={400}
+        className="w-full h-full object-cover"
+        priority
+      />
+    </div>
+  )
 }
 ```
 
+#### 2.3 **Adding New Template Thumbnails**
+
+**Step 1: Create SVG Thumbnail**
+1. Analyze your template's key visual elements
+2. Create `/public/thumbnails/[template-id].svg`
+3. Use template's actual colors, layout, and proportions
+4. Include distinctive features (sidebars, headers, decorative elements)
+
+**Step 2: Update Thumbnail Component**
+Add your template case to `TemplateThumbnail.tsx`:
+```tsx
+case 'your-template-id':
+  return '/thumbnails/your-template-id.svg'
+```
+
+**Step 3: Update Template Gallery**
+Add template to the gallery options in `TemplateGallery.tsx`:
+```tsx
+const templates: TemplateOption[] = [
+  // ... existing templates
+  {
+    id: 'your-template-id',
+    name: 'Your Template Name',
+    description: 'Template description',
+    category: 'professional' | 'creative' | 'minimal'
+  }
+]
+```
+
+#### 2.4 **Thumbnail Design Best Practices**
+- **Accuracy**: Thumbnail should closely represent the actual PDF output
+- **Clarity**: Key sections should be clearly distinguishable at small sizes
+- **Consistency**: Maintain visual hierarchy and proportions from the template
+- **Performance**: SVG format ensures fast loading and scalability
+- **Accessibility**: Include meaningful alt text for screen readers
+
 ### 3. **PDF Generator Integration**
-Update the PDF generator to support multiple templates:
+Update the PDF generator to support multiple templates and ensure new templates are properly integrated:
 
 ```tsx
 // pdfGenerator.ts - Template switching logic

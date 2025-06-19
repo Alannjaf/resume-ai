@@ -14,9 +14,9 @@ export function Footer() {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                <span className="text-sm font-bold">RA</span>
+                <span className="text-sm font-bold">W</span>
               </div>
-              <span className="text-xl font-bold">ResumeAI</span>
+              <span className="text-xl font-bold">Work<span className="text-blue-600">.krd</span></span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
               {t('metadata.description')}
@@ -107,7 +107,7 @@ export function Footer() {
             <ul className="space-y-3 text-sm">
               <li className="flex items-center space-x-2 text-gray-400">
                 <Mail className="h-4 w-4" />
-                <span>support@resumeai.com</span>
+                <span>support@work.krd</span>
               </li>
               <li className="flex items-center space-x-2 text-gray-400">
                 <Phone className="h-4 w-4" />
@@ -135,7 +135,7 @@ export function Footer() {
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-sm text-gray-400">
-              © 2024 ResumeAI. All rights reserved.
+              © 2024 Work.krd. All rights reserved.
             </div>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
               <span>Powered by Google Gemini AI</span>
