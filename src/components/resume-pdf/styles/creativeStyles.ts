@@ -46,7 +46,7 @@ export const styles = StyleSheet.create({
   // Header styles
   header: {
     marginBottom: 35,
-    marginTop: -30,
+    marginTop: 20,
     position: 'relative',
     zIndex: 10,
   },
