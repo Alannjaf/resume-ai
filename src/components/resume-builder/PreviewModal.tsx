@@ -27,7 +27,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
 
     setIsLoadingPreview(true)
     try {
-      const blob = await getResumePDFBlob(data)
+      const blob = await getResumePDFBlob(data, template)
       const url = URL.createObjectURL(blob)
       setPdfUrl(url)
     } catch (error) {
@@ -46,7 +46,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
 
     setIsGeneratingPDF(true)
     try {
-      await generateResumePDF(data)
+      await generateResumePDF(data, undefined, template)
       toast.success('PDF downloaded successfully!')
     } catch (error) {
       toast.error('Failed to generate PDF. Please try again.')
