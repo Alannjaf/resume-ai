@@ -26,6 +26,13 @@ const templates: TemplateOption[] = [
     description: 'Artistic design with visual elements and colors',
     thumbnail: '/api/placeholder/300/400', // We'll generate these
     category: 'creative'
+  },
+  {
+    id: 'executive',
+    name: 'Executive Professional',
+    description: 'Clean executive layout with elegant typography',
+    thumbnail: '/thumbnails/executive.svg',
+    category: 'professional'
   }
 ]
 

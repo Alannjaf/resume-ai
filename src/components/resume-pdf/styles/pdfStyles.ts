@@ -56,6 +56,11 @@ export const styles = StyleSheet.create({
   headerText: {
     flex: 1,
   },
+
+  headerTextNoPhoto: {
+    marginLeft: 0,
+    paddingLeft: 0,
+  },
   
   name: {
     fontSize: 28,

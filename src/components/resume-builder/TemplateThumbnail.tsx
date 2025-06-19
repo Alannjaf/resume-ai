@@ -15,6 +15,8 @@ export function TemplateThumbnail({ templateId, className = '' }: TemplateThumbn
         return '/thumbnails/modern.svg'
       case 'creative':
         return '/thumbnails/creative.svg'
+      case 'executive':
+        return '/thumbnails/executive.svg'
       default:
         return '/thumbnails/modern.svg'
     }
@@ -26,6 +28,8 @@ export function TemplateThumbnail({ templateId, className = '' }: TemplateThumbn
         return 'Modern Professional Resume Template Preview'
       case 'creative':
         return 'Creative Resume Template Preview'
+      case 'executive':
+        return 'Executive Professional Resume Template Preview'
       default:
         return 'Resume Template Preview'
     }

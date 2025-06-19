@@ -3,11 +3,14 @@ import { saveAs } from 'file-saver'
 import { ResumeData } from '../types/resume'
 import EnhancedModernTemplate from '../components/resume-pdf/EnhancedModernTemplate'
 import { CreativeTemplate } from '../components/resume-pdf/CreativeTemplate'
+import { ExecutiveProfessionalTemplate } from '../components/resume-pdf/ExecutiveProfessionalTemplate'
 
 const getTemplate = (template: string, data: ResumeData) => {
   switch (template) {
     case 'creative':
       return CreativeTemplate({ data })
+    case 'executive':
+      return ExecutiveProfessionalTemplate({ data })
     case 'modern':
     default:
       return EnhancedModernTemplate({ data })

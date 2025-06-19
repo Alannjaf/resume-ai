@@ -11,19 +11,17 @@ export const CreativeHeader: React.FC<CreativeHeaderProps> = ({ personal }) => {
   return (
     <View style={styles.header}>
       <View style={styles.profileContainer}>
-        {/* Profile Image with Creative Border */}
-        <View style={styles.profileImageWrapper}>
-          <View style={styles.profileImageBorder}>
-            {personal.profileImage ? (
+        {/* Profile Image with Creative Border - Only show if photo exists */}
+        {personal.profileImage && (
+          <View style={styles.profileImageWrapper}>
+            <View style={styles.profileImageBorder}>
               <Image 
                 src={personal.profileImage} 
                 style={styles.profileImage}
               />
-            ) : (
-              <Text style={{ fontSize: 12, color: '#64748b' }}>Photo</Text>
-            )}
+            </View>
           </View>
-        </View>
+        )}
 
         {/* Name and Title Section */}
         <View style={styles.nameSection}>

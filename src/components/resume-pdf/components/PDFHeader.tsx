@@ -10,19 +10,16 @@ interface PDFHeaderProps {
 export const PDFHeader: React.FC<PDFHeaderProps> = ({ personal }) => {
   return (
     <View style={styles.header}>
-      <View style={styles.profileImageContainer}>
-        {personal.profileImage ? (
+      {/* Only show profile image container if photo exists */}
+      {personal.profileImage && (
+        <View style={styles.profileImageContainer}>
           <Image 
             src={personal.profileImage} 
             style={styles.profileImage}
           />
-        ) : (
-          <View style={styles.profileImagePlaceholder}>
-            <Text style={{ fontSize: 14, color: '#64748b' }}>Photo</Text>
-          </View>
-        )}
-      </View>
-      <View style={styles.headerText}>
+        </View>
+      )}
+      <View style={[styles.headerText, !personal.profileImage && styles.headerTextNoPhoto]}>
         <Text style={styles.name}>{personal.fullName}</Text>
         {personal.title && <Text style={styles.title}>{personal.title}</Text>}
         <View style={styles.contactInfo}>
