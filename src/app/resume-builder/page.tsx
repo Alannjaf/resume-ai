@@ -20,13 +20,13 @@ import toast from 'react-hot-toast'
 
 // Form sections
 const FORM_SECTIONS = [
-  { id: 'template', title: 'Choose Template', icon: '🎨' },
   { id: 'personal', title: 'Personal Information', icon: '👤' },
   { id: 'summary', title: 'Professional Summary', icon: '📝' },
   { id: 'experience', title: 'Work Experience', icon: '💼' },
   { id: 'education', title: 'Education', icon: '🎓' },
   { id: 'skills', title: 'Skills', icon: '⚡' },
   { id: 'languages', title: 'Languages', icon: '🌐' },
+  { id: 'template', title: 'Choose Template', icon: '🎨' },
 ]
 
 function ResumeBuilderContent() {
@@ -299,18 +299,8 @@ function ResumeBuilderContent() {
                 {FORM_SECTIONS[currentSection].title}
               </h2>
 
-              {/* Template Selection Section */}
-              {currentSection === 0 && (
-                <div className="space-y-6">
-                  <TemplateGallery
-                    selectedTemplate={selectedTemplate}
-                    onTemplateSelect={setSelectedTemplate}
-                  />
-                </div>
-              )}
-
               {/* Personal Information Section */}
-              {currentSection === 1 && (
+              {currentSection === 0 && (
                 <div className="space-y-6">
                   {/* Profile Image Upload */}
                   <div className="flex justify-center">
@@ -470,7 +460,7 @@ function ResumeBuilderContent() {
               )}
 
               {/* Professional Summary Section */}
-              {currentSection === 2 && (
+              {currentSection === 1 && (
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium mb-1">
@@ -505,7 +495,7 @@ function ResumeBuilderContent() {
               )}
 
               {/* Work Experience Section */}
-              {currentSection === 3 && (
+              {currentSection === 2 && (
                 <WorkExperienceForm
                   experiences={formData.experience}
                   onChange={(experience) => setFormData({ ...formData, experience })}
@@ -513,7 +503,7 @@ function ResumeBuilderContent() {
               )}
 
               {/* Education Section */}
-              {currentSection === 4 && (
+              {currentSection === 3 && (
                 <EducationForm
                   education={formData.education}
                   onChange={(education) => setFormData({ ...formData, education })}
@@ -521,7 +511,7 @@ function ResumeBuilderContent() {
               )}
 
               {/* Skills Section */}
-              {currentSection === 5 && (
+              {currentSection === 4 && (
                 <SkillsForm
                   skills={formData.skills}
                   onChange={(skills) => setFormData({ ...formData, skills })}
@@ -530,11 +520,21 @@ function ResumeBuilderContent() {
               )}
 
               {/* Languages Section */}
-              {currentSection === 6 && (
+              {currentSection === 5 && (
                 <LanguagesForm
                   languages={formData.languages}
                   onChange={(languages) => setFormData({ ...formData, languages })}
                 />
+              )}
+
+              {/* Template Selection Section */}
+              {currentSection === 6 && (
+                <div className="space-y-6">
+                  <TemplateGallery
+                    selectedTemplate={selectedTemplate}
+                    onTemplateSelect={setSelectedTemplate}
+                  />
+                </div>
               )}
 
               {/* Navigation Buttons */}
