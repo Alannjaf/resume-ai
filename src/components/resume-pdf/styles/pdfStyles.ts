@@ -8,24 +8,22 @@ export const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 1.4,
     color: '#1a1a1a',
-  },
-  
-  firstPageContent: {
-    paddingTop: 0,
-  },
-  
-  continuationPage: {
-    paddingTop: 40, // Space at top for continued content
+    paddingTop: 30,    // Padding for all pages
+    paddingHorizontal: 0,
   },
   
   // Header Section
   header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
     backgroundColor: '#1e293b',
     color: '#ffffff',
     padding: '32 40',
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: 140,
+    height: 140,
   },
   
   profileImageContainer: {
@@ -89,13 +87,41 @@ export const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     minHeight: 600,
+    marginTop: 140, // Space for the absolute header
+  },
+  
+  pageWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#ffffff',
+  },
+  
+  leftBgOverlay: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: '38%',
+    backgroundColor: '#f8fafc',
+    borderRight: '1px solid #e2e8f0',
+  },
+  
+  leftColumnBg: {
+    position: 'absolute',
+    left: 0,
+    top: 140, // Start after header
+    bottom: 0,
+    width: '38%',
+    backgroundColor: '#f8fafc',
+    borderRight: '1px solid #e2e8f0',
   },
   
   leftColumn: {
     width: '38%',
-    backgroundColor: '#f8fafc',
     padding: '24 20',
-    borderRight: '1px solid #e2e8f0',
   },
   
   rightColumn: {
