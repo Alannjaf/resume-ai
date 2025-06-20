@@ -32,6 +32,12 @@ export async function POST(request: NextRequest) {
       }, { status: 403 })
     }
 
+    if (!limits.subscription) {
+      return NextResponse.json({ 
+        error: 'User subscription not found.' 
+      }, { status: 404 })
+    }
+
     // Get form data
     const formData = await request.formData()
     const file = formData.get('file') as File

@@ -19,7 +19,7 @@ export const PDFHeader: React.FC<PDFHeaderProps> = ({ personal }) => {
           />
         </View>
       )}
-      <View style={[styles.headerText, !personal.profileImage && styles.headerTextNoPhoto]}>
+      <View style={[styles.headerText, ...(!personal.profileImage ? [styles.headerTextNoPhoto] : [])]}>
         <Text style={styles.name}>{personal.fullName}</Text>
         {personal.title && <Text style={styles.title}>{personal.title}</Text>}
         <View style={styles.contactInfo}>

@@ -20,6 +20,12 @@ export async function POST(request: NextRequest) {
       }, { status: 403 })
     }
 
+    if (!limits.subscription) {
+      return NextResponse.json({ 
+        error: 'User subscription not found.' 
+      }, { status: 404 })
+    }
+
     const { template, timestamp, userAgent } = await request.json()
 
     // Check if user can use the selected template
@@ -41,7 +47,7 @@ export async function POST(request: NextRequest) {
       template,
       timestamp,
       userAgent: userAgent?.substring(0, 200), // Truncate for storage
-      ip: request.ip || request.headers.get('x-forwarded-for') || 'unknown'
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
     })
 
     return NextResponse.json({ success: true })

@@ -24,6 +24,12 @@ export async function POST(req: Request) {
       }, { status: 403 })
     }
 
+    if (!limits.subscription) {
+      return NextResponse.json({ 
+        error: 'User subscription not found.' 
+      }, { status: 404 })
+    }
+
     const body = await req.json()
     const { description, jobTitle, language } = body
 

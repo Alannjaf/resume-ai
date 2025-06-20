@@ -16,8 +16,8 @@ export const ExecutiveHeader = ({ personal }: ExecutiveHeaderProps) => {
           <Text style={executiveStyles.name}>{personal.fullName}</Text>
           
           {/* Job Title */}
-          {personal.jobTitle && (
-            <Text style={executiveStyles.headerJobTitle}>{personal.jobTitle}</Text>
+          {personal.title && (
+            <Text style={executiveStyles.headerJobTitle}>{personal.title}</Text>
           )}
           
           {/* Contact Information */}
