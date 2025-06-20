@@ -17,6 +17,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  // Debug: Check if Clerk key is loaded
+  console.log('Clerk Key:', process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.substring(0, 20) + '...')
+  
   return (
     <ClerkProvider>
       <html lang="en">
