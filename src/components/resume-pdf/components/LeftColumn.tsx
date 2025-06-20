@@ -34,7 +34,7 @@ export const LeftColumn: React.FC<LeftColumnProps> = ({ data }) => {
           {data.languages.map((language) => (
             <View key={language.id} style={skillsStyles.languageItem}>
               <Text style={skillsStyles.languageName}>{language.name}</Text>
-              <Text style={skillsStyles.languageLevel}>{language.proficiency}</Text>
+              <Text style={skillsStyles.languageLevel}>{language.proficiency || 'Basic'}</Text>
             </View>
           ))}
         </View>

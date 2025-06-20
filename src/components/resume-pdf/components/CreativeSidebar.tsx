@@ -67,7 +67,7 @@ export const CreativeSidebar: React.FC<CreativeSidebarProps> = ({ data }) => {
           {data.languages.map((language) => (
             <View key={language.id} style={sidebarStyles.languageItem}>
               <Text style={sidebarStyles.languageName}>{language.name}</Text>
-              <Text style={sidebarStyles.languageLevel}>{language.proficiency}</Text>
+              <Text style={sidebarStyles.languageLevel}>{language.proficiency || 'Basic'}</Text>
             </View>
           ))}
         </View>
