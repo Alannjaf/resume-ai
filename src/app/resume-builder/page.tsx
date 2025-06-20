@@ -297,8 +297,8 @@ function ResumeBuilderContent() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Progress Sidebar */}
-          <div className="lg:col-span-1">
+          {/* Progress Sidebar - Hidden on mobile, shown on desktop */}
+          <div className="hidden lg:block lg:col-span-1">
             <Card className="p-6">
               <h2 className="text-lg font-semibold mb-4">Progress</h2>
               <div className="space-y-3">
@@ -602,6 +602,31 @@ function ResumeBuilderContent() {
               </div>
             </Card>
           </div>
+        </div>
+
+        {/* Progress Section for Mobile - Shown only on mobile */}
+        <div className="lg:hidden mt-8">
+          <Card className="p-6">
+            <h2 className="text-lg font-semibold mb-4">Progress</h2>
+            <div className="space-y-3">
+              {FORM_SECTIONS.map((section, index) => (
+                <button
+                  key={section.id}
+                  onClick={() => setCurrentSection(index)}
+                  className={`w-full text-left p-3 rounded-lg transition-colors flex items-center space-x-3 ${
+                    index === currentSection
+                      ? 'bg-primary text-primary-foreground'
+                      : index < currentSection
+                      ? 'bg-green-50 text-green-700'
+                      : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <span className="text-xl">{section.icon}</span>
+                  <span className="font-medium">{section.title}</span>
+                </button>
+              ))}
+            </div>
+          </Card>
         </div>
       </div>
 

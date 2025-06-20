@@ -19,6 +19,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
   const [isLoadingPreview, setIsLoadingPreview] = useState(false)
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
   const [availableTemplates, setAvailableTemplates] = useState<string[]>(['modern'])
+  const [isMobile, setIsMobile] = useState(false)
   const currentPdfUrlRef = useRef<string | null>(null)
 
   const generatePDFPreview = useCallback(async () => {
@@ -96,6 +97,18 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     }
   }
 
+  // Check if mobile device
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent))
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   // Load user permissions when modal opens
   useEffect(() => {
     if (isOpen) {
@@ -163,60 +176,64 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
         )}
         
         {/* Modal Header */}
-        <div className="flex justify-between items-center p-6 border-b">
-          <div>
-            <h2 className="text-xl font-semibold">Resume Preview</h2>
-            {isTemplateRestricted && (
-              <p className="text-sm text-orange-600 mt-1">
-                Template: {template.charAt(0).toUpperCase() + template.slice(1)} (Premium)
-              </p>
-            )}
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button 
-              variant="outline"
-              onClick={generatePDFPreview}
-              disabled={isLoadingPreview}
-              size="sm"
-            >
-              {isLoadingPreview ? (
-                <>
-                  <div className="animate-spin h-4 w-4 mr-2 border-2 border-gray-600 border-t-transparent rounded-full" />
-                  Loading...
-                </>
-              ) : (
-                <>
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Refresh
-                </>
+        <div className="p-4 sm:p-6 border-b">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <div className="flex-1">
+              <h2 className="text-lg sm:text-xl font-semibold">Resume Preview</h2>
+              {isTemplateRestricted && (
+                <p className="text-sm text-orange-600 mt-1">
+                  Template: {template.charAt(0).toUpperCase() + template.slice(1)} (Premium)
+                </p>
               )}
-            </Button>
-            <Button 
-              onClick={handleDownloadPDF}
-              disabled={isGeneratingPDF || isTemplateRestricted}
-              size="sm"
-              className={isTemplateRestricted ? 'opacity-50 cursor-not-allowed' : ''}
-            >
-              {isGeneratingPDF ? (
-                <>
-                  <div className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full" />
-                  Downloading...
-                </>
-              ) : isTemplateRestricted ? (
-                <>
-                  <Crown className="h-4 w-4 mr-2" />
-                  Upgrade to Download
-                </>
-              ) : (
-                <>
-                  <Download className="h-4 w-4 mr-2" />
-                  Download PDF
-                </>
-              )}
-            </Button>
-            <Button variant="outline" onClick={onClose} size="sm">
-              <X className="h-4 w-4" />
-            </Button>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <Button 
+                variant="outline"
+                onClick={generatePDFPreview}
+                disabled={isLoadingPreview}
+                size="sm"
+                className="text-xs sm:text-sm"
+              >
+                {isLoadingPreview ? (
+                  <>
+                    <div className="animate-spin h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 border-2 border-gray-600 border-t-transparent rounded-full" />
+                    <span className="hidden sm:inline">Loading...</span>
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Refresh</span>
+                  </>
+                )}
+              </Button>
+              <Button 
+                onClick={handleDownloadPDF}
+                disabled={isGeneratingPDF || isTemplateRestricted}
+                size="sm"
+                className={`text-xs sm:text-sm ${isTemplateRestricted ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                {isGeneratingPDF ? (
+                  <>
+                    <div className="animate-spin h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 border-2 border-white border-t-transparent rounded-full" />
+                    <span className="hidden sm:inline">Downloading...</span>
+                  </>
+                ) : isTemplateRestricted ? (
+                  <>
+                    <Crown className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Upgrade</span>
+                    <span className="sm:hidden">Pro</span>
+                  </>
+                ) : (
+                  <>
+                    <Download className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Download</span>
+                  </>
+                )}
+              </Button>
+              <Button variant="outline" onClick={onClose} size="sm" className="text-xs sm:text-sm">
+                <X className="h-3 w-3 sm:h-4 sm:w-4" />
+              </Button>
+            </div>
           </div>
         </div>
         
@@ -230,11 +247,31 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
               </div>
             </div>
           ) : pdfUrl ? (
-            <iframe
-              src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=1`}
-              className="w-full h-full border-0"
-              title="Resume Preview"
-            />
+            <div className="w-full h-full">
+              {isMobile ? (
+                // Mobile view
+                <div className="w-full h-full overflow-auto bg-gray-100 p-4">
+                  <object
+                    data={`${pdfUrl}#zoom=75&view=Fit`}
+                    type="application/pdf"
+                    className="w-full h-full min-h-[600px]"
+                  >
+                    <embed
+                      src={`${pdfUrl}#zoom=75&view=Fit`}
+                      type="application/pdf"
+                      className="w-full h-full"
+                    />
+                  </object>
+                </div>
+              ) : (
+                // Desktop view - use iframe
+                <iframe
+                  src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-width`}
+                  className="w-full h-full border-0"
+                  title="Resume Preview"
+                />
+              )}
+            </div>
           ) : (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
