@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { generateResumePDF, getResumePDFBlob } from '@/lib/pdfGenerator'
 import { X, Download, RefreshCw, Crown, ArrowUp } from 'lucide-react'
@@ -20,7 +20,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
   const [availableTemplates, setAvailableTemplates] = useState<string[]>(['modern'])
 
-  const generatePDFPreview = async () => {
+  const generatePDFPreview = useCallback(async () => {
     if (!data.personal.fullName) {
       toast.error('Please fill in your name before generating preview')
       return
@@ -37,7 +37,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     } finally {
       setIsLoadingPreview(false)
     }
-  }
+  }, [data, template])
 
   const handleDownloadPDF = async () => {
     if (!data.personal.fullName) {
@@ -118,7 +118,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
         setPdfUrl(null)
       }
     }
-  }, [isOpen, data])
+  }, [isOpen, data, generatePDFPreview])
 
   if (!isOpen) return null
 

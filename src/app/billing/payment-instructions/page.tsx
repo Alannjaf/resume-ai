@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { AppHeader } from '@/components/shared/AppHeader'
-import { Copy, CheckCircle, Clock, Info, CreditCard } from 'lucide-react'
+import { Copy, CheckCircle, Info, CreditCard } from 'lucide-react'
 import { useUser } from '@clerk/nextjs'
 
 interface Plan {

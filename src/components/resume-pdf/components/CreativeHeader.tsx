@@ -18,6 +18,7 @@ export const CreativeHeader: React.FC<CreativeHeaderProps> = ({ personal }) => {
               <Image 
                 src={personal.profileImage} 
                 style={styles.profileImage}
+                alt="Profile photo"
               />
             </View>
           </View>

@@ -1,4 +1,3 @@
-
 C:\Users\Multimedia\Desktop\Projects\resume-ai>npm run build
 
 > resume-ai@1.0.0 build
@@ -55,14 +54,12 @@ C:\Users\Multimedia\Desktop\Projects\resume-ai>npm run build
 101:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
 
 ./src/app/billing/page.tsx
-8:24  Warning: 'Crown' is defined but never used.  @typescript-eslint/no-unused-vars
 107:19  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
 265:40  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
 266:34  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
 266:81  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
 
 ./src/app/billing/payment-instructions/page.tsx
-9:29  Warning: 'Clock' is defined but never used.  @typescript-eslint/no-unused-vars
 266:24  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
 286:14  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
 
@@ -78,10 +75,6 @@ C:\Users\Multimedia\Desktop\Projects\resume-ai>npm run build
 128:15  Warning: `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`.  react/no-unescaped-entities
 
 ./src/app/resume-builder/page.tsx
-18:10  Warning: 'WorkExperience' is defined but never used.  @typescript-eslint/no-unused-vars
-18:26  Warning: 'Education' is defined but never used.  @typescript-eslint/no-unused-vars
-18:37  Warning: 'Skill' is defined but never used.  @typescript-eslint/no-unused-vars
-18:44  Warning: 'Language' is defined but never used.  @typescript-eslint/no-unused-vars
 154:18  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
 179:60  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
 183:58  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
@@ -96,17 +89,12 @@ C:\Users\Multimedia\Desktop\Projects\resume-ai>npm run build
 175:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
 
 ./src/components/admin/UserManagement.tsx
-17:3  Warning: 'MoreVertical' is defined but never used.  @typescript-eslint/no-unused-vars
-19:3  Warning: 'X' is defined but never used.  @typescript-eslint/no-unused-vars
-40:9  Warning: 'router' is assigned a value but never used.  @typescript-eslint/no-unused-vars
-84:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
+38:9  Warning: 'router' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+82:14  Warning: 'error' is defined but never used.  @typescript-eslint/no-unused-vars
 
 ./src/components/ai/AIProfessionalSummary.tsx
 27:3  Warning: 'currentSummary' is defined but never used.  @typescript-eslint/no-unused-vars
 29:3  Warning: 'personalInfo' is defined but never used.  @typescript-eslint/no-unused-vars
-
-./src/components/landing/pricing.tsx
-4:23  Warning: 'Clock' is defined but never used.  @typescript-eslint/no-unused-vars
 
 ./src/components/resume-builder/EducationForm.tsx
 32:71  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
@@ -117,7 +105,7 @@ C:\Users\Multimedia\Desktop\Projects\resume-ai>npm run build
 90:53  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
 
 ./src/components/resume-builder/PreviewModal.tsx
-121:6  Warning: React Hook useEffect has missing dependencies: 'generatePDFPreview' and 'pdfUrl'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+121:6  Warning: React Hook useEffect has a missing dependency: 'pdfUrl'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
 
 ./src/components/resume-builder/ResumePreview.tsx
 10:39  Warning: 'template' is assigned a value but never used.  @typescript-eslint/no-unused-vars
@@ -132,21 +120,8 @@ C:\Users\Multimedia\Desktop\Projects\resume-ai>npm run build
 110:40  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
 110:50  Warning: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
 
-./src/components/resume-builder/TemplateGallery.tsx
-3:17  Warning: 'useState' is defined but never used.  @typescript-eslint/no-unused-vars
-
 ./src/components/resume-builder/WorkExperienceForm.tsx
-3:10  Warning: 'useState' is defined but never used.  @typescript-eslint/no-unused-vars
 35:77  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
-
-./src/components/resume-pdf/components/CreativeHeader.tsx        
-18:15  Warning: Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
-
-./src/components/resume-pdf/components/ExecutiveHeader.tsx       
-47:13  Warning: Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
-
-./src/components/resume-pdf/components/PDFHeader.tsx
-16:11  Warning: Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
 
 ./src/components/resume-pdf/components/RightColumn.tsx
 11:16  Warning: Unexpected any. Specify a different type.  @typescript-eslint/no-explicit-any
@@ -181,17 +156,22 @@ C:\Users\Multimedia\Desktop\Projects\resume-ai>npm run build
 info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
 Failed to compile.
 
-./src/lib/pdfGenerator.ts:23:28
-Type error: Argument of type 'string | number | bigint | boolean | Iterable<ReactNode> | Element | Promise<ReactNode> | null | undefined' is not assignable to parameter of type 'ReactElement<DocumentProps, string | JSXElementConstructor<any>> | undefined'.    
-  Type 'null' is not assignable to type 'ReactElement<DocumentProps, string | JSXElementConstructor<any>> | undefined'.
+./src/components/resume-pdf/components/CreativeHeader.tsx:21:17
+Type error: No overload matches this call.
+  Overload 1 of 2, '(props: ImageProps): Image', gave the following error.
+    Type '{ src: string; style: { width: number; height: number; borderRadius: number; }; alt: string; }' is not assignable to type 'IntrinsicAttributes & (IntrinsicClassAttributes<Image> & Readonly<ImageProps>)'.
+      Property 'alt' does not exist on type 'IntrinsicAttributes & (IntrinsicClassAttributes<Image> & Readonly<ImageProps>)'.     
+  Overload 2 of 2, '(props: ImageProps, context: any): Image', gave the following error.
+    Type '{ src: string; style: { width: number; height: number; borderRadius: number; }; alt: string; }' is not assignable to type 'IntrinsicAttributes & (IntrinsicClassAttributes<Image> & Readonly<ImageProps>)'.
+      Property 'alt' does not exist on type 'IntrinsicAttributes & (IntrinsicClassAttributes<Image> & Readonly<ImageProps>)'.     
 
-  21 |   try {
-  22 |     const templateComponent = getTemplate(template, resumeData)
-> 23 |     const blob = await pdf(templateComponent).toBlob()    
-     |                            ^
-  24 |     const defaultFileName = `${resumeData.personal.fullName.replace(/\s+/g, '_')}_Resume.pdf`
-  25 |     saveAs(blob, fileName || defaultFileName)
-  26 |     return true
+  19 |                 src={personal.profileImage}
+  20 |                 style={styles.profileImage}
+> 21 |                 alt="Profile photo"
+     |                 ^
+  22 |               />
+  23 |             </View>
+  24 |           </View>
 Next.js build worker exited with code: 1 and signal: null
 
 C:\Users\Multimedia\Desktop\Projects\resume-ai>

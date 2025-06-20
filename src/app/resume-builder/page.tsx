@@ -15,7 +15,7 @@ import { PreviewModal } from '@/components/resume-builder/PreviewModal'
 import { TemplateGallery } from '@/components/resume-builder/TemplateGallery'
 import { AIProfessionalSummary } from '@/components/ai/AIProfessionalSummary'
 import ImageUploader from '@/components/resume-builder/ImageUploader'
-import { WorkExperience, Education, Skill, Language, ResumeData } from '@/types/resume'
+import { ResumeData } from '@/types/resume'
 import toast from 'react-hot-toast'
 
 // Form sections

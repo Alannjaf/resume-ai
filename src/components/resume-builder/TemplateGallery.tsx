@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import { Check, Lock, Crown } from 'lucide-react'
 import { TemplateThumbnail } from './TemplateThumbnail'
 

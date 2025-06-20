@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { AppHeader } from '@/components/shared/AppHeader'
-import { Check, Clock, Crown, Star, CreditCard } from 'lucide-react'
+import { Check, Clock, Star, CreditCard } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 interface Plan {

@@ -14,9 +14,7 @@ import {
   Calendar,
   Crown,
   CreditCard,
-  MoreVertical,
-  Check,
-  X
+  Check
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
