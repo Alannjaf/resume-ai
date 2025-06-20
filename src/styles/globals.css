@@ -308,3 +308,97 @@ html {
     margin-top: 0.5rem !important;
   }
 }
+
+/* PDF Preview Protection Classes - Simplified */
+.pdf-preview-protected {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  
+  /* Disable context menu on the element itself */
+  -webkit-context-menu: none !important;
+  -moz-context-menu: none !important;
+  context-menu: none !important;
+}
+
+/* Ensure scrolling still works on protected elements */
+.pdf-preview-protected {
+  overflow: auto !important;
+}
+
+/* For iframe specifically */
+iframe.pdf-preview-protected {
+  pointer-events: auto !important;
+  overflow: auto !important;
+}
+
+/* For mobile objects */
+object.pdf-preview-protected,
+embed.pdf-preview-protected {
+  pointer-events: auto !important;
+  overflow: auto !important;
+}
+
+/* Comprehensive context menu blocking */
+.no-context-menu,
+.no-context-menu * {
+  -webkit-context-menu: none !important;
+  -moz-context-menu: none !important;
+  context-menu: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
+/* Ensure scrolling still works */
+.no-context-menu {
+  overflow: auto !important;
+}
+
+.no-context-menu iframe {
+  pointer-events: auto !important;
+  overflow: auto !important;
+}
+
+/* Prevent drag and drop on all elements */
+.pdf-preview-protected * {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+}
+
+/* Additional protection for images and media */
+.pdf-preview-protected img,
+.pdf-preview-protected video,
+.pdf-preview-protected audio {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
+
+/* Disable text selection on protection overlay */
+.pdf-protection-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 10;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
