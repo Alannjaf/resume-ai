@@ -45,7 +45,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     } finally {
       setIsLoadingPreview(false)
     }
-  }, []) // Remove dependencies to prevent infinite loops - function will use current values via closure
+  }, [data, template]) // Include data and template as dependencies
 
   const handleDownloadPDF = async () => {
     if (!data.personal.fullName) {
@@ -119,7 +119,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     if (isOpen && data.personal.fullName) {
       generatePDFPreview()
     }
-  }, [isOpen, data, template, generatePDFPreview]) // Safe to include generatePDFPreview now since it has no dependencies
+  }, [isOpen, data, template, generatePDFPreview]) // Safe to include generatePDFPreview with proper dependencies
 
   // Clean up URL object when modal closes or component unmounts
   useEffect(() => {
@@ -231,7 +231,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
             </div>
           ) : pdfUrl ? (
             <iframe
-              src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=0`}
+              src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=1`}
               className="w-full h-full border-0"
               title="Resume Preview"
             />
