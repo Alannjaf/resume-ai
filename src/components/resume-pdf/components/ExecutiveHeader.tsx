@@ -47,7 +47,6 @@ export const ExecutiveHeader = ({ personal }: ExecutiveHeaderProps) => {
             <Image 
               src={personal.profileImage} 
               style={executiveStyles.profilePhoto}
-              alt="Profile photo"
             />
           </View>
         )}

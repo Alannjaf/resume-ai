@@ -118,7 +118,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
         setPdfUrl(null)
       }
     }
-  }, [isOpen, data, generatePDFPreview])
+  }, [isOpen, data, generatePDFPreview, pdfUrl])
 
   if (!isOpen) return null
 

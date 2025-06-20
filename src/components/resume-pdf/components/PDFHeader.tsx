@@ -16,7 +16,6 @@ export const PDFHeader: React.FC<PDFHeaderProps> = ({ personal }) => {
           <Image 
             src={personal.profileImage} 
             style={styles.profileImage}
-            alt="Profile photo"
           />
         </View>
       )}
