@@ -102,5 +102,3 @@ cat .env.local
 - I always run the server and run the build in my windows cmd
 
 ---
-
-**Remember:** Always check PROJECT_STATUS.md for the most current todo list and progress!
