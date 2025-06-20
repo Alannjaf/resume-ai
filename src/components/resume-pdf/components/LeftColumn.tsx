@@ -29,7 +29,7 @@ export const LeftColumn: React.FC<LeftColumnProps> = ({ data }) => {
 
       {/* Languages Section */}
       {data.languages && data.languages.length > 0 && (
-        <View style={styles.section}>
+        <View wrap={false} style={styles.section}>
           <Text style={styles.leftSectionTitle}>Languages</Text>
           {data.languages.map((language) => (
             <View key={language.id} style={skillsStyles.languageItem}>

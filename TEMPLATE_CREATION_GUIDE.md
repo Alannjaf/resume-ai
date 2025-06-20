@@ -195,6 +195,57 @@ const styles = StyleSheet.create({
 })
 ```
 
+### Strategy Selection Guidelines
+
+**Use Strategy 1 (Complete Section Wrapping) for:**
+- **Languages Section** - Entire section should move as one unit
+- **Short sections** with few items (2-4 items max)
+- **Critical sections** that must never split
+- **Sections where title loses meaning without content**
+
+**Use Strategy 2 (Title with First Item) for:**
+- **Work Experience** - Long sections with many entries
+- **Education** - Multiple degrees/institutions  
+- **Projects** - Multiple project entries
+- **Large sections** where some splitting is acceptable
+
+**Use Strategy 3 (Individual Item Grouping) for:**
+- **Skills** - Each skill group stays together
+- **Achievements** - Individual achievements as units
+- **Any list** where items are independent
+
+### Languages Section - Special Case
+
+The Languages section requires **Strategy 1** because:
+- It's typically short (2-5 languages)
+- Section title is meaningless without language items
+- Professional appearance requires complete section integrity
+
+```typescript
+// ✅ CORRECT: Languages Section Implementation
+{data.languages && data.languages.length > 0 && (
+  <View wrap={false} style={styles.section}>
+    <Text style={styles.sectionTitle}>Languages</Text>
+    {data.languages.map((language) => (
+      <View key={language.id} style={styles.languageItem}>
+        <Text style={styles.languageName}>{language.name}</Text>
+        <Text style={styles.languageLevel}>{language.proficiency}</Text>
+      </View>
+    ))}
+  </View>
+)}
+
+// ❌ INCORRECT: This will cause section splitting
+{data.languages.map((language, index) => (
+  <View key={language.id} wrap={false}>
+    {index === 0 && <Text style={styles.sectionTitle}>Languages</Text>}
+    <View style={styles.languageItem}>
+      {/* Language content */}
+    </View>
+  </View>
+))}
+```
+
 ### Fixed Background Elements
 ```typescript
 // Background elements that appear on all pages
@@ -503,7 +554,32 @@ fontFamily: 'Inter'
 fontFamily: 'Helvetica' // or 'Times-Roman', 'Courier'
 ```
 
-### 4. Flexbox Limitations
+### 4. Wrong Grouping Strategy for Languages Section
+```typescript
+// ❌ This causes Languages section to split across pages
+{data.languages.map((language, index) => (
+  <View key={language.id} wrap={false}>
+    {index === 0 && <Text style={styles.sectionTitle}>Languages</Text>}
+    <View style={styles.languageItem}>
+      <Text style={styles.languageName}>{language.name}</Text>
+      <Text style={styles.languageLevel}>{language.proficiency}</Text>
+    </View>
+  </View>
+))}
+
+// ✅ Use Strategy 1 to keep entire Languages section together
+<View wrap={false} style={styles.section}>
+  <Text style={styles.sectionTitle}>Languages</Text>
+  {data.languages.map((language) => (
+    <View key={language.id} style={styles.languageItem}>
+      <Text style={styles.languageName}>{language.name}</Text>
+      <Text style={styles.languageLevel}>{language.proficiency}</Text>
+    </View>
+  ))}
+</View>
+```
+
+### 5. Flexbox Limitations
 ```typescript
 // ❌ Complex flexbox might not work
 style={{

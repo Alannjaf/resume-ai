@@ -59,19 +59,15 @@ export const CreativeSidebar: React.FC<CreativeSidebarProps> = ({ data }) => {
 
       {/* Languages Section */}
       {data.languages && data.languages.length > 0 && (
-        <View style={sectionStyles.section}>
-          {data.languages.map((language, index) => (
-            <View key={language.id} wrap={false}>
-              {index === 0 && (
-                <View style={sectionStyles.sectionTitleContainer}>
-                  <Text style={sectionStyles.sectionTitle}>Languages</Text>
-                  <View style={sectionStyles.sectionUnderline} />
-                </View>
-              )}
-              <View style={sidebarStyles.languageItem}>
-                <Text style={sidebarStyles.languageName}>{language.name}</Text>
-                <Text style={sidebarStyles.languageLevel}>{language.proficiency}</Text>
-              </View>
+        <View wrap={false} style={sectionStyles.section}>
+          <View style={sectionStyles.sectionTitleContainer}>
+            <Text style={sectionStyles.sectionTitle}>Languages</Text>
+            <View style={sectionStyles.sectionUnderline} />
+          </View>
+          {data.languages.map((language) => (
+            <View key={language.id} style={sidebarStyles.languageItem}>
+              <Text style={sidebarStyles.languageName}>{language.name}</Text>
+              <Text style={sidebarStyles.languageLevel}>{language.proficiency}</Text>
             </View>
           ))}
         </View>
