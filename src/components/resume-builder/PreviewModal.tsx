@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { generateResumePDF, getResumePDFBlob } from '@/lib/pdfGenerator'
 import { X, Download, RefreshCw, Crown, ArrowUp } from 'lucide-react'
@@ -19,6 +19,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
   const [isLoadingPreview, setIsLoadingPreview] = useState(false)
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
   const [availableTemplates, setAvailableTemplates] = useState<string[]>(['modern'])
+  const currentPdfUrlRef = useRef<string | null>(null)
 
   const generatePDFPreview = useCallback(async () => {
     if (!data.personal.fullName) {
@@ -28,8 +29,15 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
 
     setIsLoadingPreview(true)
     try {
+      // Clean up previous URL if it exists
+      if (currentPdfUrlRef.current) {
+        URL.revokeObjectURL(currentPdfUrlRef.current)
+        currentPdfUrlRef.current = null
+      }
+      
       const blob = await getResumePDFBlob(data, template)
       const url = URL.createObjectURL(blob)
+      currentPdfUrlRef.current = url
       setPdfUrl(url)
     } catch (error) {
       toast.error('Failed to generate PDF preview')
@@ -37,7 +45,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     } finally {
       setIsLoadingPreview(false)
     }
-  }, [data, template])
+  }, []) // Remove dependencies to prevent infinite loops - function will use current values via closure
 
   const handleDownloadPDF = async () => {
     if (!data.personal.fullName) {
@@ -106,19 +114,22 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     }
   }, [isOpen])
 
-  // Generate PDF preview when modal opens
+  // Generate PDF preview when modal opens or data changes
   useEffect(() => {
     if (isOpen && data.personal.fullName) {
       generatePDFPreview()
     }
+  }, [isOpen, data, template, generatePDFPreview]) // Safe to include generatePDFPreview now since it has no dependencies
+
+  // Clean up URL object when modal closes or component unmounts
+  useEffect(() => {
     return () => {
-      // Clean up URL object when modal closes
-      if (pdfUrl) {
-        URL.revokeObjectURL(pdfUrl)
-        setPdfUrl(null)
+      if (currentPdfUrlRef.current) {
+        URL.revokeObjectURL(currentPdfUrlRef.current)
+        currentPdfUrlRef.current = null
       }
     }
-  }, [isOpen, data, generatePDFPreview, pdfUrl])
+  }, []) // Remove isOpen dependency to prevent unnecessary cleanup calls
 
   if (!isOpen) return null
 

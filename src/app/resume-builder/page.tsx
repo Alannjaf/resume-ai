@@ -174,23 +174,26 @@ function ResumeBuilderContent() {
         setSelectedTemplate(resume.template || 'modern')
         
         // Ensure all items have IDs
+        let idCounter = 0
+        const generateId = () => `${Date.now()}_${++idCounter}`
+        
         const formDataWithIds: ResumeData = {
           ...resume.formData,
           experience: resume.formData.experience.map((exp: any) => ({
             ...exp,
-            id: exp.id || Date.now().toString() + Math.random().toString(36).substr(2, 9)
+            id: exp.id || generateId()
           })),
           education: resume.formData.education.map((edu: any) => ({
             ...edu,
-            id: edu.id || Date.now().toString() + Math.random().toString(36).substr(2, 9)
+            id: edu.id || generateId()
           })),
           skills: resume.formData.skills.map((skill: any) => ({
             ...skill,
-            id: skill.id || Date.now().toString() + Math.random().toString(36).substr(2, 9)
+            id: skill.id || generateId()
           })),
           languages: resume.formData.languages.map((lang: any) => ({
             ...lang,
-            id: lang.id || Date.now().toString() + Math.random().toString(36).substr(2, 9)
+            id: lang.id || generateId()
           }))
         }
         

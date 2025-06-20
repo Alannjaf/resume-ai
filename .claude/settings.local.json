@@ -11,7 +11,8 @@
       "Bash(npm install:*)",
       "Bash(find:*)",
       "Bash(ls:*)",
-      "Bash(rg:*)"
+      "Bash(rg:*)",
+      "mcp__NEON__run_sql"
     ],
     "deny": []
   }

@@ -1,5 +1,6 @@
 'use client'
 
+import { useMemo } from 'react'
 import { ResumeData } from '@/types/resume'
 
 interface ResumePreviewProps {
@@ -9,7 +10,7 @@ interface ResumePreviewProps {
 
 export function ResumePreview({ data, template = 'modern' }: ResumePreviewProps) {
   // Transform data to ensure all required fields have default values
-  const transformedData: ResumeData = {
+  const transformedData: ResumeData = useMemo(() => ({
     ...data,
     education: data.education.map(edu => ({
       ...edu,
@@ -20,7 +21,7 @@ export function ResumePreview({ data, template = 'modern' }: ResumePreviewProps)
       ...skill,
       level: skill.level || ''
     }))
-  }
+  }), [data])
 
   return (
     <div data-resume-preview className="bg-white p-8 shadow-lg max-w-4xl mx-auto">
