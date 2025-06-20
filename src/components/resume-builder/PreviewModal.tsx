@@ -6,6 +6,7 @@ import { generateResumePDF, getResumePDFBlob } from '@/lib/pdfGenerator'
 import { X, Download, RefreshCw, Crown, ArrowUp } from 'lucide-react'
 import { ResumeData } from '@/types/resume'
 import toast from 'react-hot-toast'
+import { PDFDocument } from 'pdf-lib'
 
 interface PreviewModalProps {
   isOpen: boolean
@@ -20,7 +21,23 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
   const [availableTemplates, setAvailableTemplates] = useState<string[]>(['modern'])
   const [isMobile, setIsMobile] = useState(false)
+  const [currentPdfPage, setCurrentPdfPage] = useState(1)
+  const [totalPdfPages, setTotalPdfPages] = useState(1)
+  const [currentPdfUrl, setCurrentPdfUrl] = useState<string | null>(null)
   const currentPdfUrlRef = useRef<string | null>(null)
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+
+  // Function to get actual page count from PDF
+  const getPDFPageCount = async (blob: Blob): Promise<number> => {
+    try {
+      const arrayBuffer = await blob.arrayBuffer()
+      const pdfDoc = await PDFDocument.load(arrayBuffer)
+      return pdfDoc.getPageCount()
+    } catch (error) {
+      console.error('Error getting PDF page count:', error)
+      return 1 // Default to 1 page if parsing fails
+    }
+  }
 
   const generatePDFPreview = useCallback(async () => {
     if (!data.personal.fullName) {
@@ -40,6 +57,14 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       const url = URL.createObjectURL(blob)
       currentPdfUrlRef.current = url
       setPdfUrl(url)
+      setCurrentPdfPage(1) // Reset to first page
+      
+      // Get actual page count from the PDF
+      const pageCount = await getPDFPageCount(blob)
+      setTotalPdfPages(pageCount)
+      
+      // Update current PDF URL for page navigation
+      updatePdfUrl(url, 1)
     } catch (error) {
       toast.error('Failed to generate PDF preview')
       console.error('PDF preview error:', error)
@@ -97,6 +122,57 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     }
   }
 
+  // Function to update PDF URL with page parameter
+  const updatePdfUrl = (baseUrl: string, page: number) => {
+    const urlWithPage = `${baseUrl}#toolbar=0&navpanes=0&scrollbar=1&view=Fit&zoom=page-fit&page=${page}`
+    setCurrentPdfUrl(urlWithPage)
+  }
+
+  // Page navigation functions
+  const goToNextPage = () => {
+    if (currentPdfPage < totalPdfPages && pdfUrl) {
+      const newPage = currentPdfPage + 1
+      setCurrentPdfPage(newPage)
+      updatePdfUrl(pdfUrl, newPage)
+    }
+  }
+
+  const goToPrevPage = () => {
+    if (currentPdfPage > 1 && pdfUrl) {
+      const newPage = currentPdfPage - 1
+      setCurrentPdfPage(newPage)
+      updatePdfUrl(pdfUrl, newPage)
+    }
+  }
+
+  const goToPage = (pageNum: number) => {
+    if (pageNum >= 1 && pageNum <= totalPdfPages && pdfUrl) {
+      setCurrentPdfPage(pageNum)
+      updatePdfUrl(pdfUrl, pageNum)
+    }
+  }
+
+  // Right-click prevention handlers
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault()
+  }
+
+  const handleDragStart = (e: React.DragEvent) => {
+    e.preventDefault()
+  }
+
+  // Keyboard shortcut prevention
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // Prevent Ctrl+S (save), Ctrl+P (print), Ctrl+A (select all)
+    if (e.ctrlKey && (e.key === 's' || e.key === 'p' || e.key === 'a')) {
+      e.preventDefault()
+    }
+    // Prevent F12 (developer tools)
+    if (e.key === 'F12') {
+      e.preventDefault()
+    }
+  }
+
   // Check if mobile device
   useEffect(() => {
     const checkMobile = () => {
@@ -149,8 +225,12 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
   const isTemplateRestricted = !availableTemplates.includes(template)
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden">
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+      onKeyDown={handleKeyDown}
+      tabIndex={-1}
+    >
+      <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden pdf-preview-modal">
         {/* Upgrade Banner for Restricted Templates */}
         {isTemplateRestricted && (
           <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-white p-4">
@@ -187,6 +267,29 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
               )}
             </div>
             <div className="flex items-center gap-2 flex-wrap">
+              {/* Page Navigation Controls - Desktop Only */}
+              {pdfUrl && !isLoadingPreview && !isMobile && (
+                <div className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg shadow-sm">
+                  <button
+                    onClick={goToPrevPage}
+                    disabled={currentPdfPage <= 1}
+                    className="flex items-center justify-center w-8 h-8 bg-blue-50 hover:bg-blue-100 disabled:bg-gray-100 disabled:cursor-not-allowed rounded-md transition-colors text-blue-600 disabled:text-gray-400 font-semibold"
+                  >
+                    ←
+                  </button>
+                  <span className="text-gray-700 font-medium min-w-[50px] text-center text-sm">
+                    {currentPdfPage} / {totalPdfPages}
+                  </span>
+                  <button
+                    onClick={goToNextPage}
+                    disabled={currentPdfPage >= totalPdfPages}
+                    className="flex items-center justify-center w-8 h-8 bg-blue-50 hover:bg-blue-100 disabled:bg-gray-100 disabled:cursor-not-allowed rounded-md transition-colors text-blue-600 disabled:text-gray-400 font-semibold"
+                  >
+                    →
+                  </button>
+                </div>
+              )}
+              
               <Button 
                 variant="outline"
                 onClick={generatePDFPreview}
@@ -249,7 +352,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
           ) : pdfUrl ? (
             <div className="w-full h-full">
               {isMobile ? (
-                // Mobile view
+                // Mobile view - simple without overlay
                 <div className="w-full h-full overflow-auto bg-gray-100 p-4">
                   <object
                     data={`${pdfUrl}#zoom=75&view=Fit`}
@@ -264,12 +367,37 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
                   </object>
                 </div>
               ) : (
-                // Desktop view - use iframe
-                <iframe
-                  src={`${pdfUrl}#toolbar=0&navpanes=0&scrollbar=1&view=FitH&zoom=page-width`}
-                  className="w-full h-full border-0"
-                  title="Resume Preview"
-                />
+                // Desktop view with overlay protection and page navigation
+                <div className="w-full h-full relative">
+                  <iframe
+                    key={`pdf-page-${currentPdfPage}`}
+                    ref={iframeRef}
+                    src={currentPdfUrl || pdfUrl}
+                    className="w-full h-full border-0"
+                    title="Resume Preview"
+                    style={{ minHeight: '100%' }}
+                  />
+                  {/* Enhanced protection overlay */}
+                  <div 
+                    className="absolute inset-0 bg-transparent z-10"
+                    onContextMenu={handleContextMenu}
+                    onDragStart={handleDragStart}
+                    onMouseDown={(e) => e.preventDefault()}
+                    onKeyDown={handleKeyDown}
+                    tabIndex={-1}
+                    style={{
+                      userSelect: 'none',
+                      WebkitUserSelect: 'none',
+                      MozUserSelect: 'none',
+                      msUserSelect: 'none',
+                      WebkitTouchCallout: 'none',
+                      WebkitUserDrag: 'none',
+                      WebkitTapHighlightColor: 'transparent',
+                      pointerEvents: 'auto',
+                      cursor: 'default'
+                    }}
+                  />
+                </div>
               )}
             </div>
           ) : (
