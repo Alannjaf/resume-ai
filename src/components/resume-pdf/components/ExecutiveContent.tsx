@@ -82,14 +82,14 @@ export const ExecutiveContent = ({ data }: ExecutiveContentProps) => {
       {data.languages && data.languages.length > 0 && (
         <View wrap={false} style={executiveStyles.section}>
           <Text style={executiveStyles.sectionTitle}>LANGUAGES</Text>
-          {data.languages.map((language) => (
-            <View key={language.id} style={executiveStyles.languageItem}>
-              <View style={executiveStyles.languageHeader}>
+          <View style={executiveStyles.languagesRow}>
+            {data.languages.map((language, index) => (
+              <View key={language.id} style={executiveStyles.languageChip}>
                 <Text style={executiveStyles.languageName}>{language.name}</Text>
-                <Text style={executiveStyles.languageLevel}>{language.proficiency}</Text>
+                <Text style={executiveStyles.languageLevel}>({language.proficiency || 'Basic'})</Text>
               </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
       )}
     </View>

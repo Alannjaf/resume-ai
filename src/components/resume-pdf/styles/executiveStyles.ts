@@ -216,28 +216,30 @@ export const executiveStyles = StyleSheet.create({
   },
 
   // Languages Styles
-  languageItem: {
-    marginBottom: 12,
-    breakInside: 'avoid',
-    keepTogether: true,
+  languagesRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: 4,
   },
 
-  languageHeader: {
+  languageChip: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    marginRight: 16,
+    marginBottom: 4,
   },
 
   languageName: {
-    fontSize: 11,
-    fontWeight: 'bold',
+    fontSize: 10,
+    fontWeight: 'medium',
     color: '#1e293b',
-    flex: 1,
+    marginRight: 4,
   },
 
   languageLevel: {
-    fontSize: 10,
-    color: '#2563eb',
-    fontWeight: 'medium',
+    fontSize: 9,
+    color: '#6b7280',
+    fontWeight: 'normal',
   },
 })
