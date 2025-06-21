@@ -391,10 +391,10 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
                       MozUserSelect: 'none',
                       msUserSelect: 'none',
                       WebkitTouchCallout: 'none',
-                      WebkitUserDrag: 'none',
                       WebkitTapHighlightColor: 'transparent',
                       pointerEvents: 'auto',
-                      cursor: 'default'
+                      cursor: 'default',
+                      ['WebkitUserDrag' as any]: 'none'
                     }}
                   />
                 </div>
