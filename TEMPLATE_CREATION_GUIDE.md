@@ -331,6 +331,8 @@ borderRadius: 37.5,        // Circle (half of width/height)
 
 ### Header Component Pattern
 ```typescript
+import { Text, View, Image } from '@react-pdf/renderer'
+
 interface HeaderProps {
   personal: PersonalInfo
 }
@@ -338,6 +340,16 @@ interface HeaderProps {
 const TemplateHeader: React.FC<HeaderProps> = ({ personal }) => {
   return (
     <View wrap={false} style={styles.header}>
+      {/* Profile Photo (optional) */}
+      {personal.profileImage && (
+        <View style={styles.photoContainer}>
+          <Image 
+            src={personal.profileImage} 
+            style={styles.profilePhoto}
+          />
+        </View>
+      )}
+      
       <Text style={styles.name}>{personal.fullName}</Text>
       <Text style={styles.title}>{personal.jobTitle}</Text>
       
@@ -349,6 +361,67 @@ const TemplateHeader: React.FC<HeaderProps> = ({ personal }) => {
     </View>
   )
 }
+```
+
+#### Profile Photo Styles
+```typescript
+// Add these styles for profile photo support
+photoContainer: {
+  width: 80,          // Adjust size as needed
+  height: 80,
+  marginBottom: 10,   // Space between photo and name
+  alignSelf: 'center', // Center the photo
+},
+
+profilePhoto: {
+  width: 80,
+  height: 80,
+  borderRadius: 40,   // Half of width/height for circle
+  border: '2px solid #e5e7eb', // Optional border
+}
+```
+
+#### Profile Photo Layout Options
+
+**Option 1: Centered Above Name (Elegant Style)**
+```typescript
+<View style={styles.header}>
+  {personal.profileImage && (
+    <View style={styles.photoContainer}>
+      <Image src={personal.profileImage} style={styles.profilePhoto} />
+    </View>
+  )}
+  <Text style={styles.name}>{personal.fullName}</Text>
+</View>
+```
+
+**Option 2: Side-by-Side Layout (Executive Style)**
+```typescript
+<View style={styles.headerContent}>
+  <View style={styles.headerText}>
+    <Text style={styles.name}>{personal.fullName}</Text>
+    {/* Other content */}
+  </View>
+  {personal.profileImage && (
+    <View style={styles.photoContainer}>
+      <Image src={personal.profileImage} style={styles.profilePhoto} />
+    </View>
+  )}
+</View>
+```
+
+**Option 3: Top Corner (Modern Style)**
+```typescript
+<View style={styles.header}>
+  <View style={styles.topRow}>
+    <View style={styles.nameSection}>
+      <Text style={styles.name}>{personal.fullName}</Text>
+    </View>
+    {personal.profileImage && (
+      <Image src={personal.profileImage} style={styles.cornerPhoto} />
+    )}
+  </View>
+</View>
 ```
 
 ### Section Component Pattern
@@ -418,6 +491,7 @@ const ExperienceItem: React.FC<ExperienceItemProps> = ({ experience }) => {
 ### Pre-Integration Testing Checklist
 - [ ] Template renders without errors
 - [ ] All sections display correctly
+- [ ] Profile photo displays correctly (if uploaded)
 - [ ] Page breaks work as expected
 - [ ] Fixed elements appear on all pages
 - [ ] Text doesn't overflow or get cut off
