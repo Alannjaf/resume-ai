@@ -32,6 +32,12 @@ export const getAllTemplates = (): TemplateInfo[] => {
       name: 'Elegant Professional',
       description: 'Sophisticated single-column design with navy accents',
       category: 'professional'
+    },
+    {
+      id: 'minimalist',
+      name: 'Minimalist Modern',
+      description: 'Clean typography-focused design with minimal visual elements',
+      category: 'minimal'
     }
   ]
 }

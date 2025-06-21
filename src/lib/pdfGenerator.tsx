@@ -6,6 +6,7 @@ import EnhancedModernTemplate from '../components/resume-pdf/EnhancedModernTempl
 import { CreativeTemplate } from '../components/resume-pdf/CreativeTemplate'
 import { ExecutiveProfessionalTemplate } from '../components/resume-pdf/ExecutiveProfessionalTemplate'
 import { ElegantProfessionalTemplate } from '../components/resume-pdf/ElegantProfessionalTemplate'
+import { MinimalistModernTemplate } from '../components/resume-pdf/MinimalistModernTemplate'
 
 const getTemplate = (template: string, data: ResumeData) => {
   switch (template) {
@@ -15,6 +16,8 @@ const getTemplate = (template: string, data: ResumeData) => {
       return <ExecutiveProfessionalTemplate data={data} />
     case 'elegant':
       return <ElegantProfessionalTemplate data={data} />
+    case 'minimalist':
+      return <MinimalistModernTemplate data={data} />
     case 'modern':
     default:
       return <EnhancedModernTemplate data={data} />
