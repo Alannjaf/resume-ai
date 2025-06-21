@@ -83,6 +83,68 @@
     "title": "Billing & Subscription",
     "currentPlan": "Current Plan"
   },
+  "about": {
+    "title": "About Work.krd",
+    "subtitle": "We're on a mission to help job seekers in Kurdistan and the Middle East create professional resumes that stand out and land their dream jobs.",
+    "stats": {
+      "users": "Active Users",
+      "resumes": "Resumes Created",
+      "success": "Success Rate",
+      "support": "Support"
+    },
+    "values": {
+      "community": {
+        "title": "Community First",
+        "description": "Built for the Kurdish and MENA job market with local insights and expertise."
+      },
+      "quality": {
+        "title": "Quality Design",
+        "description": "Professional templates that meet international standards and local preferences."
+      },
+      "innovation": {
+        "title": "AI Innovation",
+        "description": "Cutting-edge AI technology to help you write better content faster."
+      },
+      "success": {
+        "title": "Your Success",
+        "description": "We measure our success by helping you achieve your career goals."
+      }
+    }
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "Have questions or need help? We're here to support you on your career journey.",
+    "info": {
+      "title": "Contact Information",
+      "email": {
+        "title": "Email Support"
+      },
+      "phone": {
+        "title": "Phone Support"
+      },
+      "chat": {
+        "title": "Live Chat",
+        "content": "Available 9 AM - 6 PM (GMT+3)"
+      },
+      "address": {
+        "title": "Office Address"
+      }
+    },
+    "form": {
+      "title": "Send us a Message",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name", 
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email Address",
+      "emailPlaceholder": "Enter your email address",
+      "subject": "Subject",
+      "subjectPlaceholder": "What's this about?",
+      "message": "Message",
+      "messagePlaceholder": "Tell us how we can help you...",
+      "submit": "Send Message"
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "Something went wrong",
