@@ -38,6 +38,12 @@ export const getAllTemplates = (): TemplateInfo[] => {
       name: 'Minimalist Modern',
       description: 'Clean typography-focused design with minimal visual elements',
       category: 'minimal'
+    },
+    {
+      id: 'creative-artistic',
+      name: 'Creative Artistic',
+      description: 'Vibrant and artistic design with colorful accents and decorative elements',
+      category: 'creative'
     }
   ]
 }

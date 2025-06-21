@@ -1,0 +1,64 @@
+<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <!-- Page background -->
+  <rect width="400" height="300" fill="#fefefe" stroke="#e5e7eb" stroke-width="1"/>
+  
+  <!-- Background gradient overlay -->
+  <rect x="0" y="0" width="400" height="140" fill="#f3e8ff"/>
+  
+  <!-- Left accent bar -->
+  <rect x="0" y="0" width="8" height="300" fill="#9333ea"/>
+  
+  <!-- Header section -->
+  <!-- Profile photo with decorative border -->
+  <circle cx="340" cy="60" r="28" fill="#ec4899"/>
+  <circle cx="340" cy="60" r="24" fill="#ffffff" stroke="#ffffff" stroke-width="2"/>
+  <circle cx="340" cy="60" r="22" fill="#f3f4f6"/>
+  
+  <!-- Name -->
+  <rect x="30" y="40" width="140" height="12" fill="#9333ea"/>
+  
+  <!-- Title -->
+  <rect x="30" y="58" width="80" height="6" fill="#ec4899"/>
+  
+  <!-- Contact info with icons -->
+  <circle cx="32" cy="82" r="3" fill="#f59e0b"/>
+  <rect x="40" y="79" width="60" height="3" fill="#1f2937"/>
+  <circle cx="110" cy="82" r="3" fill="#f59e0b"/>
+  <rect x="118" y="79" width="50" height="3" fill="#1f2937"/>
+  
+  <circle cx="32" cy="95" r="3" fill="#f59e0b"/>
+  <rect x="40" y="92" width="40" height="3" fill="#1f2937"/>
+  <circle cx="110" cy="95" r="3" fill="#f59e0b"/>
+  <rect x="118" y="92" width="55" height="3" fill="#1f2937"/>
+  
+  <!-- Content sections with decorative elements -->
+  <!-- Summary section -->
+  <circle cx="40" cy="165" r="6" fill="#9333ea"/>
+  <rect x="55" y="162" width="80" height="4" fill="#9333ea"/>
+  <rect x="30" y="175" width="340" height="2" fill="#f3e8ff"/>
+  <rect x="30" y="185" width="340" height="20" fill="#ffffff" stroke="#ec4899" stroke-width="0" style="stroke-dasharray: 0,0,0,4"/>
+  <rect x="25" y="185" width="4" height="20" fill="#ec4899"/>
+  <rect x="35" y="190" width="300" height="2" fill="#1f2937"/>
+  <rect x="35" y="195" width="280" height="2" fill="#1f2937"/>
+  
+  <!-- Experience section -->
+  <circle cx="40" cy="225" r="6" fill="#9333ea"/>
+  <rect x="55" y="222" width="90" height="4" fill="#9333ea"/>
+  <rect x="30" y="235" width="340" height="2" fill="#f3e8ff"/>
+  
+  <!-- Experience item card -->
+  <rect x="30" y="245" width="340" height="30" fill="#ffffff"/>
+  <rect x="25" y="245" width="4" height="30" fill="#f59e0b"/>
+  <rect x="40" y="250" width="80" height="3" fill="#9333ea"/>
+  <rect x="40" y="257" width="60" height="2.5" fill="#ec4899"/>
+  <rect x="280" y="250" width="40" height="6" fill="#f3e8ff" rx="3"/>
+  <rect x="285" y="252" width="30" height="2" fill="#6b7280"/>
+  <rect x="40" y="265" width="200" height="2" fill="#1f2937"/>
+  <rect x="40" y="270" width="180" height="2" fill="#1f2937"/>
+  
+  <!-- Skills chips -->
+  <rect x="30" y="285" width="25" height="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.5" rx="4"/>
+  <rect x="60" y="285" width="30" height="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.5" rx="4"/>
+  <rect x="95" y="285" width="28" height="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.5" rx="4"/>
+  <rect x="128" y="285" width="32" height="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.5" rx="4"/>
+</svg>

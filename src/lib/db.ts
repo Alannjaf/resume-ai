@@ -204,7 +204,7 @@ async function getSystemSettings() {
     // Template Access Control
     freeTemplates: ['modern'],
     basicTemplates: ['modern', 'creative'],
-    proTemplates: ['modern', 'creative', 'executive', 'elegant', 'minimalist'],
+    proTemplates: ['modern', 'creative', 'executive', 'elegant', 'minimalist', 'creative-artistic'],
     
     // Profile Photo Upload Access Control
     photoUploadPlans: ['BASIC', 'PRO']
@@ -264,7 +264,7 @@ export async function checkUserLimits(clerkUserId: string) {
       availableTemplates = systemSettings.basicTemplates || ['modern', 'creative']
       break
     case 'PRO':
-      availableTemplates = systemSettings.proTemplates || ['modern', 'creative', 'executive', 'elegant', 'minimalist']
+      availableTemplates = systemSettings.proTemplates || ['modern', 'creative', 'executive', 'elegant', 'minimalist', 'creative-artistic']
       break
   }
 
