@@ -1,4 +1,4 @@
-import { Text, View } from '@react-pdf/renderer'
+import { Text, View, Image } from '@react-pdf/renderer'
 import { PersonalInfo } from '@/types/resume'
 import { elegantStyles } from '../styles/elegantStyles'
 
@@ -16,6 +16,16 @@ export const ElegantHeader = ({ personal }: ElegantHeaderProps) => {
 
   return (
     <View style={elegantStyles.header}>
+      {/* Profile photo at the top if exists */}
+      {personal.profileImage && (
+        <View style={elegantStyles.photoContainer}>
+          <Image 
+            src={personal.profileImage} 
+            style={elegantStyles.profilePhoto}
+          />
+        </View>
+      )}
+      
       {/* Full Name */}
       <Text style={elegantStyles.name}>{personal.fullName}</Text>
       

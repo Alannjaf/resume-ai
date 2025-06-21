@@ -65,6 +65,21 @@ export const elegantStyles = StyleSheet.create({
     marginHorizontal: 4,
   },
 
+  // Photo Styles
+  photoContainer: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+    alignSelf: 'center',
+  },
+
+  profilePhoto: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    border: `2px solid ${colors.primary}`,
+  },
+
   // Summary Section
   summarySection: {
     marginBottom: 25,
