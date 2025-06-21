@@ -3,6 +3,7 @@
 import React from 'react'
 import { Check, Lock, Crown } from 'lucide-react'
 import { TemplateThumbnail } from './TemplateThumbnail'
+import { getAllTemplates } from '@/lib/templates'
 
 interface TemplateOption {
   id: string
@@ -12,36 +13,11 @@ interface TemplateOption {
   category: 'professional' | 'creative' | 'minimal'
 }
 
-const templates: TemplateOption[] = [
-  {
-    id: 'modern',
-    name: 'Modern Professional',
-    description: 'Clean, professional layout with dual columns',
-    thumbnail: '/api/placeholder/300/400', // We'll generate these
-    category: 'professional'
-  },
-  {
-    id: 'creative',
-    name: 'Creative',
-    description: 'Artistic design with visual elements and colors',
-    thumbnail: '/api/placeholder/300/400', // We'll generate these
-    category: 'creative'
-  },
-  {
-    id: 'executive',
-    name: 'Executive Professional',
-    description: 'Clean executive layout with elegant typography',
-    thumbnail: '/thumbnails/executive.svg',
-    category: 'professional'
-  },
-  {
-    id: 'elegant',
-    name: 'Elegant Professional',
-    description: 'Sophisticated single-column design with navy accents',
-    thumbnail: '/thumbnails/elegant.svg',
-    category: 'professional'
-  }
-]
+// Get templates from centralized source and add thumbnail paths
+const templates: TemplateOption[] = getAllTemplates().map(template => ({
+  ...template,
+  thumbnail: `/thumbnails/${template.id}.svg`
+}))
 
 interface TemplateGalleryProps {
   selectedTemplate: string

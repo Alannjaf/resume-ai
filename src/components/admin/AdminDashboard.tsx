@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
+import { getTemplateIds } from '@/lib/templates'
 
 interface Stats {
   totalUsers: number
@@ -58,6 +59,7 @@ interface SystemSettings {
 
 export function AdminDashboard() {
   const router = useRouter()
+  const availableTemplates = getTemplateIds() // Get all templates dynamically
   const [stats, setStats] = useState<Stats | null>(null)
   const [settings, setSettings] = useState<SystemSettings>({
     // Free Plan Limits
@@ -81,7 +83,7 @@ export function AdminDashboard() {
     // Template Access Control
     freeTemplates: ['modern'],
     basicTemplates: ['modern', 'creative'],
-    proTemplates: ['modern', 'creative', 'executive'],
+    proTemplates: availableTemplates, // All templates for PRO by default
     
     // Profile Photo Upload Access Control
     photoUploadPlans: ['BASIC', 'PRO'],
@@ -140,7 +142,7 @@ export function AdminDashboard() {
         basicTemplates: Array.isArray(data.basicTemplates) ? data.basicTemplates : 
           (data.basicTemplates ? JSON.parse(data.basicTemplates) : ['modern', 'creative']),
         proTemplates: Array.isArray(data.proTemplates) ? data.proTemplates : 
-          (data.proTemplates ? JSON.parse(data.proTemplates) : ['modern', 'creative', 'executive']),
+          (data.proTemplates ? JSON.parse(data.proTemplates) : availableTemplates),
         
         // Profile Photo Upload Access Control
         photoUploadPlans: Array.isArray(data.photoUploadPlans) ? data.photoUploadPlans : 
@@ -441,7 +443,7 @@ export function AdminDashboard() {
                 <div>
                   <label className="block text-sm font-medium mb-2">Free Plan Templates</label>
                   <div className="space-y-2">
-                    {['modern', 'creative', 'executive', 'elegant'].map(template => (
+                    {availableTemplates.map(template => (
                       <label key={template} className="flex items-center space-x-2">
                         <input
                           type="checkbox"
@@ -469,7 +471,7 @@ export function AdminDashboard() {
                 <div>
                   <label className="block text-sm font-medium mb-2">Basic Plan Templates</label>
                   <div className="space-y-2">
-                    {['modern', 'creative', 'executive', 'elegant'].map(template => (
+                    {availableTemplates.map(template => (
                       <label key={template} className="flex items-center space-x-2">
                         <input
                           type="checkbox"
@@ -497,7 +499,7 @@ export function AdminDashboard() {
                 <div>
                   <label className="block text-sm font-medium mb-2">Pro Plan Templates</label>
                   <div className="space-y-2">
-                    {['modern', 'creative', 'executive', 'elegant'].map(template => (
+                    {availableTemplates.map(template => (
                       <label key={template} className="flex items-center space-x-2">
                         <input
                           type="checkbox"
