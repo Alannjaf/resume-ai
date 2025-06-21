@@ -6,15 +6,10 @@
   NODE_VERSION = "22"
   NPM_VERSION = "10"
 
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# Next.js specific plugin
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 [functions]
   node_bundler = "esbuild"
+  external_node_modules = ["@prisma/client", "prisma"]

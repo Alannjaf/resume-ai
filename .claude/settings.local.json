@@ -12,7 +12,8 @@
       "Bash(find:*)",
       "Bash(ls:*)",
       "Bash(rg:*)",
-      "mcp__NEON__run_sql"
+      "mcp__NEON__run_sql",
+      "mcp__NEON__list_projects"
     ],
     "deny": []
   }
