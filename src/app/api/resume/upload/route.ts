@@ -17,32 +17,50 @@ const openai = new OpenAI({
 })
 
 export async function POST(request: NextRequest) {
+  console.log('📂 Resume upload request received')
+  
   try {
     // Check authentication
     const { userId } = await auth()
+    console.log('👤 User ID:', userId ? 'authenticated' : 'not authenticated')
+    
     if (!userId) {
+      console.log('❌ Authentication failed')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     // Check import limits (PRO feature)
+    console.log('🔍 Checking user limits...')
     const limits = await checkUserLimits(userId)
+    console.log('📊 User limits:', { canImport: limits.canImport, hasSubscription: !!limits.subscription })
+    
     if (!limits.canImport) {
+      console.log('❌ Import not allowed - upgrade required')
       return NextResponse.json({ 
         error: 'Resume import is a PRO feature. Please upgrade your plan to import resumes.' 
       }, { status: 403 })
     }
 
     if (!limits.subscription) {
+      console.log('❌ No subscription found')
       return NextResponse.json({ 
         error: 'User subscription not found.' 
       }, { status: 404 })
     }
 
     // Get form data
+    console.log('📋 Parsing form data...')
     const formData = await request.formData()
     const file = formData.get('file') as File
     
+    console.log('📁 File info:', {
+      name: file?.name,
+      type: file?.type,
+      size: file?.size
+    })
+    
     if (!file) {
+      console.log('❌ No file provided in form data')
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
@@ -53,7 +71,10 @@ export async function POST(request: NextRequest) {
       'application/msword'
     ]
     
+    console.log('🔍 Validating file type...', { fileType: file.type, allowedTypes })
+    
     if (!allowedTypes.includes(file.type)) {
+      console.log('❌ Invalid file type:', file.type)
       return NextResponse.json(
         { error: 'Invalid file type. Please upload a PDF or DOCX file.' },
         { status: 400 }
@@ -62,7 +83,10 @@ export async function POST(request: NextRequest) {
 
     // Validate file size (max 5MB)
     const maxSize = 5 * 1024 * 1024 // 5MB
+    console.log('📏 Validating file size...', { fileSize: file.size, maxSize })
+    
     if (file.size > maxSize) {
+      console.log('❌ File too large:', file.size)
       return NextResponse.json(
         { error: 'File too large. Maximum size is 5MB.' },
         { status: 400 }
@@ -369,6 +393,7 @@ Return valid JSON only, no explanations.`
     }
 
   } catch (error) {
+    console.error('💥 Resume upload error:', error)
     return NextResponse.json(
       { error: 'Failed to process resume. Please try again.' },
       { status: 500 }
