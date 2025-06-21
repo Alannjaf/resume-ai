@@ -94,15 +94,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Convert file to buffer
+    console.log('🔄 Converting file to buffer...')
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
+    console.log('✅ File converted to buffer, size:', buffer.length)
 
     // For PDF files, send directly to AI. For DOCX, extract text first
     if (file.type === 'application/pdf') {
+      console.log('📄 Processing PDF file...')
       try {
         // Convert PDF to base64 according to OpenRouter documentation
+        console.log('🔄 Converting PDF to base64...')
         const base64Pdf = buffer.toString('base64')
         const dataUrl = `data:application/pdf;base64,${base64Pdf}`
+        console.log('✅ PDF converted to base64, length:', base64Pdf.length)
 
         // Single API call approach - extract structured data directly
         // Use 'any' type to bypass OpenAI SDK's strict typing for OpenRouter's file format
@@ -157,6 +162,7 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
           }
         ]
 
+        console.log('🤖 Sending request to OpenRouter AI...')
         const completion = await openai.chat.completions.create({
           model: 'google/gemini-2.5-flash-preview-05-20',
           messages,
@@ -164,11 +170,13 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
           temperature: 0.0 // Zero temperature for exact extraction
         })
 
+        console.log('✅ AI response received')
         const aiText = completion.choices[0]?.message?.content?.trim() || ''
-        
-        // AI response received
+        console.log('📝 Raw AI response length:', aiText.length)
+        console.log('📝 Raw AI response preview:', aiText.substring(0, 200) + '...')
         
         // Clean the response to ensure valid JSON
+        console.log('🧹 Cleaning AI response...')
         let cleanedText = aiText
         cleanedText = cleanedText.replace(/```json\s*/g, '').replace(/```\s*/g, '')
         
@@ -182,8 +190,12 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
           cleanedText = cleanedText.substring(0, lastBrace + 1)
         }
         
+        console.log('🧹 Cleaned JSON preview:', cleanedText.substring(0, 200) + '...')
+        
         // Parse the JSON
+        console.log('🔍 Parsing JSON...')
         const aiData = JSON.parse(cleanedText) as any
+        console.log('✅ JSON parsed successfully')
 
         // Helper function to convert date format from MM/YYYY to YYYY-MM
         const convertDateFormat = (date: string): string => {
@@ -272,11 +284,14 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
         }
 
         // Update import count
+        console.log('📊 Updating import count...')
         await prisma.subscription.update({
           where: { id: limits.subscription.id },
           data: { importCount: { increment: 1 } }
         })
+        console.log('✅ Import count updated')
 
+        console.log('🎉 PDF processing completed successfully')
         return NextResponse.json({
           success: true,
           data: transformedData,
@@ -284,6 +299,11 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
         })
 
       } catch (pdfError: any) {
+        console.error('❌ PDF processing error:', pdfError)
+        console.error('❌ Error details:', {
+          message: pdfError.message,
+          stack: pdfError.stack?.substring(0, 500)
+        })
         return NextResponse.json(
           { error: 'Failed to process PDF. Please try again or convert to DOCX format.' },
           { status: 400 }
