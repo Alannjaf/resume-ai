@@ -148,8 +148,26 @@ CRITICAL INSTRUCTIONS:
       "proficiency": "Basic|Conversational|Fluent|Professional|Native"
     }
   ],
-  "projects": [],
-  "certifications": []
+  "projects": [
+    {
+      "name": "Project Name",
+      "description": "Project description",
+      "technologies": "Tech stack used",
+      "link": "Project URL",
+      "startDate": "01/2020",
+      "endDate": "12/2020"
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Certification Name",
+      "issuer": "Issuing Organization",
+      "date": "01/2020",
+      "expiryDate": "01/2023",
+      "credentialId": "ID123",
+      "url": "Certificate URL"
+    }
+  ]
 }
 
 CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do not use fake names like "John Doe" or "Ahmed Al-Ali".`
@@ -313,12 +331,17 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
             description: proj.description || '',
             technologies: proj.technologies || '',
             link: proj.link || '',
+            startDate: proj.startDate || '',
+            endDate: proj.endDate || '',
           })),
           certifications: (aiData.certifications || []).map((cert: any, index: number) => ({
             id: cert.id || `cert_${index + 1}`,
             name: cert.name || '',
             issuer: cert.issuer || '',
             date: cert.date || '',
+            expiryDate: cert.expiryDate || '',
+            credentialId: cert.credentialId || '',
+            url: cert.url || '',
           })),
         }
 
@@ -433,12 +456,17 @@ Return valid JSON only, no explanations.`
             description: proj.description || '',
             technologies: proj.technologies || '',
             link: proj.link || '',
+            startDate: proj.startDate || '',
+            endDate: proj.endDate || '',
           })),
           certifications: (aiData.certifications || []).map((cert: any, index: number) => ({
             id: cert.id || `cert_${index + 1}`,
             name: cert.name || '',
             issuer: cert.issuer || '',
             date: cert.date || '',
+            expiryDate: cert.expiryDate || '',
+            credentialId: cert.credentialId || '',
+            url: cert.url || '',
           })),
         }
 
