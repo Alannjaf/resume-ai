@@ -11,6 +11,8 @@ import { WorkExperienceForm } from '@/components/resume-builder/WorkExperienceFo
 import { EducationForm } from '@/components/resume-builder/EducationForm'
 import { SkillsForm } from '@/components/resume-builder/SkillsForm'
 import { LanguagesForm } from '@/components/resume-builder/LanguagesForm'
+import { ProjectsForm } from '@/components/resume-builder/ProjectsForm'
+import { CertificationsForm } from '@/components/resume-builder/CertificationsForm'
 import { PreviewModal } from '@/components/resume-builder/PreviewModal'
 import { TemplateGallery } from '@/components/resume-builder/TemplateGallery'
 import { AIProfessionalSummary } from '@/components/ai/AIProfessionalSummary'
@@ -26,6 +28,8 @@ const FORM_SECTIONS = [
   { id: 'education', title: 'Education', icon: '🎓' },
   { id: 'skills', title: 'Skills', icon: '⚡' },
   { id: 'languages', title: 'Languages', icon: '🌐' },
+  { id: 'projects', title: 'Projects', icon: '💻' },
+  { id: 'certifications', title: 'Certifications', icon: '🏆' },
   { id: 'template', title: 'Choose Template', icon: '🎨' },
 ]
 
@@ -60,6 +64,8 @@ function ResumeBuilderContent() {
     education: [],
     skills: [],
     languages: [],
+    projects: [],
+    certifications: [],
   })
 
   const handleNext = () => {
@@ -194,6 +200,14 @@ function ResumeBuilderContent() {
           languages: resume.formData.languages.map((lang: any) => ({
             ...lang,
             id: lang.id || generateId()
+          })),
+          projects: (resume.formData.projects || []).map((proj: any) => ({
+            ...proj,
+            id: proj.id || generateId()
+          })),
+          certifications: (resume.formData.certifications || []).map((cert: any) => ({
+            ...cert,
+            id: cert.id || generateId()
           }))
         }
         
@@ -567,8 +581,24 @@ function ResumeBuilderContent() {
                 />
               )}
 
-              {/* Template Selection Section */}
+              {/* Projects Section */}
               {currentSection === 6 && (
+                <ProjectsForm
+                  projects={formData.projects || []}
+                  onChange={(projects) => setFormData({ ...formData, projects })}
+                />
+              )}
+
+              {/* Certifications Section */}
+              {currentSection === 7 && (
+                <CertificationsForm
+                  certifications={formData.certifications || []}
+                  onChange={(certifications) => setFormData({ ...formData, certifications })}
+                />
+              )}
+
+              {/* Template Selection Section */}
+              {currentSection === 8 && (
                 <div className="space-y-6">
                   <TemplateGallery
                     selectedTemplate={selectedTemplate}

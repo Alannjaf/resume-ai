@@ -111,6 +111,70 @@ export const ElegantContent = ({ data }: ElegantContentProps) => {
           </View>
         </View>
       )}
+
+      {/* Projects Section */}
+      {data.projects && data.projects.length > 0 && (
+        <View style={elegantStyles.section}>
+          {data.projects.map((project, index) => (
+            <View key={project.id} wrap={false}>
+              {index === 0 && (
+                <Text style={[elegantStyles.sectionTitle, elegantStyles.sectionTitleWithLine]}>
+                  Notable Projects
+                </Text>
+              )}
+              <View style={elegantStyles.experienceItem}>
+                <View style={elegantStyles.experienceHeader}>
+                  <Text style={elegantStyles.jobTitle}>{project.name}</Text>
+                  {(project.startDate || project.endDate) && (
+                    <Text style={elegantStyles.dateRange}>
+                      {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+                    </Text>
+                  )}
+                </View>
+                <View style={elegantStyles.companyInfo}>
+                  {project.technologies && (
+                    <Text style={elegantStyles.company}>Technologies: {project.technologies}</Text>
+                  )}
+                  {project.link && (
+                    <Text style={elegantStyles.location}>{project.link}</Text>
+                  )}
+                </View>
+                {project.description && (
+                  <Text style={elegantStyles.description}>{project.description}</Text>
+                )}
+              </View>
+            </View>
+          ))}
+        </View>
+      )}
+
+      {/* Certifications Section */}
+      {data.certifications && data.certifications.length > 0 && (
+        <View style={elegantStyles.section}>
+          {data.certifications.map((cert, index) => (
+            <View key={cert.id} wrap={false}>
+              {index === 0 && (
+                <Text style={[elegantStyles.sectionTitle, elegantStyles.sectionTitleWithLine]}>
+                  Certifications
+                </Text>
+              )}
+              <View style={elegantStyles.educationItem}>
+                <View style={elegantStyles.educationHeader}>
+                  <Text style={elegantStyles.degree}>{cert.name}</Text>
+                  {cert.date && (
+                    <Text style={elegantStyles.dateRange}>
+                      {formatDate(cert.date)}
+                    </Text>
+                  )}
+                </View>
+                <Text style={elegantStyles.school}>{cert.issuer}</Text>
+                {cert.credentialId && <Text style={elegantStyles.field}>ID: {cert.credentialId}</Text>}
+                {cert.url && <Text style={elegantStyles.location}>{cert.url}</Text>}
+              </View>
+            </View>
+          ))}
+        </View>
+      )}
     </View>
   )
 }

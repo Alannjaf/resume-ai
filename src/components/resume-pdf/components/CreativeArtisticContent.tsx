@@ -111,6 +111,80 @@ export const CreativeArtisticContent = ({ data }: CreativeArtisticContentProps) 
         </View>
       )}
 
+      {/* Projects Section */}
+      {data.projects && data.projects.length > 0 && (
+        <View style={creativeArtisticStyles.section}>
+          {data.projects.map((project, index) => (
+            <View key={project.id} wrap={false}>
+              {index === 0 && (
+                <>
+                  <View style={creativeArtisticStyles.sectionHeader}>
+                    <View style={creativeArtisticStyles.sectionIcon} />
+                    <Text style={creativeArtisticStyles.sectionTitle}>Notable Projects</Text>
+                  </View>
+                  <View style={creativeArtisticStyles.sectionDivider} />
+                </>
+              )}
+              <View style={creativeArtisticStyles.experienceItem}>
+                <View style={creativeArtisticStyles.experienceHeader}>
+                  <View style={creativeArtisticStyles.jobTitleContainer}>
+                    <Text style={creativeArtisticStyles.jobTitle}>{project.name}</Text>
+                    {project.technologies && (
+                      <Text style={creativeArtisticStyles.company}>Technologies: {project.technologies}</Text>
+                    )}
+                  </View>
+                  <View style={creativeArtisticStyles.dateContainer}>
+                    {(project.startDate || project.endDate) && (
+                      <Text style={creativeArtisticStyles.dateRange}>
+                        {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+                      </Text>
+                    )}
+                    {project.link && (
+                      <Text style={creativeArtisticStyles.location}>{project.link}</Text>
+                    )}
+                  </View>
+                </View>
+                {project.description && (
+                  <Text style={creativeArtisticStyles.description}>{project.description}</Text>
+                )}
+              </View>
+            </View>
+          ))}
+        </View>
+      )}
+
+      {/* Certifications Section */}
+      {data.certifications && data.certifications.length > 0 && (
+        <View style={creativeArtisticStyles.section}>
+          {data.certifications.map((cert, index) => (
+            <View key={cert.id} wrap={false}>
+              {index === 0 && (
+                <>
+                  <View style={creativeArtisticStyles.sectionHeader}>
+                    <View style={creativeArtisticStyles.sectionIcon} />
+                    <Text style={creativeArtisticStyles.sectionTitle}>Certifications</Text>
+                  </View>
+                  <View style={creativeArtisticStyles.sectionDivider} />
+                </>
+              )}
+              <View style={creativeArtisticStyles.educationItem}>
+                <View style={creativeArtisticStyles.educationHeader}>
+                  <Text style={creativeArtisticStyles.degree}>{cert.name}</Text>
+                  {cert.date && (
+                    <Text style={creativeArtisticStyles.dateRange}>
+                      {formatDate(cert.date)}
+                    </Text>
+                  )}
+                </View>
+                <Text style={creativeArtisticStyles.school}>{cert.issuer}</Text>
+                {cert.credentialId && <Text style={creativeArtisticStyles.field}>ID: {cert.credentialId}</Text>}
+                {cert.url && <Text style={creativeArtisticStyles.location}>{cert.url}</Text>}
+              </View>
+            </View>
+          ))}
+        </View>
+      )}
+
       {/* Languages Section */}
       {data.languages && data.languages.length > 0 && (
         <View wrap={false} style={creativeArtisticStyles.section}>

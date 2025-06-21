@@ -78,6 +78,64 @@ export const ExecutiveContent = ({ data }: ExecutiveContentProps) => {
         </View>
       )}
 
+      {/* Projects Section */}
+      {data.projects && data.projects.length > 0 && (
+        <View style={executiveStyles.section}>
+          {data.projects.map((project, index) => (
+            <View key={project.id} wrap={false}>
+              {index === 0 && (
+                <Text style={executiveStyles.sectionTitle}>NOTABLE PROJECTS</Text>
+              )}
+              <View style={executiveStyles.experienceItem}>
+                <View style={executiveStyles.experienceHeader}>
+                  <Text style={executiveStyles.jobTitle}>{project.name}</Text>
+                  {(project.startDate || project.endDate) && (
+                    <Text style={executiveStyles.dateRange}>
+                      {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+                    </Text>
+                  )}
+                </View>
+                <View style={executiveStyles.companyInfo}>
+                  {project.technologies && (
+                    <Text style={executiveStyles.company}>Technologies: {project.technologies}</Text>
+                  )}
+                  {project.link && <Text style={executiveStyles.location}>{project.link}</Text>}
+                </View>
+                {project.description && (
+                  <Text style={executiveStyles.description}>{project.description}</Text>
+                )}
+              </View>
+            </View>
+          ))}
+        </View>
+      )}
+
+      {/* Certifications Section */}
+      {data.certifications && data.certifications.length > 0 && (
+        <View style={executiveStyles.section}>
+          {data.certifications.map((cert, index) => (
+            <View key={cert.id} wrap={false}>
+              {index === 0 && (
+                <Text style={executiveStyles.sectionTitle}>CERTIFICATIONS</Text>
+              )}
+              <View style={executiveStyles.educationItem}>
+                <View style={executiveStyles.educationHeader}>
+                  <Text style={executiveStyles.degree}>{cert.name}</Text>
+                  {cert.date && (
+                    <Text style={executiveStyles.dateRange}>
+                      {formatDate(cert.date)}
+                    </Text>
+                  )}
+                </View>
+                <Text style={executiveStyles.school}>{cert.issuer}</Text>
+                {cert.credentialId && <Text style={executiveStyles.field}>ID: {cert.credentialId}</Text>}
+                {cert.url && <Text style={executiveStyles.location}>{cert.url}</Text>}
+              </View>
+            </View>
+          ))}
+        </View>
+      )}
+
       {/* Languages Section */}
       {data.languages && data.languages.length > 0 && (
         <View wrap={false} style={executiveStyles.section}>

@@ -35,7 +35,9 @@ export async function GET(
         experience: resume.sections.find(s => s.type === 'WORK_EXPERIENCE')?.content || [],
         education: resume.sections.find(s => s.type === 'EDUCATION')?.content || [],
         skills: resume.sections.find(s => s.type === 'SKILLS')?.content || [],
-        languages: resume.sections.find(s => s.type === 'LANGUAGES')?.content || []
+        languages: resume.sections.find(s => s.type === 'LANGUAGES')?.content || [],
+        projects: resume.sections.find(s => s.type === 'PROJECTS')?.content || [],
+        certifications: resume.sections.find(s => s.type === 'CERTIFICATIONS')?.content || []
       }
     }
 
@@ -131,6 +133,26 @@ export async function PUT(
           type: SectionType.LANGUAGES,
           title: 'Languages',
           content: formData.languages,
+          order: order++
+        })
+      }
+
+      if (formData.projects?.length > 0) {
+        sections.push({
+          resumeId: id,
+          type: SectionType.PROJECTS,
+          title: 'Projects',
+          content: formData.projects,
+          order: order++
+        })
+      }
+
+      if (formData.certifications?.length > 0) {
+        sections.push({
+          resumeId: id,
+          type: SectionType.CERTIFICATIONS,
+          title: 'Certifications',
+          content: formData.certifications,
           order: order++
         })
       }

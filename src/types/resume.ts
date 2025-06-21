@@ -38,16 +38,21 @@ export interface Language {
 export interface Project {
   id: string
   name: string
-  description?: string
-  technologies?: string
-  link?: string
+  description: string
+  technologies: string
+  link: string
+  startDate: string
+  endDate: string
 }
 
 export interface Certification {
   id: string
   name: string
   issuer: string
-  date?: string
+  date: string
+  expiryDate: string
+  credentialId: string
+  url: string
 }
 
 export interface PersonalInfo {

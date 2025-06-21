@@ -69,7 +69,7 @@ export async function POST(req: Request) {
       })
 
       // Update sections if provided
-      if (formData.experience || formData.education || formData.skills || formData.languages) {
+      if (formData.experience || formData.education || formData.skills || formData.languages || formData.projects || formData.certifications) {
         const { prisma } = await import('@/lib/prisma')
         
         // Clear existing sections
@@ -117,6 +117,26 @@ export async function POST(req: Request) {
             type: SectionType.LANGUAGES,
             title: 'Languages',
             content: formData.languages,
+            order: order++
+          })
+        }
+
+        if (formData.projects?.length > 0) {
+          sections.push({
+            resumeId: resume.id,
+            type: SectionType.PROJECTS,
+            title: 'Projects',
+            content: formData.projects,
+            order: order++
+          })
+        }
+
+        if (formData.certifications?.length > 0) {
+          sections.push({
+            resumeId: resume.id,
+            type: SectionType.CERTIFICATIONS,
+            title: 'Certifications',
+            content: formData.certifications,
             order: order++
           })
         }

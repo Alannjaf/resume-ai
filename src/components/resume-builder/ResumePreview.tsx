@@ -125,6 +125,69 @@ export function ResumePreview({ data, template = 'modern' }: ResumePreviewProps)
             </div>
           </div>
         )}
+
+        {transformedData.projects && transformedData.projects.length > 0 && (
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 border-b-2 border-gray-300 pb-2">Projects</h2>
+            <div className="mt-4 space-y-4">
+              {transformedData.projects.map((project) => (
+                <div key={project.id} className="border-l-4 border-green-500 pl-4">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">{project.name}</h3>
+                      {project.technologies && (
+                        <p className="text-gray-600 text-sm">Technologies: {project.technologies}</p>
+                      )}
+                    </div>
+                    {(project.startDate || project.endDate) && (
+                      <p className="text-gray-600 text-sm">
+                        {project.startDate} - {project.endDate || 'Present'}
+                      </p>
+                    )}
+                  </div>
+                  {project.description && (
+                    <p className="mt-2 text-gray-700 leading-relaxed">{project.description}</p>
+                  )}
+                  {project.link && (
+                    <p className="mt-1 text-blue-600 text-sm">{project.link}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {transformedData.certifications && transformedData.certifications.length > 0 && (
+          <div>
+            <h2 className="text-xl font-bold text-gray-900 border-b-2 border-gray-300 pb-2">Certifications</h2>
+            <div className="mt-4 space-y-3">
+              {transformedData.certifications.map((cert) => (
+                <div key={cert.id} className="border-l-4 border-purple-500 pl-4">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">{cert.name}</h3>
+                      <p className="text-gray-700">{cert.issuer}</p>
+                      {cert.credentialId && (
+                        <p className="text-gray-600 text-sm">Credential ID: {cert.credentialId}</p>
+                      )}
+                    </div>
+                    {cert.date && (
+                      <div className="text-right">
+                        <p className="text-gray-600 text-sm">Issued: {cert.date}</p>
+                        {cert.expiryDate && (
+                          <p className="text-gray-600 text-sm">Expires: {cert.expiryDate}</p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  {cert.url && (
+                    <p className="mt-1 text-blue-600 text-sm">{cert.url}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

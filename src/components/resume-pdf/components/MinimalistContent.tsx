@@ -88,6 +88,64 @@ export const MinimalistContent = ({ data }: MinimalistContentProps) => {
         </View>
       )}
 
+      {/* Projects Section */}
+      {data.projects && data.projects.length > 0 && (
+        <View style={minimalistStyles.section}>
+          {data.projects.map((project, index) => (
+            <View key={project.id} wrap={false}>
+              {index === 0 && (
+                <Text style={minimalistStyles.sectionTitle}>Projects</Text>
+              )}
+              <View style={minimalistStyles.experienceItem}>
+                <View style={minimalistStyles.experienceHeader}>
+                  <Text style={minimalistStyles.jobTitle}>{project.name}</Text>
+                  {(project.startDate || project.endDate) && (
+                    <Text style={minimalistStyles.dateRange}>
+                      {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+                    </Text>
+                  )}
+                </View>
+                {project.technologies && (
+                  <Text style={minimalistStyles.company}>Technologies: {project.technologies}</Text>
+                )}
+                {project.description && (
+                  <Text style={minimalistStyles.description}>{project.description}</Text>
+                )}
+                {project.link && (
+                  <Text style={minimalistStyles.location}>{project.link}</Text>
+                )}
+              </View>
+            </View>
+          ))}
+        </View>
+      )}
+
+      {/* Certifications Section */}
+      {data.certifications && data.certifications.length > 0 && (
+        <View style={minimalistStyles.section}>
+          {data.certifications.map((cert, index) => (
+            <View key={cert.id} wrap={false}>
+              {index === 0 && (
+                <Text style={minimalistStyles.sectionTitle}>Certifications</Text>
+              )}
+              <View style={minimalistStyles.educationItem}>
+                <View style={minimalistStyles.educationHeader}>
+                  <Text style={minimalistStyles.degree}>{cert.name}</Text>
+                  {cert.date && (
+                    <Text style={minimalistStyles.dateRange}>
+                      {formatDate(cert.date)}
+                    </Text>
+                  )}
+                </View>
+                <Text style={minimalistStyles.school}>{cert.issuer}</Text>
+                {cert.credentialId && <Text style={minimalistStyles.field}>ID: {cert.credentialId}</Text>}
+                {cert.url && <Text style={minimalistStyles.location}>{cert.url}</Text>}
+              </View>
+            </View>
+          ))}
+        </View>
+      )}
+
       {/* Languages Section */}
       {data.languages && data.languages.length > 0 && (
         <View wrap={false} style={minimalistStyles.section}>
