@@ -33,6 +33,13 @@ const templates: TemplateOption[] = [
     description: 'Clean executive layout with elegant typography',
     thumbnail: '/thumbnails/executive.svg',
     category: 'professional'
+  },
+  {
+    id: 'elegant',
+    name: 'Elegant Professional',
+    description: 'Sophisticated single-column design with navy accents',
+    thumbnail: '/thumbnails/elegant.svg',
+    category: 'professional'
   }
 ]
 

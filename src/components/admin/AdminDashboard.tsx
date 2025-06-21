@@ -441,7 +441,7 @@ export function AdminDashboard() {
                 <div>
                   <label className="block text-sm font-medium mb-2">Free Plan Templates</label>
                   <div className="space-y-2">
-                    {['modern', 'creative', 'executive'].map(template => (
+                    {['modern', 'creative', 'executive', 'elegant'].map(template => (
                       <label key={template} className="flex items-center space-x-2">
                         <input
                           type="checkbox"
@@ -469,7 +469,7 @@ export function AdminDashboard() {
                 <div>
                   <label className="block text-sm font-medium mb-2">Basic Plan Templates</label>
                   <div className="space-y-2">
-                    {['modern', 'creative', 'executive'].map(template => (
+                    {['modern', 'creative', 'executive', 'elegant'].map(template => (
                       <label key={template} className="flex items-center space-x-2">
                         <input
                           type="checkbox"
@@ -497,7 +497,7 @@ export function AdminDashboard() {
                 <div>
                   <label className="block text-sm font-medium mb-2">Pro Plan Templates</label>
                   <div className="space-y-2">
-                    {['modern', 'creative', 'executive'].map(template => (
+                    {['modern', 'creative', 'executive', 'elegant'].map(template => (
                       <label key={template} className="flex items-center space-x-2">
                         <input
                           type="checkbox"
