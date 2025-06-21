@@ -39,7 +39,7 @@ export function Footer() {
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Quick Links</h3>
+            <h3 className="text-lg font-semibold">{t('footer.sections.quickLinks')}</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <a href="#features" className="text-gray-400 hover:text-white transition-colors">
@@ -58,7 +58,7 @@ export function Footer() {
               </li>
               <li>
                 <a href="/resume-builder" className="text-gray-400 hover:text-white transition-colors">
-                  Resume Builder
+                  {t('footer.links.resumeBuilder')}
                 </a>
               </li>
             </ul>
@@ -66,26 +66,26 @@ export function Footer() {
 
           {/* Support */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Support</h3>
+            <h3 className="text-lg font-semibold">{t('footer.sections.support')}</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <a href="#contact" className="text-gray-400 hover:text-white transition-colors">
-                  Contact Us
+                  {t('footer.links.contactUs')}
                 </a>
               </li>
               <li>
                 <a href="/billing" className="text-gray-400 hover:text-white transition-colors">
-                  Billing
+                  {t('footer.links.billing')}
                 </a>
               </li>
               <li>
                 <a href="/privacy" className="text-gray-400 hover:text-white transition-colors">
-                  Privacy Policy
+                  {t('footer.links.privacyPolicy')}
                 </a>
               </li>
               <li>
                 <a href="/terms" className="text-gray-400 hover:text-white transition-colors">
-                  Terms of Service
+                  {t('footer.links.termsOfService')}
                 </a>
               </li>
             </ul>
@@ -111,7 +111,7 @@ export function Footer() {
             
             {/* Language Support */}
             <div className="pt-4">
-              <p className="text-xs text-gray-500 mb-2">Languages Supported:</p>
+              <p className="text-xs text-gray-500 mb-2">{t('footer.languagesSupported')}</p>
               <div className="flex flex-wrap gap-2">
                 <span className="bg-gray-800 px-2 py-1 rounded text-xs">English</span>
                 <span className="bg-gray-800 px-2 py-1 rounded text-xs">کوردی</span>
@@ -125,12 +125,12 @@ export function Footer() {
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-sm text-gray-400">
-              © 2025 Work.krd. All rights reserved.
+              {t('footer.copyright')}
             </div>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
-              <span>Powered by Google Gemini AI</span>
+              <span>{t('footer.poweredBy')}</span>
               <span>•</span>
-              <span>Secure Payments by FIB & Nasspay</span>
+              <span>{t('footer.securePayments')}</span>
             </div>
           </div>
         </div>

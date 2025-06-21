@@ -24,6 +24,12 @@
       "ai": "مدعوم بالذكاء الاصطناعي",
       "templates": "قوالب مهنية",
       "languages": "دعم متعدد اللغات"
+    },
+    "socialProof": {
+      "trustedBy": "موثوق به من قبل المهنيين في جميع أنحاء العالم",
+      "resumesCreated": "سيرة ذاتية تم إنشاؤها",
+      "successRate": "معدل النجاح",
+      "languages": "لغات"
     }
   },
   "features": {
@@ -56,6 +62,34 @@
       }
     }
   },
+  "about": {
+    "title": "حول Work.krd",
+    "subtitle": "نحن في مهمة لمساعدة الباحثين عن العمل في كردستان والشرق الأوسط على إنشاء سير ذاتية مهنية تبرز وتحصل على وظائف أحلامهم.",
+    "stats": {
+      "users": "المستخدمون النشطون",
+      "resumes": "السير الذاتية المنشأة",
+      "success": "معدل النجاح",
+      "support": "الدعم"
+    },
+    "values": {
+      "community": {
+        "title": "المجتمع أولاً",
+        "description": "مصمم لسوق العمل الكردي والشرق أوسطي بفهم وخبرة محلية."
+      },
+      "quality": {
+        "title": "تصميم عالي الجودة",
+        "description": "قوالب مهنية تلبي المعايير الدولية والتفضيلات المحلية."
+      },
+      "innovation": {
+        "title": "ابتكار الذكاء الاصطناعي",
+        "description": "تكنولوجيا ذكاء اصطناعي متطورة لمساعدتك في كتابة محتوى أفضل بشكل أسرع."
+      },
+      "success": {
+        "title": "نجاحك",
+        "description": "نقيس نجاحنا بمساعدتك في تحقيق أهدافك المهنية."
+      }
+    }
+  },
   "pricing": {
     "title": "اختر الخطة المناسبة لك",
     "subtitle": "ابدأ مجاناً وترقى كلما نمت",
@@ -83,6 +117,366 @@
     "title": "الفواتير والاشتراك",
     "currentPlan": "الخطة الحالية"
   },
+  "forms": {
+    "workExperience": {
+      "title": "الخبرة العملية",
+      "addButton": "إضافة خبرة",
+      "experienceNumber": "الخبرة رقم #{number}",
+      "fields": {
+        "jobTitle": "المسمى الوظيفي",
+        "company": "الشركة",
+        "location": "الموقع",
+        "startDate": "تاريخ البداية",
+        "endDate": "تاريخ النهاية",
+        "current": "أعمل هنا حالياً",
+        "description": "وصف الوظيفة"
+      },
+      "placeholders": {
+        "jobTitle": "مثال: مهندس برمجيات",
+        "company": "مثال: شركة التقنية",
+        "location": "مثال: بغداد، العراق",
+        "description": "اوصف مسؤولياتك الرئيسية وإنجازاتك..."
+      }
+    },
+    "education": {
+      "title": "التعليم",
+      "addButton": "إضافة تعليم",
+      "educationNumber": "التعليم رقم #{number}",
+      "fields": {
+        "degree": "الدرجة العلمية",
+        "fieldOfStudy": "مجال الدراسة",
+        "school": "المدرسة/الجامعة",
+        "location": "الموقع",
+        "startDate": "تاريخ البداية",
+        "endDate": "تاريخ النهاية"
+      },
+      "placeholders": {
+        "degree": "مثال: بكالوريوس",
+        "fieldOfStudy": "مثال: علوم الحاسوب",
+        "school": "مثال: جامعة بغداد",
+        "location": "مثال: بغداد، العراق"
+      }
+    },
+    "skills": {
+      "title": "المهارات",
+      "addButton": "إضافة مهارة",
+      "description": "أضف المهارات التقنية والشخصية المتعلقة بالوظيفة المستهدفة.",
+      "placeholder": "مثال: JavaScript، إدارة المشاريع، التواصل",
+      "levels": {
+        "beginner": "مبتدئ",
+        "intermediate": "متوسط",
+        "advanced": "متقدم",
+        "expert": "خبير"
+      }
+    },
+    "languages": {
+      "title": "اللغات",
+      "addButton": "إضافة لغة",
+      "fields": {
+        "language": "اللغة",
+        "proficiency": "مستوى الإتقان"
+      },
+      "proficiency": {
+        "native": "لغة أم",
+        "fluent": "طلق",
+        "intermediate": "متوسط",
+        "basic": "أساسي"
+      }
+    },
+    "projects": {
+      "title": "المشاريع",
+      "addButton": "إضافة مشروع",
+      "fields": {
+        "name": "اسم المشروع",
+        "description": "الوصف",
+        "technologies": "التقنيات المستخدمة",
+        "url": "رابط المشروع"
+      }
+    },
+    "certifications": {
+      "title": "الشهادات",
+      "addButton": "إضافة شهادة",
+      "fields": {
+        "name": "اسم الشهادة",
+        "issuer": "الجهة المانحة",
+        "date": "تاريخ الحصول",
+        "expiryDate": "تاريخ الانتهاء",
+        "credentialId": "رقم الشهادة"
+      }
+    },
+    "personalInfo": {
+      "title": "المعلومات الشخصية",
+      "fields": {
+        "fullName": "الاسم الكامل",
+        "professionalTitle": "المسمى المهني",
+        "email": "البريد الإلكتروني",
+        "phone": "رقم الهاتف",
+        "location": "الموقع",
+        "linkedin": "لينكد إن",
+        "website": "الموقع الإلكتروني",
+        "profilePhoto": "الصورة الشخصية"
+      },
+      "placeholders": {
+        "fullName": "أدخل اسمك الكامل",
+        "professionalTitle": "مثال: مهندس برمجيات",
+        "email": "your.email@example.com",
+        "phone": "+964 xxx xxx xxxx",
+        "location": "المدينة، البلد",
+        "linkedin": "linkedin.com/in/yourprofile",
+        "website": "yourwebsite.com"
+      },
+      "photoUpgrade": {
+        "title": "رفع الصورة الشخصية متاح للخطط الأساسية والمتقدمة",
+        "description": "قم بترقية خطتك لإضافة صورة شخصية مهنية"
+      }
+    },
+    "professionalSummary": {
+      "title": "الملخص المهني",
+      "placeholder": "اكتب ملخصاً موجزاً عن خلفيتك المهنية ومهاراتك الرئيسية وأهدافك المهنية...",
+      "tip": "حافظ على إيجاز الملخص (3-4 جمل) وركز على نقاط القوة الفريدة لديك."
+    },
+    "validation": {
+      "required": "هذا الحقل مطلوب",
+      "email": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+      "phone": "يرجى إدخال رقم هاتف صحيح",
+      "url": "يرجى إدخال رابط صحيح"
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "لوحة التحكم",
+      "subtitle": "أنشئ وأدر سيرتك الذاتية المهنية",
+      "cards": {
+        "newResume": "إنشاء سيرة ذاتية جديدة",
+        "importResume": "استيراد سيرة ذاتية",
+        "browseTemplates": "تصفح القوالب",
+        "billing": "الاشتراك والفواتير"
+      },
+      "resumes": {
+        "title": "سيرتك الذاتية",
+        "newResume": "سيرة ذاتية جديدة",
+        "loading": "جاري تحميل سيرتك الذاتية...",
+        "empty": {
+          "title": "لا توجد سير ذاتية بعد",
+          "description": "ابدأ بإنشاء سيرتك الذاتية الأولى",
+          "button": "أنشئ سيرتك الذاتية الأولى"
+        },
+        "actions": {
+          "edit": "تعديل",
+          "preview": "معاينة",
+          "delete": "حذف",
+          "editResume": "تعديل السيرة الذاتية",
+          "deleteResume": "حذف السيرة الذاتية"
+        },
+        "deleteConfirm": {
+          "title": "حذف السيرة الذاتية؟",
+          "description": "هذا الإجراء لا يمكن التراجع عنه. ستتم إزالة السيرة الذاتية نهائياً.",
+          "confirm": "حذف",
+          "cancel": "إلغاء"
+        },
+        "messages": {
+          "deleteSuccess": "تم حذف السيرة الذاتية بنجاح",
+          "deleteError": "فشل في حذف السيرة الذاتية. حاول مرة أخرى.",
+          "deleteErrorGeneric": "خطأ في حذف السيرة الذاتية. حاول مرة أخرى."
+        },
+        "updated": "آخر تحديث {date}"
+      }
+    },
+    "resumeBuilder": {
+      "title": "منشئ السيرة الذاتية",
+      "backToDashboard": "العودة للوحة التحكم",
+      "resumeTitle": "عنوان السيرة الذاتية",
+      "resumeTitlePlaceholder": "أدخل عنوان السيرة الذاتية",
+      "sections": {
+        "chooseTemplate": "اختر القالب",
+        "personalInfo": "المعلومات الشخصية",
+        "professionalSummary": "الملخص المهني",
+        "workExperience": "الخبرة العملية",
+        "education": "التعليم",
+        "skills": "المهارات",
+        "languages": "اللغات",
+        "projects": "المشاريع",
+        "certifications": "الشهادات"
+      },
+      "actions": {
+        "preview": "معاينة",
+        "save": "حفظ",
+        "saving": "جاري الحفظ...",
+        "previous": "السابق",
+        "next": "التالي",
+        "viewResume": "عرض السيرة الذاتية"
+      },
+      "progress": "التقدم",
+      "loading": {
+        "resume": "جاري تحميل السيرة الذاتية...",
+        "builder": "جاري تحميل منشئ السيرة الذاتية..."
+      }
+    },
+    "billing": {
+      "title": "الاشتراك والفواتير",
+      "subtitle": "اختر الخطة التي تناسبك",
+      "manualPayment": {
+        "title": "الدفع اليدوي متاح!",
+        "description": "يمكنك ترقية خطتك عن طريق إرسال الدفعة من خلال بنك FIB أو التواصل مع فريق الدعم."
+      },
+      "currentPlan": {
+        "title": "الخطة الحالية",
+        "description": "أنت حالياً على خطة {plan}",
+        "resumesUsed": "السير الذاتية المستخدمة",
+        "aiUsage": "استخدام الذكاء الاصطناعي",
+        "exportsUsed": "التصديرات المستخدمة"
+      },
+      "loading": "جاري تحميل خطط الأسعار...",
+      "upgradeNow": "ترقِ الآن",
+      "paymentMethods": {
+        "title": "طرق الدفع المدعومة",
+        "fib": {
+          "name": "البنك العراقي الأول (FIB)",
+          "description": "دفع محلي آمن للمستخدمين العراقيين"
+        },
+        "nasspay": {
+          "name": "ناسباي",
+          "description": "حل دفع بديل"
+        },
+        "soon": "قريباً",
+        "workingOn": "نعمل بنشاط على دمج طرق الدفع هذه لنوفر لك خيارات دفع آمنة ومريحة."
+      }
+    }
+  },
+  "ai": {
+    "generateButton": "توليد بالذكاء الاصطناعي",
+    "enhanceButton": "تحسين بالذكاء الاصطناعي",
+    "suggestButton": "اقتراح بالذكاء الاصطناعي",
+    "generating": "جاري التوليد...",
+    "enhancing": "جاري التحسين...",
+    "suggesting": "الذكاء الاصطناعي يفكر...",
+    "error": "فشل في التوليد بالذكاء الاصطناعي. حاول مرة أخرى.",
+    "success": "تم توليد المحتوى بالذكاء الاصطناعي بنجاح!"
+  },
+  "footer": {
+    "sections": {
+      "quickLinks": "روابط سريعة",
+      "support": "الدعم"
+    },
+    "links": {
+      "resumeBuilder": "منشئ السيرة الذاتية",
+      "contactUs": "تواصل معنا",
+      "billing": "الفواتير",
+      "privacyPolicy": "سياسة الخصوصية",
+      "termsOfService": "شروط الخدمة"
+    },
+    "languagesSupported": "اللغات المدعومة:",
+    "copyright": "© 2025 Work.krd. جميع الحقوق محفوظة.",
+    "poweredBy": "مدعوم بـ Google Gemini AI",
+    "securePayments": "مدفوعات آمنة بواسطة FIB و Nasspay"
+  },
+  "contact": {
+    "title": "تواصل معنا",
+    "subtitle": "هل لديك أسئلة أو تحتاج مساعدة؟ نحن هنا لدعمك في رحلتك المهنية.",
+    "info": {
+      "title": "معلومات الاتصال",
+      "email": {
+        "title": "دعم البريد الإلكتروني"
+      },
+      "phone": {
+        "title": "الدعم الهاتفي"
+      },
+      "chat": {
+        "title": "الدردشة المباشرة",
+        "content": "متاح من 9 صباحاً - 6 مساءً (GMT+3)"
+      },
+      "address": {
+        "title": "عنوان المكتب"
+      }
+    },
+    "form": {
+      "title": "أرسل لنا رسالة",
+      "firstName": "الاسم الأول",
+      "firstNamePlaceholder": "أدخل اسمك الأول",
+      "lastName": "اسم العائلة", 
+      "lastNamePlaceholder": "أدخل اسم عائلتك",
+      "email": "عنوان البريد الإلكتروني",
+      "emailPlaceholder": "أدخل عنوان بريدك الإلكتروني",
+      "subject": "الموضوع",
+      "subjectPlaceholder": "ما هو موضوع الرسالة؟",
+      "message": "الرسالة",
+      "messagePlaceholder": "أخبرنا كيف يمكننا مساعدتك...",
+      "submit": "إرسال الرسالة",
+      "sending": "جاري الإرسال...",
+      "success": "تم إرسال الرسالة بنجاح! سنتواصل معك قريباً.",
+      "error": "فشل في إرسال الرسالة. حاول مرة أخرى."
+    }
+  },
+  "pricing": {
+    "title": "اختر الخطة المناسبة لك",
+    "subtitle": "ابدأ مجاناً وترقى كلما نمت",
+    "monthly": "شهرياً",
+    "yearly": "سنوياً",
+    "save": "وفر 20%",
+    "currency": "دولار",
+    "mostPopular": "الأكثر شعبية",
+    "paymentMethodsSoon": "طرق الدفع قريباً",
+    "manualPaymentFib": "الدفع اليدوي متاح عبر تحويل FIB!",
+    "plans": {
+      "free": {
+        "name": "مجاني",
+        "description": "مثالي للبداية",
+        "buttonText": "ابدأ مجاناً"
+      },
+      "basic": {
+        "name": "أساسي",
+        "description": "رائع للباحثين عن عمل",
+        "buttonText": "ترقَ الآن"
+      },
+      "pro": {
+        "name": "متقدم",
+        "description": "الأفضل للمهنيين",
+        "buttonText": "ترقَ الآن"
+      },
+      "features": {
+        "resumesPerMonth": "سيرة ذاتية شهرياً",
+        "aiSuggestionsPerMonth": "اقتراح ذكي شهرياً",
+        "exportsPerMonth": "تصدير شهرياً",
+        "unlimitedResumes": "سير ذاتية غير محدودة",
+        "unlimitedAI": "معالجة ذكية غير محدودة",
+        "unlimitedExports": "تصديرات غير محدودة",
+        "basicTemplates": "قوالب أساسية",
+        "allTemplates": "جميع خيارات القوالب",
+        "premiumTemplates": "جميع القوالب المتقدمة",
+        "advancedAI": "تحسين ذكي متقدم",
+        "pdfExport": "تصدير PDF",
+        "multipleFormats": "تنسيقات تصدير متعددة",
+        "prioritySupport": "دعم ذو أولوية",
+        "customBranding": "علامة تجارية مخصصة",
+        "analytics": "تحليلات متقدمة"
+      }
+    },
+    "paymentMethods": {
+      "title": "طرق الدفع قريباً",
+      "fib": "FIB",
+      "nasspay": "Nasspay",
+      "visa": "Visa",
+      "mastercard": "Mastercard",
+      "soon": "قريباً"
+    },
+    "faq": {
+      "title": "الأسئلة الشائعة",
+      "items": {
+        "switchPlans": {
+          "question": "هل يمكنني تغيير الخطط في أي وقت؟",
+          "answer": "نعم، يمكنك الترقية أو التراجع عن خطتك في أي وقت. التغييرات تصبح سارية فوراً."
+        },
+        "languages": {
+          "question": "هل تدعمون الكردية والعربية؟",
+          "answer": "نعم! ندعم بالكامل الكردية الصورانية والعربية والإنجليزية مع اتجاه النص RTL الصحيح."
+        },
+        "freeTrial": {
+          "question": "هل توجد فترة تجريبية مجانية للخطط المدفوعة؟",
+          "answer": "خطتنا المجانية تتيح لك تجربة معظم الميزات. يمكنك الترقية في أي وقت دون فقدان بياناتك."
+        }
+      }
+    }
+  },
   "common": {
     "loading": "جاري التحميل...",
     "error": "حدث خطأ ما",
@@ -94,6 +488,13 @@
     "close": "إغلاق",
     "back": "رجوع",
     "next": "التالي",
-    "submit": "إرسال"
+    "submit": "إرسال",
+    "required": "مطلوب",
+    "optional": "اختياري",
+    "edit": "تعديل",
+    "preview": "معاينة",
+    "upgrade": "ترقية",
+    "language": "اللغة",
+    "admin": "المدير"
   }
 }

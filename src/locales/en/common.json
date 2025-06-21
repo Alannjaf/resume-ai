@@ -24,6 +24,12 @@
       "ai": "AI-Powered",
       "templates": "Professional Templates",
       "languages": "Multi-language Support"
+    },
+    "socialProof": {
+      "trustedBy": "Trusted by professionals worldwide",
+      "resumesCreated": "Resumes Created",
+      "successRate": "Success Rate",
+      "languages": "Languages"
     }
   },
   "features": {
@@ -145,6 +151,366 @@
       "submit": "Send Message"
     }
   },
+  "forms": {
+    "workExperience": {
+      "title": "Work Experience",
+      "addButton": "Add Experience",
+      "experienceNumber": "Experience #{number}",
+      "fields": {
+        "jobTitle": "Job Title",
+        "company": "Company",
+        "location": "Location",
+        "startDate": "Start Date",
+        "endDate": "End Date",
+        "current": "I currently work here",
+        "description": "Job Description"
+      },
+      "placeholders": {
+        "jobTitle": "e.g., Software Engineer",
+        "company": "e.g., Tech Corp",
+        "location": "e.g., Baghdad, Iraq",
+        "description": "Describe your key responsibilities and achievements..."
+      }
+    },
+    "education": {
+      "title": "Education",
+      "addButton": "Add Education",
+      "educationNumber": "Education #{number}",
+      "fields": {
+        "degree": "Degree",
+        "fieldOfStudy": "Field of Study",
+        "school": "School/University",
+        "location": "Location",
+        "startDate": "Start Date",
+        "endDate": "End Date"
+      },
+      "placeholders": {
+        "degree": "e.g., Bachelor's Degree",
+        "fieldOfStudy": "e.g., Computer Science",
+        "school": "e.g., University of Baghdad",
+        "location": "e.g., Baghdad, Iraq"
+      }
+    },
+    "skills": {
+      "title": "Skills",
+      "addButton": "Add Skill",
+      "description": "Include both technical and soft skills relevant to your target job.",
+      "placeholder": "e.g., JavaScript, Project Management, Communication",
+      "levels": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced",
+        "expert": "Expert"
+      }
+    },
+    "languages": {
+      "title": "Languages",
+      "addButton": "Add Language",
+      "fields": {
+        "language": "Language",
+        "proficiency": "Proficiency"
+      },
+      "proficiency": {
+        "native": "Native",
+        "fluent": "Fluent",
+        "intermediate": "Intermediate",
+        "basic": "Basic"
+      }
+    },
+    "projects": {
+      "title": "Projects",
+      "addButton": "Add Project",
+      "fields": {
+        "name": "Project Name",
+        "description": "Description",
+        "technologies": "Technologies Used",
+        "url": "Project URL"
+      }
+    },
+    "certifications": {
+      "title": "Certifications",
+      "addButton": "Add Certification",
+      "fields": {
+        "name": "Certification Name",
+        "issuer": "Issuing Organization",
+        "date": "Date Obtained",
+        "expiryDate": "Expiry Date",
+        "credentialId": "Credential ID"
+      }
+    },
+    "personalInfo": {
+      "title": "Personal Information",
+      "fields": {
+        "fullName": "Full Name",
+        "professionalTitle": "Professional Title",
+        "email": "Email",
+        "phone": "Phone",
+        "location": "Location",
+        "linkedin": "LinkedIn",
+        "website": "Website",
+        "profilePhoto": "Profile Photo"
+      },
+      "placeholders": {
+        "fullName": "Enter your full name",
+        "professionalTitle": "e.g., Software Engineer",
+        "email": "your.email@example.com",
+        "phone": "+964 xxx xxx xxxx",
+        "location": "City, Country",
+        "linkedin": "linkedin.com/in/yourprofile",
+        "website": "yourwebsite.com"
+      },
+      "photoUpgrade": {
+        "title": "Profile photo upload is available for BASIC and PRO plans",
+        "description": "Upgrade your plan to add a professional profile photo"
+      }
+    },
+    "professionalSummary": {
+      "title": "Professional Summary",
+      "placeholder": "Write a brief summary of your professional background, key skills, and career objectives...",
+      "tip": "Keep your summary concise (3-4 sentences) and focus on your unique value proposition."
+    },
+    "validation": {
+      "required": "This field is required",
+      "email": "Please enter a valid email address",
+      "phone": "Please enter a valid phone number",
+      "url": "Please enter a valid URL"
+    }
+  },
+  "pages": {
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Create and manage your professional resumes",
+      "cards": {
+        "newResume": "Create New Resume",
+        "importResume": "Import Resume",
+        "browseTemplates": "Browse Templates",
+        "billing": "Subscription & Billing"
+      },
+      "resumes": {
+        "title": "Your Resumes",
+        "newResume": "New Resume",
+        "loading": "Loading your resumes...",
+        "empty": {
+          "title": "No resumes yet",
+          "description": "Get started by creating your first resume",
+          "button": "Create Your First Resume"
+        },
+        "actions": {
+          "edit": "Edit",
+          "preview": "Preview",
+          "delete": "Delete",
+          "editResume": "Edit resume",
+          "deleteResume": "Delete resume"
+        },
+        "deleteConfirm": {
+          "title": "Delete Resume?",
+          "description": "This action cannot be undone. The resume will be permanently deleted.",
+          "confirm": "Delete",
+          "cancel": "Cancel"
+        },
+        "messages": {
+          "deleteSuccess": "Resume deleted successfully",
+          "deleteError": "Failed to delete resume. Please try again.",
+          "deleteErrorGeneric": "Error deleting resume. Please try again."
+        },
+        "updated": "Updated {date}"
+      }
+    },
+    "resumeBuilder": {
+      "title": "Resume Builder",
+      "backToDashboard": "Back to Dashboard",
+      "resumeTitle": "Resume Title",
+      "resumeTitlePlaceholder": "Enter resume title",
+      "sections": {
+        "chooseTemplate": "Choose Template",
+        "personalInfo": "Personal Information",
+        "professionalSummary": "Professional Summary",
+        "workExperience": "Work Experience",
+        "education": "Education",
+        "skills": "Skills",
+        "languages": "Languages",
+        "projects": "Projects",
+        "certifications": "Certifications"
+      },
+      "actions": {
+        "preview": "Preview",
+        "save": "Save",
+        "saving": "Saving...",
+        "previous": "Previous",
+        "next": "Next",
+        "viewResume": "View Resume"
+      },
+      "progress": "Progress",
+      "loading": {
+        "resume": "Loading resume...",
+        "builder": "Loading resume builder..."
+      }
+    },
+    "billing": {
+      "title": "Subscription & Billing",
+      "subtitle": "Choose the plan that works best for you",
+      "manualPayment": {
+        "title": "Manual Payment Available!",
+        "description": "You can upgrade your plan by sending payment through FIB or contacting our support team."
+      },
+      "currentPlan": {
+        "title": "Current Plan",
+        "description": "You are currently on the {plan} plan",
+        "resumesUsed": "Resumes Used",
+        "aiUsage": "AI Usage",
+        "exportsUsed": "Exports Used"
+      },
+      "loading": "Loading pricing plans...",
+      "upgradeNow": "Upgrade Now",
+      "paymentMethods": {
+        "title": "Supported Payment Methods",
+        "fib": {
+          "name": "First Iraqi Bank (FIB)",
+          "description": "Secure local payment for Iraqi users"
+        },
+        "nasspay": {
+          "name": "Nasspay",
+          "description": "Alternative payment solution"
+        },
+        "soon": "Soon",
+        "workingOn": "We're actively working on integrating these payment methods to provide you with secure and convenient payment options."
+      }
+    }
+  },
+  "ai": {
+    "generateButton": "Generate with AI",
+    "enhanceButton": "Enhance with AI",
+    "suggestButton": "Suggest with AI",
+    "generating": "Generating...",
+    "enhancing": "Enhancing...",
+    "suggesting": "AI is thinking...",
+    "error": "AI generation failed. Please try again.",
+    "success": "AI content generated successfully!"
+  },
+  "footer": {
+    "sections": {
+      "quickLinks": "Quick Links",
+      "support": "Support"
+    },
+    "links": {
+      "resumeBuilder": "Resume Builder",
+      "contactUs": "Contact Us",
+      "billing": "Billing",
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service"
+    },
+    "languagesSupported": "Languages Supported:",
+    "copyright": "© 2025 Work.krd. All rights reserved.",
+    "poweredBy": "Powered by Google Gemini AI",
+    "securePayments": "Secure Payments by FIB & Nasspay"
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "Have questions or need help? We're here to support you on your career journey.",
+    "info": {
+      "title": "Contact Information",
+      "email": {
+        "title": "Email Support"
+      },
+      "phone": {
+        "title": "Phone Support"
+      },
+      "chat": {
+        "title": "Live Chat",
+        "content": "Available 9 AM - 6 PM (GMT+3)"
+      },
+      "address": {
+        "title": "Office Address"
+      }
+    },
+    "form": {
+      "title": "Send us a Message",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name", 
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email Address",
+      "emailPlaceholder": "Enter your email address",
+      "subject": "Subject",
+      "subjectPlaceholder": "What's this about?",
+      "message": "Message",
+      "messagePlaceholder": "Tell us how we can help you...",
+      "submit": "Send Message",
+      "sending": "Sending...",
+      "success": "Message sent successfully! We'll get back to you soon.",
+      "error": "Failed to send message. Please try again."
+    }
+  },
+  "pricing": {
+    "title": "Choose the Right Plan for You",
+    "subtitle": "Start free and upgrade as you grow",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "save": "Save 20%",
+    "currency": "USD",
+    "mostPopular": "Most Popular",
+    "paymentMethodsSoon": "Payment methods coming soon",
+    "manualPaymentFib": "Manual payment available via FIB transfer!",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Perfect for getting started",
+        "buttonText": "Get Started Free"
+      },
+      "basic": {
+        "name": "Basic",
+        "description": "Great for job seekers",
+        "buttonText": "Upgrade Now"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Best for professionals",
+        "buttonText": "Upgrade Now"
+      },
+      "features": {
+        "resumesPerMonth": "resumes per month",
+        "aiSuggestionsPerMonth": "AI suggestions per month",
+        "exportsPerMonth": "exports per month",
+        "unlimitedResumes": "Unlimited resumes",
+        "unlimitedAI": "Unlimited AI processing",
+        "unlimitedExports": "Unlimited exports",
+        "basicTemplates": "Basic templates",
+        "allTemplates": "All template options",
+        "premiumTemplates": "All premium templates",
+        "advancedAI": "Advanced AI enhancement",
+        "pdfExport": "PDF export",
+        "multipleFormats": "Multiple export formats",
+        "prioritySupport": "Priority support",
+        "customBranding": "Custom branding",
+        "analytics": "Advanced analytics"
+      }
+    },
+    "paymentMethods": {
+      "title": "Payment methods coming soon",
+      "fib": "FIB",
+      "nasspay": "Nasspay",
+      "visa": "Visa",
+      "mastercard": "Mastercard",
+      "soon": "Soon"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "items": {
+        "switchPlans": {
+          "question": "Can I switch plans anytime?",
+          "answer": "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately."
+        },
+        "languages": {
+          "question": "Do you support Kurdish and Arabic?",
+          "answer": "Yes! We fully support Kurdish Sorani, Arabic, and English with proper RTL text direction."
+        },
+        "freeTrial": {
+          "question": "Is there a free trial for paid plans?",
+          "answer": "Our Free plan lets you try most features. You can upgrade anytime without losing your data."
+        }
+      }
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "Something went wrong",
@@ -156,6 +522,13 @@
     "close": "Close",
     "back": "Back",
     "next": "Next",
-    "submit": "Submit"
+    "submit": "Submit",
+    "required": "required",
+    "optional": "optional",
+    "edit": "Edit",
+    "preview": "Preview",
+    "upgrade": "Upgrade",
+    "language": "Language",
+    "admin": "Admin"
   }
 }

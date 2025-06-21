@@ -17,6 +17,51 @@ interface Plan {
   available: boolean
 }
 
+// Function to translate plan data
+const translatePlan = (plan: Plan, t: (key: string) => string) => {
+  const translateFeature = (feature: string) => {
+    if (feature.includes('resumes per month')) {
+      const number = feature.split(' ')[0]
+      return `${number} ${t('pricing.plans.features.resumesPerMonth')}`
+    }
+    if (feature.includes('AI suggestions per month')) {
+      const number = feature.split(' ')[0]
+      return `${number} ${t('pricing.plans.features.aiSuggestionsPerMonth')}`
+    }
+    if (feature.includes('exports per month')) {
+      const number = feature.split(' ')[0]
+      return `${number} ${t('pricing.plans.features.exportsPerMonth')}`
+    }
+    if (feature === 'Unlimited resumes') return t('pricing.plans.features.unlimitedResumes')
+    if (feature === 'Unlimited AI processing') return t('pricing.plans.features.unlimitedAI')
+    if (feature === 'Unlimited exports') return t('pricing.plans.features.unlimitedExports')
+    if (feature === 'Basic templates') return t('pricing.plans.features.basicTemplates')
+    if (feature === 'All template options') return t('pricing.plans.features.allTemplates')
+    if (feature === 'All premium templates') return t('pricing.plans.features.premiumTemplates')
+    if (feature === 'Advanced AI enhancement') return t('pricing.plans.features.advancedAI')
+    if (feature === 'PDF export') return t('pricing.plans.features.pdfExport')
+    if (feature === 'Multiple export formats') return t('pricing.plans.features.multipleFormats')
+    if (feature === 'Priority support') return t('pricing.plans.features.prioritySupport')
+    if (feature === 'Custom branding') return t('pricing.plans.features.customBranding')
+    if (feature === 'Advanced analytics') return t('pricing.plans.features.analytics')
+    return feature // fallback for any untranslated features
+  }
+
+  return {
+    ...plan,
+    name: plan.name === 'Free' ? t('pricing.plans.free.name') : 
+          plan.name === 'Basic' ? t('pricing.plans.basic.name') : 
+          plan.name === 'Pro' ? t('pricing.plans.pro.name') : plan.name,
+    description: plan.name === 'Free' ? t('pricing.plans.free.description') : 
+                plan.name === 'Basic' ? t('pricing.plans.basic.description') : 
+                plan.name === 'Pro' ? t('pricing.plans.pro.description') : plan.description,
+    buttonText: plan.name === 'Free' ? t('pricing.plans.free.buttonText') : 
+               plan.name === 'Basic' ? t('pricing.plans.basic.buttonText') : 
+               plan.name === 'Pro' ? t('pricing.plans.pro.buttonText') : plan.buttonText,
+    features: plan.features.map(translateFeature)
+  }
+}
+
 export function Pricing() {
   const { t } = useLanguage()
   const [plans, setPlans] = useState<Plan[]>([])
@@ -55,7 +100,7 @@ export function Pricing() {
           <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4 max-w-2xl mx-auto">
             <div className="flex items-center justify-center space-x-2">
               <Check className="h-5 w-5 text-green-600" />
-              <span className="text-green-800 font-medium">Manual payment available via FIB transfer!</span>
+              <span className="text-green-800 font-medium">{t('pricing.manualPaymentFib')}</span>
             </div>
           </div>
         </div>
@@ -68,37 +113,39 @@ export function Pricing() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {plans.map((plan, index) => (
-              <Card key={index} className={`relative ${plan.popular ? 'border-primary shadow-xl scale-105' : 'border-gray-200'}`}>
-                {plan.popular && (
+            {plans.map((plan, index) => {
+              const translatedPlan = translatePlan(plan, t)
+              return (
+              <Card key={index} className={`relative ${translatedPlan.popular ? 'border-primary shadow-xl scale-105' : 'border-gray-200'}`}>
+                {translatedPlan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <div className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium flex items-center">
                       <Star className="h-3 w-3 mr-1 fill-current" />
-                      Most Popular
+                      {t('pricing.mostPopular')}
                     </div>
                   </div>
                 )}
                 
                 <CardHeader className="text-center pb-4">
                   <CardTitle className="text-2xl font-bold text-gray-900">
-                    {plan.name}
+                    {translatedPlan.name}
                   </CardTitle>
                   <div className="mt-4">
                     <span className="text-4xl font-bold text-gray-900">
-                      {plan.price === 0 ? 'Free' : `${plan.priceIQD.toLocaleString()} IQD`}
+                      {translatedPlan.price === 0 ? t('pricing.plans.free.name') : `${translatedPlan.priceIQD.toLocaleString()} IQD`}
                     </span>
                     <span className="text-gray-600 ml-1">
-                      {plan.price > 0 ? `/${t('pricing.monthly')}` : ''}
+                      {translatedPlan.price > 0 ? `/${t('pricing.monthly')}` : ''}
                     </span>
                   </div>
                   <CardDescription className="mt-2 text-base">
-                    {plan.description}
+                    {translatedPlan.description}
                   </CardDescription>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
                   <div className="space-y-3">
-                    {plan.features.map((feature, featureIndex) => (
+                    {translatedPlan.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-start">
                         <Check className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700">{feature}</span>
@@ -109,7 +156,7 @@ export function Pricing() {
 
                 <CardFooter className="pt-4">
                   <Button 
-                    variant={plan.name === 'Free' ? 'outline' : 'default'}
+                    variant={translatedPlan.name === t('pricing.plans.free.name') ? 'outline' : 'default'}
                     size="lg"
                     className="w-full"
                     onClick={() => {
@@ -120,52 +167,53 @@ export function Pricing() {
                       }
                     }}
                   >
-                    {plan.buttonText}
+                    {translatedPlan.buttonText}
                   </Button>
                 </CardFooter>
               </Card>
-            ))}
+            )
+            })}
           </div>
         )}
 
         {/* Payment Methods */}
         <div className="text-center mt-12">
           <p className="text-sm text-gray-600 mb-4">
-            Payment methods coming soon
+            {t('pricing.paymentMethods.title')}
           </p>
           <div className="flex justify-center items-center space-x-6 opacity-50">
             <div className="bg-white px-4 py-2 rounded border text-sm font-medium relative">
-              FIB
-              <div className="absolute -top-2 -right-2 bg-blue-100 text-blue-800 text-xs px-1.5 py-0.5 rounded-full">Soon</div>
+              {t('pricing.paymentMethods.fib')}
+              <div className="absolute -top-2 -right-2 bg-blue-100 text-blue-800 text-xs px-1.5 py-0.5 rounded-full">{t('pricing.paymentMethods.soon')}</div>
             </div>
             <div className="bg-white px-4 py-2 rounded border text-sm font-medium relative">
-              Nasspay
-              <div className="absolute -top-2 -right-2 bg-blue-100 text-blue-800 text-xs px-1.5 py-0.5 rounded-full">Soon</div>
+              {t('pricing.paymentMethods.nasspay')}
+              <div className="absolute -top-2 -right-2 bg-blue-100 text-blue-800 text-xs px-1.5 py-0.5 rounded-full">{t('pricing.paymentMethods.soon')}</div>
             </div>
             <div className="bg-white px-4 py-2 rounded border text-sm font-medium opacity-30">
-              Visa
+              {t('pricing.paymentMethods.visa')}
             </div>
             <div className="bg-white px-4 py-2 rounded border text-sm font-medium opacity-30">
-              Mastercard
+              {t('pricing.paymentMethods.mastercard')}
             </div>
           </div>
         </div>
 
         {/* FAQ Section */}
         <div className="mt-16 max-w-2xl mx-auto">
-          <h3 className="text-xl font-semibold text-center mb-8">Frequently Asked Questions</h3>
+          <h3 className="text-xl font-semibold text-center mb-8">{t('pricing.faq.title')}</h3>
           <div className="space-y-4">
             <div className="bg-white p-6 rounded-lg border">
-              <h4 className="font-medium mb-2">Can I switch plans anytime?</h4>
-              <p className="text-gray-600 text-sm">Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.</p>
+              <h4 className="font-medium mb-2">{t('pricing.faq.items.switchPlans.question')}</h4>
+              <p className="text-gray-600 text-sm">{t('pricing.faq.items.switchPlans.answer')}</p>
             </div>
             <div className="bg-white p-6 rounded-lg border">
-              <h4 className="font-medium mb-2">Do you support Kurdish and Arabic?</h4>
-              <p className="text-gray-600 text-sm">Yes! We fully support Kurdish Sorani, Arabic, and English with proper RTL text direction.</p>
+              <h4 className="font-medium mb-2">{t('pricing.faq.items.languages.question')}</h4>
+              <p className="text-gray-600 text-sm">{t('pricing.faq.items.languages.answer')}</p>
             </div>
             <div className="bg-white p-6 rounded-lg border">
-              <h4 className="font-medium mb-2">Is there a free trial for paid plans?</h4>
-              <p className="text-gray-600 text-sm">Our Free plan lets you try most features. You can upgrade anytime without losing your data.</p>
+              <h4 className="font-medium mb-2">{t('pricing.faq.items.freeTrial.question')}</h4>
+              <p className="text-gray-600 text-sm">{t('pricing.faq.items.freeTrial.answer')}</p>
             </div>
           </div>
         </div>

@@ -66,14 +66,14 @@ export function Hero() {
 
           {/* Social proof */}
           <div className="mt-12 pt-8 border-t border-gray-200">
-            <p className="text-sm text-gray-500 mb-4">Trusted by professionals worldwide</p>
+            <p className="text-sm text-gray-500 mb-4">{t('hero.socialProof.trustedBy')}</p>
             <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
               <div className="text-2xl font-bold text-gray-400">10K+</div>
-              <div className="text-sm text-gray-400">Resumes Created</div>
+              <div className="text-sm text-gray-400">{t('hero.socialProof.resumesCreated')}</div>
               <div className="text-2xl font-bold text-gray-400">95%</div>
-              <div className="text-sm text-gray-400">Success Rate</div>
+              <div className="text-sm text-gray-400">{t('hero.socialProof.successRate')}</div>
               <div className="text-2xl font-bold text-gray-400">3</div>
-              <div className="text-sm text-gray-400">Languages</div>
+              <div className="text-sm text-gray-400">{t('hero.socialProof.languages')}</div>
             </div>
           </div>
         </div>
