@@ -31,6 +31,8 @@ interface UserData {
     status: string
     resumeCount: number
     aiUsageCount: number
+    exportCount: number
+    importCount: number
   } | null
 }
 
@@ -133,39 +135,39 @@ export function UserManagement() {
         ) : (
           <div className="grid gap-4">
             {filteredUsers.map((user) => (
-              <Card key={user.id} className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
-                      <User className="h-6 w-6 text-gray-600" />
+              <Card key={user.id} className="p-4 sm:p-6">
+                <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+                  <div className="flex items-center space-x-3 sm:space-x-4">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
+                      <User className="h-5 w-5 sm:h-6 sm:w-6 text-gray-600" />
                     </div>
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <h3 className="font-semibold text-gray-900">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center space-x-2 mb-1">
+                        <h3 className="font-semibold text-gray-900 truncate">
                           {user.name || 'No name'}
                         </h3>
                         {user.role === 'ADMIN' && (
-                          <Badge variant="secondary" className="flex items-center gap-1">
+                          <Badge variant="secondary" className="flex items-center gap-1 flex-shrink-0">
                             <Crown className="h-3 w-3" />
                             Admin
                           </Badge>
                         )}
                       </div>
-                      <div className="flex items-center space-x-4 text-sm text-gray-600">
-                        <span className="flex items-center">
-                          <Mail className="h-3 w-3 mr-1" />
-                          {user.email}
+                      <div className="flex flex-col space-y-1 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4 text-sm text-gray-600">
+                        <span className="flex items-center truncate">
+                          <Mail className="h-3 w-3 mr-1 flex-shrink-0" />
+                          <span className="truncate">{user.email}</span>
                         </span>
                         <span className="flex items-center">
-                          <Calendar className="h-3 w-3 mr-1" />
+                          <Calendar className="h-3 w-3 mr-1 flex-shrink-0" />
                           Joined {new Date(user.createdAt).toLocaleDateString()}
                         </span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-4">
-                    <div className="text-right">
+                  <div className="flex items-center justify-between sm:justify-end sm:space-x-4">
+                    <div className="text-left sm:text-right">
                       <Badge variant={user.subscription?.plan === 'PRO' ? 'default' : 'outline'}>
                         {user.subscription?.plan || 'NO PLAN'}
                       </Badge>
@@ -173,7 +175,9 @@ export function UserManagement() {
                         {user.subscription && (
                           <>
                             {user.subscription.resumeCount} resumes • 
-                            {user.subscription.aiUsageCount} AI uses
+                            {user.subscription.aiUsageCount} AI uses • 
+                            {user.subscription.exportCount} exports • 
+                            {user.subscription.importCount} imports
                           </>
                         )}
                       </div>
@@ -185,9 +189,11 @@ export function UserManagement() {
                         setSelectedUser(user)
                         setShowUpgradeModal(true)
                       }}
+                      className="flex-shrink-0"
                     >
                       <CreditCard className="h-4 w-4 mr-2" />
-                      Manage Plan
+                      <span className="hidden sm:inline">Manage Plan</span>
+                      <span className="sm:hidden">Manage</span>
                     </Button>
                   </div>
                 </div>

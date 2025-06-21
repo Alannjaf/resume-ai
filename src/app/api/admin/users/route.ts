@@ -14,7 +14,8 @@ export async function GET() {
             status: true,
             resumeCount: true,
             aiUsageCount: true,
-            exportCount: true
+            exportCount: true,
+            importCount: true
           }
         }
       },
