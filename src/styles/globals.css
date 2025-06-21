@@ -402,3 +402,31 @@ embed.pdf-preview-protected {
   -moz-user-select: none;
   -ms-user-select: none;
 }
+
+/* Clerk Sign In/Up Modal Mobile Fix */
+.cl-rootBox {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+
+.cl-card {
+  margin: 0 auto !important;
+  max-width: 100% !important;
+}
+
+@media (max-width: 640px) {
+  .cl-rootBox {
+    padding: 0 1rem !important;
+  }
+  
+  .cl-card {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  .cl-modalContent {
+    margin: 0 !important;
+    width: 100% !important;
+  }
+}
