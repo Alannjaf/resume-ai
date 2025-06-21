@@ -39,7 +39,7 @@ export function Footer() {
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">{t('nav.features')}</h3>
+            <h3 className="text-lg font-semibold">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <a href="#features" className="text-gray-400 hover:text-white transition-colors">
@@ -52,8 +52,8 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#templates" className="text-gray-400 hover:text-white transition-colors">
-                  Templates
+                <a href="#about" className="text-gray-400 hover:text-white transition-colors">
+                  {t('nav.about')}
                 </a>
               </li>
               <li>
@@ -61,26 +61,21 @@ export function Footer() {
                   Resume Builder
                 </a>
               </li>
-              <li>
-                <a href="/dashboard" className="text-gray-400 hover:text-white transition-colors">
-                  Dashboard
-                </a>
-              </li>
             </ul>
           </div>
 
           {/* Support */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">{t('nav.contact')}</h3>
+            <h3 className="text-lg font-semibold">Support</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="/help" className="text-gray-400 hover:text-white transition-colors">
-                  Help Center
+                <a href="#contact" className="text-gray-400 hover:text-white transition-colors">
+                  Contact Us
                 </a>
               </li>
               <li>
-                <a href="/contact" className="text-gray-400 hover:text-white transition-colors">
-                  Contact Us
+                <a href="/billing" className="text-gray-400 hover:text-white transition-colors">
+                  Billing
                 </a>
               </li>
               <li>
@@ -93,11 +88,6 @@ export function Footer() {
                   Terms of Service
                 </a>
               </li>
-              <li>
-                <a href="/faq" className="text-gray-400 hover:text-white transition-colors">
-                  FAQ
-                </a>
-              </li>
             </ul>
           </div>
 
@@ -107,15 +97,15 @@ export function Footer() {
             <ul className="space-y-3 text-sm">
               <li className="flex items-center space-x-2 text-gray-400">
                 <Mail className="h-4 w-4" />
-                <span>support@work.krd</span>
+                <span>info@work.krd</span>
               </li>
               <li className="flex items-center space-x-2 text-gray-400">
                 <Phone className="h-4 w-4" />
-                <span>+964 750 123 4567</span>
+                <span>+964 750 491 0348</span>
               </li>
               <li className="flex items-start space-x-2 text-gray-400">
                 <MapPin className="h-4 w-4 mt-0.5" />
-                <span>Kurdistan Region, Iraq</span>
+                <span>Erbil, Kurdistan Region, Iraq</span>
               </li>
             </ul>
             
@@ -135,7 +125,7 @@ export function Footer() {
         <div className="border-t border-gray-800 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <div className="text-sm text-gray-400">
-              © 2024 Work.krd. All rights reserved.
+              © 2025 Work.krd. All rights reserved.
             </div>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
               <span>Powered by Google Gemini AI</span>
