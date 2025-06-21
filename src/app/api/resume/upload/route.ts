@@ -97,7 +97,9 @@ CRITICAL INSTRUCTIONS:
 - Return ONLY valid JSON with no explanations or markdown
 - The PDF contains a real person's resume - extract their actual details
 - For dates, extract them exactly as they appear in the PDF (e.g., "01/2020", "January 2020", "2020", etc.)
-- If end date is current/present, use "Present" as the value`
+- If end date is current/present, use "Present" as the value
+- For languages, extract BOTH the language name AND proficiency level if mentioned (Basic, Conversational, Fluent, Professional, Native)
+- If no proficiency level is mentioned, use "Conversational" as default instead of leaving empty`
           },
           {
             role: 'user',
@@ -140,7 +142,12 @@ CRITICAL INSTRUCTIONS:
     }
   ],
   "skills": [],
-  "languages": [],
+  "languages": [
+    {
+      "name": "Language Name",
+      "proficiency": "Basic|Conversational|Fluent|Professional|Native"
+    }
+  ],
   "projects": [],
   "certifications": []
 }
@@ -289,14 +296,14 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
               return {
                 id: `lang_${index + 1}`,
                 name: lang,
-                proficiency: 'Fluent', // Default proficiency for simple string languages
+                proficiency: 'Conversational', // Default proficiency for simple string languages
               }
             } else {
               // If language is already an object
               return {
                 id: lang.id || `lang_${index + 1}`,
                 name: lang.name || '',
-                proficiency: lang.proficiency || '',
+                proficiency: lang.proficiency || 'Conversational',
               }
             }
           }),
@@ -389,7 +396,7 @@ Return valid JSON only, no explanations.`
 
         const aiData = JSON.parse(cleanedText) as ResumeData
 
-        // Merge AI data with basic extraction
+        // Merge AI data with basic extraction and apply transformations
         const mergedData: ResumeData = {
           personal: {
             ...basicData.personal,
@@ -398,10 +405,41 @@ Return valid JSON only, no explanations.`
           summary: aiData.summary || basicData.summary || '',
           experience: aiData.experience || [],
           education: aiData.education || [],
-          skills: aiData.skills || [],
-          languages: aiData.languages || [],
-          projects: aiData.projects || [],
-          certifications: aiData.certifications || [],
+          skills: (aiData.skills || []).map((skill: any, index: number) => ({
+            id: skill.id || `skill_${index + 1}`,
+            name: typeof skill === 'string' ? skill : (skill.name || ''),
+            level: typeof skill === 'object' ? (skill.level || '') : '',
+          })),
+          languages: (aiData.languages || []).map((lang: any, index: number) => {
+            if (typeof lang === 'string') {
+              // If language is a string, create object with name and default proficiency
+              return {
+                id: `lang_${index + 1}`,
+                name: lang,
+                proficiency: 'Conversational', // Default proficiency for simple string languages
+              }
+            } else {
+              // If language is already an object
+              return {
+                id: lang.id || `lang_${index + 1}`,
+                name: lang.name || '',
+                proficiency: lang.proficiency || 'Conversational',
+              }
+            }
+          }),
+          projects: (aiData.projects || []).map((proj: any, index: number) => ({
+            id: proj.id || `proj_${index + 1}`,
+            name: proj.name || '',
+            description: proj.description || '',
+            technologies: proj.technologies || '',
+            link: proj.link || '',
+          })),
+          certifications: (aiData.certifications || []).map((cert: any, index: number) => ({
+            id: cert.id || `cert_${index + 1}`,
+            name: cert.name || '',
+            issuer: cert.issuer || '',
+            date: cert.date || '',
+          })),
         }
 
         // Update import count
