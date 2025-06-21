@@ -1,64 +1,93 @@
-<svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+<svg width="300" height="400" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg">
   <!-- Page background -->
-  <rect width="400" height="300" fill="#fefefe" stroke="#e5e7eb" stroke-width="1"/>
+  <rect width="300" height="400" fill="#fefefe" stroke="#e5e7eb" stroke-width="1"/>
   
-  <!-- Background gradient overlay -->
-  <rect x="0" y="0" width="400" height="140" fill="#f3e8ff"/>
+  <!-- Background gradient overlay - limited to header area -->
+  <rect x="25" y="30" width="250" height="120" fill="#f3e8ff"/>
   
-  <!-- Left accent bar -->
-  <rect x="0" y="0" width="8" height="300" fill="#9333ea"/>
+  <!-- Left accent bar - limited height -->
+  <rect x="0" y="30" width="6" height="120" fill="#9333ea"/>
   
   <!-- Header section -->
-  <!-- Profile photo with decorative border -->
-  <circle cx="340" cy="60" r="28" fill="#ec4899"/>
-  <circle cx="340" cy="60" r="24" fill="#ffffff" stroke="#ffffff" stroke-width="2"/>
-  <circle cx="340" cy="60" r="22" fill="#f3f4f6"/>
+  <!-- Profile photo with decorative pink border -->
+  <circle cx="230" cy="85" r="22" fill="#ec4899"/>
+  <circle cx="230" cy="85" r="19" fill="#ffffff" stroke="#ffffff" stroke-width="2"/>
+  <circle cx="230" cy="85" r="17" fill="#f3f4f6"/>
   
-  <!-- Name -->
-  <rect x="30" y="40" width="140" height="12" fill="#9333ea"/>
+  <!-- Name - uppercase style -->
+  <rect x="35" y="55" width="90" height="7" fill="#9333ea"/>
+  <rect x="35" y="65" width="75" height="7" fill="#9333ea"/>
   
-  <!-- Title -->
-  <rect x="30" y="58" width="80" height="6" fill="#ec4899"/>
+  <!-- Title with proper spacing -->
+  <rect x="35" y="85" width="52" height="4" fill="#ec4899"/>
   
-  <!-- Contact info with icons -->
-  <circle cx="32" cy="82" r="3" fill="#f59e0b"/>
-  <rect x="40" y="79" width="60" height="3" fill="#1f2937"/>
-  <circle cx="110" cy="82" r="3" fill="#f59e0b"/>
-  <rect x="118" y="79" width="50" height="3" fill="#1f2937"/>
+  <!-- Contact grid with amber icons -->
+  <circle cx="37" cy="105" r="2" fill="#f59e0b"/>
+  <rect x="42" y="103" width="34" height="2" fill="#1f2937"/>
+  <circle cx="82" cy="105" r="2" fill="#f59e0b"/>
+  <rect x="87" y="103" width="30" height="2" fill="#1f2937"/>
   
-  <circle cx="32" cy="95" r="3" fill="#f59e0b"/>
-  <rect x="40" y="92" width="40" height="3" fill="#1f2937"/>
-  <circle cx="110" cy="95" r="3" fill="#f59e0b"/>
-  <rect x="118" y="92" width="55" height="3" fill="#1f2937"/>
+  <circle cx="37" cy="115" r="2" fill="#f59e0b"/>
+  <rect x="42" y="113" width="26" height="2" fill="#1f2937"/>
+  <circle cx="82" cy="115" r="2" fill="#f59e0b"/>
+  <rect x="87" y="113" width="38" height="2" fill="#1f2937"/>
   
-  <!-- Content sections with decorative elements -->
-  <!-- Summary section -->
-  <circle cx="40" cy="165" r="6" fill="#9333ea"/>
-  <rect x="55" y="162" width="80" height="4" fill="#9333ea"/>
-  <rect x="30" y="175" width="340" height="2" fill="#f3e8ff"/>
-  <rect x="30" y="185" width="340" height="20" fill="#ffffff" stroke="#ec4899" stroke-width="0" style="stroke-dasharray: 0,0,0,4"/>
-  <rect x="25" y="185" width="4" height="20" fill="#ec4899"/>
-  <rect x="35" y="190" width="300" height="2" fill="#1f2937"/>
-  <rect x="35" y="195" width="280" height="2" fill="#1f2937"/>
+  <!-- Content sections below header -->
+  <!-- Summary section with icon and divider -->
+  <circle cx="35" cy="170" r="3" fill="#9333ea"/>
+  <rect x="45" y="168" width="75" height="3" fill="#9333ea"/>
+  <rect x="30" y="178" width="225" height="1" fill="#f3e8ff"/>
+  
+  <!-- Summary card with pink left border -->
+  <rect x="30" y="188" width="225" height="15" fill="#ffffff" rx="2"/>
+  <rect x="30" y="188" width="2" height="15" fill="#ec4899"/>
+  <rect x="36" y="192" width="187" height="2" fill="#1f2937"/>
+  <rect x="36" y="196" width="165" height="2" fill="#1f2937"/>
   
   <!-- Experience section -->
-  <circle cx="40" cy="225" r="6" fill="#9333ea"/>
-  <rect x="55" y="222" width="90" height="4" fill="#9333ea"/>
-  <rect x="30" y="235" width="340" height="2" fill="#f3e8ff"/>
+  <circle cx="35" cy="225" r="3" fill="#9333ea"/>
+  <rect x="45" y="223" width="90" height="3" fill="#9333ea"/>
+  <rect x="30" y="233" width="225" height="1" fill="#f3e8ff"/>
   
-  <!-- Experience item card -->
-  <rect x="30" y="245" width="340" height="30" fill="#ffffff"/>
-  <rect x="25" y="245" width="4" height="30" fill="#f59e0b"/>
-  <rect x="40" y="250" width="80" height="3" fill="#9333ea"/>
-  <rect x="40" y="257" width="60" height="2.5" fill="#ec4899"/>
-  <rect x="280" y="250" width="40" height="6" fill="#f3e8ff" rx="3"/>
-  <rect x="285" y="252" width="30" height="2" fill="#6b7280"/>
-  <rect x="40" y="265" width="200" height="2" fill="#1f2937"/>
-  <rect x="40" y="270" width="180" height="2" fill="#1f2937"/>
+  <!-- Experience card with amber left border -->
+  <rect x="30" y="243" width="225" height="18" fill="#ffffff" rx="2"/>
+  <rect x="30" y="243" width="2" height="18" fill="#f59e0b"/>
+  <rect x="36" y="247" width="60" height="3" fill="#9333ea"/>
+  <rect x="36" y="252" width="45" height="2" fill="#ec4899"/>
+  <!-- Date badge -->
+  <rect x="195" y="247" width="26" height="5" fill="#f3e8ff" rx="2"/>
+  <rect x="197" y="248" width="22" height="1.5" fill="#6b7280"/>
+  <rect x="36" y="256" width="135" height="2" fill="#1f2937"/>
   
-  <!-- Skills chips -->
-  <rect x="30" y="285" width="25" height="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.5" rx="4"/>
-  <rect x="60" y="285" width="30" height="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.5" rx="4"/>
-  <rect x="95" y="285" width="28" height="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.5" rx="4"/>
-  <rect x="128" y="285" width="32" height="8" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.5" rx="4"/>
+  <!-- Skills section with rounded chips -->
+  <circle cx="35" cy="285" r="3" fill="#9333ea"/>
+  <rect x="45" y="283" width="60" height="3" fill="#9333ea"/>
+  <rect x="30" y="293" width="225" height="1" fill="#f3e8ff"/>
+  
+  <!-- Skill chips -->
+  <rect x="30" y="303" width="17" height="6" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.5" rx="3"/>
+  <rect x="50" y="303" width="21" height="6" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.5" rx="3"/>
+  <rect x="75" y="303" width="19" height="6" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.5" rx="3"/>
+  <rect x="98" y="303" width="23" height="6" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.5" rx="3"/>
+  <rect x="125" y="303" width="20" height="6" fill="#f3e8ff" stroke="#9333ea" stroke-width="0.5" rx="3"/>
+  
+  <!-- Languages section indicator -->
+  <circle cx="35" cy="330" r="3" fill="#9333ea"/>
+  <rect x="45" y="328" width="60" height="3" fill="#9333ea"/>
+  <rect x="30" y="338" width="225" height="1" fill="#f3e8ff"/>
+  
+  <rect x="30" y="348" width="225" height="10" fill="#ffffff" rx="2"/>
+  <rect x="30" y="348" width="2" height="10" fill="#ec4899"/>
+  <!-- Language items with dots -->
+  <circle cx="36" cy="353" r="1" fill="#ec4899"/>
+  <rect x="40" y="352" width="19" height="1.5" fill="#1f2937"/>
+  <circle cx="63" cy="353" r="1" fill="#ec4899"/>
+  <rect x="67" y="352" width="15" height="1.5" fill="#1f2937"/>
+  <circle cx="86" cy="353" r="1" fill="#ec4899"/>
+  <rect x="90" y="352" width="23" height="1.5" fill="#1f2937"/>
+  
+  <!-- Education section -->
+  <circle cx="35" cy="380" r="3" fill="#9333ea"/>
+  <rect x="45" y="378" width="60" height="3" fill="#9333ea"/>
+  <rect x="30" y="388" width="225" height="1" fill="#f3e8ff"/>
 </svg>
