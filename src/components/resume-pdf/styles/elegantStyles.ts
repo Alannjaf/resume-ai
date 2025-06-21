@@ -33,7 +33,7 @@ export const elegantStyles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     color: colors.primary,
-    marginBottom: 8,
+    marginBottom: 12,
     letterSpacing: 0.5,
   },
 
@@ -238,32 +238,28 @@ export const elegantStyles = StyleSheet.create({
   },
 
   // Languages Styles
+  languagesContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+  },
+
   languageItem: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    marginBottom: 6,
-    backgroundColor: colors.light,
-    borderRadius: 4,
-    border: `1px solid ${colors.border}`,
+    marginBottom: 4,
   },
 
   languageName: {
     fontSize: 11,
     fontWeight: 'medium',
     color: colors.text,
-    flex: 1,
+    marginRight: 4,
   },
 
   languageLevel: {
     fontSize: 10,
-    color: colors.primary,
-    fontWeight: 'medium',
-    backgroundColor: colors.accent,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 3,
+    color: colors.secondary,
+    fontStyle: 'italic',
   },
 })

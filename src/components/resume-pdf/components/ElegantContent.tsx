@@ -96,14 +96,19 @@ export const ElegantContent = ({ data }: ElegantContentProps) => {
           <Text style={[elegantStyles.sectionTitle, elegantStyles.sectionTitleWithLine]}>
             Languages
           </Text>
-          {data.languages.map((language) => (
-            <View key={language.id} style={elegantStyles.languageItem}>
-              <Text style={elegantStyles.languageName}>{language.name}</Text>
-              <Text style={elegantStyles.languageLevel}>
-                {language.proficiency || 'Basic'}
-              </Text>
-            </View>
-          ))}
+          <View style={elegantStyles.languagesContainer}>
+            {data.languages.map((language, index) => (
+              <View key={language.id} style={elegantStyles.languageItem}>
+                <Text style={elegantStyles.languageName}>{language.name}</Text>
+                <Text style={elegantStyles.languageLevel}>
+                  ({language.proficiency || 'Basic'})
+                </Text>
+                {index < data.languages.length - 1 && (
+                  <Text style={{ marginHorizontal: 8, color: '#e2e8f0' }}>•</Text>
+                )}
+              </View>
+            ))}
+          </View>
         </View>
       )}
     </View>
