@@ -17,50 +17,34 @@ const openai = new OpenAI({
 })
 
 export async function POST(request: NextRequest) {
-  console.log('📂 Resume upload request received')
-  
   try {
     // Check authentication
     const { userId } = await auth()
-    console.log('👤 User ID:', userId ? 'authenticated' : 'not authenticated')
     
     if (!userId) {
-      console.log('❌ Authentication failed')
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     // Check import limits (PRO feature)
-    console.log('🔍 Checking user limits...')
     const limits = await checkUserLimits(userId)
-    console.log('📊 User limits:', { canImport: limits.canImport, hasSubscription: !!limits.subscription })
     
     if (!limits.canImport) {
-      console.log('❌ Import not allowed - upgrade required')
       return NextResponse.json({ 
         error: 'Resume import is a PRO feature. Please upgrade your plan to import resumes.' 
       }, { status: 403 })
     }
 
     if (!limits.subscription) {
-      console.log('❌ No subscription found')
       return NextResponse.json({ 
         error: 'User subscription not found.' 
       }, { status: 404 })
     }
 
     // Get form data
-    console.log('📋 Parsing form data...')
     const formData = await request.formData()
     const file = formData.get('file') as File
     
-    console.log('📁 File info:', {
-      name: file?.name,
-      type: file?.type,
-      size: file?.size
-    })
-    
     if (!file) {
-      console.log('❌ No file provided in form data')
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
@@ -71,10 +55,7 @@ export async function POST(request: NextRequest) {
       'application/msword'
     ]
     
-    console.log('🔍 Validating file type...', { fileType: file.type, allowedTypes })
-    
     if (!allowedTypes.includes(file.type)) {
-      console.log('❌ Invalid file type:', file.type)
       return NextResponse.json(
         { error: 'Invalid file type. Please upload a PDF or DOCX file.' },
         { status: 400 }
@@ -83,10 +64,8 @@ export async function POST(request: NextRequest) {
 
     // Validate file size (max 5MB)
     const maxSize = 5 * 1024 * 1024 // 5MB
-    console.log('📏 Validating file size...', { fileSize: file.size, maxSize })
     
     if (file.size > maxSize) {
-      console.log('❌ File too large:', file.size)
       return NextResponse.json(
         { error: 'File too large. Maximum size is 5MB.' },
         { status: 400 }
@@ -94,20 +73,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Convert file to buffer
-    console.log('🔄 Converting file to buffer...')
     const arrayBuffer = await file.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
-    console.log('✅ File converted to buffer, size:', buffer.length)
 
     // For PDF files, send directly to AI. For DOCX, extract text first
     if (file.type === 'application/pdf') {
-      console.log('📄 Processing PDF file...')
       try {
         // Convert PDF to base64 according to OpenRouter documentation
-        console.log('🔄 Converting PDF to base64...')
         const base64Pdf = buffer.toString('base64')
         const dataUrl = `data:application/pdf;base64,${base64Pdf}`
-        console.log('✅ PDF converted to base64, length:', base64Pdf.length)
 
         // Single API call approach - extract structured data directly
         // Use 'any' type to bypass OpenAI SDK's strict typing for OpenRouter's file format
@@ -121,7 +95,9 @@ CRITICAL INSTRUCTIONS:
 - Do NOT generate any fictional, example, or placeholder data
 - If information is not found in the PDF, use empty strings or empty arrays
 - Return ONLY valid JSON with no explanations or markdown
-- The PDF contains a real person's resume - extract their actual details`
+- The PDF contains a real person's resume - extract their actual details
+- For dates, extract them exactly as they appear in the PDF (e.g., "01/2020", "January 2020", "2020", etc.)
+- If end date is current/present, use "Present" as the value`
           },
           {
             role: 'user',
@@ -141,8 +117,28 @@ CRITICAL INSTRUCTIONS:
     "title": ""
   },
   "summary": "",
-  "experience": [],
-  "education": [],
+  "experience": [
+    {
+      "title": "Job Title",
+      "company": "Company Name",
+      "location": "City, State",
+      "startDate": "01/2020",
+      "endDate": "12/2023 or Present",
+      "description": "Job responsibilities and achievements"
+    }
+  ],
+  "education": [
+    {
+      "degree": "Degree Name",
+      "field": "Field of Study",
+      "school": "University Name",
+      "location": "City, State",
+      "startDate": "09/2016",
+      "endDate": "05/2020",
+      "gpa": "3.5",
+      "achievements": "Honors, awards, etc."
+    }
+  ],
   "skills": [],
   "languages": [],
   "projects": [],
@@ -162,7 +158,6 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
           }
         ]
 
-        console.log('🤖 Sending request to OpenRouter AI...')
         const completion = await openai.chat.completions.create({
           model: 'google/gemini-2.5-flash-preview-05-20',
           messages,
@@ -170,13 +165,9 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
           temperature: 0.0 // Zero temperature for exact extraction
         })
 
-        console.log('✅ AI response received')
         const aiText = completion.choices[0]?.message?.content?.trim() || ''
-        console.log('📝 Raw AI response length:', aiText.length)
-        console.log('📝 Raw AI response preview:', aiText.substring(0, 200) + '...')
         
         // Clean the response to ensure valid JSON
-        console.log('🧹 Cleaning AI response...')
         let cleanedText = aiText
         cleanedText = cleanedText.replace(/```json\s*/g, '').replace(/```\s*/g, '')
         
@@ -190,27 +181,68 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
           cleanedText = cleanedText.substring(0, lastBrace + 1)
         }
         
-        console.log('🧹 Cleaned JSON preview:', cleanedText.substring(0, 200) + '...')
-        
         // Parse the JSON
-        console.log('🔍 Parsing JSON...')
         const aiData = JSON.parse(cleanedText) as any
-        console.log('✅ JSON parsed successfully')
 
-        // Helper function to convert date format from MM/YYYY to YYYY-MM
+        // Helper function to convert various date formats to YYYY-MM
         const convertDateFormat = (date: string): string => {
           if (!date || date.trim() === '') return ''
           
+          // Remove extra whitespace
+          date = date.trim()
+          
+          // Handle "Present", "Current", etc.
+          if (date.toLowerCase().includes('present') || date.toLowerCase().includes('current')) {
+            return ''
+          }
+          
           // Handle MM/YYYY format
-          if (date.includes('/') && date.length <= 7) {
+          if (date.match(/^\d{1,2}\/\d{4}$/)) {
             const [month, year] = date.split('/')
-            if (month && year && month.length <= 2 && year.length === 4) {
-              return `${year}-${month.padStart(2, '0')}`
+            return `${year}-${month.padStart(2, '0')}`
+          }
+          
+          // Handle YYYY-MM format (already correct)
+          if (date.match(/^\d{4}-\d{2}$/)) {
+            return date
+          }
+          
+          // Handle Month YYYY format (e.g., "January 2023", "Jan 2023")
+          const monthYearMatch = date.match(/^(\w+)\s+(\d{4})$/)
+          if (monthYearMatch) {
+            const monthNames = {
+              'january': '01', 'jan': '01',
+              'february': '02', 'feb': '02',
+              'march': '03', 'mar': '03',
+              'april': '04', 'apr': '04',
+              'may': '05',
+              'june': '06', 'jun': '06',
+              'july': '07', 'jul': '07',
+              'august': '08', 'aug': '08',
+              'september': '09', 'sep': '09', 'sept': '09',
+              'october': '10', 'oct': '10',
+              'november': '11', 'nov': '11',
+              'december': '12', 'dec': '12'
+            }
+            const monthNum = monthNames[monthYearMatch[1].toLowerCase() as keyof typeof monthNames]
+            if (monthNum) {
+              return `${monthYearMatch[2]}-${monthNum}`
             }
           }
           
-          // Return as-is if already in correct format or unrecognized
-          return date
+          // Handle MM-YYYY format
+          if (date.match(/^\d{1,2}-\d{4}$/)) {
+            const [month, year] = date.split('-')
+            return `${year}-${month.padStart(2, '0')}`
+          }
+          
+          // Handle YYYY only
+          if (date.match(/^\d{4}$/)) {
+            return `${date}-01` // Default to January
+          }
+          
+          // Return empty string for unrecognized formats
+          return ''
         }
 
         // Transform the data to match our ResumeData interface
@@ -231,8 +263,8 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
             company: exp.company || '',
             location: exp.location || '',
             startDate: convertDateFormat(exp.startDate || ''),
-            endDate: convertDateFormat(exp.endDate || ''),
-            current: exp.endDate === 'Present' || exp.current || false,
+            endDate: exp.endDate?.toLowerCase().includes('present') ? '' : convertDateFormat(exp.endDate || ''),
+            current: exp.endDate?.toLowerCase().includes('present') || exp.current || false,
             description: Array.isArray(exp.description) ? exp.description.join('\n• ') : (exp.description || ''),
           })),
           education: (aiData.education || []).map((edu: any, index: number) => ({
@@ -284,14 +316,10 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
         }
 
         // Update import count
-        console.log('📊 Updating import count...')
         await prisma.subscription.update({
           where: { id: limits.subscription.id },
           data: { importCount: { increment: 1 } }
         })
-        console.log('✅ Import count updated')
-
-        console.log('🎉 PDF processing completed successfully')
         return NextResponse.json({
           success: true,
           data: transformedData,
@@ -299,11 +327,6 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
         })
 
       } catch (pdfError: any) {
-        console.error('❌ PDF processing error:', pdfError)
-        console.error('❌ Error details:', {
-          message: pdfError.message,
-          stack: pdfError.stack?.substring(0, 500)
-        })
         return NextResponse.json(
           { error: 'Failed to process PDF. Please try again or convert to DOCX format.' },
           { status: 400 }
@@ -413,7 +436,6 @@ Return valid JSON only, no explanations.`
     }
 
   } catch (error) {
-    console.error('💥 Resume upload error:', error)
     return NextResponse.json(
       { error: 'Failed to process resume. Please try again.' },
       { status: 500 }
