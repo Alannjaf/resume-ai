@@ -49,6 +49,31 @@ export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProp
 
   return (
     <div className="space-y-4">
+      {/* AI Section First - Highlighted */}
+      <div className="relative">
+        {/* Attention-grabbing header */}
+        <div className="absolute -top-3 left-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold animate-pulse">
+          ✨ AI-Powered
+        </div>
+        
+        {/* AI Skills Suggester */}
+        <AISkillsSuggester
+          currentSkills={skills}
+          onAddSkills={addSkillsFromAI}
+          experience={experience}
+        />
+      </div>
+
+      {/* Divider with "OR" */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-gray-300"></div>
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="px-4 bg-white text-gray-500">OR add manually</span>
+        </div>
+      </div>
+
       <div className="bg-green-50 p-4 rounded-lg">
         <p className="text-sm text-green-800">
           <strong>Tip:</strong> Include both technical and soft skills relevant to your target job.
@@ -58,15 +83,22 @@ export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProp
       <div className="space-y-3">
         {skills.map((skill, index) => (
           <Card key={skill.id} className="p-4">
-            <div className="flex items-center space-x-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1 sm:hidden">
+                  Skill Name
+                </label>
                 <Input
                   placeholder="e.g., JavaScript, Project Management, Communication"
                   value={skill.name}
                   onChange={(e) => updateSkill(skill.id, 'name', e.target.value)}
+                  className="w-full"
                 />
               </div>
-              <div className="w-32">
+              <div className="w-full sm:w-32">
+                <label className="block text-sm font-medium text-gray-700 mb-1 sm:hidden">
+                  Proficiency Level
+                </label>
                 <select
                   className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   value={skill.level}
@@ -78,14 +110,17 @@ export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProp
                   <option value="Expert">Expert</option>
                 </select>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => removeSkill(skill.id)}
-                className="text-red-600 hover:text-red-700"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              <div className="flex justify-end sm:justify-start">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => removeSkill(skill.id)}
+                  className="text-red-600 hover:text-red-700"
+                >
+                  <Trash2 className="h-4 w-4 mr-1 sm:mr-0" />
+                  <span className="sm:hidden">Remove</span>
+                </Button>
+              </div>
             </div>
           </Card>
         ))}
@@ -95,13 +130,6 @@ export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProp
         <Plus className="h-4 w-4 mr-2" />
         Add Skill
       </Button>
-
-      {/* AI Skills Suggester */}
-      <AISkillsSuggester
-        currentSkills={skills}
-        onAddSkills={addSkillsFromAI}
-        experience={experience}
-      />
 
       {skills.length === 0 && (
         <div className="text-center py-8 text-gray-500">

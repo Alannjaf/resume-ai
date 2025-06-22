@@ -74,7 +74,7 @@ export function AIJobDescriptionEnhancer({
   if (showSuggestion && enhancedDescription) {
     return (
       <div className="mt-4">
-        <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4">
+        <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4 overflow-hidden">
           <div className="flex items-start space-x-2 mb-3">
             <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
               <span className="text-white text-xs">AI</span>
@@ -85,7 +85,7 @@ export function AIJobDescriptionEnhancer({
             </div>
           </div>
           
-          <div className="flex space-x-2">
+          <div className="flex flex-wrap gap-2">
             <Button size="sm" onClick={handleAccept} className="bg-green-600 hover:bg-green-700">
               <Check className="h-4 w-4 mr-1" />
               Use This

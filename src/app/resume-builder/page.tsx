@@ -71,12 +71,14 @@ function ResumeBuilderContent() {
   const handleNext = () => {
     if (currentSection < FORM_SECTIONS.length - 1) {
       setCurrentSection(currentSection + 1)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
   const handlePrevious = () => {
     if (currentSection > 0) {
       setCurrentSection(currentSection - 1)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
@@ -319,7 +321,10 @@ function ResumeBuilderContent() {
                 {FORM_SECTIONS.map((section, index) => (
                   <button
                     key={section.id}
-                    onClick={() => setCurrentSection(index)}
+                    onClick={() => {
+                      setCurrentSection(index)
+                      window.scrollTo({ top: 0, behavior: 'smooth' })
+                    }}
                     className={`w-full text-left p-3 rounded-lg transition-colors flex items-center space-x-3 ${
                       index === currentSection
                         ? 'bg-primary text-primary-foreground'
@@ -516,6 +521,34 @@ function ResumeBuilderContent() {
               {/* Professional Summary Section */}
               {currentSection === 1 && (
                 <div className="space-y-4">
+                  {/* AI Section First - Highlighted */}
+                  <div className="relative">
+                    {/* Attention-grabbing header */}
+                    <div className="absolute -top-3 left-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold animate-pulse">
+                      ✨ AI-Powered
+                    </div>
+                    
+                    {/* AI Professional Summary Generator */}
+                    <AIProfessionalSummary
+                      currentSummary={formData.summary}
+                      onAccept={(summary) => setFormData({ ...formData, summary })}
+                      personalInfo={formData.personal}
+                      experience={formData.experience}
+                      skills={formData.skills}
+                    />
+                  </div>
+
+                  {/* Divider with "OR" */}
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className="px-4 bg-white text-gray-500">OR write manually</span>
+                    </div>
+                  </div>
+
+                  {/* Manual Input Section */}
                   <div>
                     <label className="block text-sm font-medium mb-1">
                       Professional Summary
@@ -530,15 +563,6 @@ function ResumeBuilderContent() {
                       }
                     />
                   </div>
-                  
-                  {/* AI Professional Summary Generator */}
-                  <AIProfessionalSummary
-                    currentSummary={formData.summary}
-                    onAccept={(summary) => setFormData({ ...formData, summary })}
-                    personalInfo={formData.personal}
-                    experience={formData.experience}
-                    skills={formData.skills}
-                  />
                   
                   <div className="bg-blue-50 p-4 rounded-lg">
                     <p className="text-sm text-blue-800">
@@ -642,7 +666,10 @@ function ResumeBuilderContent() {
               {FORM_SECTIONS.map((section, index) => (
                 <button
                   key={section.id}
-                  onClick={() => setCurrentSection(index)}
+                  onClick={() => {
+                    setCurrentSection(index)
+                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                  }}
                   className={`w-full text-left p-3 rounded-lg transition-colors flex items-center space-x-3 ${
                     index === currentSection
                       ? 'bg-primary text-primary-foreground'

@@ -90,7 +90,7 @@ export function AISkillsSuggester({
   if (showSuggestions && suggestedSkills.length > 0) {
     return (
       <div className="mt-4">
-        <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4">
+        <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4 overflow-hidden">
           <div className="flex items-start space-x-2 mb-3">
             <div className="w-6 h-6 bg-purple-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
               <span className="text-white text-xs">AI</span>
@@ -129,7 +129,7 @@ export function AISkillsSuggester({
             </div>
           </div>
           
-          <div className="flex space-x-2">
+          <div className="flex flex-wrap gap-2">
             <Button 
               size="sm" 
               onClick={handleAddSelected} 
@@ -153,11 +153,16 @@ export function AISkillsSuggester({
   }
 
   return (
-    <div className="mt-4">
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <h4 className="font-medium text-blue-900 mb-3">Get AI-powered skill suggestions</h4>
+    <div className="space-y-4">
+      <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-300 rounded-xl p-6 shadow-md">
+        <div className="flex items-center mb-4">
+          <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center mr-3">
+            <span className="text-white text-lg font-bold">AI</span>
+          </div>
+          <h4 className="text-lg font-semibold text-gray-900">Generate Relevant Skills with AI</h4>
+        </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Target Job Title
@@ -184,9 +189,14 @@ export function AISkillsSuggester({
           onClick={generateSkills}
           disabled={!formData.jobTitle || isGenerating}
           className="w-full"
+          size="lg"
         >
-          Suggest Relevant Skills
+          Generate Skills with AI
         </AISuggestionButton>
+        
+        <p className="text-sm text-gray-600 mt-3 text-center">
+          Our AI will suggest relevant skills based on your target role
+        </p>
       </div>
     </div>
   )

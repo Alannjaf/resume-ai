@@ -122,48 +122,16 @@ export default function Dashboard() {
       <AppHeader title="Dashboard" />
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Welcome to your dashboard</h1>
-          <p className="mt-2 text-gray-600">Create and manage your professional resumes</p>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="mb-4 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Welcome to your dashboard</h1>
+          <p className="mt-1 sm:mt-2 text-sm sm:text-base text-gray-600">Create and manage your professional resumes</p>
         </div>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Button 
-            className="h-32 flex flex-col items-center justify-center space-y-2"
-            onClick={() => router.push('/resume-builder')}
-          >
-            <Plus className="h-8 w-8" />
-            <span className="text-lg font-medium">Create New Resume</span>
-          </Button>
-
-          <Button 
-            variant="outline"
-            className="h-32 flex flex-col items-center justify-center space-y-2"
-            onClick={() => router.push('/resume-builder/import')}
-          >
-            <Upload className="h-8 w-8" />
-            <span className="text-lg font-medium">Import Resume</span>
-          </Button>
-          
-          <Button variant="outline" className="h-32 flex flex-col items-center justify-center space-y-2">
-            <FileText className="h-8 w-8" />
-            <span className="text-lg font-medium">Browse Templates</span>
-          </Button>
-          
-          <Button 
-            variant="outline" 
-            className="h-32 flex flex-col items-center justify-center space-y-2"
-            onClick={() => router.push('/billing')}
-          >
-            <Settings className="h-8 w-8" />
-            <span className="text-lg font-medium">Subscription & Billing</span>
-          </Button>
-        </div>
-
-        {/* Recent Resumes */}
-        <div className="bg-white rounded-lg shadow-sm border p-6">
+        {/* Mobile: Resumes First, Desktop: Normal Order */}
+        <div className="flex flex-col">
+          {/* Recent Resumes - Shows first on mobile */}
+          <div className="bg-white rounded-lg shadow-sm border p-4 sm:p-6 order-1 lg:order-2 mb-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold text-gray-900">Your Resumes</h2>
             <Button
@@ -262,6 +230,39 @@ export default function Dashboard() {
               ))}
             </div>
           )}
+          </div>
+
+          {/* Quick Actions - Shows second on mobile, first on desktop */}
+          <div className="order-2 lg:order-1 mb-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6">
+              <Button 
+                className="h-20 sm:h-32 flex flex-col items-center justify-center space-y-1 sm:space-y-2 text-sm sm:text-base"
+                onClick={() => router.push('/resume-builder')}
+              >
+                <Plus className="h-6 w-6 sm:h-8 sm:w-8" />
+                <span className="font-medium">Create New</span>
+              </Button>
+
+              <Button 
+                variant="outline"
+                className="h-20 sm:h-32 flex flex-col items-center justify-center space-y-1 sm:space-y-2 text-sm sm:text-base"
+                onClick={() => router.push('/resume-builder/import')}
+              >
+                <Upload className="h-6 w-6 sm:h-8 sm:w-8" />
+                <span className="font-medium">Import</span>
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="h-20 sm:h-32 flex flex-col items-center justify-center space-y-1 sm:space-y-2 text-sm sm:text-base col-span-2 sm:col-span-1"
+                onClick={() => router.push('/billing')}
+              >
+                <Settings className="h-6 w-6 sm:h-8 sm:w-8" />
+                <span className="font-medium">Billing</span>
+              </Button>
+            </div>
+          </div>
         </div>
       </main>
     </div>

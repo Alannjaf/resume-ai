@@ -14,8 +14,8 @@ interface AISuggestionButtonProps {
 }
 
 export function AISuggestionButton({ 
-  variant = 'outline',
-  size = 'sm',
+  variant = 'default',
+  size = 'default',
   onClick,
   children,
   disabled = false,
@@ -42,16 +42,16 @@ export function AISuggestionButton({
       size={size}
       onClick={handleClick}
       disabled={isLoading || disabled}
-      className={`${className} transition-all hover:shadow-md`}
+      className={`${className} bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 font-semibold`}
     >
       {isLoading ? (
         <>
-          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-          Generating...
+          <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+          Generating with AI...
         </>
       ) : (
         <>
-          <Sparkles className="h-4 w-4 mr-2 text-purple-500" />
+          <Sparkles className="h-5 w-5 mr-2 animate-pulse" />
           {children}
         </>
       )}

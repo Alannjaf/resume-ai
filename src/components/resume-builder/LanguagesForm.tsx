@@ -44,15 +44,22 @@ export function LanguagesForm({ languages, onChange }: LanguagesFormProps) {
       <div className="space-y-3">
         {languages.map((language, index) => (
           <Card key={language.id} className="p-4">
-            <div className="flex items-center space-x-3">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-700 mb-1 sm:hidden">
+                  Language
+                </label>
                 <Input
                   placeholder="e.g., English, Arabic, Kurdish Sorani, Spanish"
                   value={language.name}
                   onChange={(e) => updateLanguage(language.id, 'name', e.target.value)}
+                  className="w-full"
                 />
               </div>
-              <div className="w-40">
+              <div className="w-full sm:w-40">
+                <label className="block text-sm font-medium text-gray-700 mb-1 sm:hidden">
+                  Proficiency Level
+                </label>
                 <select
                   className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   value={language.proficiency}
@@ -65,14 +72,17 @@ export function LanguagesForm({ languages, onChange }: LanguagesFormProps) {
                   <option value="Professional">Professional</option>
                 </select>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => removeLanguage(language.id)}
-                className="text-red-600 hover:text-red-700"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+              <div className="flex justify-end sm:justify-start">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => removeLanguage(language.id)}
+                  className="text-red-600 hover:text-red-700"
+                >
+                  <Trash2 className="h-4 w-4 mr-1 sm:mr-0" />
+                  <span className="sm:hidden">Remove</span>
+                </Button>
+              </div>
             </div>
           </Card>
         ))}
