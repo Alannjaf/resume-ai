@@ -1,17 +1,33 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import { Upload, X, User } from 'lucide-react'
+import { Upload, X, User, Crop } from 'lucide-react'
 import Image from 'next/image'
+import { Button } from '@/components/ui/button'
+import { CropModal } from './CropModal'
+import { CropData } from '@/lib/image-utils'
 
 interface ImageUploaderProps {
   currentImage?: string
-  onImageUpload: (imageDataUrl: string) => void
+  originalImage?: string
+  cropData?: CropData
+  templateId?: string
+  onImageUpload: (imageDataUrl: string, originalImage?: string) => void
   onImageRemove: () => void
+  onCropUpdate?: (croppedImage: string, cropData: CropData) => void
 }
 
-export default function ImageUploader({ currentImage, onImageUpload, onImageRemove }: ImageUploaderProps) {
+export default function ImageUploader({ 
+  currentImage, 
+  originalImage, 
+  cropData, 
+  templateId = 'modern',
+  onImageUpload, 
+  onImageRemove, 
+  onCropUpdate 
+}: ImageUploaderProps) {
   const [dragActive, setDragActive] = useState(false)
+  const [showCropModal, setShowCropModal] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleDrag = (e: React.DragEvent) => {
@@ -46,10 +62,21 @@ export default function ImageUploader({ currentImage, onImageUpload, onImageRemo
       const reader = new FileReader()
       reader.onload = (e) => {
         const result = e.target?.result as string
-        onImageUpload(result)
+        onImageUpload(result, result) // Store as both current and original
       }
       reader.readAsDataURL(file)
     }
+  }
+
+  const handleCropSave = (croppedImage: string, newCropData: CropData) => {
+    if (onCropUpdate) {
+      onCropUpdate(croppedImage, newCropData)
+    }
+    setShowCropModal(false)
+  }
+
+  const handleCropClick = () => {
+    setShowCropModal(true)
   }
 
   const onButtonClick = () => {
@@ -94,14 +121,28 @@ export default function ImageUploader({ currentImage, onImageUpload, onImageRemo
         </div>
       )}
 
-      <div className="text-center">
-        <button
-          onClick={onButtonClick}
-          className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          <Upload size={16} className="mr-2" />
-          {currentImage ? 'Change Photo' : 'Upload Photo'}
-        </button>
+      <div className="text-center space-y-2">
+        <div className="flex justify-center space-x-2">
+          <button
+            onClick={onButtonClick}
+            className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Upload size={16} className="mr-2" />
+            {currentImage ? 'Change Photo' : 'Upload Photo'}
+          </button>
+          
+          {currentImage && originalImage && onCropUpdate && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCropClick}
+              className="inline-flex items-center"
+            >
+              <Crop size={16} className="mr-2" />
+              Crop
+            </Button>
+          )}
+        </div>
       </div>
 
       <input
@@ -115,6 +156,17 @@ export default function ImageUploader({ currentImage, onImageUpload, onImageRemo
       <p className="text-xs text-gray-500 text-center mt-2">
         Drag and drop or click to upload. Supports JPG, PNG, GIF (max 5MB)
       </p>
+
+      {/* Crop Modal */}
+      {showCropModal && originalImage && (
+        <CropModal
+          isOpen={showCropModal}
+          onClose={() => setShowCropModal(false)}
+          imageDataURL={originalImage}
+          templateId={templateId}
+          onSave={handleCropSave}
+        />
+      )}
     </div>
   )
 }

@@ -64,6 +64,14 @@ export interface PersonalInfo {
   website: string
   title?: string
   profileImage?: string
+  originalProfileImage?: string
+  profileImageCrop?: {
+    x: number
+    y: number
+    width: number
+    height: number
+    scale: number
+  }
 }
 
 export interface ResumeData {

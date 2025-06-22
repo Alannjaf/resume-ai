@@ -525,12 +525,16 @@ function ResumeBuilderContent() {
                     <div className="flex justify-center">
                       <ImageUploader
                         currentImage={formData.personal.profileImage}
-                        onImageUpload={(imageDataUrl) =>
+                        originalImage={formData.personal.originalProfileImage}
+                        cropData={formData.personal.profileImageCrop}
+                        templateId={selectedTemplate}
+                        onImageUpload={(imageDataUrl, originalImage) =>
                           setFormData({
                             ...formData,
                             personal: {
                               ...formData.personal,
                               profileImage: imageDataUrl,
+                              originalProfileImage: originalImage || imageDataUrl,
                             },
                           })
                         }
@@ -540,6 +544,18 @@ function ResumeBuilderContent() {
                             personal: {
                               ...formData.personal,
                               profileImage: undefined,
+                              originalProfileImage: undefined,
+                              profileImageCrop: undefined,
+                            },
+                          })
+                        }
+                        onCropUpdate={(croppedImage, cropData) =>
+                          setFormData({
+                            ...formData,
+                            personal: {
+                              ...formData.personal,
+                              profileImage: croppedImage,
+                              profileImageCrop: cropData,
                             },
                           })
                         }
