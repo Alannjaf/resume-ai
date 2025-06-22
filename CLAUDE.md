@@ -100,5 +100,6 @@ cat .env.local
 
 ## 💡 Development Workflow Memories
 - I always run the server and run the build in my windows cmd
+- I always run npm run dev and npm run build on my windows cmd
 
 ---

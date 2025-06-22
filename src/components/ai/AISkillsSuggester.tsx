@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Check, X, Plus } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface AISkillsSuggesterProps {
   currentSkills: Array<{ id?: string; name: string; level?: string }>
@@ -23,6 +24,7 @@ export function AISkillsSuggester({
   experience = []
 }: AISkillsSuggesterProps) {
   const [isGenerating, setIsGenerating] = useState(false)
+  const { t } = useLanguage()
   const [suggestedSkills, setSuggestedSkills] = useState<string[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
   const [formData, setFormData] = useState({
@@ -46,7 +48,7 @@ export function AISkillsSuggester({
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.error || 'Failed to generate skills')
+        throw new Error(error.error || t('ai.error'))
       }
 
       const data = await response.json()
@@ -54,7 +56,7 @@ export function AISkillsSuggester({
       setSelectedSkills(new Set())
       setShowSuggestions(true)
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to generate skills')
+      toast.error(error instanceof Error ? error.message : t('ai.error'))
     } finally {
       setIsGenerating(false)
     }
@@ -96,9 +98,9 @@ export function AISkillsSuggester({
               <span className="text-white text-xs">AI</span>
             </div>
             <div className="flex-1">
-              <h4 className="font-medium text-purple-900 mb-3">AI-Suggested Skills</h4>
+              <h4 className="font-medium text-purple-900 mb-3">{t('ai.suggestedSkills') || 'AI-Suggested Skills'}</h4>
               <p className="text-sm text-gray-600 mb-3">
-                Select skills to add to your resume. Click to toggle selection.
+                {t('ai.selectSkillsDescription') || 'Select skills to add to your resume. Click to toggle selection.'}
               </p>
               
               <div className="flex flex-wrap gap-2 mb-4">
@@ -121,7 +123,7 @@ export function AISkillsSuggester({
                     >
                       {isSelected && <Check className="h-3 w-3 mr-1" />}
                       {skill}
-                      {isExisting && <span className="ml-1 text-xs">(added)</span>}
+                      {isExisting && <span className="ml-1 text-xs">({t('ai.alreadyAdded') || 'added'})</span>}
                     </Badge>
                   )
                 })}
@@ -137,14 +139,14 @@ export function AISkillsSuggester({
               className="bg-green-600 hover:bg-green-700"
             >
               <Plus className="h-4 w-4 mr-1" />
-              Add Selected ({selectedSkills.size})
+              {t('ai.addSelected') || 'Add Selected'} ({selectedSkills.size})
             </Button>
             <Button size="sm" variant="outline" onClick={generateSkills}>
-              Generate New
+              {t('ai.generateNew') || 'Generate New'}
             </Button>
             <Button size="sm" variant="outline" onClick={handleDismiss}>
               <X className="h-4 w-4 mr-1" />
-              Dismiss
+              {t('ai.dismiss') || 'Dismiss'}
             </Button>
           </div>
         </div>
@@ -159,26 +161,26 @@ export function AISkillsSuggester({
           <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center justify-center mr-3">
             <span className="text-white text-lg font-bold">AI</span>
           </div>
-          <h4 className="text-lg font-semibold text-gray-900">Generate Relevant Skills with AI</h4>
+          <h4 className="text-lg font-semibold text-gray-900">{t('ai.generateSkillsTitle') || 'Generate Relevant Skills with AI'}</h4>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Target Job Title
+              {t('ai.targetJobTitle') || 'Target Job Title'}
             </label>
             <Input
-              placeholder="e.g. Software Engineer"
+              placeholder={t('ai.jobTitlePlaceholder') || 'e.g. Software Engineer'}
               value={formData.jobTitle}
               onChange={(e) => setFormData({ ...formData, jobTitle: e.target.value })}
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Industry
+              {t('ai.industry') || 'Industry'}
             </label>
             <Input
-              placeholder="e.g. Technology"
+              placeholder={t('ai.industryPlaceholder') || 'e.g. Technology'}
               value={formData.industry}
               onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
             />
@@ -191,11 +193,11 @@ export function AISkillsSuggester({
           className="w-full"
           size="lg"
         >
-          Generate Skills with AI
+          {t('ai.generateSkills') || 'Generate Skills with AI'}
         </AISuggestionButton>
         
         <p className="text-sm text-gray-600 mt-3 text-center">
-          Our AI will suggest relevant skills based on your target role
+          {t('ai.skillsDescription') || 'Our AI will suggest relevant skills based on your target role'}
         </p>
       </div>
     </div>

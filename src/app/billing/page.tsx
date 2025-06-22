@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { AppHeader } from '@/components/shared/AppHeader'
 import { Check, Clock, Star, CreditCard } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Plan {
   name: string
@@ -34,6 +35,7 @@ interface UserStats {
 
 export default function BillingPage() {
   const router = useRouter()
+  const { t } = useLanguage()
   const [plans, setPlans] = useState<Plan[]>([])
   const [userStats, setUserStats] = useState<UserStats | null>(null)
   const [loading, setLoading] = useState(true)
@@ -85,7 +87,7 @@ export default function BillingPage() {
       <AppHeader 
         title="Subscription & Billing"
         showBackButton={true}
-        backButtonText="Back to Dashboard"
+        backButtonText={t('pages.resumeBuilder.backToDashboard')}
         backButtonHref="/dashboard"
       />
 

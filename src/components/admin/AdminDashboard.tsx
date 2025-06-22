@@ -16,6 +16,7 @@ import {
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
 import { getTemplateIds } from '@/lib/templates'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Stats {
   totalUsers: number
@@ -59,6 +60,7 @@ interface SystemSettings {
 
 export function AdminDashboard() {
   const router = useRouter()
+  const { t } = useLanguage()
   const availableTemplates = getTemplateIds() // Get all templates dynamically
   const [stats, setStats] = useState<Stats | null>(null)
   const [settings, setSettings] = useState<SystemSettings>({
@@ -194,7 +196,7 @@ export function AdminDashboard() {
       <AppHeader 
         title="Admin Dashboard"
         showBackButton={true}
-        backButtonText="Back to Dashboard"
+        backButtonText={t('pages.resumeBuilder.backToDashboard')}
         backButtonHref="/dashboard"
       />
       

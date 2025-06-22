@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Sparkles, Loader2 } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface AISuggestionButtonProps {
   variant?: 'default' | 'outline' | 'ghost'
@@ -22,6 +23,7 @@ export function AISuggestionButton({
   className = ''
 }: AISuggestionButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
+  const { t } = useLanguage()
 
   const handleClick = async () => {
     if (isLoading || disabled) return
@@ -47,7 +49,7 @@ export function AISuggestionButton({
       {isLoading ? (
         <>
           <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-          Generating with AI...
+          {t('ai.generating')}
         </>
       ) : (
         <>

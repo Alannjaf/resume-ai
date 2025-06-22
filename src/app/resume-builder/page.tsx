@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { AppHeader } from '@/components/shared/AppHeader'
 import { ArrowLeft, ArrowRight, Save, Eye } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 import { WorkExperienceForm } from '@/components/resume-builder/WorkExperienceForm'
 import { EducationForm } from '@/components/resume-builder/EducationForm'
 import { SkillsForm } from '@/components/resume-builder/SkillsForm'
@@ -21,21 +22,22 @@ import { ResumeData } from '@/types/resume'
 import toast from 'react-hot-toast'
 
 // Form sections
-const FORM_SECTIONS = [
-  { id: 'personal', title: 'Personal Information', icon: '👤' },
-  { id: 'summary', title: 'Professional Summary', icon: '📝' },
-  { id: 'experience', title: 'Work Experience', icon: '💼' },
-  { id: 'education', title: 'Education', icon: '🎓' },
-  { id: 'skills', title: 'Skills', icon: '⚡' },
-  { id: 'languages', title: 'Languages', icon: '🌐' },
-  { id: 'projects', title: 'Projects', icon: '💻' },
-  { id: 'certifications', title: 'Certifications', icon: '🏆' },
-  { id: 'template', title: 'Choose Template', icon: '🎨' },
+const getFormSections = (t: any) => [
+  { id: 'personal', title: t('pages.resumeBuilder.sections.personalInfo'), icon: '👤' },
+  { id: 'summary', title: t('pages.resumeBuilder.sections.professionalSummary'), icon: '📝' },
+  { id: 'experience', title: t('pages.resumeBuilder.sections.workExperience'), icon: '💼' },
+  { id: 'education', title: t('pages.resumeBuilder.sections.education'), icon: '🎓' },
+  { id: 'skills', title: t('pages.resumeBuilder.sections.skills'), icon: '⚡' },
+  { id: 'languages', title: t('pages.resumeBuilder.sections.languages'), icon: '🌐' },
+  { id: 'projects', title: t('pages.resumeBuilder.sections.projects'), icon: '💻' },
+  { id: 'certifications', title: t('pages.resumeBuilder.sections.certifications'), icon: '🏆' },
+  { id: 'template', title: t('pages.resumeBuilder.sections.chooseTemplate'), icon: '🎨' },
 ]
 
 function ResumeBuilderContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { t } = useLanguage()
   const [currentSection, setCurrentSection] = useState(0)
   const [showPreview, setShowPreview] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState('modern')
@@ -43,7 +45,7 @@ function ResumeBuilderContent() {
   const [isLoading, setIsLoading] = useState(false)
   const [resumeId, setResumeId] = useState<string | null>(null)
   const [isAutoSaving, setIsAutoSaving] = useState(false)
-  const [resumeTitle, setResumeTitle] = useState('My Resume')
+  const [resumeTitle, setResumeTitle] = useState('')
   const [lastSavedData, setLastSavedData] = useState<ResumeData | null>(null)
   const [saveQueue, setSaveQueue] = useState<NodeJS.Timeout | null>(null)
   const [userPermissions, setUserPermissions] = useState<{
@@ -89,7 +91,7 @@ function ResumeBuilderContent() {
         })
 
         if (!response.ok) {
-          throw new Error('Failed to create resume')
+          throw new Error(t('pages.resumeBuilder.errors.createFailed'))
         }
 
         const data = await response.json()
@@ -115,7 +117,7 @@ function ResumeBuilderContent() {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to save progress')
+        throw new Error(t('pages.resumeBuilder.errors.saveFailed'))
       }
 
       // Update last saved data
@@ -179,6 +181,8 @@ function ResumeBuilderContent() {
     }
   }
 
+  const FORM_SECTIONS = getFormSections(t)
+  
   const handleNext = async () => {
     if (currentSection < FORM_SECTIONS.length - 1) {
       // Move to next section immediately (optimistic update)
@@ -235,7 +239,7 @@ function ResumeBuilderContent() {
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.error || 'Failed to save resume')
+        throw new Error(error.error || t('pages.resumeBuilder.messages.saveError'))
       }
 
       const data = await response.json()
@@ -246,12 +250,12 @@ function ResumeBuilderContent() {
 
       // Show success message only if requested
       if (showToast) {
-        toast.success('Resume saved successfully!')
+        toast.success(t('pages.resumeBuilder.messages.saveSuccess'))
       }
       
       return true // Return success status
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to save resume')
+      toast.error(error instanceof Error ? error.message : t('pages.resumeBuilder.messages.saveError'))
       return false // Return failure status
     } finally {
       setIsSaving(false)
@@ -272,6 +276,13 @@ function ResumeBuilderContent() {
       queueSave(sectionKey)
     }
   }
+
+  // Initialize default title when translations are ready
+  useEffect(() => {
+    if (!resumeTitle && t) {
+      setResumeTitle(t('pages.resumeBuilder.defaults.resumeTitle'))
+    }
+  }, [t, resumeTitle])
 
   // Load user permissions
   useEffect(() => {
@@ -305,13 +316,13 @@ function ResumeBuilderContent() {
           const parsedData = JSON.parse(importedData) as ResumeData
           setFormData(parsedData)
           setLastSavedData(parsedData) // Set initial baseline for change detection
-          setResumeTitle(importedTitle || 'Imported Resume')
+          setResumeTitle(importedTitle || t('pages.resumeBuilder.defaults.importedTitle'))
           
           // Clear session storage
           sessionStorage.removeItem('importedResumeData')
           sessionStorage.removeItem('importedResumeTitle')
           
-          toast.success('Resume data imported. You can now edit and save.')
+          toast.success(t('pages.resumeBuilder.messages.importSuccess'))
           return
         } catch (error) {
           // Error parsing imported data
@@ -325,7 +336,7 @@ function ResumeBuilderContent() {
       try {
         const response = await fetch(`/api/resumes/${id}`)
         if (!response.ok) {
-          throw new Error('Failed to load resume')
+          throw new Error(t('pages.resumeBuilder.messages.loadError'))
         }
 
         const data = await response.json()
@@ -376,7 +387,7 @@ function ResumeBuilderContent() {
           setShowPreview(true)
         }
       } catch (error) {
-        toast.error('Failed to load resume')
+        toast.error(t('pages.resumeBuilder.messages.loadError'))
         router.push('/dashboard')
       } finally {
         setIsLoading(false)
@@ -409,7 +420,7 @@ function ResumeBuilderContent() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4" />
-          <p>Loading resume...</p>
+          <p>{t('pages.resumeBuilder.loading.resume')}</p>
         </div>
       </div>
     )
@@ -418,9 +429,9 @@ function ResumeBuilderContent() {
   return (
     <div className="min-h-screen bg-gray-50">
       <AppHeader 
-        title="Resume Builder"
+        title={t('pages.resumeBuilder.title')}
         showBackButton={true}
-        backButtonText="Back to Dashboard"
+        backButtonText={t('pages.resumeBuilder.backToDashboard')}
         backButtonHref="/dashboard"
       />
       
@@ -431,7 +442,7 @@ function ResumeBuilderContent() {
             {/* Resume Title */}
             <div className="flex flex-col">
               <label htmlFor="resume-title" className="text-sm font-medium text-gray-700 mb-1">
-                Resume Title
+                {t('pages.resumeBuilder.resumeTitle')}
               </label>
               <input
                 id="resume-title"
@@ -439,7 +450,7 @@ function ResumeBuilderContent() {
                 value={resumeTitle}
                 onChange={(e) => setResumeTitle(e.target.value)}
                 className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Enter resume title"
+                placeholder={t('pages.resumeBuilder.resumeTitlePlaceholder')}
               />
             </div>
             
@@ -451,7 +462,7 @@ function ResumeBuilderContent() {
                 onClick={() => setShowPreview(true)}
               >
                 <Eye className="h-4 w-4 mr-2" />
-                Preview
+                {t('pages.resumeBuilder.actions.preview')}
               </Button>
               <Button 
                 onClick={() => handleSave(true)} 
@@ -461,12 +472,12 @@ function ResumeBuilderContent() {
                 {isSaving ? (
                   <>
                     <div className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full" />
-                    Saving...
+                    {t('pages.resumeBuilder.actions.saving')}
                   </>
                 ) : (
                   <>
                     <Save className="h-4 w-4 mr-2" />
-                    Save
+                    {t('pages.resumeBuilder.actions.save')}
                   </>
                 )}
               </Button>
@@ -480,7 +491,7 @@ function ResumeBuilderContent() {
           {/* Progress Sidebar - Hidden on mobile, shown on desktop */}
           <div className="hidden lg:block lg:col-span-1">
             <Card className="p-6">
-              <h2 className="text-lg font-semibold mb-4">Progress</h2>
+              <h2 className="text-lg font-semibold mb-4">{t('pages.resumeBuilder.progress')}</h2>
               <div className="space-y-3">
                 {FORM_SECTIONS.map((section, index) => (
                   <button
@@ -512,7 +523,7 @@ function ResumeBuilderContent() {
                 {isAutoSaving && (
                   <div className="flex items-center text-xs text-gray-500">
                     <div className="animate-spin h-3 w-3 mr-1 border-2 border-gray-400 border-t-transparent rounded-full" />
-                    Saving...
+                    {t('pages.resumeBuilder.actions.saving')}
                   </div>
                 )}
               </div>
@@ -565,8 +576,8 @@ function ResumeBuilderContent() {
                     <div className="flex justify-center">
                       <div className="text-center p-6 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
                         <div className="text-gray-400 mb-2">📷</div>
-                        <p className="text-sm text-gray-600">Profile photo upload is available for BASIC and PRO plans</p>
-                        <p className="text-xs text-gray-500 mt-1">Upgrade your plan to add a professional profile photo</p>
+                        <p className="text-sm text-gray-600">{t('forms.personalInfo.photoUpgrade.title')}</p>
+                        <p className="text-xs text-gray-500 mt-1">{t('forms.personalInfo.photoUpgrade.description')}</p>
                       </div>
                     </div>
                   )}
@@ -574,10 +585,10 @@ function ResumeBuilderContent() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1">
-                        Full Name *
+                        {t('forms.personalInfo.fields.fullName')} *
                       </label>
                       <Input
-                        placeholder="John Doe"
+                        placeholder={t('forms.personalInfo.placeholders.fullName')}
                         value={formData.personal.fullName}
                         onChange={(e) =>
                           setFormData({
@@ -592,10 +603,10 @@ function ResumeBuilderContent() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">
-                        Professional Title
+                        {t('forms.personalInfo.fields.professionalTitle')}
                       </label>
                       <Input
-                        placeholder="Software Engineer"
+                        placeholder={t('forms.personalInfo.placeholders.professionalTitle')}
                         value={formData.personal.title || ''}
                         onChange={(e) =>
                           setFormData({
@@ -610,11 +621,11 @@ function ResumeBuilderContent() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">
-                        Email *
+                        {t('forms.personalInfo.fields.email')} *
                       </label>
                       <Input
                         type="email"
-                        placeholder="john@example.com"
+                        placeholder={t('forms.personalInfo.placeholders.email')}
                         value={formData.personal.email}
                         onChange={(e) =>
                           setFormData({
@@ -629,10 +640,10 @@ function ResumeBuilderContent() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">
-                        Phone
+                        {t('forms.personalInfo.fields.phone')}
                       </label>
                       <Input
-                        placeholder="+1 (555) 123-4567"
+                        placeholder={t('forms.personalInfo.placeholders.phone')}
                         value={formData.personal.phone}
                         onChange={(e) =>
                           setFormData({
@@ -647,10 +658,10 @@ function ResumeBuilderContent() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">
-                        Location
+                        {t('forms.personalInfo.fields.location')}
                       </label>
                       <Input
-                        placeholder="New York, NY"
+                        placeholder={t('forms.personalInfo.placeholders.location')}
                         value={formData.personal.location}
                         onChange={(e) =>
                           setFormData({
@@ -665,10 +676,10 @@ function ResumeBuilderContent() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">
-                        LinkedIn
+                        {t('forms.personalInfo.fields.linkedin')}
                       </label>
                       <Input
-                        placeholder="linkedin.com/in/johndoe"
+                        placeholder={t('forms.personalInfo.placeholders.linkedin')}
                         value={formData.personal.linkedin}
                         onChange={(e) =>
                           setFormData({
@@ -683,10 +694,10 @@ function ResumeBuilderContent() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">
-                        Website
+                        {t('forms.personalInfo.fields.website')}
                       </label>
                       <Input
-                        placeholder="johndoe.com"
+                        placeholder={t('forms.personalInfo.placeholders.website')}
                         value={formData.personal.website}
                         onChange={(e) =>
                           setFormData({
@@ -710,7 +721,7 @@ function ResumeBuilderContent() {
                   <div className="relative">
                     {/* Attention-grabbing header */}
                     <div className="absolute -top-3 left-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold animate-pulse">
-                      ✨ AI-Powered
+                      {t('pages.resumeBuilder.ai.powered')}
                     </div>
                     
                     {/* AI Professional Summary Generator */}
@@ -729,19 +740,19 @@ function ResumeBuilderContent() {
                       <div className="w-full border-t border-gray-300"></div>
                     </div>
                     <div className="relative flex justify-center text-sm">
-                      <span className="px-4 bg-white text-gray-500">OR write manually</span>
+                      <span className="px-4 bg-white text-gray-500">{t('pages.resumeBuilder.ai.orWriteManually')}</span>
                     </div>
                   </div>
 
                   {/* Manual Input Section */}
                   <div>
                     <label className="block text-sm font-medium mb-1">
-                      Professional Summary
+                      {t('forms.professionalSummary.title')}
                     </label>
                     <textarea
                       className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       rows={6}
-                      placeholder="Write a brief summary of your professional background, key skills, and career objectives..."
+                      placeholder={t('forms.professionalSummary.placeholder')}
                       value={formData.summary}
                       onChange={(e) =>
                         setFormData({ ...formData, summary: e.target.value })
@@ -751,7 +762,7 @@ function ResumeBuilderContent() {
                   
                   <div className="bg-blue-50 p-4 rounded-lg">
                     <p className="text-sm text-blue-800">
-                      <strong>Tip:</strong> Keep your summary concise (3-4 sentences) and focus on your unique value proposition.
+                      <strong>{t('common.tip')}:</strong> {t('forms.professionalSummary.tip')}
                     </p>
                   </div>
                 </div>
@@ -825,16 +836,16 @@ function ResumeBuilderContent() {
                   disabled={currentSection === 0}
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
-                  Previous
+                  {t('pages.resumeBuilder.actions.previous')}
                 </Button>
                 {currentSection === FORM_SECTIONS.length - 1 ? (
                   <Button onClick={() => setShowPreview(true)}>
                     <Eye className="h-4 w-4 mr-2" />
-                    View Resume
+                    {t('pages.resumeBuilder.actions.viewResume')}
                   </Button>
                 ) : (
                   <Button onClick={handleNext}>
-                    Next
+                    {t('pages.resumeBuilder.actions.next')}
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
                 )}
@@ -846,7 +857,7 @@ function ResumeBuilderContent() {
         {/* Progress Section for Mobile - Shown only on mobile */}
         <div className="lg:hidden mt-8">
           <Card className="p-6">
-            <h2 className="text-lg font-semibold mb-4">Progress</h2>
+            <h2 className="text-lg font-semibold mb-4">{t('pages.resumeBuilder.progress')}</h2>
             <div className="space-y-3">
               {FORM_SECTIONS.map((section, index) => (
                 <button
@@ -881,11 +892,12 @@ function ResumeBuilderContent() {
 }
 
 function LoadingFallback() {
+  const { t } = useLanguage()
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="text-center">
         <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4" />
-        <p>Loading resume builder...</p>
+        <p>{t('pages.resumeBuilder.loading.builder')}</p>
       </div>
     </div>
   )

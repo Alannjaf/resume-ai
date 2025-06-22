@@ -5,6 +5,7 @@ import { AISuggestionButton } from './AISuggestionButton'
 import { Button } from '@/components/ui/button'
 import { Check, X, RefreshCw } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface AIJobDescriptionEnhancerProps {
   currentDescription: string
@@ -18,12 +19,13 @@ export function AIJobDescriptionEnhancer({
   onAccept
 }: AIJobDescriptionEnhancerProps) {
   const [isEnhancing, setIsEnhancing] = useState(false)
+  const { t } = useLanguage()
   const [enhancedDescription, setEnhancedDescription] = useState('')
   const [showSuggestion, setShowSuggestion] = useState(false)
 
   const enhanceDescription = async () => {
     if (!currentDescription.trim()) {
-      toast.error('Please enter a job description first')
+      toast.error(t('ai.enterDescriptionFirst') || 'Please enter a job description first')
       return
     }
 
@@ -41,14 +43,14 @@ export function AIJobDescriptionEnhancer({
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.error || 'Failed to enhance description')
+        throw new Error(error.error || t('ai.error'))
       }
 
       const data = await response.json()
       setEnhancedDescription(data.enhancedDescription)
       setShowSuggestion(true)
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Failed to enhance description')
+      toast.error(error instanceof Error ? error.message : t('ai.error'))
     } finally {
       setIsEnhancing(false)
     }
@@ -80,7 +82,7 @@ export function AIJobDescriptionEnhancer({
               <span className="text-white text-xs">AI</span>
             </div>
             <div className="flex-1">
-              <h4 className="font-medium text-purple-900 mb-2">AI-Enhanced Job Description</h4>
+              <h4 className="font-medium text-purple-900 mb-2">{t('ai.enhancedDescription') || 'AI-Enhanced Job Description'}</h4>
               <div className="text-gray-700 leading-relaxed whitespace-pre-line">{enhancedDescription}</div>
             </div>
           </div>
@@ -88,15 +90,15 @@ export function AIJobDescriptionEnhancer({
           <div className="flex flex-wrap gap-2">
             <Button size="sm" onClick={handleAccept} className="bg-green-600 hover:bg-green-700">
               <Check className="h-4 w-4 mr-1" />
-              Use This
+              {t('ai.useThis') || 'Use This'}
             </Button>
             <Button size="sm" variant="outline" onClick={handleRegenerate}>
               <RefreshCw className="h-4 w-4 mr-1" />
-              Regenerate
+              {t('ai.regenerate') || 'Regenerate'}
             </Button>
             <Button size="sm" variant="outline" onClick={handleReject}>
               <X className="h-4 w-4 mr-1" />
-              Dismiss
+              {t('ai.dismiss') || 'Dismiss'}
             </Button>
           </div>
         </div>
@@ -111,7 +113,7 @@ export function AIJobDescriptionEnhancer({
         disabled={!currentDescription.trim() || isEnhancing}
         size="sm"
       >
-        Enhance with AI
+        {t('ai.enhanceButton')}
       </AISuggestionButton>
     </div>
   )
