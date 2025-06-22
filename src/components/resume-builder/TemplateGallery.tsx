@@ -1,23 +1,24 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Check, Lock, Crown } from 'lucide-react'
 import { TemplateThumbnail } from './TemplateThumbnail'
-import { getAllTemplates } from '@/lib/templates'
+import { getTierBadgeStyle } from '@/lib/templates'
 
-interface TemplateOption {
+interface TemplateWithTier {
   id: string
   name: string
   description: string
   thumbnail: string
   category: 'professional' | 'creative' | 'minimal'
+  tier: 'free' | 'basic' | 'pro'
 }
 
-// Get templates from centralized source and add thumbnail paths
-const templates: TemplateOption[] = getAllTemplates().map(template => ({
-  ...template,
-  thumbnail: `/thumbnails/${template.id}.svg`
-}))
+interface TemplatesByTier {
+  free: TemplateWithTier[]
+  basic: TemplateWithTier[]
+  pro: TemplateWithTier[]
+}
 
 interface TemplateGalleryProps {
   selectedTemplate: string
@@ -32,9 +33,33 @@ export function TemplateGallery({
   className = '',
   allowedTemplates 
 }: TemplateGalleryProps) {
-  // Show all templates but track which ones are allowed
-  const availableTemplates = templates
+  const [templatesByTier, setTemplatesByTier] = useState<TemplatesByTier | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const userAllowedTemplates = allowedTemplates || []
+
+  // Fetch templates organized by tier
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      try {
+        const response = await fetch('/api/templates')
+        if (response.ok) {
+          const data = await response.json()
+          setTemplatesByTier(data)
+        }
+      } catch (error) {
+        console.error('Error fetching templates:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchTemplates()
+  }, [])
+
+  // Combine templates in tier order: free -> basic -> pro
+  const orderedTemplates = templatesByTier 
+    ? [...templatesByTier.free, ...templatesByTier.basic, ...templatesByTier.pro]
+    : []
   return (
     <div className={`template-gallery ${className}`}>
       <div className="mb-4">
@@ -44,8 +69,14 @@ export function TemplateGallery({
         </p>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {availableTemplates.map((template) => {
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full" />
+          <span className="ml-3 text-gray-600">Loading templates...</span>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {orderedTemplates.map((template) => {
           const isLocked = !userAllowedTemplates.includes(template.id)
           const isSelected = selectedTemplate === template.id
           
@@ -97,12 +128,9 @@ export function TemplateGallery({
                 }`}>
                   {template.category}
                 </span>
-                {isLocked && (
-                  <span className="inline-flex items-center px-2 py-1 text-xs rounded-full bg-orange-100 text-orange-800">
-                    <Crown className="h-3 w-3 mr-1" />
-                    PRO
-                  </span>
-                )}
+                <span className={`inline-flex items-center px-2 py-1 text-xs rounded-full ${getTierBadgeStyle(template.tier).className}`}>
+                  {getTierBadgeStyle(template.tier).label}
+                </span>
               </div>
               {isLocked && (
                 <p className="text-xs text-orange-600 mt-2">
@@ -112,8 +140,9 @@ export function TemplateGallery({
             </div>
             </div>
           )
-        })}
-      </div>
+          })}
+        </div>
+      )}
     </div>
   )
 }
