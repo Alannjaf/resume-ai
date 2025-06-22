@@ -7,7 +7,7 @@ type Language = 'en' | 'ar' | 'ckb'
 interface LanguageContextType {
   language: Language
   setLanguage: (lang: Language) => void
-  t: (key: string) => string
+  t: (key: string, variables?: Record<string, any>) => string
   isRTL: boolean
   isLoading: boolean
 }
@@ -55,8 +55,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     loadTranslations()
   }, [language])
 
-  // Simple translation function that supports nested keys
-  const t = (key: string): string => {
+  // Translation function that supports nested keys and variable interpolation
+  const t = (key: string, variables?: Record<string, any>): string => {
     const keys = key.split('.')
     let value = messages
     
@@ -68,7 +68,17 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       }
     }
     
-    return typeof value === 'string' ? value : key
+    let result = typeof value === 'string' ? value : key
+    
+    // Replace variables if provided
+    if (variables && typeof result === 'string') {
+      Object.entries(variables).forEach(([variableKey, variableValue]) => {
+        const placeholder = `{${variableKey}}`
+        result = result.replace(new RegExp(placeholder, 'g'), String(variableValue))
+      })
+    }
+    
+    return result
   }
 
   const isRTL = language === 'ar' || language === 'ckb'

@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, GraduationCap, Calendar } from 'lucide-react'
 import { Education } from '@/types/resume'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface EducationFormProps {
   education: Education[]
@@ -12,6 +13,7 @@ interface EducationFormProps {
 }
 
 export function EducationForm({ education, onChange }: EducationFormProps) {
+  const { t } = useLanguage()
   const addEducation = () => {
     const newEducation: Education = {
       id: Date.now().toString(),
@@ -44,7 +46,7 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
           <div className="flex justify-between items-start mb-4">
             <h3 className="text-lg font-semibold">
               <GraduationCap className="inline h-5 w-5 mr-2" />
-              Education #{index + 1}
+              {t('forms.education.educationNumber', { number: index + 1 })}
             </h3>
             <Button
               variant="outline"
@@ -59,40 +61,40 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">
-                Degree *
+                {t('forms.education.fields.degree')} *
               </label>
               <Input
-                placeholder="Bachelor of Science"
+                placeholder={t('forms.education.placeholders.degree')}
                 value={edu.degree}
                 onChange={(e) => updateEducation(edu.id, 'degree', e.target.value)}
               />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
-                Field of Study *
+                {t('forms.education.fields.fieldOfStudy')} *
               </label>
               <Input
-                placeholder="Computer Science"
+                placeholder={t('forms.education.placeholders.fieldOfStudy')}
                 value={edu.field}
                 onChange={(e) => updateEducation(edu.id, 'field', e.target.value)}
               />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
-                School/University *
+                {t('forms.education.fields.school')} *
               </label>
               <Input
-                placeholder="Stanford University"
+                placeholder={t('forms.education.placeholders.school')}
                 value={edu.school}
                 onChange={(e) => updateEducation(edu.id, 'school', e.target.value)}
               />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
-                Location
+                {t('forms.education.fields.location')}
               </label>
               <Input
-                placeholder="Stanford, CA"
+                placeholder={t('forms.education.placeholders.location')}
                 value={edu.location}
                 onChange={(e) => updateEducation(edu.id, 'location', e.target.value)}
               />
@@ -100,7 +102,7 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
             <div>
               <label className="block text-sm font-medium mb-1">
                 <Calendar className="inline h-3 w-3 mr-1" />
-                Start Date
+                {t('forms.education.fields.startDate')}
               </label>
               <Input
                 type="month"
@@ -110,7 +112,7 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
-                End Date
+                {t('forms.education.fields.endDate')}
               </label>
               <Input
                 type="month"
@@ -120,10 +122,10 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
-                GPA (Optional)
+                {t('forms.education.fields.gpa')}
               </label>
               <Input
-                placeholder="3.8/4.0"
+                placeholder={t('forms.education.placeholders.gpa')}
                 value={edu.gpa || ''}
                 onChange={(e) => updateEducation(edu.id, 'gpa', e.target.value)}
               />
@@ -132,14 +134,12 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
 
           <div className="mt-4">
             <label className="block text-sm font-medium mb-1">
-              Achievements & Activities (Optional)
+              {t('forms.education.fields.achievements')}
             </label>
             <textarea
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               rows={3}
-              placeholder="• Dean's List (2020-2022)
-• President of Computer Science Club
-• Published research paper on Machine Learning"
+              placeholder={t('forms.education.placeholders.achievements')}
               value={edu.achievements || ''}
               onChange={(e) => updateEducation(edu.id, 'achievements', e.target.value)}
             />
@@ -149,7 +149,7 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
 
       <Button onClick={addEducation} variant="outline" className="w-full">
         <Plus className="h-4 w-4 mr-2" />
-        Add Education
+        {t('forms.education.addButton')}
       </Button>
     </div>
   )

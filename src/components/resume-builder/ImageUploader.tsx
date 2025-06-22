@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { CropModal } from './CropModal'
 import { CropData } from '@/lib/image-utils'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface ImageUploaderProps {
   currentImage?: string
@@ -26,6 +27,7 @@ export default function ImageUploader({
   onImageRemove, 
   onCropUpdate 
 }: ImageUploaderProps) {
+  const { t } = useLanguage()
   const [dragActive, setDragActive] = useState(false)
   const [showCropModal, setShowCropModal] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -86,7 +88,7 @@ export default function ImageUploader({
   return (
     <div className="w-full">
       <label className="block text-sm font-medium text-gray-700 mb-2">
-        Profile Photo
+        {t('forms.personalInfo.fields.profilePhoto')}
       </label>
       
       {currentImage ? (
@@ -128,7 +130,7 @@ export default function ImageUploader({
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
           >
             <Upload size={16} className="mr-2" />
-            {currentImage ? 'Change Photo' : 'Upload Photo'}
+{currentImage ? t('forms.personalInfo.changePhoto') : t('forms.personalInfo.uploadPhoto')}
           </button>
           
           {currentImage && originalImage && onCropUpdate && (
@@ -139,7 +141,7 @@ export default function ImageUploader({
               className="inline-flex items-center"
             >
               <Crop size={16} className="mr-2" />
-              Crop
+              {t('forms.personalInfo.cropPhoto')}
             </Button>
           )}
         </div>
@@ -154,7 +156,7 @@ export default function ImageUploader({
       />
 
       <p className="text-xs text-gray-500 text-center mt-2">
-        Drag and drop or click to upload. Supports JPG, PNG, GIF (max 5MB)
+        {t('forms.personalInfo.photoInstructions')}
       </p>
 
       {/* Crop Modal */}

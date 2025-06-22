@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card'
 import { Plus, Trash2, Zap } from 'lucide-react'
 import { AISkillsSuggester } from '@/components/ai/AISkillsSuggester'
 import { Skill } from '@/types/resume'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface SkillsFormProps {
   skills: Skill[]
@@ -17,6 +18,7 @@ interface SkillsFormProps {
 }
 
 export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProps) {
+  const { t } = useLanguage()
   const addSkill = () => {
     const newSkill: Skill = {
       id: Date.now().toString(),
@@ -53,7 +55,7 @@ export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProp
       <div className="relative">
         {/* Attention-grabbing header */}
         <div className="absolute -top-3 left-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold animate-pulse">
-          ✨ AI-Powered
+          {t('forms.skills.ai.powered')}
         </div>
         
         {/* AI Skills Suggester */}
@@ -70,13 +72,13 @@ export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProp
           <div className="w-full border-t border-gray-300"></div>
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-4 bg-white text-gray-500">OR add manually</span>
+          <span className="px-4 bg-white text-gray-500">{t('forms.skills.ai.orAddManually')}</span>
         </div>
       </div>
 
       <div className="bg-green-50 p-4 rounded-lg">
         <p className="text-sm text-green-800">
-          <strong>Tip:</strong> Include both technical and soft skills relevant to your target job.
+          <strong>{t('forms.skills.tips.title')}</strong> {t('forms.skills.tips.description')}
         </p>
       </div>
 
@@ -86,10 +88,10 @@ export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProp
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               <div className="flex-1">
                 <label className="block text-sm font-medium text-gray-700 mb-1 sm:hidden">
-                  Skill Name
+                  {t('forms.skills.fields.skillName')}
                 </label>
                 <Input
-                  placeholder="e.g., JavaScript, Project Management, Communication"
+                  placeholder={t('forms.skills.placeholder')}
                   value={skill.name}
                   onChange={(e) => updateSkill(skill.id, 'name', e.target.value)}
                   className="w-full"
@@ -97,17 +99,17 @@ export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProp
               </div>
               <div className="w-full sm:w-32">
                 <label className="block text-sm font-medium text-gray-700 mb-1 sm:hidden">
-                  Proficiency Level
+                  {t('forms.skills.fields.proficiencyLevel')}
                 </label>
                 <select
                   className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   value={skill.level}
                   onChange={(e) => updateSkill(skill.id, 'level', e.target.value)}
                 >
-                  <option value="Beginner">Beginner</option>
-                  <option value="Intermediate">Intermediate</option>
-                  <option value="Advanced">Advanced</option>
-                  <option value="Expert">Expert</option>
+                  <option value="Beginner">{t('forms.skills.levels.beginner')}</option>
+                  <option value="Intermediate">{t('forms.skills.levels.intermediate')}</option>
+                  <option value="Advanced">{t('forms.skills.levels.advanced')}</option>
+                  <option value="Expert">{t('forms.skills.levels.expert')}</option>
                 </select>
               </div>
               <div className="flex justify-end sm:justify-start">
@@ -118,7 +120,7 @@ export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProp
                   className="text-red-600 hover:text-red-700"
                 >
                   <Trash2 className="h-4 w-4 mr-1 sm:mr-0" />
-                  <span className="sm:hidden">Remove</span>
+                  <span className="sm:hidden">{t('common.remove')}</span>
                 </Button>
               </div>
             </div>
@@ -128,14 +130,14 @@ export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProp
 
       <Button onClick={addSkill} variant="outline" className="w-full">
         <Plus className="h-4 w-4 mr-2" />
-        Add Skill
+        {t('forms.skills.addButton')}
       </Button>
 
       {skills.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           <Zap className="mx-auto h-12 w-12 text-gray-300 mb-4" />
-          <p>No skills added yet</p>
-          <p className="text-sm">Click "Add Skill" or use AI suggestions to get started</p>
+          <p>{t('forms.skills.empty.title')}</p>
+          <p className="text-sm">{t('forms.skills.empty.description')}</p>
         </div>
       )}
     </div>

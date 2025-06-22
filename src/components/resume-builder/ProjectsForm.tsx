@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, Calendar, Link } from 'lucide-react'
 import { Project } from '@/types/resume'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface ProjectsFormProps {
   projects: Project[]
@@ -13,6 +14,8 @@ interface ProjectsFormProps {
 }
 
 export function ProjectsForm({ projects, onChange }: ProjectsFormProps) {
+  const { t } = useLanguage()
+  
   const addProject = () => {
     const newProject: Project = {
       id: Date.now().toString(),
@@ -45,13 +48,13 @@ export function ProjectsForm({ projects, onChange }: ProjectsFormProps) {
           <div className="text-gray-400 mb-4">
             <span className="text-4xl">💼</span>
           </div>
-          <h3 className="text-lg font-medium mb-2">No projects added</h3>
+          <h3 className="text-lg font-medium mb-2">{t('forms.projects.empty.title')}</h3>
           <p className="text-gray-600 mb-4">
-            Add your notable projects to showcase your practical experience
+            {t('forms.projects.empty.description')}
           </p>
           <Button onClick={addProject}>
             <Plus className="h-4 w-4 mr-2" />
-            Add Project
+            {t('forms.projects.addButton')}
           </Button>
         </Card>
       ) : (
@@ -59,7 +62,7 @@ export function ProjectsForm({ projects, onChange }: ProjectsFormProps) {
           {projects.map((project, index) => (
             <Card key={project.id} className="p-6">
               <div className="flex justify-between items-start mb-4">
-                <h3 className="text-lg font-medium">Project {index + 1}</h3>
+                <h3 className="text-lg font-medium">{t('forms.projects.projectNumber', { number: index + 1 })}</h3>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -71,20 +74,20 @@ export function ProjectsForm({ projects, onChange }: ProjectsFormProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    Project Name *
+                    {t('forms.projects.fields.name')} *
                   </label>
                   <Input
-                    placeholder="E-commerce Platform"
+                    placeholder={t('forms.projects.placeholders.name')}
                     value={project.name}
                     onChange={(e) => updateProject(project.id, 'name', e.target.value)}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    Technologies Used
+                    {t('forms.projects.fields.technologies')}
                   </label>
                   <Input
-                    placeholder="React, Node.js, MongoDB"
+                    placeholder={t('forms.projects.placeholders.technologies')}
                     value={project.technologies}
                     onChange={(e) => updateProject(project.id, 'technologies', e.target.value)}
                   />
@@ -92,7 +95,7 @@ export function ProjectsForm({ projects, onChange }: ProjectsFormProps) {
                 <div>
                   <label className="block text-sm font-medium mb-1">
                     <Calendar className="inline h-3 w-3 mr-1" />
-                    Start Date
+                    {t('forms.projects.fields.startDate')}
                   </label>
                   <Input
                     type="month"
@@ -103,34 +106,34 @@ export function ProjectsForm({ projects, onChange }: ProjectsFormProps) {
                 <div>
                   <label className="block text-sm font-medium mb-1">
                     <Calendar className="inline h-3 w-3 mr-1" />
-                    End Date
+                    {t('forms.projects.fields.endDate')}
                   </label>
                   <Input
                     type="month"
                     value={project.endDate}
                     onChange={(e) => updateProject(project.id, 'endDate', e.target.value)}
-                    placeholder="Leave empty if ongoing"
+                    placeholder={t('forms.projects.placeholders.endDate')}
                   />
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium mb-1">
                     <Link className="inline h-3 w-3 mr-1" />
-                    Project Link
+                    {t('forms.projects.fields.url')}
                   </label>
                   <Input
-                    placeholder="https://github.com/username/project"
+                    placeholder={t('forms.projects.placeholders.url')}
                     value={project.link}
                     onChange={(e) => updateProject(project.id, 'link', e.target.value)}
                   />
                 </div>
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium mb-1">
-                    Description
+                    {t('forms.projects.fields.description')}
                   </label>
                   <textarea
                     className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary"
                     rows={3}
-                    placeholder="Describe the project, your role, and key achievements..."
+                    placeholder={t('forms.projects.placeholders.description')}
                     value={project.description}
                     onChange={(e) => updateProject(project.id, 'description', e.target.value)}
                   />
@@ -140,13 +143,13 @@ export function ProjectsForm({ projects, onChange }: ProjectsFormProps) {
           ))}
           <Button onClick={addProject} variant="outline" className="w-full">
             <Plus className="h-4 w-4 mr-2" />
-            Add Another Project
+            {t('forms.projects.addAnother')}
           </Button>
         </>
       )}
       <div className="bg-blue-50 p-4 rounded-lg">
         <p className="text-sm text-blue-800">
-          <strong>Tip:</strong> Include your most impactful projects that demonstrate your skills and experience.
+          <strong>{t('forms.projects.tips.title')}</strong> {t('forms.projects.tips.description')}
         </p>
       </div>
     </div>

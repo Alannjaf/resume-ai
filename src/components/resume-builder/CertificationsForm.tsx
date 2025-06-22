@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, Calendar, Award } from 'lucide-react'
 import { Certification } from '@/types/resume'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface CertificationsFormProps {
   certifications: Certification[]
@@ -13,6 +14,8 @@ interface CertificationsFormProps {
 }
 
 export function CertificationsForm({ certifications, onChange }: CertificationsFormProps) {
+  const { t } = useLanguage()
+  
   const addCertification = () => {
     const newCertification: Certification = {
       id: Date.now().toString(),
@@ -45,13 +48,13 @@ export function CertificationsForm({ certifications, onChange }: CertificationsF
           <div className="text-gray-400 mb-4">
             <span className="text-4xl">🏆</span>
           </div>
-          <h3 className="text-lg font-medium mb-2">No certifications added</h3>
+          <h3 className="text-lg font-medium mb-2">{t('forms.certifications.empty.title')}</h3>
           <p className="text-gray-600 mb-4">
-            Add your professional certifications to validate your expertise
+            {t('forms.certifications.empty.description')}
           </p>
           <Button onClick={addCertification}>
             <Plus className="h-4 w-4 mr-2" />
-            Add Certification
+            {t('forms.certifications.addButton')}
           </Button>
         </Card>
       ) : (
@@ -61,7 +64,7 @@ export function CertificationsForm({ certifications, onChange }: CertificationsF
               <div className="flex justify-between items-start mb-4">
                 <h3 className="text-lg font-medium">
                   <Award className="inline h-4 w-4 mr-2" />
-                  Certification {index + 1}
+                  {t('forms.certifications.certificationNumber', { number: index + 1 })}
                 </h3>
                 <Button
                   variant="ghost"
@@ -74,20 +77,20 @@ export function CertificationsForm({ certifications, onChange }: CertificationsF
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    Certification Name *
+                    {t('forms.certifications.fields.name')} *
                   </label>
                   <Input
-                    placeholder="AWS Certified Solutions Architect"
+                    placeholder={t('forms.certifications.placeholders.name')}
                     value={cert.name}
                     onChange={(e) => updateCertification(cert.id, 'name', e.target.value)}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    Issuing Organization *
+                    {t('forms.certifications.fields.issuer')} *
                   </label>
                   <Input
-                    placeholder="Amazon Web Services"
+                    placeholder={t('forms.certifications.placeholders.issuer')}
                     value={cert.issuer}
                     onChange={(e) => updateCertification(cert.id, 'issuer', e.target.value)}
                   />
@@ -95,7 +98,7 @@ export function CertificationsForm({ certifications, onChange }: CertificationsF
                 <div>
                   <label className="block text-sm font-medium mb-1">
                     <Calendar className="inline h-3 w-3 mr-1" />
-                    Issue Date
+                    {t('forms.certifications.fields.date')}
                   </label>
                   <Input
                     type="month"
@@ -106,31 +109,31 @@ export function CertificationsForm({ certifications, onChange }: CertificationsF
                 <div>
                   <label className="block text-sm font-medium mb-1">
                     <Calendar className="inline h-3 w-3 mr-1" />
-                    Expiry Date
+                    {t('forms.certifications.fields.expiryDate')}
                   </label>
                   <Input
                     type="month"
                     value={cert.expiryDate}
                     onChange={(e) => updateCertification(cert.id, 'expiryDate', e.target.value)}
-                    placeholder="Leave empty if no expiry"
+                    placeholder={t('forms.certifications.placeholders.expiryDate')}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    Credential ID
+                    {t('forms.certifications.fields.credentialId')}
                   </label>
                   <Input
-                    placeholder="ABC123DEF456"
+                    placeholder={t('forms.certifications.placeholders.credentialId')}
                     value={cert.credentialId}
                     onChange={(e) => updateCertification(cert.id, 'credentialId', e.target.value)}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
-                    Credential URL
+                    {t('forms.certifications.fields.credentialUrl')}
                   </label>
                   <Input
-                    placeholder="https://www.credly.com/badges/..."
+                    placeholder={t('forms.certifications.placeholders.credentialUrl')}
                     value={cert.url}
                     onChange={(e) => updateCertification(cert.id, 'url', e.target.value)}
                   />
@@ -140,13 +143,13 @@ export function CertificationsForm({ certifications, onChange }: CertificationsF
           ))}
           <Button onClick={addCertification} variant="outline" className="w-full">
             <Plus className="h-4 w-4 mr-2" />
-            Add Another Certification
+            {t('forms.certifications.addAnother')}
           </Button>
         </>
       )}
       <div className="bg-blue-50 p-4 rounded-lg">
         <p className="text-sm text-blue-800">
-          <strong>Tip:</strong> List certifications that are relevant to your target role and are from recognized organizations.
+          <strong>{t('forms.certifications.tips.title')}</strong> {t('forms.certifications.tips.description')}
         </p>
       </div>
     </div>

@@ -6,6 +6,18 @@ import { Footer } from '@/components/landing/footer'
 
 export default function PrivacyPolicy() {
   const { t } = useLanguage()
+  
+  // Helper function to safely get array translations
+  const getArrayTranslation = (key: string): string[] => {
+    const translation = t(key)
+    return Array.isArray(translation) ? translation : []
+  }
+  
+  // Helper function to safely get object array translations
+  const getObjectArrayTranslation = (key: string): any[] => {
+    const translation = t(key)
+    return Array.isArray(translation) ? translation : []
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -19,12 +31,12 @@ export default function PrivacyPolicy() {
         </div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">Privacy Policy</h1>
+            <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6">{t('privacy.title')}</h1>
             <p className="text-xl text-gray-600 mb-4">
-              How we protect and handle your personal information
+              {t('privacy.subtitle')}
             </p>
             <p className="text-sm text-gray-500">
-              Last updated: January 2025
+              {t('privacy.lastUpdated')}
             </p>
           </div>
         </div>
@@ -36,116 +48,103 @@ export default function PrivacyPolicy() {
           <div className="max-w-4xl mx-auto">
           
             <section className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">1. Introduction</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('privacy.sections.introduction.title')}</h2>
               <p className="text-lg text-gray-700 leading-relaxed">
-                Welcome to Work.krd ("we," "our," or "us"). We are committed to protecting your personal information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our AI-powered resume building services.
+                {t('privacy.sections.introduction.content')}
               </p>
             </section>
 
             <section className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">2. Information We Collect</h2>
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">Personal Information</h3>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('privacy.sections.dataCollection.title')}</h2>
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">{t('privacy.sections.dataCollection.personal.title')}</h3>
               <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-700">
-                <li>Name and contact information (email address, phone number)</li>
-                <li>Account credentials managed securely through Clerk authentication</li>
-                <li>Professional information (work history, education, skills, resume content)</li>
-                <li>Payment information (processed securely by FIB and Nasspay payment providers)</li>
+                {getArrayTranslation('privacy.sections.dataCollection.personal.items').map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
               </ul>
               
-              <h3 className="text-xl font-semibold text-gray-800 mb-4">Usage Data</h3>
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">{t('privacy.sections.dataCollection.usage.title')}</h3>
               <ul className="list-disc pl-6 mb-6 space-y-2 text-gray-700">
-                <li>IP address and browser information</li>
-                <li>Pages visited and time spent on our service</li>
-                <li>Device information and operating system</li>
-                <li>Resume creation and export activities</li>
-                <li>AI content generation usage patterns</li>
+                {getArrayTranslation('privacy.sections.dataCollection.usage.items').map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
               </ul>
             </section>
 
             <section className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">3. How We Use Your Information</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('privacy.sections.dataUsage.title')}</h2>
               <ul className="list-disc pl-6 space-y-2 text-gray-700">
-                <li>Provide, operate, and maintain our AI-powered resume building services</li>
-                <li>Process your account registration and authentication through Clerk</li>
-                <li>Generate AI-powered resume content and suggestions using Google Gemini</li>
-                <li>Process payments securely through FIB and Nasspay</li>
-                <li>Send you service notifications, updates, and support messages via email</li>
-                <li>Respond to your contact form submissions and support requests</li>
-                <li>Improve our website and services based on usage analytics</li>
-                <li>Provide multi-language support (English, Arabic, Kurdish)</li>
+                {getArrayTranslation('privacy.sections.dataUsage.items').map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
               </ul>
             </section>
 
             <section className="mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">4. Information Sharing and Disclosure</h2>
-              <p className="mb-6 text-lg text-gray-700 leading-relaxed">We do not sell, trade, or rent your personal information to third parties. We may share your information only in the following circumstances:</p>
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('privacy.sections.dataSharing.title')}</h2>
+              <p className="mb-6 text-lg text-gray-700 leading-relaxed">{t('privacy.sections.dataSharing.content')}</p>
               <ul className="list-disc pl-6 space-y-3 text-gray-700">
-                <li><strong className="text-gray-900">Service Providers:</strong> With Clerk (authentication), Google Gemini (AI services), FIB/Nasspay (payments), and Resend (email services)</li>
-                <li><strong className="text-gray-900">Legal Compliance:</strong> When required by law or to protect our rights and safety</li>
-                <li><strong className="text-gray-900">Business Transfers:</strong> In connection with any merger, sale, or acquisition of our business</li>
-                <li><strong className="text-gray-900">Consent:</strong> With your explicit consent for other purposes</li>
+                {getObjectArrayTranslation('privacy.sections.dataSharing.circumstances').map((circumstance, index) => (
+                  <li key={index}><strong className="text-gray-900">{circumstance.title}:</strong> {circumstance.content}</li>
+                ))}
               </ul>
             </section>
 
           <section className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">5. Data Security</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('privacy.sections.dataSecurity.title')}</h2>
             <p className="text-lg text-gray-700 leading-relaxed">
-              We implement appropriate technical and organizational security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. Our data is securely stored and transmitted using industry-standard encryption. However, no method of transmission over the internet is 100% secure.
+              {t('privacy.sections.dataSecurity.content')}
             </p>
           </section>
 
           <section className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">6. Your Rights</h2>
-            <p className="mb-6 text-lg text-gray-700 leading-relaxed">You have the right to:</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">{t('privacy.sections.userRights.title')}</h2>
+            <p className="mb-6 text-lg text-gray-700 leading-relaxed">{t('privacy.sections.userRights.content')}</p>
             <ul className="list-disc pl-6 space-y-2 text-gray-700">
-              <li>Access and review your personal information</li>
-              <li>Request correction of inaccurate data</li>
-              <li>Request deletion of your account and data</li>
-              <li>Object to processing of your personal information</li>
-              <li>Data portability (receive a copy of your data)</li>
-              <li>Withdraw consent at any time</li>
+              {getArrayTranslation('privacy.sections.userRights.rights').map((right, index) => (
+                <li key={index}>{right}</li>
+              ))}
             </ul>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">7. Cookies and Tracking</h2>
+            <h2 className="text-2xl font-semibold mb-4">{t('privacy.sections.cookies.title')}</h2>
             <p>
-              We use cookies and similar tracking technologies to enhance your experience on our website. You can control cookie settings through your browser preferences, though some features may not function properly if cookies are disabled.
+              {t('privacy.sections.cookies.content')}
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">8. Third-Party Services</h2>
-            <p className="mb-4">Our website integrates with third-party services:</p>
+            <h2 className="text-2xl font-semibold mb-4">{t('privacy.sections.thirdPartyServices.title')}</h2>
+            <p className="mb-4">{t('privacy.sections.thirdPartyServices.content')}</p>
             <ul className="list-disc pl-6">
-              <li><strong>Clerk:</strong> User authentication and account management</li>
-              <li><strong>Google Gemini AI:</strong> AI-powered resume content generation</li>
-              <li><strong>Payment Processors:</strong> FIB and Nasspay for secure payment processing</li>
-              <li><strong>Email Services:</strong> For transactional and marketing communications</li>
+              {getObjectArrayTranslation('privacy.sections.thirdPartyServices.services').map((service, index) => (
+                <li key={index}><strong>{service.name}:</strong> {service.purpose}</li>
+              ))}
             </ul>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">9. Children's Privacy</h2>
+            <h2 className="text-2xl font-semibold mb-4">{t('privacy.sections.childrenPrivacy.title')}</h2>
             <p>
-              Our services are not intended for individuals under the age of 16. We do not knowingly collect personal information from children under 16. If you become aware that a child has provided us with personal information, please contact us.
+              {t('privacy.sections.childrenPrivacy.content')}
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">10. Changes to This Privacy Policy</h2>
+            <h2 className="text-2xl font-semibold mb-4">{t('privacy.sections.policyChanges.title')}</h2>
             <p>
-              We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date.
+              {t('privacy.sections.policyChanges.content')}
             </p>
           </section>
 
           <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">11. Contact Us</h2>
-            <p className="mb-4">If you have any questions about this Privacy Policy, please contact us:</p>
+            <h2 className="text-2xl font-semibold mb-4">{t('privacy.sections.contact.title')}</h2>
+            <p className="mb-4">{t('privacy.sections.contact.content')}</p>
             <ul className="list-none">
-              <li><strong>Email:</strong> info@work.krd</li>
-              <li><strong>Phone:</strong> +964 750 491 0348</li>
-              <li><strong>Address:</strong> Erbil, Kurdistan Region, Iraq</li>
+              <li><strong>Email:</strong> {t('privacy.sections.contact.email')}</li>
+              <li><strong>Phone:</strong> {t('privacy.sections.contact.phone')}</li>
+              <li><strong>Address:</strong> {t('privacy.sections.contact.address')}</li>
             </ul>
             </section>
 

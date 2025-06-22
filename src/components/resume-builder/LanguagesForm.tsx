@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, Globe } from 'lucide-react'
 import { Language } from '@/types/resume'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface LanguagesFormProps {
   languages: Language[]
@@ -12,6 +13,8 @@ interface LanguagesFormProps {
 }
 
 export function LanguagesForm({ languages, onChange }: LanguagesFormProps) {
+  const { t } = useLanguage()
+  
   const addLanguage = () => {
     const newLanguage: Language = {
       id: Date.now().toString(),
@@ -37,7 +40,7 @@ export function LanguagesForm({ languages, onChange }: LanguagesFormProps) {
     <div className="space-y-4">
       <div className="bg-purple-50 p-4 rounded-lg">
         <p className="text-sm text-purple-800">
-          <strong>Tip:</strong> Include proficiency levels to help employers understand your language abilities.
+          <strong>{t('forms.languages.tips.title')}</strong> {t('forms.languages.tips.description')}
         </p>
       </div>
 
@@ -47,10 +50,10 @@ export function LanguagesForm({ languages, onChange }: LanguagesFormProps) {
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               <div className="flex-1">
                 <label className="block text-sm font-medium text-gray-700 mb-1 sm:hidden">
-                  Language
+                  {t('forms.languages.fields.language')}
                 </label>
                 <Input
-                  placeholder="e.g., English, Arabic, Kurdish Sorani, Spanish"
+                  placeholder={t('forms.languages.placeholders.language')}
                   value={language.name}
                   onChange={(e) => updateLanguage(language.id, 'name', e.target.value)}
                   className="w-full"
@@ -58,18 +61,18 @@ export function LanguagesForm({ languages, onChange }: LanguagesFormProps) {
               </div>
               <div className="w-full sm:w-40">
                 <label className="block text-sm font-medium text-gray-700 mb-1 sm:hidden">
-                  Proficiency Level
+                  {t('forms.languages.fields.proficiency')}
                 </label>
                 <select
                   className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                   value={language.proficiency}
                   onChange={(e) => updateLanguage(language.id, 'proficiency', e.target.value)}
                 >
-                  <option value="Basic">Basic</option>
-                  <option value="Conversational">Conversational</option>
-                  <option value="Fluent">Fluent</option>
-                  <option value="Native">Native</option>
-                  <option value="Professional">Professional</option>
+                  <option value="Basic">{t('forms.languages.proficiency.basic')}</option>
+                  <option value="Conversational">{t('forms.languages.proficiency.conversational')}</option>
+                  <option value="Fluent">{t('forms.languages.proficiency.fluent')}</option>
+                  <option value="Native">{t('forms.languages.proficiency.native')}</option>
+                  <option value="Professional">{t('forms.languages.proficiency.professional')}</option>
                 </select>
               </div>
               <div className="flex justify-end sm:justify-start">
@@ -80,7 +83,7 @@ export function LanguagesForm({ languages, onChange }: LanguagesFormProps) {
                   className="text-red-600 hover:text-red-700"
                 >
                   <Trash2 className="h-4 w-4 mr-1 sm:mr-0" />
-                  <span className="sm:hidden">Remove</span>
+                  <span className="sm:hidden">{t('common.remove')}</span>
                 </Button>
               </div>
             </div>
@@ -90,14 +93,14 @@ export function LanguagesForm({ languages, onChange }: LanguagesFormProps) {
 
       <Button onClick={addLanguage} variant="outline" className="w-full">
         <Plus className="h-4 w-4 mr-2" />
-        Add Language
+        {t('forms.languages.addButton')}
       </Button>
 
       {languages.length === 0 && (
         <div className="text-center py-8 text-gray-500">
           <Globe className="mx-auto h-12 w-12 text-gray-300 mb-4" />
-          <p>No languages added yet</p>
-          <p className="text-sm">Click "Add Language" to get started</p>
+          <p>{t('forms.languages.empty.title')}</p>
+          <p className="text-sm">{t('forms.languages.empty.description')}</p>
         </div>
       )}
     </div>

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Check, Lock, Crown } from 'lucide-react'
 import { TemplateThumbnail } from './TemplateThumbnail'
 import { getTierBadgeStyle } from '@/lib/templates'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface TemplateWithTier {
   id: string
@@ -33,6 +34,7 @@ export function TemplateGallery({
   className = '',
   allowedTemplates 
 }: TemplateGalleryProps) {
+  const { t } = useLanguage()
   const [templatesByTier, setTemplatesByTier] = useState<TemplatesByTier | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const userAllowedTemplates = allowedTemplates || []
@@ -63,16 +65,16 @@ export function TemplateGallery({
   return (
     <div className={`template-gallery ${className}`}>
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Choose Template</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('templateGallery.title')}</h3>
         <p className="text-sm text-gray-600">
-          Select a template that best fits your style and industry
+          {t('templateGallery.description')}
         </p>
       </div>
       
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
           <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full" />
-          <span className="ml-3 text-gray-600">Loading templates...</span>
+          <span className="ml-3 text-gray-600">{t('templateGallery.loading')}</span>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -126,15 +128,15 @@ export function TemplateGallery({
                     ? 'bg-purple-100 text-purple-800'
                     : 'bg-gray-100 text-gray-800'
                 }`}>
-                  {template.category}
+                  {t(`templateGallery.categories.${template.category}`)}
                 </span>
                 <span className={`inline-flex items-center px-2 py-1 text-xs rounded-full ${getTierBadgeStyle(template.tier).className}`}>
-                  {getTierBadgeStyle(template.tier).label}
+                  {t(`templateGallery.tiers.${template.tier}`)}
                 </span>
               </div>
               {isLocked && (
                 <p className="text-xs text-orange-600 mt-2">
-                  Upgrade to access this template
+                  {t('templateGallery.upgradeToAccess')}
                 </p>
               )}
             </div>
