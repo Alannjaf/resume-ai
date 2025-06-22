@@ -42,7 +42,10 @@ function ResumeBuilderContent() {
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [resumeId, setResumeId] = useState<string | null>(null)
+  const [isAutoSaving, setIsAutoSaving] = useState(false)
   const [resumeTitle, setResumeTitle] = useState('My Resume')
+  const [lastSavedData, setLastSavedData] = useState<ResumeData | null>(null)
+  const [saveQueue, setSaveQueue] = useState<NodeJS.Timeout | null>(null)
   const [userPermissions, setUserPermissions] = useState<{
     canUploadPhoto: boolean
     availableTemplates: string[]
@@ -68,11 +71,141 @@ function ResumeBuilderContent() {
     certifications: [],
   })
 
-  const handleNext = () => {
+  // Quick save function with debouncing
+  const quickSave = async (changes: any, sectionType?: string) => {
+    if (!resumeId) {
+      // If no resume exists yet, create it first
+      try {
+        const response = await fetch('/api/resumes', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title: resumeTitle,
+            template: selectedTemplate,
+            formData
+          })
+        })
+
+        if (!response.ok) {
+          throw new Error('Failed to create resume')
+        }
+
+        const data = await response.json()
+        setResumeId(data.resume.id)
+        setLastSavedData({ ...formData })
+        return true
+      } catch (error) {
+        console.error('Create resume failed:', error)
+        return false
+      }
+    }
+
+    try {
+      const response = await fetch(`/api/resumes/${resumeId}/quick-save`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          changes,
+          currentSection: sectionType
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to save progress')
+      }
+
+      // Update last saved data
+      setLastSavedData({ ...formData })
+      return true
+    } catch (error) {
+      console.error('Quick save failed:', error)
+      return false
+    }
+  }
+
+  // Detect changes and queue save
+  const queueSave = (sectionType?: string) => {
+    if (!lastSavedData) return
+
+    const changes: any = {}
+    let hasChanges = false
+
+    // Check for basic changes
+    if (resumeTitle !== lastSavedData.personal?.fullName) {
+      changes.title = resumeTitle
+      hasChanges = true
+    }
+
+    if (formData.personal !== lastSavedData.personal) {
+      changes.personal = formData.personal
+      hasChanges = true
+    }
+
+    if (formData.summary !== lastSavedData.summary) {
+      changes.summary = formData.summary
+      hasChanges = true
+    }
+
+    // Check section-specific changes
+    if (sectionType) {
+      const currentSectionData = (formData as any)[sectionType]
+      const lastSectionData = (lastSavedData as any)[sectionType]
+      
+      if (JSON.stringify(currentSectionData) !== JSON.stringify(lastSectionData)) {
+        changes.sectionData = currentSectionData
+        hasChanges = true
+      }
+    }
+
+    if (hasChanges) {
+      // Clear existing save queue
+      if (saveQueue) {
+        clearTimeout(saveQueue)
+      }
+
+      // Queue new save with debounce
+      const timeoutId = setTimeout(() => {
+        setIsAutoSaving(true)
+        quickSave(changes, sectionType).finally(() => {
+          setIsAutoSaving(false)
+        })
+      }, 500) // 500ms debounce
+
+      setSaveQueue(timeoutId)
+    }
+  }
+
+  const handleNext = async () => {
     if (currentSection < FORM_SECTIONS.length - 1) {
+      // Move to next section immediately (optimistic update)
       setCurrentSection(currentSection + 1)
       window.scrollTo({ top: 0, behavior: 'smooth' })
+
+      // Save current section data in background
+      const sectionKey = getSectionKey(currentSection)
+      if (sectionKey) {
+        queueSave(sectionKey)
+      }
     }
+  }
+
+  // Helper function to get section key from index
+  const getSectionKey = (sectionIndex: number): string | undefined => {
+    const sectionMap: Record<number, string> = {
+      0: 'personal',
+      1: 'summary', 
+      2: 'experience',
+      3: 'education',
+      4: 'skills',
+      5: 'languages',
+      6: 'projects',
+      7: 'certifications'
+    }
+    return sectionMap[sectionIndex]
   }
 
   const handlePrevious = () => {
@@ -82,7 +215,7 @@ function ResumeBuilderContent() {
     }
   }
 
-  const handleSave = async () => {
+  const handleSave = async (showToast = true) => {
     setIsSaving(true)
     try {
       const endpoint = resumeId ? `/api/resumes/${resumeId}` : '/api/resumes'
@@ -111,12 +244,32 @@ function ResumeBuilderContent() {
         setResumeId(data.resume.id)
       }
 
-      // Show success message
-      toast.success('Resume saved successfully!')
+      // Show success message only if requested
+      if (showToast) {
+        toast.success('Resume saved successfully!')
+      }
+      
+      return true // Return success status
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to save resume')
+      return false // Return failure status
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  const handleSectionChange = async (newSection: number) => {
+    if (newSection === currentSection) return
+    
+    // Change section immediately (optimistic update)
+    const oldSection = currentSection
+    setCurrentSection(newSection)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+
+    // Save old section data in background
+    const sectionKey = getSectionKey(oldSection)
+    if (sectionKey) {
+      queueSave(sectionKey)
     }
   }
 
@@ -151,6 +304,7 @@ function ResumeBuilderContent() {
         try {
           const parsedData = JSON.parse(importedData) as ResumeData
           setFormData(parsedData)
+          setLastSavedData(parsedData) // Set initial baseline for change detection
           setResumeTitle(importedTitle || 'Imported Resume')
           
           // Clear session storage
@@ -214,6 +368,7 @@ function ResumeBuilderContent() {
         }
         
         setFormData(formDataWithIds)
+        setLastSavedData(formDataWithIds) // Set initial baseline for change detection
         
         // Check if preview should be opened automatically
         const shouldPreview = searchParams.get('preview')
@@ -230,6 +385,15 @@ function ResumeBuilderContent() {
 
     loadResume()
   }, [searchParams, router])
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (saveQueue) {
+        clearTimeout(saveQueue)
+      }
+    }
+  }, [saveQueue])
 
   // Auto-save functionality (optional) - commented out to avoid dependency issues
   // useEffect(() => {
@@ -290,9 +454,9 @@ function ResumeBuilderContent() {
                 Preview
               </Button>
               <Button 
-                onClick={handleSave} 
+                onClick={() => handleSave(true)} 
                 size="sm"
-                disabled={isSaving}
+                disabled={isSaving || isAutoSaving}
               >
                 {isSaving ? (
                   <>
@@ -321,10 +485,7 @@ function ResumeBuilderContent() {
                 {FORM_SECTIONS.map((section, index) => (
                   <button
                     key={section.id}
-                    onClick={() => {
-                      setCurrentSection(index)
-                      window.scrollTo({ top: 0, behavior: 'smooth' })
-                    }}
+                    onClick={() => handleSectionChange(index)}
                     className={`w-full text-left p-3 rounded-lg transition-colors flex items-center space-x-3 ${
                       index === currentSection
                         ? 'bg-primary text-primary-foreground'
@@ -344,9 +505,17 @@ function ResumeBuilderContent() {
           {/* Form Content */}
           <div className="lg:col-span-2">
             <Card className="p-8">
-              <h2 className="text-2xl font-bold mb-6">
-                {FORM_SECTIONS[currentSection].title}
-              </h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold">
+                  {FORM_SECTIONS[currentSection].title}
+                </h2>
+                {isAutoSaving && (
+                  <div className="flex items-center text-xs text-gray-500">
+                    <div className="animate-spin h-3 w-3 mr-1 border-2 border-gray-400 border-t-transparent rounded-full" />
+                    Saving...
+                  </div>
+                )}
+              </div>
 
               {/* Personal Information Section */}
               {currentSection === 0 && (
@@ -666,10 +835,7 @@ function ResumeBuilderContent() {
               {FORM_SECTIONS.map((section, index) => (
                 <button
                   key={section.id}
-                  onClick={() => {
-                    setCurrentSection(index)
-                    window.scrollTo({ top: 0, behavior: 'smooth' })
-                  }}
+                  onClick={() => handleSectionChange(index)}
                   className={`w-full text-left p-3 rounded-lg transition-colors flex items-center space-x-3 ${
                     index === currentSection
                       ? 'bg-primary text-primary-foreground'
