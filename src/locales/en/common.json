@@ -443,6 +443,7 @@
         "preview": "Preview",
         "save": "Save",
         "saving": "Saving...",
+        "translating": "Translating to English...",
         "previous": "Previous",
         "next": "Next",
         "viewResume": "View Resume"
@@ -456,7 +457,9 @@
         "saveSuccess": "Resume saved successfully!",
         "saveError": "Failed to save resume",
         "importSuccess": "Resume data imported. You can now edit and save.",
-        "loadError": "Failed to load resume"
+        "loadError": "Failed to load resume",
+        "autoTranslated": "Resume content automatically translated to English",
+        "translationError": "Failed to translate some content. Please try again."
       },
       "defaults": {
         "resumeTitle": "My Resume",

@@ -14,8 +14,8 @@ interface AIJobDescriptionEnhancerProps {
 }
 
 export function AIJobDescriptionEnhancer({ 
-  currentDescription, 
-  jobTitle,
+  currentDescription = '', 
+  jobTitle = '',
   onAccept
 }: AIJobDescriptionEnhancerProps) {
   const [isEnhancing, setIsEnhancing] = useState(false)
@@ -24,7 +24,7 @@ export function AIJobDescriptionEnhancer({
   const [showSuggestion, setShowSuggestion] = useState(false)
 
   const enhanceDescription = async () => {
-    if (!currentDescription.trim()) {
+    if (!currentDescription || !currentDescription.trim()) {
       toast.error(t('ai.enterDescriptionFirst') || 'Please enter a job description first')
       return
     }
@@ -110,7 +110,7 @@ export function AIJobDescriptionEnhancer({
     <div className="mt-2">
       <AISuggestionButton
         onClick={enhanceDescription}
-        disabled={!currentDescription.trim() || isEnhancing}
+        disabled={!currentDescription || !currentDescription.trim() || isEnhancing}
         size="sm"
       >
         {t('ai.enhanceButton')}

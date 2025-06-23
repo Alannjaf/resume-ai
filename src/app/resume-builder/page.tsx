@@ -20,6 +20,7 @@ import { AIProfessionalSummary } from '@/components/ai/AIProfessionalSummary'
 import { TranslateAndEnhanceButton } from '@/components/ai/TranslateAndEnhanceButton'
 import ImageUploader from '@/components/resume-builder/ImageUploader'
 import { ResumeData } from '@/types/resume'
+import { isNonEnglishContent } from '@/lib/languageDetection'
 import toast from 'react-hot-toast'
 
 // Form sections
@@ -49,6 +50,7 @@ function ResumeBuilderContent() {
   const [resumeTitle, setResumeTitle] = useState('')
   const [lastSavedData, setLastSavedData] = useState<ResumeData | null>(null)
   const [saveQueue, setSaveQueue] = useState<NodeJS.Timeout | null>(null)
+  const [isAutoTranslating, setIsAutoTranslating] = useState(false)
   const [userPermissions, setUserPermissions] = useState<{
     canUploadPhoto: boolean
     availableTemplates: string[]
@@ -97,7 +99,7 @@ function ResumeBuilderContent() {
 
         const data = await response.json()
         setResumeId(data.resume.id)
-        setLastSavedData({ ...formData, title: resumeTitle })
+        setLastSavedData({ ...formData })
         return true
       } catch (error) {
         console.error('Create resume failed:', error)
@@ -122,7 +124,7 @@ function ResumeBuilderContent() {
       }
 
       // Update last saved data
-      setLastSavedData({ ...formData, title: resumeTitle })
+      setLastSavedData({ ...formData })
       return true
     } catch (error) {
       console.error('Quick save failed:', error)
@@ -141,11 +143,8 @@ function ResumeBuilderContent() {
     const changes: any = {}
     let hasChanges = false
 
-    // Check for title changes (comparing with resume title, not personal name)
-    if (resumeTitle !== (lastSavedData as any).title) {
-      changes.title = resumeTitle
-      hasChanges = true
-    }
+    // Always include title in changes for save operations
+    changes.title = resumeTitle
 
     if (JSON.stringify(formData.personal) !== JSON.stringify(lastSavedData.personal)) {
       changes.personal = formData.personal
@@ -186,12 +185,351 @@ function ResumeBuilderContent() {
     }
   }
 
+  // Auto-translate all non-English content to English
+  const autoTranslateToEnglish = async (): Promise<ResumeData> => {
+    const translatedData = { ...formData }
+    let hasTranslations = false
+
+    try {
+      // Collect all content that needs translation
+      const translationTasks: Array<{
+        content: string
+        contentType: string
+        contextInfo?: any
+        updatePath: string[]
+        index?: number
+      }> = []
+
+      // Personal information
+      if (formData.personal.fullName && isNonEnglishContent(formData.personal.fullName)) {
+        translationTasks.push({
+          content: formData.personal.fullName,
+          contentType: 'personal',
+          updatePath: ['personal', 'fullName']
+        })
+      }
+
+      if (formData.personal.title && isNonEnglishContent(formData.personal.title)) {
+        translationTasks.push({
+          content: formData.personal.title,
+          contentType: 'personal',
+          updatePath: ['personal', 'title']
+        })
+      }
+
+      if (formData.personal.location && isNonEnglishContent(formData.personal.location)) {
+        translationTasks.push({
+          content: formData.personal.location,
+          contentType: 'personal',
+          updatePath: ['personal', 'location']
+        })
+      }
+
+      // Professional summary
+      if (formData.summary && isNonEnglishContent(formData.summary)) {
+        translationTasks.push({
+          content: formData.summary,
+          contentType: 'summary',
+          updatePath: ['summary']
+        })
+      }
+
+      // Work experience
+      formData.experience.forEach((exp, i) => {
+        if (exp.jobTitle && isNonEnglishContent(exp.jobTitle)) {
+          translationTasks.push({
+            content: exp.jobTitle,
+            contentType: 'personal',
+            contextInfo: { company: exp.company },
+            updatePath: ['experience', 'jobTitle'],
+            index: i
+          })
+        }
+
+        if (exp.company && isNonEnglishContent(exp.company)) {
+          translationTasks.push({
+            content: exp.company,
+            contentType: 'personal',
+            updatePath: ['experience', 'company'],
+            index: i
+          })
+        }
+
+        if (exp.location && isNonEnglishContent(exp.location)) {
+          translationTasks.push({
+            content: exp.location,
+            contentType: 'personal',
+            updatePath: ['experience', 'location'],
+            index: i
+          })
+        }
+
+        if (exp.description && isNonEnglishContent(exp.description)) {
+          translationTasks.push({
+            content: exp.description,
+            contentType: 'description',
+            contextInfo: { jobTitle: exp.jobTitle, company: exp.company },
+            updatePath: ['experience', 'description'],
+            index: i
+          })
+        }
+      })
+
+      // Education
+      formData.education.forEach((edu, i) => {
+        if (edu.degree && isNonEnglishContent(edu.degree)) {
+          translationTasks.push({
+            content: edu.degree,
+            contentType: 'personal',
+            updatePath: ['education', 'degree'],
+            index: i
+          })
+        }
+
+        if (edu.field && isNonEnglishContent(edu.field)) {
+          translationTasks.push({
+            content: edu.field,
+            contentType: 'personal',
+            updatePath: ['education', 'field'],
+            index: i
+          })
+        }
+
+        if (edu.school && isNonEnglishContent(edu.school)) {
+          translationTasks.push({
+            content: edu.school,
+            contentType: 'personal',
+            updatePath: ['education', 'school'],
+            index: i
+          })
+        }
+
+        if (edu.location && isNonEnglishContent(edu.location)) {
+          translationTasks.push({
+            content: edu.location,
+            contentType: 'personal',
+            updatePath: ['education', 'location'],
+            index: i
+          })
+        }
+
+        if (edu.achievements && isNonEnglishContent(edu.achievements)) {
+          translationTasks.push({
+            content: edu.achievements,
+            contentType: 'description',
+            updatePath: ['education', 'achievements'],
+            index: i
+          })
+        }
+      })
+
+      // Skills
+      formData.skills.forEach((skill, i) => {
+        if (skill.name && isNonEnglishContent(skill.name)) {
+          translationTasks.push({
+            content: skill.name,
+            contentType: 'personal',
+            updatePath: ['skills', 'name'],
+            index: i
+          })
+        }
+      })
+
+      // Languages
+      formData.languages.forEach((language, i) => {
+        if (language.name && isNonEnglishContent(language.name)) {
+          translationTasks.push({
+            content: language.name,
+            contentType: 'personal',
+            updatePath: ['languages', 'name'],
+            index: i
+          })
+        }
+      })
+
+      // Projects
+      if (formData.projects) {
+        formData.projects.forEach((project, i) => {
+          if (project.name && isNonEnglishContent(project.name)) {
+            translationTasks.push({
+              content: project.name,
+              contentType: 'personal',
+              updatePath: ['projects', 'name'],
+              index: i
+            })
+          }
+
+          if (project.description && isNonEnglishContent(project.description)) {
+            translationTasks.push({
+              content: project.description,
+              contentType: 'project',
+              contextInfo: { projectName: project.name },
+              updatePath: ['projects', 'description'],
+              index: i
+            })
+          }
+
+          if (project.technologies && isNonEnglishContent(project.technologies)) {
+            translationTasks.push({
+              content: project.technologies,
+              contentType: 'personal',
+              updatePath: ['projects', 'technologies'],
+              index: i
+            })
+          }
+        })
+      }
+
+      // Certifications
+      if (formData.certifications) {
+        formData.certifications.forEach((cert, i) => {
+          if (cert.name && isNonEnglishContent(cert.name)) {
+            translationTasks.push({
+              content: cert.name,
+              contentType: 'personal',
+              updatePath: ['certifications', 'name'],
+              index: i
+            })
+          }
+
+          if (cert.issuer && isNonEnglishContent(cert.issuer)) {
+            translationTasks.push({
+              content: cert.issuer,
+              contentType: 'personal',
+              updatePath: ['certifications', 'issuer'],
+              index: i
+            })
+          }
+        })
+      }
+
+      if (translationTasks.length === 0) {
+        console.log('No translation tasks found')
+        return formData // No translation needed
+      }
+
+      console.log(`Found ${translationTasks.length} items to translate:`, translationTasks.map(t => ({ content: t.content.substring(0, 30) + '...', type: t.contentType })))
+
+      // Process translations in smaller batches of 3 to avoid overwhelming the API
+      const batchSize = 3
+      for (let i = 0; i < translationTasks.length; i += batchSize) {
+        const batch = translationTasks.slice(i, i + batchSize)
+        console.log(`Processing translation batch ${Math.floor(i/batchSize) + 1}/${Math.ceil(translationTasks.length/batchSize)}`)
+        
+        // Process batch in parallel
+        const batchPromises = batch.map(task => 
+          fetch('/api/ai/translate-enhance', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              content: task.content,
+              contentType: task.contentType,
+              contextInfo: task.contextInfo
+            })
+          }).then(async response => {
+            if (response.ok) {
+              const result = await response.json()
+              console.log(`Translated: "${task.content.substring(0, 30)}..." -> "${result.enhancedContent.substring(0, 30)}..."`)
+              return { ...task, translatedContent: result.enhancedContent }
+            } else {
+              console.error(`Translation failed for: "${task.content.substring(0, 30)}..." - Status: ${response.status}`)
+              return null
+            }
+          }).catch(error => {
+            console.error(`Translation error for: "${task.content.substring(0, 30)}..."`, error)
+            return null
+          })
+        )
+
+        const batchResults = await Promise.all(batchPromises)
+
+        // Apply translations
+        batchResults.forEach(result => {
+          if (result?.translatedContent) {
+            const { updatePath, index, translatedContent } = result
+            console.log(`Applying translation to ${updatePath.join('.')}${index !== undefined ? `[${index}]` : ''}`)
+            
+            if (updatePath.length === 2 && typeof index === 'number') {
+              // Array item update (experience, education, skills, etc.)
+              const [section, field] = updatePath
+              if (translatedData[section as keyof ResumeData] && Array.isArray(translatedData[section as keyof ResumeData])) {
+                (translatedData[section as keyof ResumeData] as any)[index][field] = translatedContent
+                hasTranslations = true
+                console.log(`Updated ${section}[${index}].${field}`)
+              }
+            } else if (updatePath.length === 2) {
+              // Nested object update (personal info)
+              const [section, field] = updatePath
+              if (translatedData[section as keyof ResumeData]) {
+                (translatedData[section as keyof ResumeData] as any)[field] = translatedContent
+                hasTranslations = true
+                console.log(`Updated ${section}.${field}`)
+              }
+            } else if (updatePath.length === 1) {
+              // Direct field update (summary)
+              const [field] = updatePath
+              translatedData[field as keyof ResumeData] = translatedContent as any
+              hasTranslations = true
+              console.log(`Updated ${field}`)
+            }
+          }
+        })
+      }
+
+      if (hasTranslations) {
+        toast.success(t('pages.resumeBuilder.messages.autoTranslated'))
+      }
+
+      return translatedData
+    } catch (error) {
+      console.error('Auto-translation error:', error)
+      toast.error(t('pages.resumeBuilder.messages.translationError'))
+      return formData // Return original data if translation fails
+    }
+  }
+
   const FORM_SECTIONS = getFormSections(t)
   
   const handleNext = async () => {
     if (currentSection < FORM_SECTIONS.length - 1) {
-      // Move to next section immediately (optimistic update)
-      setCurrentSection(currentSection + 1)
+      // Check if we're moving to template selection (section 8)
+      const nextSection = currentSection + 1
+      const isMovingToTemplateSelection = nextSection === 8
+
+      if (isMovingToTemplateSelection) {
+        // Auto-translate all content to English before template selection
+        setIsAutoTranslating(true)
+        
+        try {
+          console.log('Starting auto-translation...')
+          const translatedData = await autoTranslateToEnglish()
+          console.log('Translation completed, updating form data...')
+          setFormData(translatedData)
+          
+          // Force save the translated data immediately
+          if (resumeId) {
+            console.log('Saving translated data...')
+            await fetch(`/api/resumes/${resumeId}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                title: resumeTitle,
+                template: selectedTemplate,
+                formData: translatedData
+              })
+            })
+            console.log('Translated data saved successfully')
+          }
+        } catch (error) {
+          console.error('Auto-translation failed:', error)
+          toast.error(t('pages.resumeBuilder.messages.translationError'))
+        } finally {
+          setIsAutoTranslating(false)
+        }
+      }
+
+      // Move to next section
+      setCurrentSection(nextSection)
       window.scrollTo({ top: 0, behavior: 'smooth' })
 
       // Save current section data in background
@@ -332,7 +670,7 @@ function ResumeBuilderContent() {
           const parsedData = JSON.parse(importedData) as ResumeData
           const title = importedTitle || t('pages.resumeBuilder.defaults.importedTitle')
           setFormData(parsedData)
-          setLastSavedData({ ...parsedData, title }) // Set initial baseline for change detection
+          setLastSavedData({ ...parsedData }) // Set initial baseline for change detection
           setResumeTitle(title)
           
           // Clear session storage
@@ -396,7 +734,7 @@ function ResumeBuilderContent() {
         }
         
         setFormData(formDataWithIds)
-        setLastSavedData({ ...formDataWithIds, title: resume.title }) // Set initial baseline for change detection
+        setLastSavedData({ ...formDataWithIds }) // Set initial baseline for change detection
         
         // Check if preview should be opened automatically
         const shouldPreview = searchParams.get('preview')
@@ -900,9 +1238,18 @@ function ResumeBuilderContent() {
                     {t('pages.resumeBuilder.actions.viewResume')}
                   </Button>
                 ) : (
-                  <Button onClick={handleNext}>
-                    {t('pages.resumeBuilder.actions.next')}
-                    <ArrowRight className="h-4 w-4 ml-2" />
+                  <Button onClick={handleNext} disabled={isAutoTranslating}>
+                    {isAutoTranslating && currentSection === 7 ? (
+                      <>
+                        <div className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full" />
+                        {t('pages.resumeBuilder.actions.translating')}
+                      </>
+                    ) : (
+                      <>
+                        {t('pages.resumeBuilder.actions.next')}
+                        <ArrowRight className="h-4 w-4 ml-2" />
+                      </>
+                    )}
                   </Button>
                 )}
               </div>

@@ -150,14 +150,14 @@ export function WorkExperienceForm({ experiences, onChange }: WorkExperienceForm
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
               rows={4}
               placeholder={t('forms.workExperience.placeholders.description')}
-              value={exp.description}
+              value={exp.description || ''}
               onChange={(e) => updateExperience(exp.id, 'description', e.target.value)}
             />
             
             {/* AI Job Description Enhancer */}
             <AIJobDescriptionEnhancer
-              currentDescription={exp.description}
-              jobTitle={exp.jobTitle}
+              currentDescription={exp.description || ''}
+              jobTitle={exp.jobTitle || ''}
               onAccept={(description) => updateExperience(exp.id, 'description', description)}
             />
           </div>
