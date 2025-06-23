@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, Zap } from 'lucide-react'
 import { AISkillsSuggester } from '@/components/ai/AISkillsSuggester'
+import { TranslateAndEnhanceButton } from '@/components/ai/TranslateAndEnhanceButton'
 import { Skill } from '@/types/resume'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -95,6 +96,11 @@ export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProp
                   value={skill.name}
                   onChange={(e) => updateSkill(skill.id, 'name', e.target.value)}
                   className="w-full"
+                />
+                <TranslateAndEnhanceButton
+                  content={skill.name}
+                  contentType="personal"
+                  onAccept={(name) => updateSkill(skill.id, 'name', name)}
                 />
               </div>
               <div className="w-full sm:w-32">

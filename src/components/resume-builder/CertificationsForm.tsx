@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, Calendar, Award } from 'lucide-react'
+import { TranslateAndEnhanceButton } from '@/components/ai/TranslateAndEnhanceButton'
 import { Certification } from '@/types/resume'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -84,6 +85,11 @@ export function CertificationsForm({ certifications, onChange }: CertificationsF
                     value={cert.name}
                     onChange={(e) => updateCertification(cert.id, 'name', e.target.value)}
                   />
+                  <TranslateAndEnhanceButton
+                    content={cert.name}
+                    contentType="personal"
+                    onAccept={(name) => updateCertification(cert.id, 'name', name)}
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
@@ -93,6 +99,11 @@ export function CertificationsForm({ certifications, onChange }: CertificationsF
                     placeholder={t('forms.certifications.placeholders.issuer')}
                     value={cert.issuer}
                     onChange={(e) => updateCertification(cert.id, 'issuer', e.target.value)}
+                  />
+                  <TranslateAndEnhanceButton
+                    content={cert.issuer}
+                    contentType="personal"
+                    onAccept={(issuer) => updateCertification(cert.id, 'issuer', issuer)}
                   />
                 </div>
                 <div>

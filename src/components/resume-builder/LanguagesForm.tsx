@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, Globe } from 'lucide-react'
+import { TranslateAndEnhanceButton } from '@/components/ai/TranslateAndEnhanceButton'
 import { Language } from '@/types/resume'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -57,6 +58,11 @@ export function LanguagesForm({ languages, onChange }: LanguagesFormProps) {
                   value={language.name}
                   onChange={(e) => updateLanguage(language.id, 'name', e.target.value)}
                   className="w-full"
+                />
+                <TranslateAndEnhanceButton
+                  content={language.name}
+                  contentType="personal"
+                  onAccept={(name) => updateLanguage(language.id, 'name', name)}
                 />
               </div>
               <div className="w-full sm:w-40">

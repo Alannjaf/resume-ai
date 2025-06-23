@@ -282,7 +282,9 @@ Requirements:
 - Keep the same general meaning but improve the expression
 - Ensure proper grammar and clarity
 
-Please provide only the improved content without any additional formatting or explanations.`
+Please provide only the improved content without any additional formatting or explanations.
+
+IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other symbols. Provide plain text only.`
       }
     ]
 
@@ -298,6 +300,132 @@ Please provide only the improved content without any additional formatting or ex
     } catch (error) {
       console.error('AI generation error:', error)
       throw new Error('Failed to improve content')
+    }
+  }
+
+  static async translateToEnglish(
+    content: string,
+    sourceLanguage: 'ar' | 'ku' | 'auto' = 'auto'
+  ): Promise<string> {
+    const languageNames = {
+      ar: 'Arabic',
+      ku: 'Kurdish Sorani',
+      auto: 'the source language'
+    }
+
+    const messages = [
+      {
+        role: 'system' as const,
+        content: `You are a professional translator specializing in translating resume content from Arabic and Kurdish to English. Always maintain the professional tone and meaning.`
+      },
+      {
+        role: 'user' as const,
+        content: `Translate the following text from ${languageNames[sourceLanguage]} to English:
+
+"${content}"
+
+Requirements:
+- Maintain professional resume language
+- Preserve the original meaning and intent
+- Use proper grammar and professional vocabulary
+- Make it suitable for English-speaking employers
+- If it's a job description or achievement, use professional resume language
+- Keep the same structure and format
+
+Please provide only the English translation without any additional formatting or explanations.
+
+IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other symbols. Provide plain text only.`
+      }
+    ]
+
+    try {
+      const completion = await openai.chat.completions.create({
+        model: 'google/gemini-2.5-flash-preview-05-20',
+        messages,
+        max_tokens: 400,
+        temperature: 0.3, // Lower temperature for more consistent translation
+      })
+
+      return completion.choices[0]?.message?.content?.trim() || ''
+    } catch (error) {
+      console.error('AI translation error:', error)
+      throw new Error('Failed to translate content')
+    }
+  }
+
+  static async translateAndEnhance(
+    content: string,
+    contentType: 'personal' | 'summary' | 'description' | 'achievement' | 'project',
+    sourceLanguage: 'ar' | 'ku' | 'auto' = 'auto',
+    contextInfo?: {
+      jobTitle?: string
+      company?: string
+      projectName?: string
+    }
+  ): Promise<string> {
+    const languageNames = {
+      ar: 'Arabic',
+      ku: 'Kurdish Sorani', 
+      auto: 'the source language'
+    }
+
+    const typeInstructions = {
+      personal: 'personal information (like professional title, location, etc.)',
+      summary: 'professional summary for resume',
+      description: 'job description or role responsibilities',
+      achievement: 'achievement or accomplishment',
+      project: 'project description'
+    }
+
+    const contextText = contextInfo ? `
+Context Information:
+${contextInfo.jobTitle ? `- Job Title: ${contextInfo.jobTitle}` : ''}
+${contextInfo.company ? `- Company: ${contextInfo.company}` : ''}
+${contextInfo.projectName ? `- Project: ${contextInfo.projectName}` : ''}
+` : ''
+
+    const messages = [
+      {
+        role: 'system' as const,
+        content: `You are a professional resume writer and translator. You specialize in translating resume content from Arabic/Kurdish to English and then enhancing it to make it professional and ATS-friendly.`
+      },
+      {
+        role: 'user' as const,
+        content: `Translate and enhance the following ${typeInstructions[contentType]} from ${languageNames[sourceLanguage]} to professional English:
+
+"${content}"
+${contextText}
+Requirements:
+1. TRANSLATION: First translate accurately to English maintaining the original meaning
+2. ENHANCEMENT: Then improve the English version to be:
+   - Professional and polished for resume use
+   - ATS-friendly with relevant keywords
+   - Use strong action verbs where appropriate
+   - Include quantifiable elements if possible
+   - Proper grammar and professional vocabulary
+   - Suitable for English-speaking employers
+
+${contentType === 'description' ? '- Format as bullet points using "• " if it contains multiple achievements or responsibilities' : ''}
+${contentType === 'project' ? '- Focus on technical achievements and impact' : ''}
+
+Please provide only the final enhanced English version without showing the translation steps or any additional explanations.
+
+IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other symbols. Provide plain text only.`
+      }
+    ]
+
+    try {
+      const completion = await openai.chat.completions.create({
+        model: 'google/gemini-2.5-flash-preview-05-20',
+        messages,
+        max_tokens: 500,
+        temperature: 0.5,
+      })
+
+      return completion.choices[0]?.message?.content?.trim() || ''
+    } catch (error) {
+      console.error('AI translate & enhance error:', error)
+      throw new Error('Failed to translate and enhance content')
     }
   }
 }

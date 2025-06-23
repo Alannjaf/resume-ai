@@ -17,6 +17,7 @@ import { CertificationsForm } from '@/components/resume-builder/CertificationsFo
 import { PreviewModal } from '@/components/resume-builder/PreviewModal'
 import { TemplateGallery } from '@/components/resume-builder/TemplateGallery'
 import { AIProfessionalSummary } from '@/components/ai/AIProfessionalSummary'
+import { TranslateAndEnhanceButton } from '@/components/ai/TranslateAndEnhanceButton'
 import ImageUploader from '@/components/resume-builder/ImageUploader'
 import { ResumeData } from '@/types/resume'
 import toast from 'react-hot-toast'
@@ -96,7 +97,7 @@ function ResumeBuilderContent() {
 
         const data = await response.json()
         setResumeId(data.resume.id)
-        setLastSavedData({ ...formData })
+        setLastSavedData({ ...formData, title: resumeTitle })
         return true
       } catch (error) {
         console.error('Create resume failed:', error)
@@ -121,7 +122,7 @@ function ResumeBuilderContent() {
       }
 
       // Update last saved data
-      setLastSavedData({ ...formData })
+      setLastSavedData({ ...formData, title: resumeTitle })
       return true
     } catch (error) {
       console.error('Quick save failed:', error)
@@ -131,18 +132,22 @@ function ResumeBuilderContent() {
 
   // Detect changes and queue save
   const queueSave = (sectionType?: string) => {
-    if (!lastSavedData) return
+    // If no baseline data exists yet, initialize it
+    if (!lastSavedData) {
+      setLastSavedData({ ...formData })
+      return
+    }
 
     const changes: any = {}
     let hasChanges = false
 
-    // Check for basic changes
-    if (resumeTitle !== lastSavedData.personal?.fullName) {
+    // Check for title changes (comparing with resume title, not personal name)
+    if (resumeTitle !== (lastSavedData as any).title) {
       changes.title = resumeTitle
       hasChanges = true
     }
 
-    if (formData.personal !== lastSavedData.personal) {
+    if (JSON.stringify(formData.personal) !== JSON.stringify(lastSavedData.personal)) {
       changes.personal = formData.personal
       hasChanges = true
     }
@@ -284,6 +289,17 @@ function ResumeBuilderContent() {
     }
   }, [t, resumeTitle])
 
+  // Initialize lastSavedData for new resumes to enable auto-save
+  useEffect(() => {
+    const id = searchParams.get('id')
+    const importedData = sessionStorage.getItem('importedResumeData')
+    
+    // Only initialize for truly new resumes (no ID, no import, no existing lastSavedData)
+    if (!id && !importedData && !lastSavedData && !resumeId) {
+      setLastSavedData({ ...formData })
+    }
+  }, [searchParams, lastSavedData, resumeId, formData])
+
   // Load user permissions
   useEffect(() => {
     const loadUserPermissions = async () => {
@@ -314,9 +330,10 @@ function ResumeBuilderContent() {
       if (importedData && !searchParams.get('id')) {
         try {
           const parsedData = JSON.parse(importedData) as ResumeData
+          const title = importedTitle || t('pages.resumeBuilder.defaults.importedTitle')
           setFormData(parsedData)
-          setLastSavedData(parsedData) // Set initial baseline for change detection
-          setResumeTitle(importedTitle || t('pages.resumeBuilder.defaults.importedTitle'))
+          setLastSavedData({ ...parsedData, title }) // Set initial baseline for change detection
+          setResumeTitle(title)
           
           // Clear session storage
           sessionStorage.removeItem('importedResumeData')
@@ -379,7 +396,7 @@ function ResumeBuilderContent() {
         }
         
         setFormData(formDataWithIds)
-        setLastSavedData(formDataWithIds) // Set initial baseline for change detection
+        setLastSavedData({ ...formDataWithIds, title: resume.title }) // Set initial baseline for change detection
         
         // Check if preview should be opened automatically
         const shouldPreview = searchParams.get('preview')
@@ -600,6 +617,19 @@ function ResumeBuilderContent() {
                           })
                         }
                       />
+                      <TranslateAndEnhanceButton
+                        content={formData.personal.fullName}
+                        contentType="personal"
+                        onAccept={(enhancedName) =>
+                          setFormData({
+                            ...formData,
+                            personal: {
+                              ...formData.personal,
+                              fullName: enhancedName,
+                            },
+                          })
+                        }
+                      />
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-1">
@@ -614,6 +644,19 @@ function ResumeBuilderContent() {
                             personal: {
                               ...formData.personal,
                               title: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                      <TranslateAndEnhanceButton
+                        content={formData.personal.title || ''}
+                        contentType="personal"
+                        onAccept={(enhancedTitle) =>
+                          setFormData({
+                            ...formData,
+                            personal: {
+                              ...formData.personal,
+                              title: enhancedTitle,
                             },
                           })
                         }
@@ -669,6 +712,19 @@ function ResumeBuilderContent() {
                             personal: {
                               ...formData.personal,
                               location: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                      <TranslateAndEnhanceButton
+                        content={formData.personal.location}
+                        contentType="personal"
+                        onAccept={(enhancedLocation) =>
+                          setFormData({
+                            ...formData,
+                            personal: {
+                              ...formData.personal,
+                              location: enhancedLocation,
                             },
                           })
                         }

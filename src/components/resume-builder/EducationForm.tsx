@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, GraduationCap, Calendar } from 'lucide-react'
+import { TranslateAndEnhanceButton } from '@/components/ai/TranslateAndEnhanceButton'
 import { Education } from '@/types/resume'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -68,6 +69,11 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
                 value={edu.degree}
                 onChange={(e) => updateEducation(edu.id, 'degree', e.target.value)}
               />
+              <TranslateAndEnhanceButton
+                content={edu.degree}
+                contentType="personal"
+                onAccept={(degree) => updateEducation(edu.id, 'degree', degree)}
+              />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
@@ -77,6 +83,11 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
                 placeholder={t('forms.education.placeholders.fieldOfStudy')}
                 value={edu.field}
                 onChange={(e) => updateEducation(edu.id, 'field', e.target.value)}
+              />
+              <TranslateAndEnhanceButton
+                content={edu.field}
+                contentType="personal"
+                onAccept={(field) => updateEducation(edu.id, 'field', field)}
               />
             </div>
             <div>
@@ -88,6 +99,11 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
                 value={edu.school}
                 onChange={(e) => updateEducation(edu.id, 'school', e.target.value)}
               />
+              <TranslateAndEnhanceButton
+                content={edu.school}
+                contentType="personal"
+                onAccept={(school) => updateEducation(edu.id, 'school', school)}
+              />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
@@ -97,6 +113,11 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
                 placeholder={t('forms.education.placeholders.location')}
                 value={edu.location}
                 onChange={(e) => updateEducation(edu.id, 'location', e.target.value)}
+              />
+              <TranslateAndEnhanceButton
+                content={edu.location}
+                contentType="personal"
+                onAccept={(location) => updateEducation(edu.id, 'location', location)}
               />
             </div>
             <div>
@@ -142,6 +163,14 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
               placeholder={t('forms.education.placeholders.achievements')}
               value={edu.achievements || ''}
               onChange={(e) => updateEducation(edu.id, 'achievements', e.target.value)}
+            />
+            <TranslateAndEnhanceButton
+              content={edu.achievements || ''}
+              contentType="achievement"
+              onAccept={(achievements) => updateEducation(edu.id, 'achievements', achievements)}
+              contextInfo={{
+                jobTitle: `${edu.degree} in ${edu.field}`
+              }}
             />
           </div>
         </Card>

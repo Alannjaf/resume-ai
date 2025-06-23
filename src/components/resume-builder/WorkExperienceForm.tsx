@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, Calendar, MapPin } from 'lucide-react'
 import { AIJobDescriptionEnhancer } from '@/components/ai/AIJobDescriptionEnhancer'
+import { TranslateAndEnhanceButton } from '@/components/ai/TranslateAndEnhanceButton'
 import { WorkExperience } from '@/types/resume'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -68,6 +69,11 @@ export function WorkExperienceForm({ experiences, onChange }: WorkExperienceForm
                 value={exp.jobTitle}
                 onChange={(e) => updateExperience(exp.id, 'jobTitle', e.target.value)}
               />
+              <TranslateAndEnhanceButton
+                content={exp.jobTitle}
+                contentType="personal"
+                onAccept={(jobTitle) => updateExperience(exp.id, 'jobTitle', jobTitle)}
+              />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
@@ -77,6 +83,11 @@ export function WorkExperienceForm({ experiences, onChange }: WorkExperienceForm
                 placeholder={t('forms.workExperience.placeholders.company')}
                 value={exp.company}
                 onChange={(e) => updateExperience(exp.id, 'company', e.target.value)}
+              />
+              <TranslateAndEnhanceButton
+                content={exp.company}
+                contentType="personal"
+                onAccept={(company) => updateExperience(exp.id, 'company', company)}
               />
             </div>
             <div>
@@ -88,6 +99,11 @@ export function WorkExperienceForm({ experiences, onChange }: WorkExperienceForm
                 placeholder={t('forms.workExperience.placeholders.location')}
                 value={exp.location}
                 onChange={(e) => updateExperience(exp.id, 'location', e.target.value)}
+              />
+              <TranslateAndEnhanceButton
+                content={exp.location}
+                contentType="personal"
+                onAccept={(location) => updateExperience(exp.id, 'location', location)}
               />
             </div>
             <div>

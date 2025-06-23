@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, Calendar, Link } from 'lucide-react'
+import { TranslateAndEnhanceButton } from '@/components/ai/TranslateAndEnhanceButton'
 import { Project } from '@/types/resume'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -81,6 +82,11 @@ export function ProjectsForm({ projects, onChange }: ProjectsFormProps) {
                     value={project.name}
                     onChange={(e) => updateProject(project.id, 'name', e.target.value)}
                   />
+                  <TranslateAndEnhanceButton
+                    content={project.name}
+                    contentType="personal"
+                    onAccept={(name) => updateProject(project.id, 'name', name)}
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-1">
@@ -90,6 +96,11 @@ export function ProjectsForm({ projects, onChange }: ProjectsFormProps) {
                     placeholder={t('forms.projects.placeholders.technologies')}
                     value={project.technologies}
                     onChange={(e) => updateProject(project.id, 'technologies', e.target.value)}
+                  />
+                  <TranslateAndEnhanceButton
+                    content={project.technologies}
+                    contentType="personal"
+                    onAccept={(technologies) => updateProject(project.id, 'technologies', technologies)}
                   />
                 </div>
                 <div>
@@ -136,6 +147,14 @@ export function ProjectsForm({ projects, onChange }: ProjectsFormProps) {
                     placeholder={t('forms.projects.placeholders.description')}
                     value={project.description}
                     onChange={(e) => updateProject(project.id, 'description', e.target.value)}
+                  />
+                  <TranslateAndEnhanceButton
+                    content={project.description}
+                    contentType="project"
+                    onAccept={(description) => updateProject(project.id, 'description', description)}
+                    contextInfo={{
+                      projectName: project.name
+                    }}
                   />
                 </div>
               </div>
