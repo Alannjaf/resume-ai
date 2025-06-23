@@ -122,9 +122,42 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     }
   }
 
+  // Browser detection utility
+  const detectBrowser = () => {
+    const userAgent = navigator.userAgent.toLowerCase()
+    if (userAgent.includes('edg/')) return 'edge'
+    if (userAgent.includes('chrome') && !userAgent.includes('edg/')) return 'chrome'
+    if (userAgent.includes('firefox')) return 'firefox'
+    if (userAgent.includes('safari') && !userAgent.includes('chrome')) return 'safari'
+    return 'unknown'
+  }
+
   // Function to update PDF URL with page parameter
   const updatePdfUrl = (baseUrl: string, page: number) => {
-    const urlWithPage = `${baseUrl}#toolbar=0&navpanes=0&scrollbar=1&view=Fit&zoom=page-fit&page=${page}`
+    const browser = detectBrowser()
+    let urlWithPage: string
+    
+    // Browser-specific PDF parameters to show full page within frame
+    switch (browser) {
+      case 'edge':
+        // Edge: Use explicit zoom percentage to ensure full page fits within frame
+        urlWithPage = `${baseUrl}#toolbar=0&navpanes=0&scrollbar=1&view=Fit&zoom=65&page=${page}`
+        break
+      case 'firefox':
+        // Firefox: Use page-fit to show full page
+        urlWithPage = `${baseUrl}#page=${page}&zoom=page-fit&view=Fit`
+        break
+      case 'safari':
+        // Safari: Basic parameters with page fit
+        urlWithPage = `${baseUrl}#page=${page}&view=Fit`
+        break
+      case 'chrome':
+      default:
+        // Chrome and default - show full page within frame
+        urlWithPage = `${baseUrl}#toolbar=0&navpanes=0&scrollbar=1&view=Fit&zoom=page-fit&page=${page}`
+        break
+    }
+    
     setCurrentPdfUrl(urlWithPage)
   }
 
@@ -355,12 +388,12 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
                 // Mobile view - simple without overlay
                 <div className="w-full h-full overflow-auto bg-gray-100 p-4">
                   <object
-                    data={`${pdfUrl}#zoom=75&view=Fit`}
+                    data={`${pdfUrl}#view=Fit&zoom=page-fit`}
                     type="application/pdf"
                     className="w-full h-full min-h-[600px]"
                   >
                     <embed
-                      src={`${pdfUrl}#zoom=75&view=Fit`}
+                      src={`${pdfUrl}#view=Fit&zoom=page-fit`}
                       type="application/pdf"
                       className="w-full h-full"
                     />
