@@ -4,6 +4,7 @@ import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
+import { RichTextEditor } from '@/components/ui/rich-text-editor'
 import { Plus, Trash2, Calendar, MapPin } from 'lucide-react'
 import { AIJobDescriptionEnhancer } from '@/components/ai/AIJobDescriptionEnhancer'
 import { TranslateAndEnhanceButton } from '@/components/ai/TranslateAndEnhanceButton'
@@ -146,12 +147,11 @@ export function WorkExperienceForm({ experiences, onChange }: WorkExperienceForm
             <label className="block text-sm font-medium mb-1">
               {t('forms.workExperience.fields.description')}
             </label>
-            <textarea
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-              rows={4}
-              placeholder={t('forms.workExperience.placeholders.description')}
+            <RichTextEditor
               value={exp.description || ''}
-              onChange={(e) => updateExperience(exp.id, 'description', e.target.value)}
+              onChange={(value) => updateExperience(exp.id, 'description', value)}
+              placeholder={t('forms.workExperience.placeholders.description')}
+              className="w-full"
             />
             
             {/* AI Job Description Enhancer */}

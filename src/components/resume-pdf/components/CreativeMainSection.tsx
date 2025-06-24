@@ -4,6 +4,7 @@ import { sectionStyles } from '../styles/creativeSectionStyles'
 import { sidebarStyles } from '../styles/creativeSidebarStyles'
 import { ResumeData } from '../../../types/resume'
 import { formatDateRange } from '../utils/dateUtils'
+import { parseHtmlToPdf } from '../utils/htmlToPdfParser'
 
 interface CreativeMainSectionProps {
   data: ResumeData
@@ -47,7 +48,11 @@ export const CreativeMainSection: React.FC<CreativeMainSectionProps> = ({ data }
                     </Text>
                   </View>
                 </View>
-                <Text style={sectionStyles.description}>{exp.description}</Text>
+                <View style={{ marginTop: 2 }}>
+                  {parseHtmlToPdf(exp.description, { 
+                    text: { fontSize: 10, color: '#4b5563', lineHeight: 1.4 }
+                  }).elements}
+                </View>
               </View>
             </View>
           ))}
@@ -68,7 +73,11 @@ export const CreativeMainSection: React.FC<CreativeMainSectionProps> = ({ data }
               <View style={sidebarStyles.projectItem}>
                 <Text style={sidebarStyles.projectName}>{project.name}</Text>
                 {project.description && (
-                  <Text style={sidebarStyles.projectDescription}>{project.description}</Text>
+                  <View style={{ marginTop: 2 }}>
+                    {parseHtmlToPdf(project.description, { 
+                      text: { fontSize: 10, color: '#4b5563', lineHeight: 1.4 }
+                    }).elements}
+                  </View>
                 )}
                 {project.technologies && (
                   <Text style={sidebarStyles.projectTech}>

@@ -5,6 +5,7 @@ import { skillsStyles } from '../styles/skillsStyles'
 import { experienceStyles } from '../styles/experienceStyles'
 import { ResumeData } from '../../../types/resume'
 import { formatDateRange } from '../utils/dateUtils'
+import { parseHtmlToPdf } from '../utils/htmlToPdfParser'
 
 interface LeftColumnProps {
   data: ResumeData
@@ -60,9 +61,11 @@ export const LeftColumn: React.FC<LeftColumnProps> = ({ data }) => {
                   <Text style={experienceStyles.gpa}>GPA: {edu.gpa}</Text>
                 )}
                 {edu.achievements && (
-                  <Text style={{ fontSize: 9, color: '#4b5563', marginTop: 4, lineHeight: 1.4 }}>
-                    {edu.achievements}
-                  </Text>
+                  <View style={{ marginTop: 4 }}>
+                    {parseHtmlToPdf(edu.achievements, { 
+                      text: { fontSize: 9, color: '#4b5563', lineHeight: 1.4 }
+                    }).elements}
+                  </View>
                 )}
               </View>
             </View>

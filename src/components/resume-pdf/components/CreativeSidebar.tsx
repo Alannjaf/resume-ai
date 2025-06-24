@@ -4,6 +4,7 @@ import { sectionStyles } from '../styles/creativeSectionStyles'
 import { sidebarStyles } from '../styles/creativeSidebarStyles'
 import { ResumeData } from '../../../types/resume'
 import { formatDateRange } from '../utils/dateUtils'
+import { parseHtmlToPdf } from '../utils/htmlToPdfParser'
 
 interface CreativeSidebarProps {
   data: ResumeData
@@ -49,7 +50,11 @@ export const CreativeSidebar: React.FC<CreativeSidebarProps> = ({ data }) => {
                 </Text>
                 {edu.gpa && <Text style={sidebarStyles.gpa}>GPA: {edu.gpa}</Text>}
                 {edu.achievements && (
-                  <Text style={sidebarStyles.achievements}>{edu.achievements}</Text>
+                  <View style={{ marginTop: 2 }}>
+                    {parseHtmlToPdf(edu.achievements, { 
+                      text: { fontSize: 9, color: '#4b5563', lineHeight: 1.4 }
+                    }).elements}
+                  </View>
                 )}
               </View>
             </View>

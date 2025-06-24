@@ -5,6 +5,7 @@ import { skillsStyles } from '../styles/skillsStyles'
 import { experienceStyles } from '../styles/experienceStyles'
 import { ResumeData } from '../../../types/resume'
 import { formatDateRange } from '../utils/dateUtils'
+import { parseHtmlToPdf } from '../utils/htmlToPdfParser'
 
 interface RightColumnProps {
   data: ResumeData
@@ -47,7 +48,11 @@ export const RightColumn: React.FC<RightColumnProps> = ({ data, experiences }) =
                   {formatDateRange(exp.startDate, exp.endDate, exp.current)}
                 </Text>
               </View>
-              <Text style={experienceStyles.description}>{exp.description}</Text>
+              {exp.description && (
+                <View style={{ marginTop: 4 }}>
+                  {parseHtmlToPdf(exp.description, experienceStyles).elements}
+                </View>
+              )}
             </View>
           ))}
         </View>
@@ -61,7 +66,9 @@ export const RightColumn: React.FC<RightColumnProps> = ({ data, experiences }) =
             <View key={project.id} style={skillsStyles.projectItem} wrap={false}>
               <Text style={skillsStyles.projectName}>{project.name}</Text>
               {project.description && (
-                <Text style={skillsStyles.projectDescription}>{project.description}</Text>
+                <View style={{ marginTop: 2 }}>
+                  {parseHtmlToPdf(project.description, skillsStyles).elements}
+                </View>
               )}
               {project.technologies && (
                 <Text style={skillsStyles.projectTech}>Technologies: {project.technologies}</Text>

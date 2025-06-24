@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
+import { RichTextEditor } from '@/components/ui/rich-text-editor'
 import { Plus, Trash2, GraduationCap, Calendar } from 'lucide-react'
 import { TranslateAndEnhanceButton } from '@/components/ai/TranslateAndEnhanceButton'
 import { Education } from '@/types/resume'
@@ -157,12 +158,11 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
             <label className="block text-sm font-medium mb-1">
               {t('forms.education.fields.achievements')}
             </label>
-            <textarea
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-              rows={3}
-              placeholder={t('forms.education.placeholders.achievements')}
+            <RichTextEditor
               value={edu.achievements || ''}
-              onChange={(e) => updateEducation(edu.id, 'achievements', e.target.value)}
+              onChange={(value) => updateEducation(edu.id, 'achievements', value)}
+              placeholder={t('forms.education.placeholders.achievements')}
+              className="w-full"
             />
             <TranslateAndEnhanceButton
               content={edu.achievements || ''}

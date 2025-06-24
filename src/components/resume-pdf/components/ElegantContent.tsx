@@ -2,6 +2,7 @@ import { Text, View } from '@react-pdf/renderer'
 import { ResumeData } from '@/types/resume'
 import { elegantStyles } from '../styles/elegantStyles'
 import { formatDate } from '../utils/dateUtils'
+import { parseHtmlToPdf } from '../utils/htmlToPdfParser'
 
 interface ElegantContentProps {
   data: ResumeData
@@ -39,7 +40,9 @@ export const ElegantContent = ({ data }: ElegantContentProps) => {
                   {exp.location && <Text style={elegantStyles.location}>{exp.location}</Text>}
                 </View>
                 {exp.description && (
-                  <Text style={elegantStyles.description}>{exp.description}</Text>
+                  <View style={{ marginTop: 2 }}>
+                    {parseHtmlToPdf(exp.description, elegantStyles).elements}
+                  </View>
                 )}
               </View>
             </View>
@@ -68,6 +71,13 @@ export const ElegantContent = ({ data }: ElegantContentProps) => {
                 {edu.field && <Text style={elegantStyles.field}>{edu.field}</Text>}
                 {edu.location && <Text style={elegantStyles.location}>{edu.location}</Text>}
                 {edu.gpa && <Text style={elegantStyles.gpa}>GPA: {edu.gpa}</Text>}
+                {edu.achievements && (
+                  <View style={{ marginTop: 2 }}>
+                    {parseHtmlToPdf(edu.achievements, { 
+                      text: { fontSize: 10, color: '#4b5563', lineHeight: 1.4 }
+                    }).elements}
+                  </View>
+                )}
               </View>
             </View>
           ))}
@@ -140,7 +150,9 @@ export const ElegantContent = ({ data }: ElegantContentProps) => {
                   )}
                 </View>
                 {project.description && (
-                  <Text style={elegantStyles.description}>{project.description}</Text>
+                  <View style={{ marginTop: 2 }}>
+                    {parseHtmlToPdf(project.description, elegantStyles).elements}
+                  </View>
                 )}
               </View>
             </View>

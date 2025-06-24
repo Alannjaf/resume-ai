@@ -2,6 +2,7 @@ import { Text, View } from '@react-pdf/renderer'
 import { ResumeData } from '@/types/resume'
 import { executiveStyles } from '../styles/executiveStyles'
 import { formatDate } from '../utils/dateUtils'
+import { parseHtmlToPdf } from '../utils/htmlToPdfParser'
 
 interface ExecutiveContentProps {
   data: ResumeData
@@ -14,44 +15,29 @@ export const ExecutiveContent = ({ data }: ExecutiveContentProps) => {
       {data.experience && data.experience.length > 0 && (
         <View style={executiveStyles.section}>
           {data.experience.map((exp, index) => (
-            <View key={exp.id}>
+            <View key={exp.id} wrap={false}>
               {index === 0 && (
-                <View wrap={false}>
-                  <Text style={executiveStyles.sectionTitle}>PROFESSIONAL EXPERIENCE</Text>
-                  <View style={executiveStyles.experienceItem}>
-                    <View style={executiveStyles.experienceHeader}>
-                      <Text style={executiveStyles.jobTitle}>{exp.jobTitle}</Text>
-                      <Text style={executiveStyles.dateRange}>
-                        {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
-                      </Text>
-                    </View>
-                    <View style={executiveStyles.companyInfo}>
-                      <Text style={executiveStyles.company}>{exp.company}</Text>
-                      {exp.location && <Text style={executiveStyles.location}>{exp.location}</Text>}
-                    </View>
-                    {exp.description && (
-                      <Text style={executiveStyles.description}>{exp.description}</Text>
-                    )}
-                  </View>
-                </View>
+                <Text style={executiveStyles.sectionTitle}>PROFESSIONAL EXPERIENCE</Text>
               )}
-              {index > 0 && (
-                <View style={executiveStyles.experienceItem}>
-                  <View style={executiveStyles.experienceHeader}>
-                    <Text style={executiveStyles.jobTitle}>{exp.jobTitle}</Text>
-                    <Text style={executiveStyles.dateRange}>
-                      {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
-                    </Text>
-                  </View>
-                  <View style={executiveStyles.companyInfo}>
-                    <Text style={executiveStyles.company}>{exp.company}</Text>
-                    {exp.location && <Text style={executiveStyles.location}>{exp.location}</Text>}
-                  </View>
-                  {exp.description && (
-                    <Text style={executiveStyles.description}>{exp.description}</Text>
-                  )}
+              <View style={executiveStyles.experienceItem}>
+                <View style={executiveStyles.experienceHeader}>
+                  <Text style={executiveStyles.jobTitle}>{exp.jobTitle}</Text>
+                  <Text style={executiveStyles.dateRange}>
+                    {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
+                  </Text>
                 </View>
-              )}
+                <View style={executiveStyles.companyInfo}>
+                  <Text style={executiveStyles.company}>{exp.company}</Text>
+                  {exp.location && <Text style={executiveStyles.location}>{exp.location}</Text>}
+                </View>
+                {exp.description && (
+                  <View style={{ marginTop: 2 }}>
+                    {parseHtmlToPdf(exp.description, { 
+                      text: { fontSize: 10, color: '#374151', lineHeight: 1.4 }
+                    }).elements}
+                  </View>
+                )}
+              </View>
             </View>
           ))}
         </View>
@@ -76,6 +62,13 @@ export const ExecutiveContent = ({ data }: ExecutiveContentProps) => {
                     {edu.field && <Text style={executiveStyles.field}>{edu.field}</Text>}
                     {edu.location && <Text style={executiveStyles.location}>{edu.location}</Text>}
                     {edu.gpa && <Text style={executiveStyles.gpa}>GPA: {edu.gpa}</Text>}
+                    {edu.achievements && (
+                      <View style={{ marginTop: 2 }}>
+                        {parseHtmlToPdf(edu.achievements, { 
+                          text: { fontSize: 10, color: '#374151', lineHeight: 1.4 }
+                        }).elements}
+                      </View>
+                    )}
                   </View>
                 </View>
               )}
@@ -91,6 +84,13 @@ export const ExecutiveContent = ({ data }: ExecutiveContentProps) => {
                   {edu.field && <Text style={executiveStyles.field}>{edu.field}</Text>}
                   {edu.location && <Text style={executiveStyles.location}>{edu.location}</Text>}
                   {edu.gpa && <Text style={executiveStyles.gpa}>GPA: {edu.gpa}</Text>}
+                  {edu.achievements && (
+                    <View style={{ marginTop: 2 }}>
+                      {parseHtmlToPdf(edu.achievements, { 
+                        text: { fontSize: 10, color: '#374151', lineHeight: 1.4 }
+                      }).elements}
+                    </View>
+                  )}
                 </View>
               )}
             </View>
@@ -100,9 +100,9 @@ export const ExecutiveContent = ({ data }: ExecutiveContentProps) => {
 
       {/* Skills Section */}
       {data.skills && data.skills.length > 0 && (
-        <View style={executiveStyles.section}>
+        <View style={executiveStyles.section} wrap={false}>
           <Text style={executiveStyles.sectionTitle}>CORE COMPETENCIES</Text>
-          <View style={executiveStyles.skillsGrid} wrap={false}>
+          <View style={executiveStyles.skillsGrid}>
             {data.skills.map((skill, index) => (
               <Text key={skill.id} style={executiveStyles.skillItem}>
                 {skill.name}
@@ -137,7 +137,11 @@ export const ExecutiveContent = ({ data }: ExecutiveContentProps) => {
                       {project.link && <Text style={executiveStyles.location}>{project.link}</Text>}
                     </View>
                     {project.description && (
-                      <Text style={executiveStyles.description}>{project.description}</Text>
+                      <View style={{ marginTop: 2 }}>
+                        {parseHtmlToPdf(project.description, { 
+                          text: { fontSize: 10, color: '#374151', lineHeight: 1.4 }
+                        }).elements}
+                      </View>
                     )}
                   </View>
                 </View>
@@ -159,7 +163,11 @@ export const ExecutiveContent = ({ data }: ExecutiveContentProps) => {
                     {project.link && <Text style={executiveStyles.location}>{project.link}</Text>}
                   </View>
                   {project.description && (
-                    <Text style={executiveStyles.description}>{project.description}</Text>
+                    <View style={{ marginTop: 2 }}>
+                      {parseHtmlToPdf(project.description, { 
+                        text: { fontSize: 10, color: '#374151', lineHeight: 1.4 }
+                      }).elements}
+                    </View>
                   )}
                 </View>
               )}

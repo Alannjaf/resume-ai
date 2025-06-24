@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from '@react-pdf/renderer'
+import { View, Text, Image } from '@react-pdf/renderer'
 import { styles } from '../styles/developerStyles'
 import { PersonalInfo } from '../../../types/resume'
 
@@ -10,12 +10,23 @@ interface DeveloperHeaderProps {
 export const DeveloperHeader: React.FC<DeveloperHeaderProps> = ({ personal }) => {
   return (
     <View wrap={false} style={styles.header}>
-      {/* Name with curly braces like in terminal */}
-      <View style={styles.nameContainer}>
-        <Text style={styles.nameBrace}>{'{'}</Text>
-        <Text style={styles.name}>{personal.fullName}</Text>
-        <Text style={styles.nameBrace}>{'}'}</Text>
-      </View>
+      {/* Profile image if available */}
+      {personal.profileImage && (
+        <View style={styles.profileImageContainer}>
+          <Image 
+            src={personal.profileImage} 
+            style={styles.profileImage}
+          />
+        </View>
+      )}
+      
+      <View style={styles.headerTextContainer}>
+        {/* Name with curly braces like in terminal */}
+        <View style={styles.nameContainer}>
+          <Text style={styles.nameBrace}>{'{'}</Text>
+          <Text style={styles.name}>{personal.fullName}</Text>
+          <Text style={styles.nameBrace}>{'}'}</Text>
+        </View>
       
       {/* Job title below name */}
       {personal.title && (
@@ -37,6 +48,7 @@ export const DeveloperHeader: React.FC<DeveloperHeaderProps> = ({ personal }) =>
         {personal.website && (
           <Text style={styles.headerContactItem}>{personal.website}</Text>
         )}
+      </View>
       </View>
     </View>
   )

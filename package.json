@@ -19,6 +19,8 @@
     "@prisma/client": "^6.9.0",
     "@react-pdf/font": "^4.0.2",
     "@react-pdf/renderer": "^4.3.0",
+    "@tiptap/react": "^2.22.3",
+    "@tiptap/starter-kit": "^2.22.3",
     "@types/file-saver": "^2.0.7",
     "@types/node": "^24.0.1",
     "@types/react": "^19.1.8",

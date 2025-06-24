@@ -378,7 +378,7 @@ interface HeaderProps {
 const TemplateHeader: React.FC<HeaderProps> = ({ personal }) => {
   return (
     <View wrap={false} style={styles.header}>
-      {/* Profile Photo (optional) */}
+      {/* Profile Photo (optional) - ALWAYS INCLUDE THIS */}
       {personal.profileImage && (
         <View style={styles.photoContainer}>
           <Image 
@@ -507,21 +507,83 @@ const ExperienceItem: React.FC<ExperienceItemProps> = ({ experience }) => {
       )}
       
       {experience.description && (
-        <Text style={styles.description}>{experience.description}</Text>
-      )}
-      
-      {experience.achievements && experience.achievements.length > 0 && (
-        <View style={styles.achievements}>
-          {experience.achievements.map((achievement, index) => (
-            <Text key={index} style={styles.achievement}>
-              • {achievement}
-            </Text>
-          ))}
+        <View style={{ marginTop: 2 }}>
+          {parseHtmlToPdf(experience.description, { 
+            text: { fontSize: 10, color: '#374151', lineHeight: 1.4 }
+          }).elements}
         </View>
       )}
     </View>
   )
 }
+```
+
+## 🎨 Rich Text Content Handling
+
+### HTML to PDF Parsing
+All templates must support rich text formatting for experience descriptions, education achievements, and project descriptions. Use the `parseHtmlToPdf` utility function:
+
+```typescript
+import { parseHtmlToPdf } from '../utils/htmlToPdfParser'
+
+// For experience descriptions
+{exp.description && (
+  <View style={{ marginTop: 2 }}>
+    {parseHtmlToPdf(exp.description, { 
+      text: { fontSize: 10, color: '#374151', lineHeight: 1.4 }
+    }).elements}
+  </View>
+)}
+
+// For education achievements
+{edu.achievements && (
+  <View style={{ marginTop: 2 }}>
+    {parseHtmlToPdf(edu.achievements, { 
+      text: { fontSize: 10, color: '#4b5563', lineHeight: 1.4 }
+    }).elements}
+  </View>
+)}
+
+// For project descriptions
+{project.description && (
+  <View style={{ marginTop: 2 }}>
+    {parseHtmlToPdf(project.description, { 
+      text: { fontSize: 10, color: '#374151', lineHeight: 1.4 }
+    }).elements}
+  </View>
+)}
+```
+
+### Custom HTML Parsing for Special Templates
+For templates with unique formatting needs (like the Developer template), create custom parsers:
+
+```typescript
+// Create custom parser in utils/[templateName]HtmlParser.tsx
+export const parseCustomHtmlToPdf = (htmlContent: string, styles: any): ParsedContent => {
+  // Custom parsing logic for your template's specific needs
+  // Example: Replace bullet points with // comments for developer template
+  const prefix = listType === 'ul' ? '// ' : `${++listItemCounter}. `
+}
+```
+
+### Required Rich Text Fields
+Every template MUST handle these rich text fields:
+- **Experience descriptions** (`exp.description`)
+- **Education achievements** (`edu.achievements`) 
+- **Project descriptions** (`project.description`)
+
+### Font Styling Consistency
+Always pass consistent text styles to the parser to match your template's typography:
+
+```typescript
+// Example consistent styling
+const textStyle = { 
+  fontSize: 10,           // Match template font size
+  color: '#374151',       // Match template text color  
+  lineHeight: 1.4         // Consistent line height
+}
+
+{parseHtmlToPdf(content, { text: textStyle }).elements}
 ```
 
 ## ✅ Testing & Validation
@@ -530,6 +592,10 @@ const ExperienceItem: React.FC<ExperienceItemProps> = ({ experience }) => {
 - [ ] Template renders without errors
 - [ ] All sections display correctly
 - [ ] Profile photo displays correctly (if uploaded)
+- [ ] **Rich text formatting works in experience descriptions**
+- [ ] **Rich text formatting works in education achievements**
+- [ ] **Rich text formatting works in project descriptions**
+- [ ] **Font styling is consistent across all formatted content**
 - [ ] Page breaks work as expected
 - [ ] Fixed elements appear on all pages
 - [ ] Text doesn't overflow or get cut off
@@ -539,10 +605,13 @@ const ExperienceItem: React.FC<ExperienceItemProps> = ({ experience }) => {
 
 ### Test Data Requirements
 Create comprehensive test data including:
-- Long descriptions to test text wrapping
+- **Rich text content with bullet points and numbered lists**
+- **Long formatted descriptions to test text wrapping**
 - Multiple experience/education entries
 - All optional fields populated
 - Edge cases (empty sections, special characters)
+- **Education entries with achievements field populated**
+- **Profile images to test photo display**
 
 ### Visual Testing
 ```typescript
@@ -550,7 +619,9 @@ Create comprehensive test data including:
 const testScenarios = [
   'minimal', // Only required fields
   'standard', // Typical resume data
-  'comprehensive', // All fields populated
+  'comprehensive', // All fields populated including rich text formatting
+  'with-profile-photo', // Test profile image display
+  'rich-text-heavy', // Extensive bullet points and formatting
   'edge-cases', // Long text, special characters
 ]
 ```
@@ -617,7 +688,74 @@ export const getSubscriptionLimits = (plan: string) => {
 
 ## ⚠️ Common Pitfalls
 
-### 1. Text Overlapping Issues
+### 1. Missing Rich Text Support
+```typescript
+// ❌ WRONG: Rendering HTML as plain text
+<Text style={styles.description}>{exp.description}</Text>
+
+// ✅ CORRECT: Using HTML parser for formatted content
+{exp.description && (
+  <View style={{ marginTop: 2 }}>
+    {parseHtmlToPdf(exp.description, { 
+      text: { fontSize: 10, color: '#374151', lineHeight: 1.4 }
+    }).elements}
+  </View>
+)}
+```
+
+### 2. Missing Education Achievements
+```typescript
+// ❌ WRONG: Not including achievements field
+<View style={styles.educationItem}>
+  <Text style={styles.degree}>{edu.degree}</Text>
+  <Text style={styles.school}>{edu.school}</Text>
+  {/* Missing achievements! */}
+</View>
+
+// ✅ CORRECT: Including achievements with rich text support
+<View style={styles.educationItem}>
+  <Text style={styles.degree}>{edu.degree}</Text>
+  <Text style={styles.school}>{edu.school}</Text>
+  {edu.achievements && (
+    <View style={{ marginTop: 2 }}>
+      {parseHtmlToPdf(edu.achievements, { 
+        text: { fontSize: 10, color: '#4b5563', lineHeight: 1.4 }
+      }).elements}
+    </View>
+  )}
+</View>
+```
+
+### 3. Missing Profile Photo Support
+```typescript
+// ❌ WRONG: No profile photo support
+<View style={styles.header}>
+  <Text style={styles.name}>{personal.fullName}</Text>
+</View>
+
+// ✅ CORRECT: Always include profile photo support
+<View style={styles.header}>
+  {personal.profileImage && (
+    <View style={styles.photoContainer}>
+      <Image src={personal.profileImage} style={styles.profilePhoto} />
+    </View>
+  )}
+  <Text style={styles.name}>{personal.fullName}</Text>
+</View>
+```
+
+### 4. Inconsistent Font Styling in Rich Text
+```typescript
+// ❌ WRONG: Using template styles directly (causes font mismatch)
+{parseHtmlToPdf(exp.description, templateStyles).elements}
+
+// ✅ CORRECT: Pass specific text styles for consistency
+{parseHtmlToPdf(exp.description, { 
+  text: { fontSize: 10, color: '#374151', lineHeight: 1.4 }
+}).elements}
+```
+
+### 5. Text Overlapping Issues
 ```typescript
 // ❌ WRONG: This causes text overlap by forcing everything on one page
 {data.experience.map((exp, index) => (

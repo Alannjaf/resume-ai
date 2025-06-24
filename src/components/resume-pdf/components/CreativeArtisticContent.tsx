@@ -2,6 +2,7 @@ import { Text, View } from '@react-pdf/renderer'
 import { ResumeData } from '@/types/resume'
 import { creativeArtisticStyles } from '../styles/creativeArtisticStyles'
 import { formatDate } from '../utils/dateUtils'
+import { parseHtmlToPdf } from '../utils/htmlToPdfParser'
 
 interface CreativeArtisticContentProps {
   data: ResumeData
@@ -54,7 +55,11 @@ export const CreativeArtisticContent = ({ data }: CreativeArtisticContentProps) 
                   </View>
                 </View>
                 {exp.description && (
-                  <Text style={creativeArtisticStyles.description}>{exp.description}</Text>
+                  <View style={{ marginTop: 2 }}>
+                    {parseHtmlToPdf(exp.description, { 
+                      text: { fontSize: 10, color: '#4b5563', lineHeight: 1.4 }
+                    }).elements}
+                  </View>
                 )}
               </View>
             </View>
@@ -87,6 +92,13 @@ export const CreativeArtisticContent = ({ data }: CreativeArtisticContentProps) 
                 {edu.field && <Text style={creativeArtisticStyles.field}>{edu.field}</Text>}
                 {edu.location && <Text style={creativeArtisticStyles.location}>{edu.location}</Text>}
                 {edu.gpa && <Text style={creativeArtisticStyles.gpa}>GPA: {edu.gpa}</Text>}
+                {edu.achievements && (
+                  <View style={{ marginTop: 2 }}>
+                    {parseHtmlToPdf(edu.achievements, { 
+                      text: { fontSize: 10, color: '#4b5563', lineHeight: 1.4 }
+                    }).elements}
+                  </View>
+                )}
               </View>
             </View>
           ))}
@@ -145,7 +157,11 @@ export const CreativeArtisticContent = ({ data }: CreativeArtisticContentProps) 
                   </View>
                 </View>
                 {project.description && (
-                  <Text style={creativeArtisticStyles.description}>{project.description}</Text>
+                  <View style={{ marginTop: 2 }}>
+                    {parseHtmlToPdf(project.description, { 
+                      text: { fontSize: 10, color: '#4b5563', lineHeight: 1.4 }
+                    }).elements}
+                  </View>
                 )}
               </View>
             </View>

@@ -49,6 +49,26 @@ export const styles = StyleSheet.create({
   // Header styles - terminal style with brackets
   header: {
     marginBottom: 15,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  
+  profileImageContainer: {
+    width: 60,
+    height: 60,
+    marginRight: 15,
+    marginTop: 5,
+  },
+  
+  profileImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 6,
+    border: `2px solid ${colors.secondary}`,
+  },
+  
+  headerTextContainer: {
+    flex: 1,
   },
 
   // Name with curly braces like in image

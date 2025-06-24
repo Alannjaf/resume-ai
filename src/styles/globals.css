@@ -430,3 +430,38 @@ embed.pdf-preview-protected {
     width: 100% !important;
   }
 }
+
+/* Rich Text Editor Styles */
+.ProseMirror ul {
+  list-style-type: disc !important;
+  padding-left: 1.5rem !important;
+  margin: 0.5rem 0 !important;
+}
+
+.ProseMirror ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5rem !important;
+  margin: 0.5rem 0 !important;
+}
+
+.ProseMirror li {
+  display: list-item !important;
+  margin: 0.25rem 0 !important;
+}
+
+.ProseMirror li p {
+  display: inline !important;
+  margin: 0 !important;
+}
+
+.ProseMirror p {
+  margin: 0.5rem 0 !important;
+}
+
+.ProseMirror strong {
+  font-weight: bold !important;
+}
+
+.ProseMirror em {
+  font-style: italic !important;
+}

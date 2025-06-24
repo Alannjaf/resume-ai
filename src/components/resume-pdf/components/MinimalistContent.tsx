@@ -2,6 +2,7 @@ import { Text, View } from '@react-pdf/renderer'
 import { ResumeData } from '@/types/resume'
 import { minimalistStyles } from '../styles/minimalistStyles'
 import { formatDate } from '../utils/dateUtils'
+import { parseHtmlToPdf } from '../utils/htmlToPdfParser'
 
 interface MinimalistContentProps {
   data: ResumeData
@@ -38,7 +39,9 @@ export const MinimalistContent = ({ data }: MinimalistContentProps) => {
                   <Text style={minimalistStyles.location}>{exp.location}</Text>
                 )}
                 {exp.description && (
-                  <Text style={minimalistStyles.description}>{exp.description}</Text>
+                  <View style={{ marginTop: 2 }}>
+                    {parseHtmlToPdf(exp.description, minimalistStyles).elements}
+                  </View>
                 )}
               </View>
             </View>
@@ -65,6 +68,11 @@ export const MinimalistContent = ({ data }: MinimalistContentProps) => {
                 {edu.field && <Text style={minimalistStyles.field}>{edu.field}</Text>}
                 {edu.location && <Text style={minimalistStyles.location}>{edu.location}</Text>}
                 {edu.gpa && <Text style={minimalistStyles.gpa}>GPA: {edu.gpa}</Text>}
+                {edu.achievements && (
+                  <View style={{ marginTop: 2 }}>
+                    {parseHtmlToPdf(edu.achievements, minimalistStyles).elements}
+                  </View>
+                )}
               </View>
             </View>
           ))}
@@ -109,7 +117,9 @@ export const MinimalistContent = ({ data }: MinimalistContentProps) => {
                   <Text style={minimalistStyles.company}>Technologies: {project.technologies}</Text>
                 )}
                 {project.description && (
-                  <Text style={minimalistStyles.description}>{project.description}</Text>
+                  <View style={{ marginTop: 2 }}>
+                    {parseHtmlToPdf(project.description, minimalistStyles).elements}
+                  </View>
                 )}
                 {project.link && (
                   <Text style={minimalistStyles.location}>{project.link}</Text>

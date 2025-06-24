@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
+import { RichTextEditor } from '@/components/ui/rich-text-editor'
 import { Plus, Trash2, Calendar, Link } from 'lucide-react'
 import { TranslateAndEnhanceButton } from '@/components/ai/TranslateAndEnhanceButton'
 import { Project } from '@/types/resume'
@@ -141,12 +142,11 @@ export function ProjectsForm({ projects, onChange }: ProjectsFormProps) {
                   <label className="block text-sm font-medium mb-1">
                     {t('forms.projects.fields.description')}
                   </label>
-                  <textarea
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary"
-                    rows={3}
-                    placeholder={t('forms.projects.placeholders.description')}
+                  <RichTextEditor
                     value={project.description}
-                    onChange={(e) => updateProject(project.id, 'description', e.target.value)}
+                    onChange={(value) => updateProject(project.id, 'description', value)}
+                    placeholder={t('forms.projects.placeholders.description')}
+                    className="w-full"
                   />
                   <TranslateAndEnhanceButton
                     content={project.description}
