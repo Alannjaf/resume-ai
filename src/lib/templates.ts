@@ -44,6 +44,12 @@ export const getAllTemplates = (): TemplateInfo[] => {
       name: 'Creative Artistic',
       description: 'Vibrant and artistic design with colorful accents and decorative elements',
       category: 'creative'
+    },
+    {
+      id: 'developer',
+      name: 'Developer',
+      description: 'Tech-focused design with modern elements perfect for software developers',
+      category: 'professional'
     }
   ]
 }
