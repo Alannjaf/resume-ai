@@ -142,20 +142,46 @@ The **Group Method** is crucial for maintaining professional PDF layouts by prev
 </View>
 ```
 
-#### Strategy 2: Group Title with First Item
+#### Strategy 2: Group Title with First Item (RECOMMENDED)
 ```typescript
-// Group section title with first content item
+// ✅ CORRECT: Group section title with first content item
 {data.experience.map((exp, index) => (
-  <View key={exp.id} wrap={false}>
+  <View key={exp.id}>
     {index === 0 && (
-      <Text style={styles.sectionTitle}>Work Experience</Text>
+      <View wrap={false}>
+        <Text style={styles.sectionTitle}>Work Experience</Text>
+        <View style={styles.experienceItem}>
+          <View style={styles.experienceHeader}>
+            <Text style={styles.jobTitle}>{exp.jobTitle}</Text>
+            <Text style={styles.dateRange}>{formatDateRange(exp.startDate, exp.endDate)}</Text>
+          </View>
+          <Text style={styles.company}>{exp.company}</Text>
+          {exp.description && (
+            <Text style={styles.description}>{exp.description}</Text>
+          )}
+        </View>
+      </View>
     )}
-    <View style={styles.experienceItem}>
-      {/* Experience content */}
-    </View>
+    {index > 0 && (
+      <View style={styles.experienceItem}>
+        <View style={styles.experienceHeader}>
+          <Text style={styles.jobTitle}>{exp.jobTitle}</Text>
+          <Text style={styles.dateRange}>{formatDateRange(exp.startDate, exp.endDate)}</Text>
+        </View>
+        <Text style={styles.company}>{exp.company}</Text>
+        {exp.description && (
+          <Text style={styles.description}>{exp.description}</Text>
+        )}
+      </View>
+    )}
   </View>
 ))}
 ```
+
+**⚠️ CRITICAL: Prevent Text Overlapping**
+- Only apply `wrap={false}` to the **title + first item combination**
+- **Never** apply `wrap={false}` to the outer container that wraps all items
+- This ensures section titles stay with first items while allowing natural page breaks
 
 #### Strategy 3: Individual Item Grouping
 ```typescript
@@ -175,25 +201,34 @@ The **Group Method** is crucial for maintaining professional PDF layouts by prev
 
 ### CSS Break Control Properties
 ```typescript
+// ⚠️ USE WITH CAUTION: These properties can cause text overlap
 const styles = StyleSheet.create({
   experienceGroup: {
-    breakInside: 'avoid',      // Prevents breaking inside element
-    keepTogether: true,        // Forces content to stay together
+    // ❌ DON'T use these on large sections - causes overlap
+    // breakInside: 'avoid',      
+    // keepTogether: true,        
     marginBottom: 12,
     paddingBottom: 8,
   },
   
   section: {
     marginBottom: 20,
-    breakInside: 'avoid',      // Keep section title with content
+    // ✅ Only use for small sections (Languages, Skills)
+    // breakInside: 'avoid',      
   },
   
   sectionTitle: {
+    // ✅ Safe to use for preventing title orphaning
     breakAfter: 'avoid',       // Don't break after title
     marginBottom: 8,
   }
 })
 ```
+
+**⚠️ IMPORTANT NOTE:** 
+- CSS break control properties (`breakInside: 'avoid'`, `keepTogether: true`) should be used sparingly
+- They can cause text overlapping when applied to large sections
+- Prefer the **selective wrapping approach** with `wrap={false}` for better control
 
 ### Strategy Selection Guidelines
 
@@ -204,10 +239,13 @@ const styles = StyleSheet.create({
 - **Sections where title loses meaning without content**
 
 **Use Strategy 2 (Title with First Item) for:**
-- **Work Experience** - Long sections with many entries
-- **Education** - Multiple degrees/institutions  
-- **Projects** - Multiple project entries
+- **Work Experience** - Long sections with many entries ✅ **RECOMMENDED**
+- **Education** - Multiple degrees/institutions ✅ **RECOMMENDED**
+- **Projects** - Multiple project entries ✅ **RECOMMENDED**
+- **Certifications** - Multiple certification entries ✅ **RECOMMENDED**
 - **Large sections** where some splitting is acceptable
+
+**⭐ BEST PRACTICE**: Strategy 2 is the most robust approach for preventing both text overlap and orphaned titles
 
 **Use Strategy 3 (Individual Item Grouping) for:**
 - **Skills** - Each skill group stays together
@@ -579,7 +617,48 @@ export const getSubscriptionLimits = (plan: string) => {
 
 ## ⚠️ Common Pitfalls
 
-### 1. Border Radius Issues
+### 1. Text Overlapping Issues
+```typescript
+// ❌ WRONG: This causes text overlap by forcing everything on one page
+{data.experience.map((exp, index) => (
+  <View key={exp.id} wrap={false}>  // ⚠️ This is the problem!
+    {index === 0 && (
+      <Text style={styles.sectionTitle}>Work Experience</Text>
+    )}
+    <View style={styles.experienceItem}>
+      {/* All content forced onto single page */}
+    </View>
+  </View>
+))}
+
+// ✅ CORRECT: Allow natural page breaks while keeping titles with first items
+{data.experience.map((exp, index) => (
+  <View key={exp.id}>  // ⚠️ No wrap={false} here!
+    {index === 0 && (
+      <View wrap={false}>  // ⚠️ Only here for title + first item
+        <Text style={styles.sectionTitle}>Work Experience</Text>
+        <View style={styles.experienceItem}>
+          {/* First item content */}
+        </View>
+      </View>
+    )}
+    {index > 0 && (
+      <View style={styles.experienceItem}>
+        {/* Subsequent items can break naturally */}
+      </View>
+    )}
+  </View>
+))}
+```
+
+**Key Rules to Prevent Overlapping:**
+- ✅ **DO** use `wrap={false}` only for title + first item combinations
+- ❌ **DON'T** use `wrap={false}` on outer containers that wrap all items
+- ✅ **DO** allow sections to flow across multiple pages naturally
+- ❌ **DON'T** use CSS properties like `breakInside: 'avoid'` and `keepTogether: true` on large sections
+- ✅ **DO** test with realistic data that would span multiple pages
+
+### 2. Border Radius Issues
 ```typescript
 // ❌ This will cause PDF generation to fail
 style={{
@@ -608,12 +687,33 @@ style={{
   ))}
 </View>
 
-// ✅ Use group method to control breaks
+// ⚠️ PARTIALLY CORRECT but can cause text overlap
 <View>
   {experiences.map((exp, index) => (
-    <View key={exp.id} wrap={false}>
+    <View key={exp.id} wrap={false}>  // ⚠️ This forces all items on one page!
       {index === 0 && <Text style={styles.sectionTitle}>Work Experience</Text>}
-      {/* Content stays together */}
+      {/* Content stays together but may overlap */}
+    </View>
+  ))}
+</View>
+
+// ✅ BEST PRACTICE: Use selective wrapping
+<View>
+  {experiences.map((exp, index) => (
+    <View key={exp.id}>
+      {index === 0 && (
+        <View wrap={false}>  // Only title + first item stay together
+          <Text style={styles.sectionTitle}>Work Experience</Text>
+          <View style={styles.experienceItem}>
+            {/* First item content */}
+          </View>
+        </View>
+      )}
+      {index > 0 && (
+        <View style={styles.experienceItem}>
+          {/* Subsequent items can break naturally */}
+        </View>
+      )}
     </View>
   ))}
 </View>
