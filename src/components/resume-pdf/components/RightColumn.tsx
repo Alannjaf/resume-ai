@@ -25,7 +25,6 @@ export const RightColumn: React.FC<RightColumnProps> = ({ data, experiences }) =
       {/* Experience Section */}
       {experiences.length > 0 && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Professional Experience</Text>
           {experiences.map((exp, index) => (
             <View 
               key={exp.id} 
@@ -35,6 +34,9 @@ export const RightColumn: React.FC<RightColumnProps> = ({ data, experiences }) =
               ]}
               wrap={false} // This ensures the entire experience stays together
             >
+              {index === 0 && (
+                <Text style={styles.sectionTitle}>Professional Experience</Text>
+              )}
               <View style={experienceStyles.experienceHeader}>
                 <View style={{ flex: 1 }}>
                   <Text style={experienceStyles.jobTitle}>{exp.jobTitle}</Text>

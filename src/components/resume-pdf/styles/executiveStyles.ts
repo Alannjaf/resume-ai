@@ -111,8 +111,6 @@ export const executiveStyles = StyleSheet.create({
   // Experience Styles
   experienceItem: {
     marginBottom: 20,
-    breakInside: 'avoid',
-    keepTogether: true,
   },
 
   experienceHeader: {
@@ -164,8 +162,6 @@ export const executiveStyles = StyleSheet.create({
   // Education Styles
   educationItem: {
     marginBottom: 16,
-    breakInside: 'avoid',
-    keepTogether: true,
   },
 
   educationHeader: {
