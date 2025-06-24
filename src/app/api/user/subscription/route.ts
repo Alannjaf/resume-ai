@@ -10,12 +10,15 @@ async function getSystemSettings() {
         "maxFreeResumes",
         "maxFreeAIUsage", 
         "maxFreeExports",
+        "maxFreeImports",
         "maxBasicResumes",
         "maxBasicAIUsage",
         "maxBasicExports", 
+        "maxBasicImports",
         "maxProResumes",
         "maxProAIUsage",
         "maxProExports",
+        "maxProImports",
         "basicPlanPrice",
         "proPlanPrice"
       FROM "SystemSettings" 
@@ -34,16 +37,19 @@ async function getSystemSettings() {
     maxFreeResumes: 10,
     maxFreeAIUsage: 100,
     maxFreeExports: 20,
+    maxFreeImports: 0,
     
     // Basic Plan Limits
     maxBasicResumes: 50,
     maxBasicAIUsage: 500,
     maxBasicExports: 100,
+    maxBasicImports: 0,
     
     // Pro Plan Limits
     maxProResumes: -1,
     maxProAIUsage: -1,
-    maxProExports: -1
+    maxProExports: -1,
+    maxProImports: -1
   }
   return defaults
 }
@@ -62,7 +68,9 @@ export async function GET() {
     }
 
     const settings = await getSystemSettings()
+    console.log('🔧 System Settings from DB:', settings)
     const plan = user.subscription.plan
+    console.log('👤 User Plan:', plan)
     
     // Get limits based on plan and admin settings
     let resumesLimit, aiUsageLimit, exportLimit, importLimit
@@ -83,6 +91,8 @@ export async function GET() {
       exportLimit = settings.maxProExports !== null && settings.maxProExports !== undefined ? settings.maxProExports : -1
       importLimit = settings.maxProImports !== null && settings.maxProImports !== undefined ? settings.maxProImports : -1
     }
+    
+    console.log(`📊 Final limits for ${plan}:`, { resumesLimit, aiUsageLimit, exportLimit, importLimit })
     
     return NextResponse.json({
       currentPlan: plan,

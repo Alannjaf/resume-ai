@@ -5,6 +5,7 @@ import { Check, Lock, Crown } from 'lucide-react'
 import { TemplateThumbnail } from './TemplateThumbnail'
 import { getTierBadgeStyle } from '@/lib/templates'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useSubscription } from '@/contexts/SubscriptionContext'
 
 interface TemplateWithTier {
   id: string
@@ -35,9 +36,12 @@ export function TemplateGallery({
   allowedTemplates 
 }: TemplateGalleryProps) {
   const { t } = useLanguage()
+  const { availableTemplates, isLoading: subscriptionLoading } = useSubscription()
   const [templatesByTier, setTemplatesByTier] = useState<TemplatesByTier | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const userAllowedTemplates = allowedTemplates || []
+  
+  // Use templates from subscription context or fallback to prop
+  const userAllowedTemplates = allowedTemplates || availableTemplates
 
   // Fetch templates organized by tier
   useEffect(() => {

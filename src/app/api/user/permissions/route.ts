@@ -13,8 +13,14 @@ export async function GET() {
     const limits = await checkUserLimits(userId)
     
     return NextResponse.json({
+      canCreateResume: limits.canCreateResume,
+      canUseAI: limits.canUseAI,
+      canExport: limits.canExport,
+      canImport: limits.canImport,
       canUploadPhoto: limits.canUploadPhoto,
-      availableTemplates: limits.availableTemplates
+      availableTemplates: limits.availableTemplates,
+      canAccessProTemplates: limits.availableTemplates?.length > 2, // More than basic templates
+      canExportToPDF: limits.canExport
     })
   } catch (error) {
     console.error('Error fetching user permissions:', error)

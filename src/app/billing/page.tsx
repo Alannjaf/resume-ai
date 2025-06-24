@@ -8,6 +8,7 @@ import { AppHeader } from '@/components/shared/AppHeader'
 import { Check, Clock, Star, CreditCard } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useSubscription } from '@/contexts/SubscriptionContext'
 
 interface Plan {
   name: string
@@ -36,8 +37,8 @@ interface UserStats {
 export default function BillingPage() {
   const router = useRouter()
   const { t } = useLanguage()
+  const { subscription, isLoading: subscriptionLoading } = useSubscription()
   const [plans, setPlans] = useState<Plan[]>([])
-  const [userStats, setUserStats] = useState<UserStats | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -60,16 +61,11 @@ export default function BillingPage() {
           setPlans(enhancedPlans)
         }
 
-        // Fetch user subscription data
-        const userResponse = await fetch('/api/user/subscription')
-        if (userResponse.ok) {
-          const userData = await userResponse.json()
-          setUserStats(userData)
-          
-          // Update current plan in plans array
+        // Update current plan in plans array based on subscription context
+        if (subscription) {
           setPlans(prev => prev.map(plan => ({
             ...plan,
-            current: plan.name === userData.currentPlan
+            current: plan.name === subscription.plan
           })))
         }
       } catch (error) {
@@ -80,7 +76,7 @@ export default function BillingPage() {
     }
 
     fetchData()
-  }, [])
+  }, [subscription])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -113,67 +109,87 @@ export default function BillingPage() {
         </div>
 
         {/* Current Plan Status */}
-        {userStats && (
+        {subscription && (
           <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">Current Plan</h3>
-                <p className="text-gray-600">You are currently on the {userStats.currentPlan} plan</p>
+                <p className="text-gray-600">You are currently on the {subscription.plan} plan</p>
               </div>
               <Badge variant="secondary" className="px-3 py-1">
-                {userStats.currentPlan} Plan
+                {subscription.plan} Plan
               </Badge>
             </div>
             
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <div className="text-2xl font-bold text-gray-900">
-                  {userStats.resumesUsed}/{userStats.resumesLimit === -1 ? '∞' : userStats.resumesLimit}
+                  {subscription.resumeCount}/{subscription.resumeLimit === -1 ? '∞' : subscription.resumeLimit}
                 </div>
                 <div className="text-sm text-gray-600">Resumes Used</div>
-                {userStats.resumesLimit !== -1 && (
+                {subscription.resumeLimit !== -1 && (
                   <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
                     <div 
                       className="bg-blue-600 h-2 rounded-full" 
-                      style={{ width: `${Math.min((userStats.resumesUsed / userStats.resumesLimit) * 100, 100)}%` }}
+                      style={{ width: `${Math.min((subscription.resumeCount / subscription.resumeLimit) * 100, 100)}%` }}
                     ></div>
                   </div>
                 )}
               </div>
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <div className="text-2xl font-bold text-gray-900">
-                  {userStats.aiUsageCount}/{userStats.aiUsageLimit === -1 ? '∞' : userStats.aiUsageLimit}
+                  {subscription.aiUsageCount}/{subscription.aiUsageLimit === -1 ? '∞' : subscription.aiUsageLimit}
                 </div>
                 <div className="text-sm text-gray-600">AI Usage</div>
-                {userStats.aiUsageLimit !== -1 && (
-                  <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-green-600 h-2 rounded-full" 
-                      style={{ width: `${Math.min((userStats.aiUsageCount / userStats.aiUsageLimit) * 100, 100)}%` }}
-                    ></div>
-                  </div>
-                )}
+                <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-green-600 h-2 rounded-full" 
+                    style={{ 
+                      width: subscription.aiUsageLimit === -1 
+                        ? '100%' 
+                        : `${Math.min((subscription.aiUsageCount / subscription.aiUsageLimit) * 100, 100)}%` 
+                    }}
+                  ></div>
+                </div>
               </div>
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <div className="text-2xl font-bold text-gray-900">
-                  {userStats.exportCount}/{userStats.exportLimit === -1 ? '∞' : userStats.exportLimit}
+                  {subscription.exportCount}/{subscription.exportLimit === -1 ? '∞' : subscription.exportLimit}
                 </div>
-                <div className="text-sm text-gray-600">Exports Used</div>
-                {userStats.exportLimit !== -1 && (
-                  <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-purple-600 h-2 rounded-full" 
-                      style={{ width: `${Math.min((userStats.exportCount / userStats.exportLimit) * 100, 100)}%` }}
-                    ></div>
-                  </div>
-                )}
+                <div className="text-sm text-gray-600">PDF Exports</div>
+                <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-purple-600 h-2 rounded-full" 
+                    style={{ 
+                      width: subscription.exportLimit === -1 
+                        ? '100%' 
+                        : `${Math.min((subscription.exportCount / subscription.exportLimit) * 100, 100)}%` 
+                    }}
+                  ></div>
+                </div>
+              </div>
+              <div className="text-center p-4 bg-gray-50 rounded-lg">
+                <div className="text-2xl font-bold text-gray-900">
+                  {subscription.photoUploadsCount}/{subscription.photoUploadsLimit === -1 ? '∞' : subscription.photoUploadsLimit}
+                </div>
+                <div className="text-sm text-gray-600">Photo Uploads</div>
+                <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-orange-600 h-2 rounded-full" 
+                    style={{ 
+                      width: subscription.photoUploadsLimit === -1 
+                        ? '100%' 
+                        : `${Math.min((subscription.photoUploadsCount / subscription.photoUploadsLimit) * 100, 100)}%` 
+                    }}
+                  ></div>
+                </div>
               </div>
             </div>
           </div>
         )}
 
         {/* Pricing Plans */}
-        {loading ? (
+        {loading || subscriptionLoading ? (
           <div className="text-center py-12">
             <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4" />
             <p className="text-gray-600">Loading pricing plans...</p>

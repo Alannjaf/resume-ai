@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { generateResumePDF, getResumePDFBlob } from '@/lib/pdfGenerator'
 import { X, Download, RefreshCw, Crown, ArrowUp } from 'lucide-react'
 import { ResumeData } from '@/types/resume'
+import { useSubscription } from '@/contexts/SubscriptionContext'
 import toast from 'react-hot-toast'
 import { PDFDocument } from 'pdf-lib'
 
@@ -16,10 +17,10 @@ interface PreviewModalProps {
 }
 
 export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: PreviewModalProps) {
+  const { availableTemplates, checkPermission } = useSubscription()
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
   const [isLoadingPreview, setIsLoadingPreview] = useState(false)
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
-  const [availableTemplates, setAvailableTemplates] = useState<string[]>(['modern'])
   const [isMobile, setIsMobile] = useState(false)
   const [currentPdfPage, setCurrentPdfPage] = useState(1)
   const [totalPdfPages, setTotalPdfPages] = useState(1)
@@ -218,23 +219,6 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  // Load user permissions when modal opens
-  useEffect(() => {
-    if (isOpen) {
-      const loadPermissions = async () => {
-        try {
-          const response = await fetch('/api/user/permissions')
-          if (response.ok) {
-            const permissions = await response.json()
-            setAvailableTemplates(permissions.availableTemplates || ['modern'])
-          }
-        } catch (error) {
-          console.error('Failed to load permissions:', error)
-        }
-      }
-      loadPermissions()
-    }
-  }, [isOpen])
 
   // Generate PDF preview when modal opens or data changes
   useEffect(() => {

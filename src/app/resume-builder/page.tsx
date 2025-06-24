@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { AppHeader } from '@/components/shared/AppHeader'
 import { ArrowLeft, ArrowRight, Save, Eye } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useSubscription } from '@/contexts/SubscriptionContext'
 import { WorkExperienceForm } from '@/components/resume-builder/WorkExperienceForm'
 import { EducationForm } from '@/components/resume-builder/EducationForm'
 import { SkillsForm } from '@/components/resume-builder/SkillsForm'
@@ -40,6 +41,7 @@ function ResumeBuilderContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { t } = useLanguage()
+  const { permissions, checkPermission, isLoading: subscriptionLoading } = useSubscription()
   const [currentSection, setCurrentSection] = useState(0)
   const [showPreview, setShowPreview] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState('modern')
@@ -51,13 +53,6 @@ function ResumeBuilderContent() {
   const [lastSavedData, setLastSavedData] = useState<ResumeData | null>(null)
   const [saveQueue, setSaveQueue] = useState<NodeJS.Timeout | null>(null)
   const [isAutoTranslating, setIsAutoTranslating] = useState(false)
-  const [userPermissions, setUserPermissions] = useState<{
-    canUploadPhoto: boolean
-    availableTemplates: string[]
-  }>({
-    canUploadPhoto: false,
-    availableTemplates: ['modern']
-  })
   const [formData, setFormData] = useState<ResumeData>({
     personal: {
       fullName: '',
@@ -638,25 +633,6 @@ function ResumeBuilderContent() {
     }
   }, [searchParams, lastSavedData, resumeId, formData])
 
-  // Load user permissions
-  useEffect(() => {
-    const loadUserPermissions = async () => {
-      try {
-        const response = await fetch('/api/user/permissions')
-        if (response.ok) {
-          const permissions = await response.json()
-          setUserPermissions({
-            canUploadPhoto: permissions.canUploadPhoto || false,
-            availableTemplates: permissions.availableTemplates || ['modern']
-          })
-        }
-      } catch (error) {
-        console.error('Failed to load user permissions:', error)
-      }
-    }
-    
-    loadUserPermissions()
-  }, [])
 
   // Load resume data if editing existing resume or importing
   useEffect(() => {
@@ -887,7 +863,7 @@ function ResumeBuilderContent() {
               {currentSection === 0 && (
                 <div className="space-y-6">
                   {/* Profile Image Upload - Only show if user has permission */}
-                  {userPermissions.canUploadPhoto ? (
+                  {checkPermission('canUploadPhoto') ? (
                     <div className="flex justify-center">
                       <ImageUploader
                         currentImage={formData.personal.profileImage}
@@ -1217,7 +1193,6 @@ function ResumeBuilderContent() {
                   <TemplateGallery
                     selectedTemplate={selectedTemplate}
                     onTemplateSelect={setSelectedTemplate}
-                    allowedTemplates={userPermissions.availableTemplates}
                   />
                 </div>
               )}

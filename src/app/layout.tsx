@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import { LanguageProvider } from '@/contexts/LanguageContext'
+import { SubscriptionProvider } from '@/contexts/SubscriptionContext'
 import { Toaster } from 'react-hot-toast'
 import '@/styles/globals.css'
 
@@ -21,33 +22,35 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={inter.className}>
-          <LanguageProvider>
-            {children}
-            <Toaster 
-              position="top-right"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  background: '#363636',
-                  color: '#fff',
-                },
-                success: {
-                  duration: 3000,
-                  iconTheme: {
-                    primary: '#4aed88',
-                    secondary: '#fff',
-                  },
-                },
-                error: {
+          <SubscriptionProvider>
+            <LanguageProvider>
+              {children}
+              <Toaster 
+                position="top-right"
+                toastOptions={{
                   duration: 4000,
-                  iconTheme: {
-                    primary: '#ff4b4b',
-                    secondary: '#fff',
+                  style: {
+                    background: '#363636',
+                    color: '#fff',
                   },
-                },
-              }}
-            />
-          </LanguageProvider>
+                  success: {
+                    duration: 3000,
+                    iconTheme: {
+                      primary: '#4aed88',
+                      secondary: '#fff',
+                    },
+                  },
+                  error: {
+                    duration: 4000,
+                    iconTheme: {
+                      primary: '#ff4b4b',
+                      secondary: '#fff',
+                    },
+                  },
+                }}
+              />
+            </LanguageProvider>
+          </SubscriptionProvider>
         </body>
       </html>
     </ClerkProvider>
