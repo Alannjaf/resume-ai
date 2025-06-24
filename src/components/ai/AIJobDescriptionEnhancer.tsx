@@ -57,7 +57,42 @@ export function AIJobDescriptionEnhancer({
   }
 
   const handleAccept = () => {
-    onAccept(enhancedDescription)
+    // Convert bullet points to HTML list format for the rich text editor
+    const formatDescription = (text: string): string => {
+      const lines = text.split('\n').filter(line => line.trim())
+      const bulletLines: string[] = []
+      const regularLines: string[] = []
+      
+      lines.forEach(line => {
+        const trimmed = line.trim()
+        if (trimmed.startsWith('• ')) {
+          bulletLines.push(trimmed.substring(2)) // Remove the bullet and space
+        } else if (trimmed.startsWith('•')) {
+          bulletLines.push(trimmed.substring(1)) // Remove just the bullet
+        } else {
+          // If we have bullet points collected, add them as a list
+          if (bulletLines.length > 0) {
+            const listItems = bulletLines.map(item => `<li>${item}</li>`).join('')
+            regularLines.push(`<ul>${listItems}</ul>`)
+            bulletLines.length = 0 // Clear the array
+          }
+          if (trimmed) {
+            regularLines.push(`<p>${trimmed}</p>`)
+          }
+        }
+      })
+      
+      // Handle any remaining bullet points
+      if (bulletLines.length > 0) {
+        const listItems = bulletLines.map(item => `<li>${item}</li>`).join('')
+        regularLines.push(`<ul>${listItems}</ul>`)
+      }
+      
+      return regularLines.join('')
+    }
+
+    const formattedDescription = formatDescription(enhancedDescription)
+    onAccept(formattedDescription)
     setShowSuggestion(false)
     setEnhancedDescription('')
   }
