@@ -319,4 +319,16 @@ export const styles = StyleSheet.create({
   codeVariable: {
     color: colors.primary,
   },
+
+  // Demographics Styles - Compact Code Comment
+  demographicsCompact: {
+    marginTop: 6,
+  },
+
+  demographicsText: {
+    fontSize: 8,
+    color: colors.green,
+    fontFamily: 'Courier',
+    lineHeight: 1.2,
+  },
 })

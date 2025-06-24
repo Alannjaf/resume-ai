@@ -295,6 +295,28 @@
         "linkedin": "linkedin.com/in/yourprofile",
         "website": "yourwebsite.com"
       },
+      "demographics": {
+        "title": "المعلومات الديموغرافية (اختيارية)",
+        "optional": "(اختياري)",
+        "description": "هذه الحقول اختيارية وقد تكون مطلوبة في بعض المناطق أو الصناعات.",
+        "dateOfBirth": "تاريخ الميلاد",
+        "gender": "الجنس",
+        "nationality": "الجنسية",
+        "maritalStatus": "الحالة الاجتماعية",
+        "country": "البلد",
+        "selectGender": "اختر الجنس",
+        "male": "ذكر",
+        "female": "أنثى",
+        "other": "آخر",
+        "preferNotToSay": "أفضل عدم الإفصاح",
+        "selectMaritalStatus": "اختر الحالة الاجتماعية",
+        "single": "أعزب/عزباء",
+        "married": "متزوج/متزوجة",
+        "divorced": "مطلق/مطلقة",
+        "widowed": "أرمل/أرملة",
+        "nationalityPlaceholder": "مثال: كردي، عراقي، أمريكي",
+        "countryPlaceholder": "مثال: العراق، إقليم كردستان"
+      },
       "photoUpgrade": {
         "title": "رفع الصورة الشخصية متاح للخطط الأساسية والمتقدمة",
         "description": "قم بترقية خطتك لإضافة صورة شخصية مهنية"

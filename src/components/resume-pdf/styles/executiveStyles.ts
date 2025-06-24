@@ -238,4 +238,16 @@ export const executiveStyles = StyleSheet.create({
     color: '#6b7280',
     fontWeight: 'normal',
   },
+
+  // Demographics Styles - Compact Layout
+  demographicsCompact: {
+    marginTop: 4,
+  },
+
+  demographicsText: {
+    fontSize: 10,
+    color: '#6b7280',
+    fontStyle: 'italic',
+    lineHeight: 1.3,
+  },
 })

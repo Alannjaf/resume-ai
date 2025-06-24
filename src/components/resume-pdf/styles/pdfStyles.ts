@@ -86,6 +86,19 @@ export const styles = StyleSheet.create({
     fontSize: 10,
     color: '#cbd5e1',
   },
+
+  // Demographics Section
+  demographicsInfo: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    marginTop: 8,
+  },
+
+  demographicItem: {
+    fontSize: 9,
+    color: '#94a3b8',
+  },
   
   // Body Layout
   body: {

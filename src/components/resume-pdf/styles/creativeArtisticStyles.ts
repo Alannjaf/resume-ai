@@ -44,10 +44,10 @@ export const creativeArtisticStyles = StyleSheet.create({
 
   // Header Styles
   header: {
-    paddingTop: 20,
-    paddingBottom: 30,
+    paddingTop: 18,
+    paddingBottom: 22,
     paddingHorizontal: 15,
-    marginBottom: 20,
+    marginBottom: 16,
   },
 
   headerContent: {
@@ -74,7 +74,7 @@ export const creativeArtisticStyles = StyleSheet.create({
   title: {
     fontSize: 14,
     color: colors.secondary,
-    marginBottom: 20,
+    marginBottom: 12,
     fontWeight: 'medium',
     letterSpacing: 0.8,
   },
@@ -82,7 +82,8 @@ export const creativeArtisticStyles = StyleSheet.create({
   contactGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 15,
+    gap: 12,
+    marginBottom: 8,
   },
 
   contactItem: {
@@ -362,5 +363,30 @@ export const creativeArtisticStyles = StyleSheet.create({
     fontSize: 9,
     color: colors.lightText,
     fontStyle: 'italic',
+  },
+
+  // Demographics Styles - Compact Layout
+  demographicsCompact: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+    paddingLeft: 2,
+  },
+
+  demographicIcon: {
+    width: 4,
+    height: 4,
+    borderRadius: 2,
+    backgroundColor: colors.accent,
+    marginRight: 6,
+    marginTop: 1,
+  },
+
+  demographicsText: {
+    fontSize: 10,
+    color: colors.lightText,
+    fontStyle: 'italic',
+    lineHeight: 1.2,
+    flex: 1,
   },
 })

@@ -39,6 +39,21 @@ export const ExecutiveHeader = ({ personal }: ExecutiveHeaderProps) => {
               )}
             </View>
           </View>
+
+          {/* Optional Demographics - Compact Layout */}
+          {(personal.dateOfBirth || personal.gender || personal.nationality || personal.maritalStatus || personal.country) && (
+            <View style={executiveStyles.demographicsCompact}>
+              <Text style={executiveStyles.demographicsText}>
+                {[
+                  personal.dateOfBirth && `Born: ${personal.dateOfBirth}`,
+                  personal.gender && `Gender: ${personal.gender}`,
+                  personal.nationality && `Nationality: ${personal.nationality}`,
+                  personal.maritalStatus && `Marital: ${personal.maritalStatus}`,
+                  personal.country && `Country: ${personal.country}`
+                ].filter(Boolean).join(' • ')}
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Right side - Profile photo (only if photo exists) */}

@@ -113,4 +113,21 @@ export const styles = StyleSheet.create({
     borderRadius: 15,
     border: '1px solid #e2e8f0',
   },
+
+  // Demographics styles
+  demographicsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    marginTop: 10,
+  },
+
+  demographicItem: {
+    fontSize: 9,
+    color: '#94a3b8',
+    backgroundColor: '#f8fafc',
+    padding: '4 8',
+    borderRadius: 10,
+    border: '1px solid #e2e8f0',
+  },
 })

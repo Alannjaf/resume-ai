@@ -39,6 +39,18 @@ export function ResumePreview({ data, template = 'modern' }: ResumePreviewProps)
               {transformedData.personal.website && <span>{transformedData.personal.website}</span>}
             </div>
           )}
+          {/* Optional Demographics */}
+          {(transformedData.personal.dateOfBirth || transformedData.personal.gender || transformedData.personal.nationality || transformedData.personal.maritalStatus || transformedData.personal.country) && (
+            <div className="text-gray-500 text-sm mt-2">
+              {[
+                transformedData.personal.dateOfBirth && `Born: ${transformedData.personal.dateOfBirth}`,
+                transformedData.personal.gender && `Gender: ${transformedData.personal.gender}`,
+                transformedData.personal.nationality && `Nationality: ${transformedData.personal.nationality}`,
+                transformedData.personal.maritalStatus && `Marital Status: ${transformedData.personal.maritalStatus}`,
+                transformedData.personal.country && `Country: ${transformedData.personal.country}`
+              ].filter(Boolean).join(' | ')}
+            </div>
+          )}
         </div>
 
         {transformedData.summary && (

@@ -295,6 +295,28 @@
         "linkedin": "linkedin.com/in/yourprofile",
         "website": "yourwebsite.com"
       },
+      "demographics": {
+        "title": "زانیاری دیمۆگرافی (ئیختیاری)",
+        "optional": "(ئیختیاری)",
+        "description": "ئەم خانانە ئیختیارین و لە هەندێک هەرێم یا پیشەسازیدا پێویست دەبن.",
+        "dateOfBirth": "ڕێکەوتی لەدایکبوون",
+        "gender": "ڕەگەز",
+        "nationality": "نەتەوایەتی",
+        "maritalStatus": "باری زەماوەندی",
+        "country": "وڵات",
+        "selectGender": "ڕەگەز هەڵبژێرە",
+        "male": "نێر",
+        "female": "مێ",
+        "other": "تر",
+        "preferNotToSay": "پێیان باشە نەیڵێم",
+        "selectMaritalStatus": "باری زەماوەندی هەڵبژێرە",
+        "single": "سەڵت",
+        "married": "هاوسەرگیراو",
+        "divorced": "جیابووەوە",
+        "widowed": "بێوەژن",
+        "nationalityPlaceholder": "نموونە: کورد، عێراقی، ئەمەریکی",
+        "countryPlaceholder": "نموونە: عێراق، هەرێمی کوردستان"
+      },
       "photoUpgrade": {
         "title": "بارکردنی وێنەی کەسی بۆ پلانی بنەڕەتی و پڕۆ بەردەستە",
         "description": "پلانەکەت بەرز بکەوە بۆ زیادکردنی وێنەی کەسی پیشەیی"

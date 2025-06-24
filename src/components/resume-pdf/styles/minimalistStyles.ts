@@ -248,4 +248,17 @@ export const minimalistStyles = StyleSheet.create({
     color: colors.secondary,
     marginHorizontal: 8,
   },
+
+  // Demographics Styles
+  demographicsInfo: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginTop: 8,
+  },
+
+  demographicItem: {
+    fontSize: 9,
+    color: colors.secondary,
+  },
 })

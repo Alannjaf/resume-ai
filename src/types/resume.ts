@@ -72,6 +72,12 @@ export interface PersonalInfo {
     height: number
     scale: number
   }
+  // Optional demographic fields
+  dateOfBirth?: string
+  gender?: string
+  nationality?: string
+  maritalStatus?: string
+  country?: string
 }
 
 export interface ResumeData {

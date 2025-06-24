@@ -47,6 +47,26 @@ export const ElegantHeader = ({ personal }: ElegantHeaderProps) => {
           ))}
         </View>
       )}
+
+      {/* Optional Demographics */}
+      {(personal.dateOfBirth || personal.gender || personal.nationality || personal.maritalStatus || personal.country) && (
+        <View style={elegantStyles.demographicsInfo}>
+          {[
+            personal.dateOfBirth && `Born: ${personal.dateOfBirth}`,
+            personal.gender && `Gender: ${personal.gender}`,
+            personal.nationality && `Nationality: ${personal.nationality}`,
+            personal.maritalStatus && `Marital Status: ${personal.maritalStatus}`,
+            personal.country && `Country: ${personal.country}`
+          ].filter(Boolean).map((item, index, array) => (
+            <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={elegantStyles.demographicItem}>{item}</Text>
+              {index < array.length - 1 && (
+                <Text style={elegantStyles.contactSeparator}>•</Text>
+              )}
+            </View>
+          ))}
+        </View>
+      )}
     </View>
   )
 }

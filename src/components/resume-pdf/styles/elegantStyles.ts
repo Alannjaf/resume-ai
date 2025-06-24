@@ -262,4 +262,18 @@ export const elegantStyles = StyleSheet.create({
     color: colors.secondary,
     fontStyle: 'italic',
   },
+
+  // Demographics Styles
+  demographicsInfo: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+
+  demographicItem: {
+    fontSize: 9,
+    color: colors.secondary,
+    fontStyle: 'italic',
+  },
 })

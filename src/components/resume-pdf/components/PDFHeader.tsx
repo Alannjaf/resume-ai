@@ -37,6 +37,26 @@ export const PDFHeader: React.FC<PDFHeaderProps> = ({ personal }) => {
             </Link>
           )}
         </View>
+        {/* Optional Demographics */}
+        {(personal.dateOfBirth || personal.gender || personal.nationality || personal.maritalStatus || personal.country) && (
+          <View style={styles.demographicsInfo}>
+            {personal.dateOfBirth && (
+              <Text style={styles.demographicItem}>Born: {personal.dateOfBirth}</Text>
+            )}
+            {personal.gender && (
+              <Text style={styles.demographicItem}>Gender: {personal.gender}</Text>
+            )}
+            {personal.nationality && (
+              <Text style={styles.demographicItem}>Nationality: {personal.nationality}</Text>
+            )}
+            {personal.maritalStatus && (
+              <Text style={styles.demographicItem}>Marital Status: {personal.maritalStatus}</Text>
+            )}
+            {personal.country && (
+              <Text style={styles.demographicItem}>Country: {personal.country}</Text>
+            )}
+          </View>
+        )}
       </View>
     </View>
   )

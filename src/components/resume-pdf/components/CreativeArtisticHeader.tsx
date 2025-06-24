@@ -36,6 +36,22 @@ export const CreativeArtisticHeader = ({ personal }: CreativeArtisticHeaderProps
               </View>
             ))}
           </View>
+
+          {/* Optional Demographics - Compact */}
+          {(personal.dateOfBirth || personal.gender || personal.nationality || personal.maritalStatus || personal.country) && (
+            <View style={creativeArtisticStyles.demographicsCompact}>
+              <View style={creativeArtisticStyles.demographicIcon} />
+              <Text style={creativeArtisticStyles.demographicsText}>
+                {[
+                  personal.dateOfBirth && `Born: ${personal.dateOfBirth}`,
+                  personal.gender && `Gender: ${personal.gender}`,
+                  personal.nationality && `Nationality: ${personal.nationality}`,
+                  personal.maritalStatus && `Marital: ${personal.maritalStatus}`,
+                  personal.country && `Country: ${personal.country}`
+                ].filter(Boolean).join(' • ')}
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Right side - Profile photo with decorative border */}

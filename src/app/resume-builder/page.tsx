@@ -1091,6 +1091,126 @@ function ResumeBuilderContent() {
                       />
                     </div>
                   </div>
+                  
+                  {/* Optional Demographics Section */}
+                  <div className="mt-8 border-t pt-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-medium text-gray-900">
+                        {t('forms.personalInfo.demographics.title')}
+                      </h3>
+                      <span className="text-sm text-gray-500">
+                        {t('forms.personalInfo.demographics.optional')}
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-4">
+                      {t('forms.personalInfo.demographics.description')}
+                    </p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-1">
+                          {t('forms.personalInfo.demographics.dateOfBirth')}
+                        </label>
+                        <Input
+                          type="date"
+                          value={formData.personal.dateOfBirth || ''}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              personal: {
+                                ...formData.personal,
+                                dateOfBirth: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">
+                          {t('forms.personalInfo.demographics.gender')}
+                        </label>
+                        <select
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                          value={formData.personal.gender || ''}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              personal: {
+                                ...formData.personal,
+                                gender: e.target.value,
+                              },
+                            })
+                          }
+                        >
+                          <option value="">{t('forms.personalInfo.demographics.selectGender')}</option>
+                          <option value="male">{t('forms.personalInfo.demographics.male')}</option>
+                          <option value="female">{t('forms.personalInfo.demographics.female')}</option>
+                          <option value="other">{t('forms.personalInfo.demographics.other')}</option>
+                          <option value="prefer-not-to-say">{t('forms.personalInfo.demographics.preferNotToSay')}</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">
+                          {t('forms.personalInfo.demographics.nationality')}
+                        </label>
+                        <Input
+                          placeholder={t('forms.personalInfo.demographics.nationalityPlaceholder')}
+                          value={formData.personal.nationality || ''}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              personal: {
+                                ...formData.personal,
+                                nationality: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">
+                          {t('forms.personalInfo.demographics.maritalStatus')}
+                        </label>
+                        <select
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                          value={formData.personal.maritalStatus || ''}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              personal: {
+                                ...formData.personal,
+                                maritalStatus: e.target.value,
+                              },
+                            })
+                          }
+                        >
+                          <option value="">{t('forms.personalInfo.demographics.selectMaritalStatus')}</option>
+                          <option value="single">{t('forms.personalInfo.demographics.single')}</option>
+                          <option value="married">{t('forms.personalInfo.demographics.married')}</option>
+                          <option value="divorced">{t('forms.personalInfo.demographics.divorced')}</option>
+                          <option value="widowed">{t('forms.personalInfo.demographics.widowed')}</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-1">
+                          {t('forms.personalInfo.demographics.country')}
+                        </label>
+                        <Input
+                          placeholder={t('forms.personalInfo.demographics.countryPlaceholder')}
+                          value={formData.personal.country || ''}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              personal: {
+                                ...formData.personal,
+                                country: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
 

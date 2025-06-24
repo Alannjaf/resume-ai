@@ -47,6 +47,26 @@ export const MinimalistHeader = ({ personal }: MinimalistHeaderProps) => {
           ))}
         </View>
       )}
+
+      {/* Optional Demographics */}
+      {(personal.dateOfBirth || personal.gender || personal.nationality || personal.maritalStatus || personal.country) && (
+        <View style={minimalistStyles.demographicsInfo}>
+          {[
+            personal.dateOfBirth && `Born: ${personal.dateOfBirth}`,
+            personal.gender && `Gender: ${personal.gender}`,
+            personal.nationality && `Nationality: ${personal.nationality}`,
+            personal.maritalStatus && `Marital Status: ${personal.maritalStatus}`,
+            personal.country && `Country: ${personal.country}`
+          ].filter(Boolean).map((item, index, array) => (
+            <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={minimalistStyles.demographicItem}>{item}</Text>
+              {index < array.length - 1 && (
+                <Text style={minimalistStyles.contactSeparator}>|</Text>
+              )}
+            </View>
+          ))}
+        </View>
+      )}
     </View>
   )
 }

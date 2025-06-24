@@ -329,6 +329,28 @@
         "linkedin": "linkedin.com/in/yourprofile",
         "website": "yourwebsite.com"
       },
+      "demographics": {
+        "title": "Optional Demographics",
+        "optional": "(Optional)",
+        "description": "These fields are optional and may be required in some regions or industries.",
+        "dateOfBirth": "Date of Birth",
+        "gender": "Gender",
+        "nationality": "Nationality",
+        "maritalStatus": "Marital Status",
+        "country": "Country",
+        "selectGender": "Select gender",
+        "male": "Male",
+        "female": "Female",
+        "other": "Other",
+        "preferNotToSay": "Prefer not to say",
+        "selectMaritalStatus": "Select marital status",
+        "single": "Single",
+        "married": "Married",
+        "divorced": "Divorced",
+        "widowed": "Widowed",
+        "nationalityPlaceholder": "e.g., Kurdish, Iraqi, American",
+        "countryPlaceholder": "e.g., Iraq, Kurdistan Region"
+      },
       "photoUpgrade": {
         "title": "Profile photo upload is available for BASIC and PRO plans",
         "description": "Upgrade your plan to add a professional profile photo"
