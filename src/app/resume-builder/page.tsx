@@ -22,6 +22,7 @@ import { TranslateAndEnhanceButton } from '@/components/ai/TranslateAndEnhanceBu
 import ImageUploader from '@/components/resume-builder/ImageUploader'
 import { ResumeData } from '@/types/resume'
 import { isNonEnglishContent } from '@/lib/languageDetection'
+import { scrollToTopForSectionChange, scrollToTopAfterAsync } from '@/lib/scrollUtils'
 import toast from 'react-hot-toast'
 
 // Form sections
@@ -525,7 +526,15 @@ function ResumeBuilderContent() {
 
       // Move to next section
       setCurrentSection(nextSection)
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      
+      // Improved scroll to top with proper timing
+      if (isMovingToTemplateSelection) {
+        // After async operations, use special scroll function
+        await scrollToTopAfterAsync()
+      } else {
+        // Regular section change scroll
+        await scrollToTopForSectionChange()
+      }
 
       // Save current section data in background
       const sectionKey = getSectionKey(currentSection)
@@ -550,10 +559,10 @@ function ResumeBuilderContent() {
     return sectionMap[sectionIndex]
   }
 
-  const handlePrevious = () => {
+  const handlePrevious = async () => {
     if (currentSection > 0) {
       setCurrentSection(currentSection - 1)
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      await scrollToTopForSectionChange()
     }
   }
 
@@ -606,7 +615,7 @@ function ResumeBuilderContent() {
     // Change section immediately (optimistic update)
     const oldSection = currentSection
     setCurrentSection(newSection)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    await scrollToTopForSectionChange()
 
     // Save old section data in background
     const sectionKey = getSectionKey(oldSection)

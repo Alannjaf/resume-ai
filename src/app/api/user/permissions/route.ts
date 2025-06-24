@@ -19,7 +19,7 @@ export async function GET() {
       canImport: limits.canImport,
       canUploadPhoto: limits.canUploadPhoto,
       availableTemplates: limits.availableTemplates,
-      canAccessProTemplates: limits.availableTemplates?.length > 2, // More than basic templates
+      canAccessProTemplates: (limits.availableTemplates?.length ?? 0) > 2, // More than basic templates
       canExportToPDF: limits.canExport
     })
   } catch (error) {
