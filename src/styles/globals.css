@@ -431,6 +431,53 @@ embed.pdf-preview-protected {
   }
 }
 
+/* Mobile Input Optimization - Prevent iOS Zoom */
+@media screen and (max-width: 768px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="search"],
+  textarea,
+  select {
+    font-size: 16px !important;
+    transform: translateZ(0);
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  
+  /* Ensure touch targets are large enough */
+  input, textarea, select, button {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+}
+
+/* Additional mobile input fixes */
+input, textarea, select {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Prevent zoom on input focus specifically for iOS */
+@supports (-webkit-touch-callout: none) {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="search"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
 /* Rich Text Editor Styles */
 .ProseMirror ul {
   list-style-type: disc !important;
