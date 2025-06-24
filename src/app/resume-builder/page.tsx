@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -54,6 +54,7 @@ function ResumeBuilderContent() {
   const [lastSavedData, setLastSavedData] = useState<ResumeData | null>(null)
   const [saveQueue, setSaveQueue] = useState<NodeJS.Timeout | null>(null)
   const [isAutoTranslating, setIsAutoTranslating] = useState(false)
+  const summaryTextareaRef = useRef<HTMLTextAreaElement>(null)
   const [formData, setFormData] = useState<ResumeData>({
     personal: {
       fullName: '',
@@ -1107,6 +1108,10 @@ function ResumeBuilderContent() {
                     <AIProfessionalSummary
                       currentSummary={formData.summary}
                       onAccept={(summary) => setFormData({ ...formData, summary })}
+                      onActionComplete={() => {
+                        summaryTextareaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                        summaryTextareaRef.current?.focus()
+                      }}
                       personalInfo={formData.personal}
                       experience={formData.experience}
                       skills={formData.skills}
@@ -1129,6 +1134,7 @@ function ResumeBuilderContent() {
                       {t('forms.professionalSummary.title')}
                     </label>
                     <textarea
+                      ref={summaryTextareaRef}
                       className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
                       rows={6}
                       placeholder={t('forms.professionalSummary.placeholder')}

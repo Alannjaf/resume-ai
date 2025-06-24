@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
@@ -18,6 +18,8 @@ interface WorkExperienceFormProps {
 
 export function WorkExperienceForm({ experiences, onChange }: WorkExperienceFormProps) {
   const { t } = useLanguage()
+  const descriptionRefs = useRef<Map<string, HTMLDivElement>>(new Map())
+  
   const addExperience = () => {
     const newExperience: WorkExperience = {
       id: Date.now().toString(),
@@ -148,6 +150,13 @@ export function WorkExperienceForm({ experiences, onChange }: WorkExperienceForm
               {t('forms.workExperience.fields.description')}
             </label>
             <RichTextEditor
+              ref={(el) => {
+                if (el) {
+                  descriptionRefs.current.set(exp.id, el)
+                } else {
+                  descriptionRefs.current.delete(exp.id)
+                }
+              }}
               value={exp.description || ''}
               onChange={(value) => updateExperience(exp.id, 'description', value)}
               placeholder={t('forms.workExperience.placeholders.description')}
@@ -159,6 +168,16 @@ export function WorkExperienceForm({ experiences, onChange }: WorkExperienceForm
               currentDescription={exp.description || ''}
               jobTitle={exp.jobTitle || ''}
               onAccept={(description) => updateExperience(exp.id, 'description', description)}
+              onActionComplete={() => {
+                const editorRef = descriptionRefs.current.get(exp.id)
+                if (editorRef) {
+                  editorRef.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                  // Focus the editor if it has a focus method
+                  if ('focus' in editorRef && typeof editorRef.focus === 'function') {
+                    editorRef.focus()
+                  }
+                }
+              }}
             />
           </div>
         </Card>

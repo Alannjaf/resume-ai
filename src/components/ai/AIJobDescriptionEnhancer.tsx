@@ -11,12 +11,14 @@ interface AIJobDescriptionEnhancerProps {
   currentDescription: string
   jobTitle: string
   onAccept: (description: string) => void
+  onActionComplete?: () => void
 }
 
 export function AIJobDescriptionEnhancer({ 
   currentDescription = '', 
   jobTitle = '',
-  onAccept
+  onAccept,
+  onActionComplete
 }: AIJobDescriptionEnhancerProps) {
   const [isEnhancing, setIsEnhancing] = useState(false)
   const { t } = useLanguage()
@@ -95,11 +97,13 @@ export function AIJobDescriptionEnhancer({
     onAccept(formattedDescription)
     setShowSuggestion(false)
     setEnhancedDescription('')
+    onActionComplete?.()
   }
 
   const handleReject = () => {
     setShowSuggestion(false)
     setEnhancedDescription('')
+    onActionComplete?.()
   }
 
   const handleRegenerate = () => {

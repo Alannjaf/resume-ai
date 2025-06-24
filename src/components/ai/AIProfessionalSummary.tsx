@@ -11,6 +11,7 @@ import { useLanguage } from '@/contexts/LanguageContext'
 interface AIProfessionalSummaryProps {
   currentSummary: string
   onAccept: (summary: string) => void
+  onActionComplete?: () => void
   personalInfo?: {
     fullName?: string
     email?: string
@@ -27,6 +28,7 @@ interface AIProfessionalSummaryProps {
 export function AIProfessionalSummary({ 
   currentSummary, 
   onAccept, 
+  onActionComplete,
   personalInfo,
   experience = [],
   skills = []
@@ -75,11 +77,13 @@ export function AIProfessionalSummary({
     onAccept(generatedSummary)
     setShowSuggestion(false)
     setGeneratedSummary('')
+    onActionComplete?.()
   }
 
   const handleReject = () => {
     setShowSuggestion(false)
     setGeneratedSummary('')
+    onActionComplete?.()
   }
 
   const handleRegenerate = () => {
