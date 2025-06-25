@@ -14,7 +14,8 @@
       "Bash(rg:*)",
       "mcp__NEON__run_sql",
       "mcp__NEON__list_projects",
-      "mcp__NEON__get_database_tables"
+      "mcp__NEON__get_database_tables",
+      "Bash(node:*)"
     ],
     "deny": []
   }
