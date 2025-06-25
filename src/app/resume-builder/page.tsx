@@ -5,8 +5,12 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { FormInput } from '@/components/ui/form-input'
 import { AppHeader } from '@/components/shared/AppHeader'
-import { ArrowLeft, ArrowRight, Save, Eye } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Save, Eye, Keyboard } from 'lucide-react'
+import { useFormNavigation } from '@/hooks/useFormNavigation'
+import { KeyboardShortcutsHelp } from '@/components/ui/keyboard-shortcuts-help'
+import { NavigationIndicator } from '@/components/ui/navigation-indicator'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useSubscription } from '@/contexts/SubscriptionContext'
 import { WorkExperienceForm } from '@/components/resume-builder/WorkExperienceForm'
@@ -54,6 +58,7 @@ function ResumeBuilderContent() {
   const [lastSavedData, setLastSavedData] = useState<ResumeData | null>(null)
   const [saveQueue, setSaveQueue] = useState<NodeJS.Timeout | null>(null)
   const [isAutoTranslating, setIsAutoTranslating] = useState(false)
+  const [showKeyboardHelp, setShowKeyboardHelp] = useState(false)
   const summaryTextareaRef = useRef<HTMLTextAreaElement>(null)
   const [formData, setFormData] = useState<ResumeData>({
     personal: {
@@ -625,6 +630,67 @@ function ResumeBuilderContent() {
     }
   }
 
+  // Set up form navigation
+  const { formRef, focusFirstElement } = useFormNavigation({
+    onNext: handleNext,
+    onPrevious: handlePrevious,
+    onSave: () => handleSave(true),
+    onPreview: () => setShowPreview(true),
+    currentSection,
+    totalSections: FORM_SECTIONS.length,
+    disabled: isAutoTranslating || isSaving
+  })
+
+  // Listen for section navigation events
+  useEffect(() => {
+    const handleSectionNavigation = (event: CustomEvent) => {
+      const { sectionIndex } = event.detail
+      handleSectionChange(sectionIndex)
+    }
+
+    window.addEventListener('navigate-to-section', handleSectionNavigation as EventListener)
+    return () => {
+      window.removeEventListener('navigate-to-section', handleSectionNavigation as EventListener)
+    }
+  }, [])
+
+  // Focus first element when section changes
+  useEffect(() => {
+    focusFirstElement()
+  }, [currentSection, focusFirstElement])
+
+  // Global keyboard shortcuts (F1 for help)
+  useEffect(() => {
+    const handleGlobalKeyDown = (event: KeyboardEvent) => {
+      switch (event.key) {
+        case 'F1':
+          event.preventDefault()
+          if (showKeyboardHelp) {
+            setShowKeyboardHelp(false)
+          } else if (showPreview) {
+            // If preview is open, F1 shows help over the preview
+            setShowKeyboardHelp(true)
+          } else {
+            setShowKeyboardHelp(true)
+          }
+          break
+        case 'Escape':
+          // Global escape handling
+          if (showKeyboardHelp) {
+            setShowKeyboardHelp(false)
+          } else if (showPreview) {
+            setShowPreview(false)
+          }
+          break
+      }
+    }
+
+    window.addEventListener('keydown', handleGlobalKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleGlobalKeyDown)
+    }
+  }, [showKeyboardHelp, showPreview])
+
   // Initialize default title when translations are ready
   useEffect(() => {
     if (!resumeTitle && t) {
@@ -800,6 +866,14 @@ function ResumeBuilderContent() {
               <Button 
                 variant="outline" 
                 size="sm"
+                onClick={() => setShowKeyboardHelp(true)}
+                title="Keyboard Shortcuts (F1)"
+              >
+                <Keyboard className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
                 onClick={() => setShowPreview(true)}
               >
                 <Eye className="h-4 w-4 mr-2" />
@@ -856,11 +930,18 @@ function ResumeBuilderContent() {
 
           {/* Form Content */}
           <div className="lg:col-span-2">
-            <Card className="p-8">
+            <Card className="p-8" ref={formRef}>
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold">
-                  {FORM_SECTIONS[currentSection].title}
-                </h2>
+                <div>
+                  <h2 className="text-2xl font-bold">
+                    {FORM_SECTIONS[currentSection].title}
+                  </h2>
+                  <NavigationIndicator 
+                    currentSection={currentSection}
+                    totalSections={FORM_SECTIONS.length}
+                    className="mt-2"
+                  />
+                </div>
                 {isAutoSaving && (
                   <div className="flex items-center text-xs text-gray-500">
                     <div className="animate-spin h-3 w-3 mr-1 border-2 border-gray-400 border-t-transparent rounded-full" />
@@ -928,7 +1009,7 @@ function ResumeBuilderContent() {
                       <label className="block text-sm font-medium mb-1">
                         {t('forms.personalInfo.fields.fullName')} *
                       </label>
-                      <Input
+                      <FormInput
                         placeholder={t('forms.personalInfo.placeholders.fullName')}
                         value={formData.personal.fullName}
                         onChange={(e) =>
@@ -959,7 +1040,7 @@ function ResumeBuilderContent() {
                       <label className="block text-sm font-medium mb-1">
                         {t('forms.personalInfo.fields.professionalTitle')}
                       </label>
-                      <Input
+                      <FormInput
                         placeholder={t('forms.personalInfo.placeholders.professionalTitle')}
                         value={formData.personal.title || ''}
                         onChange={(e) =>
@@ -990,7 +1071,7 @@ function ResumeBuilderContent() {
                       <label className="block text-sm font-medium mb-1">
                         {t('forms.personalInfo.fields.email')} *
                       </label>
-                      <Input
+                      <FormInput
                         type="email"
                         placeholder={t('forms.personalInfo.placeholders.email')}
                         value={formData.personal.email}
@@ -1399,6 +1480,12 @@ function ResumeBuilderContent() {
         onClose={() => setShowPreview(false)}
         data={formData}
         template={selectedTemplate}
+      />
+
+      {/* Keyboard Shortcuts Help Modal */}
+      <KeyboardShortcutsHelp
+        isOpen={showKeyboardHelp}
+        onClose={() => setShowKeyboardHelp(false)}
       />
     </div>
   )
