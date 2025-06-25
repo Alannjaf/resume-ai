@@ -384,6 +384,9 @@ ${contextInfo.company ? `- Company: ${contextInfo.company}` : ''}
 ${contextInfo.projectName ? `- Project: ${contextInfo.projectName}` : ''}
 ` : ''
 
+    const wordCount = content.trim().split(/\s+/).length
+    const isShortContent = wordCount <= 5
+    
     const messages = [
       {
         role: 'system' as const,
@@ -404,6 +407,15 @@ Requirements:
    - Include quantifiable elements if possible
    - Proper grammar and professional vocabulary
    - Suitable for English-speaking employers
+
+CRITICAL LENGTH REQUIREMENT:
+${isShortContent ? 
+`- The input has EXACTLY ${wordCount} word(s). You MUST return EXACTLY ${wordCount} word(s).
+- If the input is a single word (like a nationality, country, or title), return ONLY the direct translation.
+- DO NOT add articles (a, an, the), prepositions, or any extra words.
+- Examples: "العراق" → "Iraq" (NOT "The Republic of Iraq"), "مهندس" → "Engineer" (NOT "Software Engineer")` :
+`- Maintain approximately the same length as the original content.
+- Do not significantly expand or reduce the content length.`}
 
 ${contentType === 'description' ? '- Format as bullet points using "• " if it contains multiple achievements or responsibilities' : ''}
 ${contentType === 'project' ? '- Focus on technical achievements and impact' : ''}

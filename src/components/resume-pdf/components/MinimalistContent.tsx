@@ -22,60 +22,104 @@ export const MinimalistContent = ({ data }: MinimalistContentProps) => {
       {/* Work Experience Section */}
       {data.experience && data.experience.length > 0 && (
         <View style={minimalistStyles.section}>
-          {data.experience.map((exp, index) => (
-            <View key={exp.id} wrap={false}>
-              {index === 0 && (
-                <Text style={minimalistStyles.sectionTitle}>Experience</Text>
-              )}
-              <View style={minimalistStyles.experienceItem}>
-                <View style={minimalistStyles.experienceHeader}>
-                  <Text style={minimalistStyles.jobTitle}>{exp.jobTitle}</Text>
-                  <Text style={minimalistStyles.dateRange}>
-                    {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
-                  </Text>
-                </View>
-                <Text style={minimalistStyles.company}>{exp.company}</Text>
-                {exp.location && (
-                  <Text style={minimalistStyles.location}>{exp.location}</Text>
-                )}
-                {exp.description && (
-                  <View style={{ marginTop: 2 }}>
-                    {parseHtmlToPdf(exp.description, minimalistStyles).elements}
+          {data.experience.map((exp, index) => {
+            if (index === 0) {
+              return (
+                <View key={exp.id} style={minimalistStyles.experienceItem}>
+                  <View wrap={false}>
+                    <Text style={minimalistStyles.sectionTitle}>Experience</Text>
+                    <View style={minimalistStyles.experienceHeader}>
+                      <Text style={minimalistStyles.jobTitle}>{exp.jobTitle}</Text>
+                      <Text style={minimalistStyles.dateRange}>
+                        {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
+                      </Text>
+                    </View>
+                    <Text style={minimalistStyles.company}>{exp.company}</Text>
+                    {exp.location && (
+                      <Text style={minimalistStyles.location}>{exp.location}</Text>
+                    )}
                   </View>
-                )}
-              </View>
-            </View>
-          ))}
+                  {exp.description && (
+                    <View style={{ marginTop: 2 }}>
+                      {parseHtmlToPdf(exp.description, minimalistStyles).elements}
+                    </View>
+                  )}
+                </View>
+              )
+            } else {
+              return (
+                <View key={exp.id} style={minimalistStyles.experienceItem} wrap={false}>
+                  <View style={minimalistStyles.experienceHeader}>
+                    <Text style={minimalistStyles.jobTitle}>{exp.jobTitle}</Text>
+                    <Text style={minimalistStyles.dateRange}>
+                      {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
+                    </Text>
+                  </View>
+                  <Text style={minimalistStyles.company}>{exp.company}</Text>
+                  {exp.location && (
+                    <Text style={minimalistStyles.location}>{exp.location}</Text>
+                  )}
+                  {exp.description && (
+                    <View style={{ marginTop: 2 }}>
+                      {parseHtmlToPdf(exp.description, minimalistStyles).elements}
+                    </View>
+                  )}
+                </View>
+              )
+            }
+          })}
         </View>
       )}
 
       {/* Education Section */}
       {data.education && data.education.length > 0 && (
         <View style={minimalistStyles.section}>
-          {data.education.map((edu, index) => (
-            <View key={edu.id} wrap={false}>
-              {index === 0 && (
-                <Text style={minimalistStyles.sectionTitle}>Education</Text>
-              )}
-              <View style={minimalistStyles.educationItem}>
-                <View style={minimalistStyles.educationHeader}>
-                  <Text style={minimalistStyles.degree}>{edu.degree}</Text>
-                  <Text style={minimalistStyles.dateRange}>
-                    {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
-                  </Text>
-                </View>
-                <Text style={minimalistStyles.school}>{edu.school}</Text>
-                {edu.field && <Text style={minimalistStyles.field}>{edu.field}</Text>}
-                {edu.location && <Text style={minimalistStyles.location}>{edu.location}</Text>}
-                {edu.gpa && <Text style={minimalistStyles.gpa}>GPA: {edu.gpa}</Text>}
-                {edu.achievements && (
-                  <View style={{ marginTop: 2 }}>
-                    {parseHtmlToPdf(edu.achievements, minimalistStyles).elements}
+          {data.education.map((edu, index) => {
+            if (index === 0) {
+              return (
+                <View key={edu.id} style={minimalistStyles.educationItem}>
+                  <View wrap={false}>
+                    <Text style={minimalistStyles.sectionTitle}>Education</Text>
+                    <View style={minimalistStyles.educationHeader}>
+                      <Text style={minimalistStyles.degree}>{edu.degree}</Text>
+                      <Text style={minimalistStyles.dateRange}>
+                        {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
+                      </Text>
+                    </View>
+                    <Text style={minimalistStyles.school}>{edu.school}</Text>
+                    {edu.field && <Text style={minimalistStyles.field}>{edu.field}</Text>}
+                    {edu.location && <Text style={minimalistStyles.location}>{edu.location}</Text>}
+                    {edu.gpa && <Text style={minimalistStyles.gpa}>GPA: {edu.gpa}</Text>}
                   </View>
-                )}
-              </View>
-            </View>
-          ))}
+                  {edu.achievements && (
+                    <View style={{ marginTop: 2 }}>
+                      {parseHtmlToPdf(edu.achievements, minimalistStyles).elements}
+                    </View>
+                  )}
+                </View>
+              )
+            } else {
+              return (
+                <View key={edu.id} style={minimalistStyles.educationItem} wrap={false}>
+                  <View style={minimalistStyles.educationHeader}>
+                    <Text style={minimalistStyles.degree}>{edu.degree}</Text>
+                    <Text style={minimalistStyles.dateRange}>
+                      {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
+                    </Text>
+                  </View>
+                  <Text style={minimalistStyles.school}>{edu.school}</Text>
+                  {edu.field && <Text style={minimalistStyles.field}>{edu.field}</Text>}
+                  {edu.location && <Text style={minimalistStyles.location}>{edu.location}</Text>}
+                  {edu.gpa && <Text style={minimalistStyles.gpa}>GPA: {edu.gpa}</Text>}
+                  {edu.achievements && (
+                    <View style={{ marginTop: 2 }}>
+                      {parseHtmlToPdf(edu.achievements, minimalistStyles).elements}
+                    </View>
+                  )}
+                </View>
+              )
+            }
+          })}
         </View>
       )}
 
@@ -99,60 +143,104 @@ export const MinimalistContent = ({ data }: MinimalistContentProps) => {
       {/* Projects Section */}
       {data.projects && data.projects.length > 0 && (
         <View style={minimalistStyles.section}>
-          {data.projects.map((project, index) => (
-            <View key={project.id} wrap={false}>
-              {index === 0 && (
-                <Text style={minimalistStyles.sectionTitle}>Projects</Text>
-              )}
-              <View style={minimalistStyles.experienceItem}>
-                <View style={minimalistStyles.experienceHeader}>
-                  <Text style={minimalistStyles.jobTitle}>{project.name}</Text>
-                  {(project.startDate || project.endDate) && (
-                    <Text style={minimalistStyles.dateRange}>
-                      {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
-                    </Text>
+          {data.projects.map((project, index) => {
+            if (index === 0) {
+              return (
+                <View key={project.id} style={minimalistStyles.experienceItem}>
+                  <View wrap={false}>
+                    <Text style={minimalistStyles.sectionTitle}>Projects</Text>
+                    <View style={minimalistStyles.experienceHeader}>
+                      <Text style={minimalistStyles.jobTitle}>{project.name}</Text>
+                      {(project.startDate || project.endDate) && (
+                        <Text style={minimalistStyles.dateRange}>
+                          {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+                        </Text>
+                      )}
+                    </View>
+                    {project.technologies && (
+                      <Text style={minimalistStyles.company}>Technologies: {project.technologies}</Text>
+                    )}
+                    {project.link && (
+                      <Text style={minimalistStyles.location}>{project.link}</Text>
+                    )}
+                  </View>
+                  {project.description && (
+                    <View style={{ marginTop: 2 }}>
+                      {parseHtmlToPdf(project.description, minimalistStyles).elements}
+                    </View>
                   )}
                 </View>
-                {project.technologies && (
-                  <Text style={minimalistStyles.company}>Technologies: {project.technologies}</Text>
-                )}
-                {project.description && (
-                  <View style={{ marginTop: 2 }}>
-                    {parseHtmlToPdf(project.description, minimalistStyles).elements}
+              )
+            } else {
+              return (
+                <View key={project.id} style={minimalistStyles.experienceItem} wrap={false}>
+                  <View style={minimalistStyles.experienceHeader}>
+                    <Text style={minimalistStyles.jobTitle}>{project.name}</Text>
+                    {(project.startDate || project.endDate) && (
+                      <Text style={minimalistStyles.dateRange}>
+                        {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+                      </Text>
+                    )}
                   </View>
-                )}
-                {project.link && (
-                  <Text style={minimalistStyles.location}>{project.link}</Text>
-                )}
-              </View>
-            </View>
-          ))}
+                  {project.technologies && (
+                    <Text style={minimalistStyles.company}>Technologies: {project.technologies}</Text>
+                  )}
+                  {project.link && (
+                    <Text style={minimalistStyles.location}>{project.link}</Text>
+                  )}
+                  {project.description && (
+                    <View style={{ marginTop: 2 }}>
+                      {parseHtmlToPdf(project.description, minimalistStyles).elements}
+                    </View>
+                  )}
+                </View>
+              )
+            }
+          })}
         </View>
       )}
 
       {/* Certifications Section */}
       {data.certifications && data.certifications.length > 0 && (
         <View style={minimalistStyles.section}>
-          {data.certifications.map((cert, index) => (
-            <View key={cert.id} wrap={false}>
-              {index === 0 && (
-                <Text style={minimalistStyles.sectionTitle}>Certifications</Text>
-              )}
-              <View style={minimalistStyles.educationItem}>
-                <View style={minimalistStyles.educationHeader}>
-                  <Text style={minimalistStyles.degree}>{cert.name}</Text>
-                  {cert.date && (
-                    <Text style={minimalistStyles.dateRange}>
-                      {formatDate(cert.date)}
-                    </Text>
-                  )}
+          {data.certifications.map((cert, index) => {
+            if (index === 0) {
+              return (
+                <View key={cert.id} style={minimalistStyles.educationItem}>
+                  <View wrap={false}>
+                    <Text style={minimalistStyles.sectionTitle}>Certifications</Text>
+                    <View style={minimalistStyles.educationHeader}>
+                      <Text style={minimalistStyles.degree}>{cert.name}</Text>
+                      {cert.date && (
+                        <Text style={minimalistStyles.dateRange}>
+                          {formatDate(cert.date)}
+                        </Text>
+                      )}
+                    </View>
+                    <Text style={minimalistStyles.school}>{cert.issuer}</Text>
+                    {cert.credentialId && <Text style={minimalistStyles.field}>ID: {cert.credentialId}</Text>}
+                    {cert.url && <Text style={minimalistStyles.location}>{cert.url}</Text>}
+                  </View>
                 </View>
-                <Text style={minimalistStyles.school}>{cert.issuer}</Text>
-                {cert.credentialId && <Text style={minimalistStyles.field}>ID: {cert.credentialId}</Text>}
-                {cert.url && <Text style={minimalistStyles.location}>{cert.url}</Text>}
-              </View>
-            </View>
-          ))}
+              )
+            } else {
+              return (
+                <View key={cert.id} style={minimalistStyles.educationItem} wrap={false}>
+                  <View style={minimalistStyles.educationHeader}>
+                    <Text style={minimalistStyles.degree}>{cert.name}</Text>
+                    {cert.date && (
+                      <Text style={minimalistStyles.dateRange}>
+                        {formatDate(cert.date)}
+                      </Text>
+                    )}
+                  </View>
+                  <Text style={minimalistStyles.school}>{cert.issuer}</Text>
+                  {cert.credentialId && <Text style={minimalistStyles.field}>ID: {cert.credentialId}</Text>}
+                  {cert.url && <Text style={minimalistStyles.location}>{cert.url}</Text>}
+                </View>
+              )
+            }
+          })}
         </View>
       )}
 

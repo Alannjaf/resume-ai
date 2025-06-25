@@ -26,35 +26,65 @@ export const RightColumn: React.FC<RightColumnProps> = ({ data, experiences }) =
       {/* Experience Section */}
       {experiences.length > 0 && (
         <View style={styles.section}>
-          {experiences.map((exp, index) => (
-            <View 
-              key={exp.id} 
-              style={[
-                experienceStyles.experienceItem,
-                index === experiences.length - 1 ? { borderBottom: 'none' } : {}
-              ]}
-              wrap={false} // This ensures the entire experience stays together
-            >
-              {index === 0 && (
-                <Text style={styles.sectionTitle}>Professional Experience</Text>
-              )}
-              <View style={experienceStyles.experienceHeader}>
-                <View style={{ flex: 1 }}>
-                  <Text style={experienceStyles.jobTitle}>{exp.jobTitle}</Text>
-                  <Text style={experienceStyles.company}>{exp.company}</Text>
-                  <Text style={experienceStyles.jobLocation}>{exp.location}</Text>
+          {experiences.map((exp, index) => {
+            if (index === 0) {
+              return (
+                <View 
+                  key={exp.id} 
+                  style={[
+                    experienceStyles.experienceItem,
+                    index === experiences.length - 1 ? { borderBottom: 'none' } : {}
+                  ]}
+                >
+                  <View wrap={false}>
+                    <Text style={styles.sectionTitle}>Professional Experience</Text>
+                    <View style={experienceStyles.experienceHeader}>
+                      <View style={{ flex: 1 }}>
+                        <Text style={experienceStyles.jobTitle}>{exp.jobTitle}</Text>
+                        <Text style={experienceStyles.company}>{exp.company}</Text>
+                        <Text style={experienceStyles.jobLocation}>{exp.location}</Text>
+                      </View>
+                      <Text style={experienceStyles.duration}>
+                        {formatDateRange(exp.startDate, exp.endDate, exp.current)}
+                      </Text>
+                    </View>
+                  </View>
+                  {exp.description && (
+                    <View style={{ marginTop: 4 }}>
+                      {parseHtmlToPdf(exp.description, experienceStyles).elements}
+                    </View>
+                  )}
                 </View>
-                <Text style={experienceStyles.duration}>
-                  {formatDateRange(exp.startDate, exp.endDate, exp.current)}
-                </Text>
-              </View>
-              {exp.description && (
-                <View style={{ marginTop: 4 }}>
-                  {parseHtmlToPdf(exp.description, experienceStyles).elements}
+              )
+            } else {
+              return (
+                <View 
+                  key={exp.id} 
+                  style={[
+                    experienceStyles.experienceItem,
+                    index === experiences.length - 1 ? { borderBottom: 'none' } : {}
+                  ]}
+                  wrap={false}
+                >
+                  <View style={experienceStyles.experienceHeader}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={experienceStyles.jobTitle}>{exp.jobTitle}</Text>
+                      <Text style={experienceStyles.company}>{exp.company}</Text>
+                      <Text style={experienceStyles.jobLocation}>{exp.location}</Text>
+                    </View>
+                    <Text style={experienceStyles.duration}>
+                      {formatDateRange(exp.startDate, exp.endDate, exp.current)}
+                    </Text>
+                  </View>
+                  {exp.description && (
+                    <View style={{ marginTop: 4 }}>
+                      {parseHtmlToPdf(exp.description, experienceStyles).elements}
+                    </View>
+                  )}
                 </View>
-              )}
-            </View>
-          ))}
+              )
+            }
+          })}
         </View>
       )}
 

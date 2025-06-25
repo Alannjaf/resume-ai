@@ -227,6 +227,46 @@ function ResumeBuilderContent() {
         })
       }
 
+      // Optional personal fields
+      if (formData.personal.nationality && isNonEnglishContent(formData.personal.nationality)) {
+        translationTasks.push({
+          content: formData.personal.nationality,
+          contentType: 'personal',
+          updatePath: ['personal', 'nationality']
+        })
+      }
+
+      if (formData.personal.country && isNonEnglishContent(formData.personal.country)) {
+        translationTasks.push({
+          content: formData.personal.country,
+          contentType: 'personal',
+          updatePath: ['personal', 'country']
+        })
+      }
+
+      if (formData.personal.maritalStatus && isNonEnglishContent(formData.personal.maritalStatus)) {
+        // Translate marital status options
+        const maritalStatusMap: { [key: string]: string } = {
+          'single': 'single',
+          'married': 'married',
+          'divorced': 'divorced',
+          'widowed': 'widowed',
+          'متزوج': 'married',
+          'أعزب': 'single',
+          'مطلق': 'divorced',
+          'أرمل': 'widowed',
+          'سەڵت': 'single',
+          'هاوسەرگیری کردوو': 'married',
+          'جیابووەوە': 'divorced',
+          'بێوەژن': 'widowed'
+        }
+        const translatedStatus = maritalStatusMap[formData.personal.maritalStatus.toLowerCase()]
+        if (translatedStatus && translatedStatus !== formData.personal.maritalStatus) {
+          translatedData.personal.maritalStatus = translatedStatus
+          hasTranslations = true
+        }
+      }
+
       // Professional summary
       if (formData.summary && isNonEnglishContent(formData.summary)) {
         translationTasks.push({
@@ -1231,9 +1271,24 @@ function ResumeBuilderContent() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-1">
-                          {t('forms.personalInfo.demographics.nationality')}
-                        </label>
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-sm font-medium">
+                            {t('forms.personalInfo.demographics.nationality')}
+                          </label>
+                          <TranslateAndEnhanceButton
+                            content={formData.personal.nationality || ''}
+                            contentType="personal"
+                            onAccept={(result) =>
+                              setFormData({
+                                ...formData,
+                                personal: {
+                                  ...formData.personal,
+                                  nationality: result,
+                                },
+                              })
+                            }
+                          />
+                        </div>
                         <Input
                           placeholder={t('forms.personalInfo.demographics.nationalityPlaceholder')}
                           value={formData.personal.nationality || ''}
@@ -1273,9 +1328,24 @@ function ResumeBuilderContent() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-1">
-                          {t('forms.personalInfo.demographics.country')}
-                        </label>
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-sm font-medium">
+                            {t('forms.personalInfo.demographics.country')}
+                          </label>
+                          <TranslateAndEnhanceButton
+                            content={formData.personal.country || ''}
+                            contentType="personal"
+                            onAccept={(result) =>
+                              setFormData({
+                                ...formData,
+                                personal: {
+                                  ...formData.personal,
+                                  country: result,
+                                },
+                              })
+                            }
+                          />
+                        </div>
                         <Input
                           placeholder={t('forms.personalInfo.demographics.countryPlaceholder')}
                           value={formData.personal.country || ''}

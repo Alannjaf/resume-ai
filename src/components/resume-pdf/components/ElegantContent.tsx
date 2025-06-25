@@ -21,66 +21,112 @@ export const ElegantContent = ({ data }: ElegantContentProps) => {
       {/* Work Experience Section */}
       {data.experience && data.experience.length > 0 && (
         <View style={elegantStyles.section}>
-          {data.experience.map((exp, index) => (
-            <View key={exp.id} wrap={false}>
-              {index === 0 && (
-                <Text style={[elegantStyles.sectionTitle, elegantStyles.sectionTitleWithLine]}>
-                  Professional Experience
-                </Text>
-              )}
-              <View style={elegantStyles.experienceItem}>
-                <View style={elegantStyles.experienceHeader}>
-                  <Text style={elegantStyles.jobTitle}>{exp.jobTitle}</Text>
-                  <Text style={elegantStyles.dateRange}>
-                    {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
-                  </Text>
-                </View>
-                <View style={elegantStyles.companyInfo}>
-                  <Text style={elegantStyles.company}>{exp.company}</Text>
-                  {exp.location && <Text style={elegantStyles.location}>{exp.location}</Text>}
-                </View>
-                {exp.description && (
-                  <View style={{ marginTop: 2 }}>
-                    {parseHtmlToPdf(exp.description, elegantStyles).elements}
+          {data.experience.map((exp, index) => {
+            if (index === 0) {
+              return (
+                <View key={exp.id} style={elegantStyles.experienceItem}>
+                  <View wrap={false}>
+                    <Text style={[elegantStyles.sectionTitle, elegantStyles.sectionTitleWithLine]}>
+                      Professional Experience
+                    </Text>
+                    <View style={elegantStyles.experienceHeader}>
+                      <Text style={elegantStyles.jobTitle}>{exp.jobTitle}</Text>
+                      <Text style={elegantStyles.dateRange}>
+                        {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
+                      </Text>
+                    </View>
+                    <View style={elegantStyles.companyInfo}>
+                      <Text style={elegantStyles.company}>{exp.company}</Text>
+                      {exp.location && <Text style={elegantStyles.location}>{exp.location}</Text>}
+                    </View>
                   </View>
-                )}
-              </View>
-            </View>
-          ))}
+                  {exp.description && (
+                    <View style={{ marginTop: 2 }}>
+                      {parseHtmlToPdf(exp.description, elegantStyles).elements}
+                    </View>
+                  )}
+                </View>
+              )
+            } else {
+              return (
+                <View key={exp.id} style={elegantStyles.experienceItem} wrap={false}>
+                  <View style={elegantStyles.experienceHeader}>
+                    <Text style={elegantStyles.jobTitle}>{exp.jobTitle}</Text>
+                    <Text style={elegantStyles.dateRange}>
+                      {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
+                    </Text>
+                  </View>
+                  <View style={elegantStyles.companyInfo}>
+                    <Text style={elegantStyles.company}>{exp.company}</Text>
+                    {exp.location && <Text style={elegantStyles.location}>{exp.location}</Text>}
+                  </View>
+                  {exp.description && (
+                    <View style={{ marginTop: 2 }}>
+                      {parseHtmlToPdf(exp.description, elegantStyles).elements}
+                    </View>
+                  )}
+                </View>
+              )
+            }
+          })}
         </View>
       )}
 
       {/* Education Section */}
       {data.education && data.education.length > 0 && (
         <View style={elegantStyles.section}>
-          {data.education.map((edu, index) => (
-            <View key={edu.id} wrap={false}>
-              {index === 0 && (
-                <Text style={[elegantStyles.sectionTitle, elegantStyles.sectionTitleWithLine]}>
-                  Education
-                </Text>
-              )}
-              <View style={elegantStyles.educationItem}>
-                <View style={elegantStyles.educationHeader}>
-                  <Text style={elegantStyles.degree}>{edu.degree}</Text>
-                  <Text style={elegantStyles.dateRange}>
-                    {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
-                  </Text>
-                </View>
-                <Text style={elegantStyles.school}>{edu.school}</Text>
-                {edu.field && <Text style={elegantStyles.field}>{edu.field}</Text>}
-                {edu.location && <Text style={elegantStyles.location}>{edu.location}</Text>}
-                {edu.gpa && <Text style={elegantStyles.gpa}>GPA: {edu.gpa}</Text>}
-                {edu.achievements && (
-                  <View style={{ marginTop: 2 }}>
-                    {parseHtmlToPdf(edu.achievements, { 
-                      text: { fontSize: 10, color: '#4b5563', lineHeight: 1.4 }
-                    }).elements}
+          {data.education.map((edu, index) => {
+            if (index === 0) {
+              return (
+                <View key={edu.id} style={elegantStyles.educationItem}>
+                  <View wrap={false}>
+                    <Text style={[elegantStyles.sectionTitle, elegantStyles.sectionTitleWithLine]}>
+                      Education
+                    </Text>
+                    <View style={elegantStyles.educationHeader}>
+                      <Text style={elegantStyles.degree}>{edu.degree}</Text>
+                      <Text style={elegantStyles.dateRange}>
+                        {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
+                      </Text>
+                    </View>
+                    <Text style={elegantStyles.school}>{edu.school}</Text>
+                    {edu.field && <Text style={elegantStyles.field}>{edu.field}</Text>}
+                    {edu.location && <Text style={elegantStyles.location}>{edu.location}</Text>}
+                    {edu.gpa && <Text style={elegantStyles.gpa}>GPA: {edu.gpa}</Text>}
                   </View>
-                )}
-              </View>
-            </View>
-          ))}
+                  {edu.achievements && (
+                    <View style={{ marginTop: 2 }}>
+                      {parseHtmlToPdf(edu.achievements, { 
+                        text: { fontSize: 10, color: '#4b5563', lineHeight: 1.4 }
+                      }).elements}
+                    </View>
+                  )}
+                </View>
+              )
+            } else {
+              return (
+                <View key={edu.id} style={elegantStyles.educationItem} wrap={false}>
+                  <View style={elegantStyles.educationHeader}>
+                    <Text style={elegantStyles.degree}>{edu.degree}</Text>
+                    <Text style={elegantStyles.dateRange}>
+                      {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
+                    </Text>
+                  </View>
+                  <Text style={elegantStyles.school}>{edu.school}</Text>
+                  {edu.field && <Text style={elegantStyles.field}>{edu.field}</Text>}
+                  {edu.location && <Text style={elegantStyles.location}>{edu.location}</Text>}
+                  {edu.gpa && <Text style={elegantStyles.gpa}>GPA: {edu.gpa}</Text>}
+                  {edu.achievements && (
+                    <View style={{ marginTop: 2 }}>
+                      {parseHtmlToPdf(edu.achievements, { 
+                        text: { fontSize: 10, color: '#4b5563', lineHeight: 1.4 }
+                      }).elements}
+                    </View>
+                  )}
+                </View>
+              )
+            }
+          })}
         </View>
       )}
 
@@ -125,66 +171,110 @@ export const ElegantContent = ({ data }: ElegantContentProps) => {
       {/* Projects Section */}
       {data.projects && data.projects.length > 0 && (
         <View style={elegantStyles.section}>
-          {data.projects.map((project, index) => (
-            <View key={project.id} wrap={false}>
-              {index === 0 && (
-                <Text style={[elegantStyles.sectionTitle, elegantStyles.sectionTitleWithLine]}>
-                  Notable Projects
-                </Text>
-              )}
-              <View style={elegantStyles.experienceItem}>
-                <View style={elegantStyles.experienceHeader}>
-                  <Text style={elegantStyles.jobTitle}>{project.name}</Text>
-                  {(project.startDate || project.endDate) && (
-                    <Text style={elegantStyles.dateRange}>
-                      {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+          {data.projects.map((project, index) => {
+            if (index === 0) {
+              return (
+                <View key={project.id} style={elegantStyles.experienceItem}>
+                  <View wrap={false}>
+                    <Text style={[elegantStyles.sectionTitle, elegantStyles.sectionTitleWithLine]}>
+                      Notable Projects
                     </Text>
-                  )}
-                </View>
-                <View style={elegantStyles.companyInfo}>
-                  {project.technologies && (
-                    <Text style={elegantStyles.company}>Technologies: {project.technologies}</Text>
-                  )}
-                  {project.link && (
-                    <Text style={elegantStyles.location}>{project.link}</Text>
-                  )}
-                </View>
-                {project.description && (
-                  <View style={{ marginTop: 2 }}>
-                    {parseHtmlToPdf(project.description, elegantStyles).elements}
+                    <View style={elegantStyles.experienceHeader}>
+                      <Text style={elegantStyles.jobTitle}>{project.name}</Text>
+                      {(project.startDate || project.endDate) && (
+                        <Text style={elegantStyles.dateRange}>
+                          {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+                        </Text>
+                      )}
+                    </View>
+                    <View style={elegantStyles.companyInfo}>
+                      {project.technologies && (
+                        <Text style={elegantStyles.company}>Technologies: {project.technologies}</Text>
+                      )}
+                      {project.link && (
+                        <Text style={elegantStyles.location}>{project.link}</Text>
+                      )}
+                    </View>
                   </View>
-                )}
-              </View>
-            </View>
-          ))}
+                  {project.description && (
+                    <View style={{ marginTop: 2 }}>
+                      {parseHtmlToPdf(project.description, elegantStyles).elements}
+                    </View>
+                  )}
+                </View>
+              )
+            } else {
+              return (
+                <View key={project.id} style={elegantStyles.experienceItem} wrap={false}>
+                  <View style={elegantStyles.experienceHeader}>
+                    <Text style={elegantStyles.jobTitle}>{project.name}</Text>
+                    {(project.startDate || project.endDate) && (
+                      <Text style={elegantStyles.dateRange}>
+                        {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+                      </Text>
+                    )}
+                  </View>
+                  <View style={elegantStyles.companyInfo}>
+                    {project.technologies && (
+                      <Text style={elegantStyles.company}>Technologies: {project.technologies}</Text>
+                    )}
+                    {project.link && (
+                      <Text style={elegantStyles.location}>{project.link}</Text>
+                    )}
+                  </View>
+                  {project.description && (
+                    <View style={{ marginTop: 2 }}>
+                      {parseHtmlToPdf(project.description, elegantStyles).elements}
+                    </View>
+                  )}
+                </View>
+              )
+            }
+          })}
         </View>
       )}
 
       {/* Certifications Section */}
       {data.certifications && data.certifications.length > 0 && (
         <View style={elegantStyles.section}>
-          {data.certifications.map((cert, index) => (
-            <View key={cert.id} wrap={false}>
-              {index === 0 && (
-                <Text style={[elegantStyles.sectionTitle, elegantStyles.sectionTitleWithLine]}>
-                  Certifications
-                </Text>
-              )}
-              <View style={elegantStyles.educationItem}>
-                <View style={elegantStyles.educationHeader}>
-                  <Text style={elegantStyles.degree}>{cert.name}</Text>
-                  {cert.date && (
-                    <Text style={elegantStyles.dateRange}>
-                      {formatDate(cert.date)}
-                    </Text>
-                  )}
+          {data.certifications.map((cert, index) => {
+            if (index === 0) {
+              return (
+                <View key={cert.id} style={elegantStyles.educationItem} wrap={false}>
+                  <Text style={[elegantStyles.sectionTitle, elegantStyles.sectionTitleWithLine]}>
+                    Certifications
+                  </Text>
+                  <View style={elegantStyles.educationHeader}>
+                    <Text style={elegantStyles.degree}>{cert.name}</Text>
+                    {cert.date && (
+                      <Text style={elegantStyles.dateRange}>
+                        {formatDate(cert.date)}
+                      </Text>
+                    )}
+                  </View>
+                  <Text style={elegantStyles.school}>{cert.issuer}</Text>
+                  {cert.credentialId && <Text style={elegantStyles.field}>ID: {cert.credentialId}</Text>}
+                  {cert.url && <Text style={elegantStyles.location}>{cert.url}</Text>}
                 </View>
-                <Text style={elegantStyles.school}>{cert.issuer}</Text>
-                {cert.credentialId && <Text style={elegantStyles.field}>ID: {cert.credentialId}</Text>}
-                {cert.url && <Text style={elegantStyles.location}>{cert.url}</Text>}
-              </View>
-            </View>
-          ))}
+              )
+            } else {
+              return (
+                <View key={cert.id} style={elegantStyles.educationItem} wrap={false}>
+                  <View style={elegantStyles.educationHeader}>
+                    <Text style={elegantStyles.degree}>{cert.name}</Text>
+                    {cert.date && (
+                      <Text style={elegantStyles.dateRange}>
+                        {formatDate(cert.date)}
+                      </Text>
+                    )}
+                  </View>
+                  <Text style={elegantStyles.school}>{cert.issuer}</Text>
+                  {cert.credentialId && <Text style={elegantStyles.field}>ID: {cert.credentialId}</Text>}
+                  {cert.url && <Text style={elegantStyles.location}>{cert.url}</Text>}
+                </View>
+              )
+            }
+          })}
         </View>
       )}
     </View>
