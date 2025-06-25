@@ -1,13 +1,15 @@
 'use client'
 
+import { useMemo } from 'react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { FormInput } from '@/components/ui/form-input'
 import { Card } from '@/components/ui/card'
 import { RichTextEditor } from '@/components/ui/rich-text-editor'
 import { Plus, Trash2, GraduationCap, Calendar } from 'lucide-react'
 import { TranslateAndEnhanceButton } from '@/components/ai/TranslateAndEnhanceButton'
 import { Education } from '@/types/resume'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useFieldNavigation } from '@/hooks/useFieldNavigation'
 
 interface EducationFormProps {
   education: Education[]
@@ -16,6 +18,25 @@ interface EducationFormProps {
 
 export function EducationForm({ education, onChange }: EducationFormProps) {
   const { t } = useLanguage()
+  const { registerField, focusNext } = useFieldNavigation({ scrollOffset: 80 })
+
+  // Create field order for each education entry
+  const fieldOrders = useMemo(() => {
+    const orders: Record<string, string[]> = {}
+    education.forEach(edu => {
+      orders[edu.id] = [
+        `${edu.id}-degree`,
+        `${edu.id}-field`,
+        `${edu.id}-school`,
+        `${edu.id}-location`,
+        `${edu.id}-startDate`,
+        `${edu.id}-endDate`,
+        `${edu.id}-gpa`,
+        `${edu.id}-achievements`
+      ]
+    })
+    return orders
+  }, [education])
   const addEducation = () => {
     const newEducation: Education = {
       id: Date.now().toString(),
@@ -65,10 +86,12 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
               <label className="block text-sm font-medium mb-1">
                 {t('forms.education.fields.degree')} *
               </label>
-              <Input
+              <FormInput
+                ref={(el) => registerField(`${edu.id}-degree`, el)}
                 placeholder={t('forms.education.placeholders.degree')}
                 value={edu.degree}
                 onChange={(e) => updateEducation(edu.id, 'degree', e.target.value)}
+                onEnterKey={() => focusNext(`${edu.id}-degree`, fieldOrders[edu.id])}
               />
               <TranslateAndEnhanceButton
                 content={edu.degree}
@@ -80,10 +103,12 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
               <label className="block text-sm font-medium mb-1">
                 {t('forms.education.fields.fieldOfStudy')} *
               </label>
-              <Input
+              <FormInput
+                ref={(el) => registerField(`${edu.id}-field`, el)}
                 placeholder={t('forms.education.placeholders.fieldOfStudy')}
                 value={edu.field}
                 onChange={(e) => updateEducation(edu.id, 'field', e.target.value)}
+                onEnterKey={() => focusNext(`${edu.id}-field`, fieldOrders[edu.id])}
               />
               <TranslateAndEnhanceButton
                 content={edu.field}
@@ -95,10 +120,12 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
               <label className="block text-sm font-medium mb-1">
                 {t('forms.education.fields.school')} *
               </label>
-              <Input
+              <FormInput
+                ref={(el) => registerField(`${edu.id}-school`, el)}
                 placeholder={t('forms.education.placeholders.school')}
                 value={edu.school}
                 onChange={(e) => updateEducation(edu.id, 'school', e.target.value)}
+                onEnterKey={() => focusNext(`${edu.id}-school`, fieldOrders[edu.id])}
               />
               <TranslateAndEnhanceButton
                 content={edu.school}
@@ -110,10 +137,12 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
               <label className="block text-sm font-medium mb-1">
                 {t('forms.education.fields.location')}
               </label>
-              <Input
+              <FormInput
+                ref={(el) => registerField(`${edu.id}-location`, el)}
                 placeholder={t('forms.education.placeholders.location')}
                 value={edu.location}
                 onChange={(e) => updateEducation(edu.id, 'location', e.target.value)}
+                onEnterKey={() => focusNext(`${edu.id}-location`, fieldOrders[edu.id])}
               />
               <TranslateAndEnhanceButton
                 content={edu.location}
@@ -126,30 +155,36 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
                 <Calendar className="inline h-3 w-3 mr-1" />
                 {t('forms.education.fields.startDate')}
               </label>
-              <Input
+              <FormInput
+                ref={(el) => registerField(`${edu.id}-startDate`, el)}
                 type="month"
                 value={edu.startDate}
                 onChange={(e) => updateEducation(edu.id, 'startDate', e.target.value)}
+                onEnterKey={() => focusNext(`${edu.id}-startDate`, fieldOrders[edu.id])}
               />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
                 {t('forms.education.fields.endDate')}
               </label>
-              <Input
+              <FormInput
+                ref={(el) => registerField(`${edu.id}-endDate`, el)}
                 type="month"
                 value={edu.endDate}
                 onChange={(e) => updateEducation(edu.id, 'endDate', e.target.value)}
+                onEnterKey={() => focusNext(`${edu.id}-endDate`, fieldOrders[edu.id])}
               />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
                 {t('forms.education.fields.gpa')}
               </label>
-              <Input
+              <FormInput
+                ref={(el) => registerField(`${edu.id}-gpa`, el)}
                 placeholder={t('forms.education.placeholders.gpa')}
                 value={edu.gpa || ''}
                 onChange={(e) => updateEducation(edu.id, 'gpa', e.target.value)}
+                onEnterKey={() => focusNext(`${edu.id}-gpa`, fieldOrders[edu.id])}
               />
             </div>
           </div>
@@ -159,6 +194,7 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
               {t('forms.education.fields.achievements')}
             </label>
             <RichTextEditor
+              ref={(el) => registerField(`${edu.id}-achievements`, el)}
               value={edu.achievements || ''}
               onChange={(value) => updateEducation(edu.id, 'achievements', value)}
               placeholder={t('forms.education.placeholders.achievements')}

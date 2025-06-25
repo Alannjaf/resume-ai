@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useRef } from 'react'
+import React, { useRef, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { FormInput } from '@/components/ui/form-input'
 import { Card } from '@/components/ui/card'
 import { RichTextEditor } from '@/components/ui/rich-text-editor'
 import { Plus, Trash2, Calendar, MapPin } from 'lucide-react'
@@ -10,6 +11,7 @@ import { AIJobDescriptionEnhancer } from '@/components/ai/AIJobDescriptionEnhanc
 import { TranslateAndEnhanceButton } from '@/components/ai/TranslateAndEnhanceButton'
 import { WorkExperience } from '@/types/resume'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useFieldNavigation } from '@/hooks/useFieldNavigation'
 
 interface WorkExperienceFormProps {
   experiences: WorkExperience[]
@@ -19,6 +21,23 @@ interface WorkExperienceFormProps {
 export function WorkExperienceForm({ experiences, onChange }: WorkExperienceFormProps) {
   const { t } = useLanguage()
   const descriptionRefs = useRef<Map<string, HTMLDivElement>>(new Map())
+  const { registerField, focusNext } = useFieldNavigation({ scrollOffset: 80 })
+
+  // Create field order for each experience
+  const fieldOrders = useMemo(() => {
+    const orders: Record<string, string[]> = {}
+    experiences.forEach(exp => {
+      orders[exp.id] = [
+        `${exp.id}-jobTitle`,
+        `${exp.id}-company`,
+        `${exp.id}-location`,
+        `${exp.id}-startDate`,
+        `${exp.id}-endDate`,
+        `${exp.id}-description`
+      ]
+    })
+    return orders
+  }, [experiences])
   
   const addExperience = () => {
     const newExperience: WorkExperience = {
@@ -67,10 +86,12 @@ export function WorkExperienceForm({ experiences, onChange }: WorkExperienceForm
               <label className="block text-sm font-medium mb-1">
                 {t('forms.workExperience.fields.jobTitle')} *
               </label>
-              <Input
+              <FormInput
+                ref={(el) => registerField(`${exp.id}-jobTitle`, el)}
                 placeholder={t('forms.workExperience.placeholders.jobTitle')}
                 value={exp.jobTitle}
                 onChange={(e) => updateExperience(exp.id, 'jobTitle', e.target.value)}
+                onEnterKey={() => focusNext(`${exp.id}-jobTitle`, fieldOrders[exp.id])}
               />
               <TranslateAndEnhanceButton
                 content={exp.jobTitle}
@@ -82,10 +103,12 @@ export function WorkExperienceForm({ experiences, onChange }: WorkExperienceForm
               <label className="block text-sm font-medium mb-1">
                 {t('forms.workExperience.fields.company')} *
               </label>
-              <Input
+              <FormInput
+                ref={(el) => registerField(`${exp.id}-company`, el)}
                 placeholder={t('forms.workExperience.placeholders.company')}
                 value={exp.company}
                 onChange={(e) => updateExperience(exp.id, 'company', e.target.value)}
+                onEnterKey={() => focusNext(`${exp.id}-company`, fieldOrders[exp.id])}
               />
               <TranslateAndEnhanceButton
                 content={exp.company}
@@ -98,10 +121,12 @@ export function WorkExperienceForm({ experiences, onChange }: WorkExperienceForm
                 <MapPin className="inline h-3 w-3 mr-1" />
                 {t('forms.workExperience.fields.location')}
               </label>
-              <Input
+              <FormInput
+                ref={(el) => registerField(`${exp.id}-location`, el)}
                 placeholder={t('forms.workExperience.placeholders.location')}
                 value={exp.location}
                 onChange={(e) => updateExperience(exp.id, 'location', e.target.value)}
+                onEnterKey={() => focusNext(`${exp.id}-location`, fieldOrders[exp.id])}
               />
               <TranslateAndEnhanceButton
                 content={exp.location}
@@ -114,21 +139,25 @@ export function WorkExperienceForm({ experiences, onChange }: WorkExperienceForm
                 <Calendar className="inline h-3 w-3 mr-1" />
                 {t('forms.workExperience.fields.startDate')}
               </label>
-              <Input
+              <FormInput
+                ref={(el) => registerField(`${exp.id}-startDate`, el)}
                 type="month"
                 value={exp.startDate}
                 onChange={(e) => updateExperience(exp.id, 'startDate', e.target.value)}
+                onEnterKey={() => focusNext(`${exp.id}-startDate`, fieldOrders[exp.id])}
               />
             </div>
             <div>
               <label className="block text-sm font-medium mb-1">
                 {t('forms.workExperience.fields.endDate')}
               </label>
-              <Input
+              <FormInput
+                ref={(el) => registerField(`${exp.id}-endDate`, el)}
                 type="month"
                 value={exp.endDate}
                 onChange={(e) => updateExperience(exp.id, 'endDate', e.target.value)}
                 disabled={exp.current}
+                onEnterKey={() => focusNext(`${exp.id}-endDate`, fieldOrders[exp.id])}
               />
             </div>
             <div className="flex items-center">
@@ -153,8 +182,10 @@ export function WorkExperienceForm({ experiences, onChange }: WorkExperienceForm
               ref={(el) => {
                 if (el) {
                   descriptionRefs.current.set(exp.id, el)
+                  registerField(`${exp.id}-description`, el)
                 } else {
                   descriptionRefs.current.delete(exp.id)
+                  registerField(`${exp.id}-description`, null)
                 }
               }}
               value={exp.description || ''}

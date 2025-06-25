@@ -5,8 +5,9 @@ import { ResumeData } from '@/types/resume';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const { userId } = await auth();
     if (!userId) {
@@ -24,7 +25,7 @@ export async function GET(
 
     // Fetch resume with all related data
     const resume = await prisma.resume.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         sections: {
           orderBy: { order: 'asc' },

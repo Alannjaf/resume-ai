@@ -1,13 +1,16 @@
 'use client'
 
+import { useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { FormInput } from '@/components/ui/form-input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, Zap } from 'lucide-react'
 import { AISkillsSuggester } from '@/components/ai/AISkillsSuggester'
 import { TranslateAndEnhanceButton } from '@/components/ai/TranslateAndEnhanceButton'
 import { Skill } from '@/types/resume'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useFieldNavigation } from '@/hooks/useFieldNavigation'
 
 interface SkillsFormProps {
   skills: Skill[]
@@ -20,6 +23,12 @@ interface SkillsFormProps {
 
 export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProps) {
   const { t } = useLanguage()
+  const { registerField, focusNext } = useFieldNavigation({ scrollOffset: 80 })
+
+  // Create field order for skills
+  const fieldOrder = useMemo(() => {
+    return skills.map(skill => `${skill.id}-name`)
+  }, [skills])
   const addSkill = () => {
     const newSkill: Skill = {
       id: Date.now().toString(),
@@ -91,10 +100,12 @@ export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProp
                 <label className="block text-sm font-medium text-gray-700 mb-1 sm:hidden">
                   {t('forms.skills.fields.skillName')}
                 </label>
-                <Input
+                <FormInput
+                  ref={(el) => registerField(`${skill.id}-name`, el)}
                   placeholder={t('forms.skills.placeholder')}
                   value={skill.name}
                   onChange={(e) => updateSkill(skill.id, 'name', e.target.value)}
+                  onEnterKey={() => focusNext(`${skill.id}-name`, fieldOrder)}
                   className="w-full"
                 />
                 <TranslateAndEnhanceButton
