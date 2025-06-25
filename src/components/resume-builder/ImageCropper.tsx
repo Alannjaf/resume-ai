@@ -34,7 +34,7 @@ export function ImageCropper({ imageDataURL, cropConfig, onCropChange, className
         setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight })
         
         // Calculate crop size as percentage of image for better proportions
-        const canvasSize = 400
+        const canvasSize = 350 // Reduced from 400 to fit better in container
         const imageDisplaySize = Math.min(canvasSize / img.naturalWidth, canvasSize / img.naturalHeight) * img.naturalWidth
         
         // Make crop area about 40% of the displayed image size initially
@@ -77,7 +77,7 @@ export function ImageCropper({ imageDataURL, cropConfig, onCropChange, className
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const canvasSize = 400
+    const canvasSize = 350 // Reduced from 400 to fit better in container
     canvas.width = canvasSize
     canvas.height = canvasSize
 
@@ -258,7 +258,7 @@ export function ImageCropper({ imageDataURL, cropConfig, onCropChange, className
     const resetScale = 1
     
     // Recalculate proportional crop size like in initialization
-    const canvasSize = 400
+    const canvasSize = 350 // Reduced from 400 to fit better in container
     const imageDisplaySize = Math.min(canvasSize / imageDimensions.width, canvasSize / imageDimensions.height) * imageDimensions.width
     
     // Make crop area about 40% of the displayed image size
@@ -289,19 +289,9 @@ export function ImageCropper({ imageDataURL, cropConfig, onCropChange, className
   }
 
   return (
-    <div className={`flex flex-col items-center space-y-4 ${className}`}>
-      <div className="relative">
-        <canvas
-          ref={canvasRef}
-          className="border border-gray-300 rounded-lg cursor-move touch-none"
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerLeave={handlePointerUp}
-        />
-      </div>
-      
-      <div className="flex items-center space-x-2">
+    <div className={`flex flex-col space-y-4 ${className}`}>
+      {/* Controls at top */}
+      <div className="flex items-center justify-center space-x-2">
         <Button variant="outline" size="sm" onClick={() => handleZoom(false)}>
           <ZoomOut className="h-4 w-4" />
         </Button>
@@ -311,6 +301,20 @@ export function ImageCropper({ imageDataURL, cropConfig, onCropChange, className
         <Button variant="outline" size="sm" onClick={handleReset}>
           <RotateCcw className="h-4 w-4" />
         </Button>
+      </div>
+      
+      {/* Image area with padding */}
+      <div className="flex justify-center p-6 bg-white border border-gray-200 rounded-lg">
+        <div className="relative max-w-full overflow-hidden">
+          <canvas
+            ref={canvasRef}
+            className="border border-gray-300 rounded-lg cursor-move touch-none shadow-sm max-w-full h-auto"
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerLeave={handlePointerUp}
+          />
+        </div>
       </div>
       
       <div className="text-center">

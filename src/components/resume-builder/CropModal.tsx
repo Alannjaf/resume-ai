@@ -82,12 +82,34 @@ export function CropModal({ isOpen, onClose, imageDataURL, templateId, onSave }:
               {t('forms.personalInfo.cropModal.subtitle', { shape: cropConfig.shape.replace('-', ' ') })}
             </p>
           </div>
-          <button
-            onClick={handleCancel}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <X className="h-6 w-6" />
-          </button>
+          <div className="flex items-center space-x-3">
+            <Button variant="outline" onClick={handleCancel}>
+              {t('common.cancel')}
+            </Button>
+            <Button
+              onClick={handleSave}
+              disabled={!currentCrop || isProcessing}
+              className="min-w-[100px]"
+            >
+              {isProcessing ? (
+                <>
+                  <div className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full" />
+                  {t('forms.personalInfo.cropModal.saving')}
+                </>
+              ) : (
+                <>
+                  <Check className="h-4 w-4 mr-2" />
+                  {t('forms.personalInfo.cropModal.saveCrop')}
+                </>
+              )}
+            </Button>
+            <button
+              onClick={handleCancel}
+              className="text-gray-400 hover:text-gray-600 transition-colors ml-2"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
         </div>
 
         {/* Content */}
@@ -172,33 +194,11 @@ export function CropModal({ isOpen, onClose, imageDataURL, templateId, onSave }:
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between p-6 border-t bg-gray-50">
+        <div className="flex items-center justify-center p-6 border-t bg-gray-50">
           <div className="text-sm text-gray-600">
             {t('forms.personalInfo.cropModal.template')}: <span className="font-medium capitalize">{templateId}</span>
             {' • '}
             <span className="capitalize">{cropConfig.shape.replace('-', ' ')}</span> {t('forms.personalInfo.cropModal.crop')}
-          </div>
-          <div className="flex items-center space-x-3">
-            <Button variant="outline" onClick={handleCancel}>
-              {t('common.cancel')}
-            </Button>
-            <Button
-              onClick={handleSave}
-              disabled={!currentCrop || isProcessing}
-              className="min-w-[100px]"
-            >
-              {isProcessing ? (
-                <>
-                  <div className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full" />
-                  {t('forms.personalInfo.cropModal.saving')}
-                </>
-              ) : (
-                <>
-                  <Check className="h-4 w-4 mr-2" />
-                  {t('forms.personalInfo.cropModal.saveCrop')}
-                </>
-              )}
-            </Button>
           </div>
         </div>
       </div>
