@@ -6,61 +6,61 @@
   <rect x="20" y="20" width="260" height="45" fill="#f8fafc"/>
   
   <!-- Name -->
-  <rect x="30" y="30" width="120" height="8" fill="#1e293b" rx="2"/>
+  <text x="30" y="40" fill="#1e293b" font-family="serif" font-size="14" font-weight="bold">ROBERT WILLIAMS</text>
   
   <!-- Contact info -->
-  <rect x="30" y="45" width="80" height="5" fill="#6b7280" rx="1"/>
-  <rect x="120" y="45" width="90" height="5" fill="#6b7280" rx="1"/>
+  <text x="30" y="52" fill="#6b7280" font-family="serif" font-size="7">robert.williams@example.com</text>
+  <text x="120" y="52" fill="#6b7280" font-family="serif" font-size="7">(555) 987-6543 • New York, NY</text>
   
   <!-- Blue accent line under header -->
   <rect x="20" y="75" width="260" height="2" fill="#2563eb"/>
   
   <!-- Professional Summary section -->
-  <rect x="30" y="95" width="150" height="6" fill="#1e293b" rx="1"/>
-  <rect x="30" y="110" width="240" height="4" fill="#374151" rx="1"/>
-  <rect x="30" y="118" width="220" height="4" fill="#374151" rx="1"/>
-  <rect x="30" y="126" width="200" height="4" fill="#374151" rx="1"/>
+  <text x="30" y="102" fill="#1e293b" font-family="serif" font-size="10" font-weight="bold">EXECUTIVE SUMMARY</text>
+  <text x="30" y="116" fill="#374151" font-family="serif" font-size="7">Senior executive with 15+ years of leadership experience in Fortune 500</text>
+  <text x="30" y="124" fill="#374151" font-family="serif" font-size="7">companies. Proven track record of driving growth, operational excellence,</text>
+  <text x="30" y="132" fill="#374151" font-family="serif" font-size="7">and strategic transformation across diverse business units.</text>
   
   <!-- Section divider -->
   <rect x="30" y="145" width="240" height="1" fill="#e5e7eb"/>
   
   <!-- Experience section title -->
-  <rect x="30" y="160" width="180" height="6" fill="#1e293b" rx="1"/>
+  <text x="30" y="167" fill="#1e293b" font-family="serif" font-size="10" font-weight="bold">PROFESSIONAL EXPERIENCE</text>
   
   <!-- Experience entries -->
   <!-- Entry 1 -->
-  <rect x="30" y="180" width="140" height="5" fill="#1e293b" rx="1"/>
-  <rect x="200" y="180" width="70" height="4" fill="#6b7280" rx="1"/>
-  <rect x="30" y="190" width="100" height="4" fill="#2563eb" rx="1"/>
-  <rect x="30" y="200" width="240" height="3" fill="#374151" rx="1"/>
-  <rect x="30" y="207" width="220" height="3" fill="#374151" rx="1"/>
+  <text x="30" y="187" fill="#1e293b" font-family="serif" font-size="8" font-weight="bold">Chief Operating Officer</text>
+  <text x="200" y="187" fill="#6b7280" font-family="serif" font-size="7">2020-Present</text>
+  <text x="30" y="197" fill="#2563eb" font-family="serif" font-size="7">Global Tech Solutions Inc.</text>
+  <text x="30" y="207" fill="#374151" font-family="serif" font-size="6">• Led digital transformation initiative resulting in 40% efficiency gains</text>
+  <text x="30" y="214" fill="#374151" font-family="serif" font-size="6">• Managed $500M+ annual budget and 200+ person operations team</text>
   
   <!-- Entry 2 -->
-  <rect x="30" y="225" width="130" height="5" fill="#1e293b" rx="1"/>
-  <rect x="200" y="225" width="70" height="4" fill="#6b7280" rx="1"/>
-  <rect x="30" y="235" width="90" height="4" fill="#2563eb" rx="1"/>
-  <rect x="30" y="245" width="240" height="3" fill="#374151" rx="1"/>
-  <rect x="30" y="252" width="200" height="3" fill="#374151" rx="1"/>
+  <text x="30" y="232" fill="#1e293b" font-family="serif" font-size="8" font-weight="bold">Vice President of Operations</text>
+  <text x="200" y="232" fill="#6b7280" font-family="serif" font-size="7">2017-2020</text>
+  <text x="30" y="242" fill="#2563eb" font-family="serif" font-size="7">Enterprise Corp</text>
+  <text x="30" y="252" fill="#374151" font-family="serif" font-size="6">• Streamlined operations reducing costs by 25% while improving quality</text>
+  <text x="30" y="259" fill="#374151" font-family="serif" font-size="6">• Established strategic partnerships driving $50M in new revenue</text>
   
   <!-- Section divider -->
   <rect x="30" y="270" width="240" height="1" fill="#e5e7eb"/>
   
   <!-- Education section -->
-  <rect x="30" y="285" width="80" height="6" fill="#1e293b" rx="1"/>
-  <rect x="30" y="305" width="120" height="5" fill="#1e293b" rx="1"/>
-  <rect x="200" y="305" width="70" height="4" fill="#6b7280" rx="1"/>
-  <rect x="30" y="315" width="110" height="4" fill="#2563eb" rx="1"/>
-  <rect x="30" y="325" width="80" height="3" fill="#6b7280" rx="1"/>
+  <text x="30" y="292" fill="#1e293b" font-family="serif" font-size="10" font-weight="bold">EDUCATION</text>
+  <text x="30" y="312" fill="#1e293b" font-family="serif" font-size="8">Master of Business Administration</text>
+  <text x="200" y="312" fill="#6b7280" font-family="serif" font-size="7">2015</text>
+  <text x="30" y="322" fill="#2563eb" font-family="serif" font-size="7">Harvard Business School</text>
+  <text x="30" y="332" fill="#6b7280" font-family="serif" font-size="6">Concentration: Strategy &amp; General Management</text>
   
   <!-- Section divider -->
   <rect x="30" y="345" width="240" height="1" fill="#e5e7eb"/>
   
   <!-- Skills section -->
-  <rect x="30" y="360" width="120" height="6" fill="#1e293b" rx="1"/>
+  <text x="30" y="367" fill="#1e293b" font-family="serif" font-size="10" font-weight="bold">CORE COMPETENCIES</text>
   
   <!-- Skills as bullet points -->
-  <rect x="30" y="375" width="40" height="3" fill="#374151" rx="1"/>
-  <rect x="75" y="375" width="45" height="3" fill="#374151" rx="1"/>
-  <rect x="125" y="375" width="50" height="3" fill="#374151" rx="1"/>
-  <rect x="180" y="375" width="35" height="3" fill="#374151" rx="1"/>
+  <text x="30" y="382" fill="#374151" font-family="serif" font-size="6">Strategic Planning</text>
+  <text x="75" y="382" fill="#374151" font-family="serif" font-size="6">Team Leadership</text>
+  <text x="125" y="382" fill="#374151" font-family="serif" font-size="6">Financial Analysis</text>
+  <text x="180" y="382" fill="#374151" font-family="serif" font-size="6">Change Management</text>
 </svg>

@@ -13,69 +13,63 @@
   <circle cx="40" cy="40" r="15" fill="#3b82f6" stroke="white" stroke-width="2"/>
   
   <!-- Name and title -->
-  <rect x="65" y="30" width="80" height="6" fill="#1f2937" rx="3"/>
-  <rect x="65" y="42" width="60" height="3" fill="#3b82f6" rx="1.5"/>
+  <text x="65" y="35" fill="#1f2937" font-family="Arial, sans-serif" font-size="12" font-weight="bold">ALEX CHEN</text>
+  <text x="65" y="47" fill="#3b82f6" font-family="Arial, sans-serif" font-size="8">Graphic Designer</text>
   
   <!-- Contact chips -->
-  <rect x="20" y="70" width="35" height="8" fill="white" stroke="#d1d5db" rx="4"/>
-  <rect x="60" y="70" width="30" height="8" fill="white" stroke="#d1d5db" rx="4"/>
-  <rect x="95" y="70" width="40" height="8" fill="white" stroke="#d1d5db" rx="4"/>
+  <text x="25" y="76" fill="#6b7280" font-family="Arial, sans-serif" font-size="5">Email</text>
+  <text x="65" y="76" fill="#6b7280" font-family="Arial, sans-serif" font-size="5">Phone</text>
+  <text x="100" y="76" fill="#6b7280" font-family="Arial, sans-serif" font-size="5">Portfolio</text>
   
   <!-- Two column layout -->
   <!-- Left sidebar -->
   <!-- Skills section -->
-  <rect x="20" y="100" width="40" height="3" fill="#374151" rx="1.5"/>
-  <rect x="20" y="108" width="15" height="2" fill="#3b82f6" rx="1"/>
+  <text x="20" y="104" fill="#374151" font-family="Arial, sans-serif" font-size="7" font-weight="bold">SKILLS</text>
   
   <!-- Skill chips -->
-  <rect x="20" y="118" width="20" height="6" fill="#3b82f6" rx="3"/>
-  <rect x="45" y="118" width="25" height="6" fill="#3b82f6" rx="3"/>
-  <rect x="20" y="128" width="30" height="6" fill="#3b82f6" rx="3"/>
-  <rect x="55" y="128" width="18" height="6" fill="#3b82f6" rx="3"/>
+  <text x="25" y="123" fill="white" font-family="Arial, sans-serif" font-size="5">Adobe CS</text>
+  <text x="50" y="123" fill="white" font-family="Arial, sans-serif" font-size="5">Figma</text>
+  <text x="25" y="133" fill="white" font-family="Arial, sans-serif" font-size="5">Illustrator</text>
+  <text x="60" y="133" fill="white" font-family="Arial, sans-serif" font-size="5">UI/UX</text>
   
   <!-- Education section -->
-  <rect x="20" y="150" width="45" height="3" fill="#374151" rx="1.5"/>
-  <rect x="20" y="158" width="15" height="2" fill="#3b82f6" rx="1"/>
+  <text x="20" y="154" fill="#374151" font-family="Arial, sans-serif" font-size="7" font-weight="bold">EDUCATION</text>
   
-  <rect x="20" y="168" width="60" height="3" fill="#6b7280" rx="1.5"/>
-  <rect x="20" y="176" width="50" height="2" fill="#9ca3af" rx="1"/>
-  <rect x="20" y="182" width="45" height="2" fill="#9ca3af" rx="1"/>
+  <text x="20" y="172" fill="#6b7280" font-family="Arial, sans-serif" font-size="6">Bachelor of Fine Arts</text>
+  <text x="20" y="180" fill="#9ca3af" font-family="Arial, sans-serif" font-size="5">Design Institute</text>
+  <text x="20" y="186" fill="#9ca3af" font-family="Arial, sans-serif" font-size="5">2019-2023</text>
   
   <!-- Languages section -->
-  <rect x="20" y="200" width="50" height="3" fill="#374151" rx="1.5"/>
-  <rect x="20" y="208" width="15" height="2" fill="#3b82f6" rx="1"/>
+  <text x="20" y="204" fill="#374151" font-family="Arial, sans-serif" font-size="7" font-weight="bold">LANGUAGES</text>
   
-  <rect x="20" y="218" width="35" height="2" fill="#6b7280" rx="1"/>
-  <rect x="60" y="218" width="25" height="2" fill="#9ca3af" rx="1"/>
-  <rect x="20" y="226" width="30" height="2" fill="#6b7280" rx="1"/>
-  <rect x="55" y="226" width="30" height="2" fill="#9ca3af" rx="1"/>
+  <text x="20" y="222" fill="#6b7280" font-family="Arial, sans-serif" font-size="5">English</text>
+  <text x="60" y="222" fill="#9ca3af" font-family="Arial, sans-serif" font-size="5">Native</text>
+  <text x="20" y="230" fill="#6b7280" font-family="Arial, sans-serif" font-size="5">Mandarin</text>
+  <text x="55" y="230" fill="#9ca3af" font-family="Arial, sans-serif" font-size="5">Fluent</text>
   
   <!-- Right main content -->
   <!-- Summary section -->
-  <rect x="120" y="100" width="50" height="4" fill="#374151" rx="2"/>
-  <rect x="120" y="108" width="15" height="2" fill="#3b82f6" rx="1"/>
+  <text x="120" y="104" fill="#374151" font-family="Arial, sans-serif" font-size="8" font-weight="bold">ABOUT</text>
   
-  <rect x="120" y="120" width="160" height="3" fill="#9ca3af" rx="1.5"/>
-  <rect x="120" y="128" width="150" height="3" fill="#9ca3af" rx="1.5"/>
-  <rect x="120" y="136" width="140" height="3" fill="#9ca3af" rx="1.5"/>
+  <text x="120" y="124" fill="#9ca3af" font-family="Arial, sans-serif" font-size="6">Creative graphic designer with 3+ years of experience</text>
+  <text x="120" y="132" fill="#9ca3af" font-family="Arial, sans-serif" font-size="6">in brand identity and digital design. Passionate about</text>
+  <text x="120" y="140" fill="#9ca3af" font-family="Arial, sans-serif" font-size="6">creating visually compelling solutions.</text>
   
   <!-- Experience section -->
-  <rect x="120" y="160" width="55" height="4" fill="#374151" rx="2"/>
-  <rect x="120" y="168" width="15" height="2" fill="#3b82f6" rx="1"/>
+  <text x="120" y="164" fill="#374151" font-family="Arial, sans-serif" font-size="8" font-weight="bold">EXPERIENCE</text>
   
   <!-- Experience entry with creative styling -->
   <rect x="120" y="180" width="160" height="40" fill="#f8fafc" stroke="#e2e8f0" rx="4"/>
-  <rect x="125" y="185" width="90" height="4" fill="#6b7280" rx="2"/>
-  <rect x="125" y="194" width="70" height="3" fill="#9ca3af" rx="1.5"/>
-  <rect x="125" y="202" width="140" height="2" fill="#d1d5db" rx="1"/>
-  <rect x="125" y="208" width="130" height="2" fill="#d1d5db" rx="1"/>
-  <rect x="125" y="214" width="120" height="2" fill="#d1d5db" rx="1"/>
+  <text x="125" y="189" fill="#6b7280" font-family="Arial, sans-serif" font-size="7" font-weight="bold">Senior Graphic Designer</text>
+  <text x="125" y="198" fill="#9ca3af" font-family="Arial, sans-serif" font-size="6">Creative Studio • 2022-Present</text>
+  <text x="125" y="206" fill="#d1d5db" font-family="Arial, sans-serif" font-size="5">• Designed brand identities for 15+ clients</text>
+  <text x="125" y="212" fill="#d1d5db" font-family="Arial, sans-serif" font-size="5">• Led creative campaigns increasing engagement by 60%</text>
+  <text x="125" y="218" fill="#d1d5db" font-family="Arial, sans-serif" font-size="5">• Collaborated with marketing teams on visual strategy</text>
   
   <!-- Projects section -->
-  <rect x="120" y="240" width="45" height="4" fill="#374151" rx="2"/>
-  <rect x="120" y="248" width="15" height="2" fill="#3b82f6" rx="1"/>
+  <text x="120" y="244" fill="#374151" font-family="Arial, sans-serif" font-size="8" font-weight="bold">PROJECTS</text>
   
-  <rect x="120" y="260" width="80" height="3" fill="#6b7280" rx="1.5"/>
-  <rect x="120" y="268" width="140" height="2" fill="#d1d5db" rx="1"/>
-  <rect x="120" y="274" width="100" height="2" fill="#3b82f6" rx="1"/>
+  <text x="120" y="264" fill="#6b7280" font-family="Arial, sans-serif" font-size="6">Brand Redesign Project</text>
+  <text x="120" y="272" fill="#d1d5db" font-family="Arial, sans-serif" font-size="5">Complete visual identity overhaul for tech startup</text>
+  <text x="120" y="278" fill="#3b82f6" font-family="Arial, sans-serif" font-size="5">Featured in Design Awards 2023</text>
 </svg>

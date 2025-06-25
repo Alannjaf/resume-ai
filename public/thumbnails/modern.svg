@@ -9,50 +9,52 @@
   <circle cx="50" cy="40" r="20" fill="white"/>
   
   <!-- Contact info -->
-  <rect x="10" y="80" width="80" height="4" fill="#94a3b8" rx="2"/>
-  <rect x="10" y="90" width="60" height="4" fill="#94a3b8" rx="2"/>
-  <rect x="10" y="100" width="45" height="4" fill="#94a3b8" rx="2"/>
+  <text x="10" y="85" fill="white" font-family="Arial, sans-serif" font-size="6">john@example.com</text>
+  <text x="10" y="95" fill="white" font-family="Arial, sans-serif" font-size="6">(555) 123-4567</text>
+  <text x="10" y="105" fill="white" font-family="Arial, sans-serif" font-size="6">City, State</text>
   
   <!-- Skills section -->
-  <rect x="10" y="130" width="30" height="4" fill="#cbd5e1" rx="2"/>
-  <rect x="10" y="140" width="70" height="3" fill="#cbd5e1" rx="1.5"/>
-  <rect x="10" y="148" width="55" height="3" fill="#cbd5e1" rx="1.5"/>
-  <rect x="10" y="156" width="65" height="3" fill="#cbd5e1" rx="1.5"/>
+  <text x="10" y="135" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">SKILLS</text>
+  <text x="10" y="145" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="6">JavaScript</text>
+  <text x="10" y="153" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="6">React</text>
+  <text x="10" y="161" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="6">Node.js</text>
+  <text x="10" y="169" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="6">Python</text>
   
   <!-- Education section -->
-  <rect x="10" y="180" width="35" height="4" fill="#cbd5e1" rx="2"/>
-  <rect x="10" y="190" width="80" height="3" fill="#cbd5e1" rx="1.5"/>
-  <rect x="10" y="198" width="60" height="3" fill="#cbd5e1" rx="1.5"/>
+  <text x="10" y="185" fill="white" font-family="Arial, sans-serif" font-size="8" font-weight="bold">EDUCATION</text>
+  <text x="10" y="195" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="6">Computer Science</text>
+  <text x="10" y="203" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="6">University Name</text>
+  <text x="10" y="211" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="6">2020-2024</text>
   
   <!-- Right content area -->
   <!-- Name/Title -->
-  <rect x="120" y="20" width="120" height="8" fill="#374151" rx="4"/>
-  <rect x="120" y="35" width="80" height="4" fill="#6b7280" rx="2"/>
+  <text x="120" y="30" fill="#374151" font-family="Arial, sans-serif" font-size="16" font-weight="bold">SARAH JOHNSON</text>
+  <text x="120" y="45" fill="#6b7280" font-family="Arial, sans-serif" font-size="10">Marketing Manager</text>
   
   <!-- Summary -->
-  <rect x="120" y="60" width="160" height="3" fill="#9ca3af" rx="1.5"/>
-  <rect x="120" y="68" width="150" height="3" fill="#9ca3af" rx="1.5"/>
-  <rect x="120" y="76" width="140" height="3" fill="#9ca3af" rx="1.5"/>
+  <text x="120" y="65" fill="#9ca3af" font-family="Arial, sans-serif" font-size="7">Experienced marketing professional with 5+ years in digital</text>
+  <text x="120" y="73" fill="#9ca3af" font-family="Arial, sans-serif" font-size="7">marketing and brand management. Proven track record</text>
+  <text x="120" y="81" fill="#9ca3af" font-family="Arial, sans-serif" font-size="7">of increasing brand awareness by 40%.</text>
   
   <!-- Experience section -->
-  <rect x="120" y="100" width="50" height="4" fill="#374151" rx="2"/>
+  <text x="120" y="105" fill="#374151" font-family="Arial, sans-serif" font-size="10" font-weight="bold">EXPERIENCE</text>
   
   <!-- Experience entry 1 -->
-  <rect x="120" y="115" width="100" height="4" fill="#6b7280" rx="2"/>
-  <rect x="120" y="125" width="80" height="3" fill="#9ca3af" rx="1.5"/>
-  <rect x="120" y="133" width="160" height="2" fill="#d1d5db" rx="1"/>
-  <rect x="120" y="139" width="140" height="2" fill="#d1d5db" rx="1"/>
+  <text x="120" y="120" fill="#6b7280" font-family="Arial, sans-serif" font-size="8" font-weight="bold">Senior Marketing Specialist</text>
+  <text x="120" y="130" fill="#9ca3af" font-family="Arial, sans-serif" font-size="7">ABC Company • 2022-Present</text>
+  <text x="120" y="138" fill="#d1d5db" font-family="Arial, sans-serif" font-size="6">• Led digital marketing campaigns increasing ROI by 35%</text>
+  <text x="120" y="144" fill="#d1d5db" font-family="Arial, sans-serif" font-size="6">• Managed social media presence across 5 platforms</text>
   
   <!-- Experience entry 2 -->
-  <rect x="120" y="160" width="90" height="4" fill="#6b7280" rx="2"/>
-  <rect x="120" y="170" width="70" height="3" fill="#9ca3af" rx="1.5"/>
-  <rect x="120" y="178" width="150" height="2" fill="#d1d5db" rx="1"/>
-  <rect x="120" y="184" width="130" height="2" fill="#d1d5db" rx="1"/>
+  <text x="120" y="165" fill="#6b7280" font-family="Arial, sans-serif" font-size="8" font-weight="bold">Marketing Coordinator</text>
+  <text x="120" y="175" fill="#9ca3af" font-family="Arial, sans-serif" font-size="7">XYZ Corp • 2020-2022</text>
+  <text x="120" y="183" fill="#d1d5db" font-family="Arial, sans-serif" font-size="6">• Coordinated email marketing campaigns with 25% open rate</text>
+  <text x="120" y="189" fill="#d1d5db" font-family="Arial, sans-serif" font-size="6">• Assisted in product launch strategies</text>
   
   <!-- Projects section -->
-  <rect x="120" y="210" width="45" height="4" fill="#374151" rx="2"/>
-  <rect x="120" y="225" width="80" height="3" fill="#6b7280" rx="1.5"/>
-  <rect x="120" y="233" width="140" height="2" fill="#d1d5db" rx="1"/>
+  <text x="120" y="215" fill="#374151" font-family="Arial, sans-serif" font-size="10" font-weight="bold">KEY PROJECTS</text>
+  <text x="120" y="230" fill="#6b7280" font-family="Arial, sans-serif" font-size="7">Brand Relaunch Campaign</text>
+  <text x="120" y="238" fill="#d1d5db" font-family="Arial, sans-serif" font-size="6">Successfully increased brand awareness by 40%</text>
   
   <!-- Border to separate sections -->
   <line x1="120" y1="150" x2="280" y2="150" stroke="#e5e7eb" stroke-width="1"/>
