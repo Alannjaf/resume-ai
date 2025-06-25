@@ -23,19 +23,38 @@ export const DeveloperContent: React.FC<DeveloperContentProps> = ({ data }) => {
       {/* Experience Section */}
       {data.experience && data.experience.length > 0 && (
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{'<experience>'}</Text>
-          {data.experience.map((exp) => (
-            <View key={exp.id} wrap={false} style={styles.experienceItem}>
-              <Text style={styles.jobTitle}>-{exp.jobTitle}</Text>
-              <Text style={styles.company}>@{exp.company}, {exp.location}</Text>
-              <Text style={styles.dateRange}>{formatDateRange(exp.startDate, exp.endDate, exp.current)}</Text>
-              {exp.description && (
-                <View style={{ marginTop: 2 }}>
-                  {parseDeveloperHtmlToPdf(exp.description, styles).elements}
+          {data.experience.map((exp, index) => {
+            if (index === 0) {
+              return (
+                <View key={exp.id} style={styles.experienceItem}>
+                  <View wrap={false}>
+                    <Text style={styles.sectionTitle}>{'<experience>'}</Text>
+                    <Text style={styles.jobTitle}>-{exp.jobTitle}</Text>
+                    <Text style={styles.company}>@{exp.company}, {exp.location}</Text>
+                    <Text style={styles.dateRange}>{formatDateRange(exp.startDate, exp.endDate, exp.current)}</Text>
+                  </View>
+                  {exp.description && (
+                    <View style={{ marginTop: 2 }}>
+                      {parseDeveloperHtmlToPdf(exp.description, styles).elements}
+                    </View>
+                  )}
                 </View>
-              )}
-            </View>
-          ))}
+              )
+            } else {
+              return (
+                <View key={exp.id} style={styles.experienceItem} wrap={false}>
+                  <Text style={styles.jobTitle}>-{exp.jobTitle}</Text>
+                  <Text style={styles.company}>@{exp.company}, {exp.location}</Text>
+                  <Text style={styles.dateRange}>{formatDateRange(exp.startDate, exp.endDate, exp.current)}</Text>
+                  {exp.description && (
+                    <View style={{ marginTop: 2 }}>
+                      {parseDeveloperHtmlToPdf(exp.description, styles).elements}
+                    </View>
+                  )}
+                </View>
+              )
+            }
+          })}
         </View>
       )}
 
