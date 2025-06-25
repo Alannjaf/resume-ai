@@ -82,14 +82,14 @@ export const creativeArtisticStyles = StyleSheet.create({
   contactGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
-    marginBottom: 8,
+    gap: 6, // Reduced from 12 to 6
+    marginBottom: 6, // Reduced from 8 to 6
   },
 
   contactItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 2, // Further reduced from 4 to 2
     minWidth: '45%',
   },
 
@@ -113,6 +113,7 @@ export const creativeArtisticStyles = StyleSheet.create({
     height: 120,
     alignSelf: 'flex-end',
     position: 'relative',
+    marginTop: -50, // Center vertically with background shape
   },
 
   photoBorder: {
@@ -369,7 +370,7 @@ export const creativeArtisticStyles = StyleSheet.create({
   demographicsCompact: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 4,
+    marginTop: -2, // Move up from the edge
     paddingLeft: 2,
   },
 
