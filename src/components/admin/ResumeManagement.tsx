@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { ResumeStatus } from '@prisma/client';
 import { toast } from 'react-hot-toast';
 import { Loader2, Trash2, Download } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { ResumeFilters } from './ResumeFilters';
 import { ResumeTable } from './ResumeTable';
 import { Pagination } from '@/components/ui/Pagination';
@@ -136,71 +138,85 @@ export function ResumeManagement() {
 
   return (
     <div className="space-y-6">
-      <ResumeFilters
-        search={search}
-        status={status}
-        template={template}
-        onSearchChange={setSearch}
-        onStatusChange={setStatus}
-        onTemplateChange={setTemplate}
-      />
+      {/* Filters Card */}
+      <Card className="p-6">
+        <ResumeFilters
+          search={search}
+          status={status}
+          template={template}
+          onSearchChange={setSearch}
+          onStatusChange={setStatus}
+          onTemplateChange={setTemplate}
+        />
+      </Card>
 
+      {/* Selection Actions */}
       {selectedIds.length > 0 && (
-        <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-center justify-between">
-          <span className="text-blue-700 dark:text-blue-300">
-            {selectedIds.length} resume(s) selected
-          </span>
-          <button
-            onClick={() => handleDeleteResumes(selectedIds)}
-            className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-          >
-            <Trash2 className="h-4 w-4" />
-            Delete Selected
-          </button>
-        </div>
+        <Card className="p-4">
+          <div className="flex items-center justify-between">
+            <span className="text-blue-700 font-medium">
+              {selectedIds.length} resume(s) selected
+            </span>
+            <Button
+              onClick={() => handleDeleteResumes(selectedIds)}
+              variant="destructive"
+              size="sm"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete Selected
+            </Button>
+          </div>
+        </Card>
       )}
 
+      {/* Actions Bar */}
       <div className="flex justify-end">
-        <button
+        <Button
           onClick={handleExport}
-          className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+          variant="outline"
+          size="sm"
         >
-          <Download className="h-4 w-4" />
+          <Download className="h-4 w-4 mr-2" />
           Export CSV
-        </button>
+        </Button>
       </div>
 
-      {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-        </div>
-      ) : resumes.length === 0 ? (
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-8 text-center">
-          <p className="text-gray-500 dark:text-gray-400">No resumes found</p>
-          <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
-            {search || status || template 
-              ? 'Try adjusting your search filters' 
-              : 'Resumes will appear here once users create them'}
-          </p>
-        </div>
-      ) : (
-        <>
-          <ResumeTable
-            resumes={resumes}
-            selectedIds={selectedIds}
-            onSelectId={handleSelectId}
-            onSelectAll={handleSelectAll}
-            onViewResume={setSelectedResume}
-            onDeleteResume={(id) => handleDeleteResumes([id])}
-          />
+      {/* Main Content Card */}
+      <Card className="p-6">
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+          </div>
+        ) : resumes.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">No resumes found</p>
+            <p className="text-sm text-gray-400 mt-2">
+              {search || status || template 
+                ? 'Try adjusting your search filters' 
+                : 'Resumes will appear here once users create them'}
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <ResumeTable
+              resumes={resumes}
+              selectedIds={selectedIds}
+              onSelectId={handleSelectId}
+              onSelectAll={handleSelectAll}
+              onViewResume={setSelectedResume}
+              onDeleteResume={(id) => handleDeleteResumes([id])}
+            />
 
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
-          />
-        </>
-      )}
+            <div className="flex justify-center">
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={setPage}
+              />
+            </div>
+          </div>
+        )}
+      </Card>
 
       {selectedResume && (
         <ResumeDetailsModal

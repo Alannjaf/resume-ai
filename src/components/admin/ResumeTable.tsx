@@ -41,11 +41,11 @@ export function ResumeTable({
   const getStatusColor = (status: ResumeStatus) => {
     switch (status) {
       case 'DRAFT':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
+        return 'bg-gray-100 text-gray-800';
       case 'PUBLISHED':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+        return 'bg-green-100 text-green-800';
       case 'ARCHIVED':
-        return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300';
+        return 'bg-orange-100 text-orange-800';
     }
   };
 
@@ -54,66 +54,66 @@ export function ResumeTable({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+    <div className="overflow-hidden rounded-lg border">
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-gray-50 dark:bg-gray-700">
+          <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left">
                 <input
                   type="checkbox"
                   checked={selectedIds.length === resumes.length && resumes.length > 0}
                   onChange={onSelectAll}
-                  className="rounded border-gray-300 dark:border-gray-600"
+                  className="rounded border-gray-300"
                 />
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                 Resume
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                 User
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                 Status
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                 Sections
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                 Created
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+          <tbody className="bg-white divide-y divide-gray-200">
             {resumes.map((resume) => (
-              <tr key={resume.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+              <tr key={resume.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4">
                   <input
                     type="checkbox"
                     checked={selectedIds.includes(resume.id)}
                     onChange={() => onSelectId(resume.id)}
-                    className="rounded border-gray-300 dark:border-gray-600"
+                    className="rounded border-gray-300"
                   />
                 </td>
                 <td className="px-6 py-4">
                   <div>
-                    <div className="text-sm font-medium text-gray-900 dark:text-white">
+                    <div className="text-sm font-medium text-gray-900">
                       {resume.title}
                     </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                    <div className="text-sm text-gray-500">
                       {resume.template} template
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4">
                   <div>
-                    <div className="text-sm text-gray-900 dark:text-white">
+                    <div className="text-sm text-gray-900">
                       {resume.user.name || 'N/A'}
                     </div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                    <div className="text-sm text-gray-500">
                       {resume.user.email}
                     </div>
                   </div>
@@ -123,23 +123,25 @@ export function ResumeTable({
                     {resume.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">
+                <td className="px-6 py-4 text-sm text-gray-900">
                   {getSectionsCount(resume._count)}
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                <td className="px-6 py-4 text-sm text-gray-500">
                   {new Date(resume.createdAt).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex space-x-2">
                     <button
                       onClick={() => onViewResume(resume)}
-                      className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                      className="text-blue-600 hover:text-blue-900"
+                      title="View Resume"
                     >
                       <Eye className="h-5 w-5" />
                     </button>
                     <button
                       onClick={() => onDeleteResume(resume.id)}
-                      className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                      className="text-red-600 hover:text-red-900"
+                      title="Delete Resume"
                     >
                       <Trash2 className="h-5 w-5" />
                     </button>
