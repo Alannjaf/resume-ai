@@ -27,6 +27,7 @@ export function Header() {
   const changeLanguage = (languageCode: 'en' | 'ar' | 'ckb') => {
     setLanguage(languageCode)
     setIsLangMenuOpen(false)
+    setIsMenuOpen(false) // Close mobile menu
   }
 
   return (
@@ -123,16 +124,16 @@ export function Header() {
         <div className="md:hidden border-t bg-background">
           <div className="container mx-auto px-4 py-4 space-y-4">
             <nav className="space-y-4">
-              <a href="#features" className="block text-sm font-medium hover:text-primary transition-colors">
+              <a href="#features" className="block text-sm font-medium hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
                 {t('nav.features')}
               </a>
-              <a href="#pricing" className="block text-sm font-medium hover:text-primary transition-colors">
+              <a href="#pricing" className="block text-sm font-medium hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
                 {t('nav.pricing')}
               </a>
-              <a href="#about" className="block text-sm font-medium hover:text-primary transition-colors">
+              <a href="#about" className="block text-sm font-medium hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
                 {t('nav.about')}
               </a>
-              <a href="#contact" className="block text-sm font-medium hover:text-primary transition-colors">
+              <a href="#contact" className="block text-sm font-medium hover:text-primary transition-colors" onClick={() => setIsMenuOpen(false)}>
                 {t('nav.contact')}
               </a>
             </nav>

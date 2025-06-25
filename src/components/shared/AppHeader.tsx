@@ -45,6 +45,7 @@ export function AppHeader({
   const changeLanguage = (languageCode: 'en' | 'ar' | 'ckb') => {
     setLanguage(languageCode)
     setIsLangMenuOpen(false)
+    setIsMobileMenuOpen(false) // Close mobile menu
   }
 
   const handleBackClick = () => {
@@ -188,7 +189,10 @@ export function AppHeader({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => router.push('/admin')}
+                onClick={() => {
+                  router.push('/admin')
+                  setIsMobileMenuOpen(false)
+                }}
                 className="w-full justify-start gap-2"
               >
                 <Shield className="h-4 w-4" />
