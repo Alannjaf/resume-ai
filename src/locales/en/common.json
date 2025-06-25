@@ -62,14 +62,6 @@
       }
     }
   },
-  "pricing": {
-    "title": "Choose the Right Plan for You",
-    "subtitle": "Start free and upgrade as you grow",
-    "monthly": "Monthly",
-    "yearly": "Yearly",
-    "save": "Save 20%",
-    "currency": "USD"
-  },
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome back, {name}",
@@ -87,7 +79,68 @@
   },
   "billing": {
     "title": "Billing & Subscription",
-    "currentPlan": "Current Plan"
+    "currentPlan": "Current Plan",
+    "paymentInstructions": {
+      "pageTitle": "Complete Your Upgrade",
+      "mobileBanking": "Mobile Banking",
+      "progressSteps": {
+        "review": "Review Plan",
+        "payment": "Make Payment",
+        "activation": "Get Activated"
+      },
+      "upgradeTitle": "Upgrade to {plan}",
+      "followSteps": "Follow these simple steps to upgrade your plan",
+      "step1": {
+        "title": "Review Your Plan",
+        "planType": "{plan} Plan",
+        "monthlySubscription": "Monthly subscription",
+        "perMonth": "per month"
+      },
+      "step2": {
+        "title": "Make Your Payment",
+        "fibTitle": "Follow These 4 Steps on Your FIB Mobile App",
+        "step1Title": "Open your FIB mobile app and log in",
+        "step1Desc": "Enter your username and password to access your account",
+        "step2Title": "Go to \"Transfer Money\" or \"تحويل الأموال\"",
+        "step2Desc": "Select \"To Another Account\" or \"إلى حساب آخر\" option",
+        "step3Title": "Enter these account details exactly",
+        "step3Desc": "Use the copy buttons to avoid typing mistakes",
+        "step4Title": "Add this in Notes/Reference field",
+        "step4Desc": "This is very important so we can identify your payment",
+        "bankName": "Bank Name",
+        "recipientName": "Recipient Name",
+        "accountNumber": "Account Number",
+        "transferAmount": "Transfer Amount",
+        "copyExactly": "Copy This Exactly",
+        "doubleCheck": "Double-check everything and confirm the transfer",
+        "checkDetails": "Make sure all details match exactly before submitting your payment"
+      },
+      "step3": {
+        "title": "What Happens Next?",
+        "verify": "We'll verify your payment",
+        "verifyDesc": "Our team checks for payments every few hours during business hours",
+        "activate": "Your plan gets activated automatically",
+        "activateDesc": "Usually within 24 hours, often much faster",
+        "email": "You'll receive a confirmation email",
+        "emailDesc": "We'll send you an email when your {plan} plan is ready to use"
+      },
+      "faq": {
+        "title": "Common Questions",
+        "q1": "What if I don't have a FIB account?",
+        "a1": "You can ask a friend or family member to send the payment for you. Just make sure to include your email in the notes.",
+        "q2": "How will I know my payment was received?",
+        "a2": "You'll receive an email confirmation when we activate your plan. You can also check your dashboard.",
+        "q3": "What if my payment is not processed after 24 hours?",
+        "a3": "Contact us at support@resumeai.app with your payment details and we'll help you immediately."
+      },
+      "buttons": {
+        "backToPlans": "Back to Plans",
+        "paymentSent": "I've Sent the Payment",
+        "backToBilling": "Back to Billing"
+      },
+      "loading": "Loading plan details...",
+      "planNotFound": "Plan not found. Please go back and select a valid plan."
+    }
   },
   "about": {
     "title": "About Work.krd",
@@ -707,24 +760,24 @@
         "name": "Pro",
         "description": "Best for professionals",
         "buttonText": "Upgrade Now"
-      },
-      "features": {
-        "resumesPerMonth": "resumes per month",
-        "aiSuggestionsPerMonth": "AI suggestions per month",
-        "exportsPerMonth": "exports per month",
-        "unlimitedResumes": "Unlimited resumes",
-        "unlimitedAI": "Unlimited AI processing",
-        "unlimitedExports": "Unlimited exports",
-        "basicTemplates": "Basic templates",
-        "allTemplates": "All template options",
-        "premiumTemplates": "All premium templates",
-        "advancedAI": "Advanced AI enhancement",
-        "pdfExport": "PDF export",
-        "multipleFormats": "Multiple export formats",
-        "prioritySupport": "Priority support",
-        "customBranding": "Custom branding",
-        "analytics": "Advanced analytics"
       }
+    },
+    "features": {
+      "resumesPerMonth": "{count} resumes per month",
+      "aiSuggestionsPerMonth": "{count} AI suggestions per month",
+      "exportsPerMonth": "{count} exports per month",
+      "unlimitedResumes": "Unlimited resumes",
+      "unlimitedAI": "Unlimited AI processing",
+      "unlimitedExports": "Unlimited exports",
+      "basicTemplates": "Basic templates",
+      "allTemplates": "All template options",
+      "premiumTemplates": "All premium templates",
+      "advancedAI": "Advanced AI enhancement",
+      "pdfExport": "PDF export",
+      "multipleFormats": "Multiple export formats",
+      "prioritySupport": "Priority support",
+      "customBranding": "Custom branding",
+      "analytics": "Advanced analytics"
     },
     "paymentMethods": {
       "title": "Payment methods coming soon",

@@ -9,6 +9,7 @@ import { Check, Clock, Star, CreditCard } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useSubscription } from '@/contexts/SubscriptionContext'
+import { translatePlanFeatures } from '@/lib/translate-features'
 
 interface Plan {
   name: string
@@ -206,18 +207,26 @@ export default function BillingPage() {
                 )}
                 
                 <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    {plan.name === 'Free' ? t('pricing.plans.free.name') : 
+                     plan.name === 'Basic' ? t('pricing.plans.basic.name') : 
+                     plan.name === 'Pro' ? t('pricing.plans.pro.name') : plan.name}
+                  </h3>
                   <div className="mb-2">
                     <span className="text-3xl font-bold text-gray-900">
-                      {plan.price === 0 ? 'Free' : `${plan.priceIQD.toLocaleString()} IQD`}
+                      {plan.price === 0 ? t('pricing.plans.free.name') : `${plan.priceIQD.toLocaleString()} IQD`}
                     </span>
-                    {plan.period !== 'forever' && <span className="text-gray-600">/{plan.period}</span>}
+                    {plan.period !== 'forever' && <span className="text-gray-600">/{t('pricing.monthly')}</span>}
                   </div>
-                  <p className="text-gray-600 text-sm">{plan.description}</p>
+                  <p className="text-gray-600 text-sm">
+                    {plan.name === 'Free' ? t('pricing.plans.free.description') : 
+                     plan.name === 'Basic' ? t('pricing.plans.basic.description') : 
+                     plan.name === 'Pro' ? t('pricing.plans.pro.description') : plan.description}
+                  </p>
                 </div>
 
                 <div className="space-y-3 mb-6">
-                  {plan.features.map((feature, i) => (
+                  {translatePlanFeatures(plan.features, t, 'pricing').map((feature, i) => (
                     <div key={i} className="flex items-center">
                       <Check className="h-4 w-4 text-green-500 mr-3 flex-shrink-0" />
                       <span className="text-sm text-gray-700">{feature}</span>

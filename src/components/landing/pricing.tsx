@@ -5,6 +5,7 @@ import { Check, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { translatePlanFeatures } from '@/lib/translate-features'
 
 interface Plan {
   name: string
@@ -18,35 +19,7 @@ interface Plan {
 }
 
 // Function to translate plan data
-const translatePlan = (plan: Plan, t: (key: string) => string) => {
-  const translateFeature = (feature: string) => {
-    if (feature.includes('resumes per month')) {
-      const number = feature.split(' ')[0]
-      return `${number} ${t('pricing.plans.features.resumesPerMonth')}`
-    }
-    if (feature.includes('AI suggestions per month')) {
-      const number = feature.split(' ')[0]
-      return `${number} ${t('pricing.plans.features.aiSuggestionsPerMonth')}`
-    }
-    if (feature.includes('exports per month')) {
-      const number = feature.split(' ')[0]
-      return `${number} ${t('pricing.plans.features.exportsPerMonth')}`
-    }
-    if (feature === 'Unlimited resumes') return t('pricing.plans.features.unlimitedResumes')
-    if (feature === 'Unlimited AI processing') return t('pricing.plans.features.unlimitedAI')
-    if (feature === 'Unlimited exports') return t('pricing.plans.features.unlimitedExports')
-    if (feature === 'Basic templates') return t('pricing.plans.features.basicTemplates')
-    if (feature === 'All template options') return t('pricing.plans.features.allTemplates')
-    if (feature === 'All premium templates') return t('pricing.plans.features.premiumTemplates')
-    if (feature === 'Advanced AI enhancement') return t('pricing.plans.features.advancedAI')
-    if (feature === 'PDF export') return t('pricing.plans.features.pdfExport')
-    if (feature === 'Multiple export formats') return t('pricing.plans.features.multipleFormats')
-    if (feature === 'Priority support') return t('pricing.plans.features.prioritySupport')
-    if (feature === 'Custom branding') return t('pricing.plans.features.customBranding')
-    if (feature === 'Advanced analytics') return t('pricing.plans.features.analytics')
-    return feature // fallback for any untranslated features
-  }
-
+const translatePlan = (plan: Plan, t: (key: string, values?: any) => string) => {
   return {
     ...plan,
     name: plan.name === 'Free' ? t('pricing.plans.free.name') : 
@@ -58,7 +31,7 @@ const translatePlan = (plan: Plan, t: (key: string) => string) => {
     buttonText: plan.name === 'Free' ? t('pricing.plans.free.buttonText') : 
                plan.name === 'Basic' ? t('pricing.plans.basic.buttonText') : 
                plan.name === 'Pro' ? t('pricing.plans.pro.buttonText') : plan.buttonText,
-    features: plan.features.map(translateFeature)
+    features: translatePlanFeatures(plan.features, t, 'pricing')
   }
 }
 

@@ -90,14 +90,6 @@
       }
     }
   },
-  "pricing": {
-    "title": "اختر الخطة المناسبة لك",
-    "subtitle": "ابدأ مجاناً وترقى كلما نمت",
-    "monthly": "شهرياً",
-    "yearly": "سنوياً",
-    "save": "وفر 20%",
-    "currency": "دولار"
-  },
   "dashboard": {
     "title": "لوحة التحكم",
     "welcome": "أهلاً بعودتك، {name}",
@@ -115,7 +107,68 @@
   },
   "billing": {
     "title": "الفواتير والاشتراك",
-    "currentPlan": "الخطة الحالية"
+    "currentPlan": "الخطة الحالية",
+    "paymentInstructions": {
+      "pageTitle": "أكمل ترقية حسابك",
+      "mobileBanking": "الخدمات المصرفية عبر الهاتف",
+      "progressSteps": {
+        "review": "مراجعة الخطة",
+        "payment": "إجراء الدفع",
+        "activation": "التفعيل"
+      },
+      "upgradeTitle": "الترقية إلى خطة {plan}",
+      "followSteps": "اتبع هذه الخطوات البسيطة لترقية خطتك",
+      "step1": {
+        "title": "مراجعة خطتك",
+        "planType": "خطة {plan}",
+        "monthlySubscription": "اشتراك شهري",
+        "perMonth": "شهرياً"
+      },
+      "step2": {
+        "title": "إجراء الدفع",
+        "fibTitle": "اتبع هذه الخطوات الأربع في تطبيق FIB",
+        "step1Title": "افتح تطبيق FIB وسجل الدخول",
+        "step1Desc": "أدخل اسم المستخدم وكلمة المرور للوصول إلى حسابك",
+        "step2Title": "اذهب إلى \"تحويل الأموال\" أو \"Transfer Money\"",
+        "step2Desc": "اختر \"إلى حساب آخر\" أو \"To Another Account\"",
+        "step3Title": "أدخل تفاصيل الحساب بالضبط",
+        "step3Desc": "استخدم أزرار النسخ لتجنب أخطاء الكتابة",
+        "step4Title": "أضف هذا في حقل الملاحظات/المرجع",
+        "step4Desc": "هذا مهم جداً حتى نتمكن من تحديد دفعتك",
+        "bankName": "اسم البنك",
+        "recipientName": "اسم المستلم",
+        "accountNumber": "رقم الحساب",
+        "transferAmount": "مبلغ التحويل",
+        "copyExactly": "انسخ هذا بالضبط",
+        "doubleCheck": "تحقق مرة أخرى من كل شيء وأكد التحويل",
+        "checkDetails": "تأكد من تطابق جميع التفاصيل بالضبط قبل إرسال دفعتك"
+      },
+      "step3": {
+        "title": "ماذا يحدث بعد ذلك؟",
+        "verify": "سنتحقق من دفعتك",
+        "verifyDesc": "يتحقق فريقنا من المدفوعات كل بضع ساعات خلال ساعات العمل",
+        "activate": "سيتم تفعيل خطتك تلقائياً",
+        "activateDesc": "عادة خلال 24 ساعة، وغالباً أسرع من ذلك",
+        "email": "ستتلقى رسالة تأكيد بالبريد الإلكتروني",
+        "emailDesc": "سنرسل لك بريداً إلكترونياً عندما تكون خطة {plan} جاهزة للاستخدام"
+      },
+      "faq": {
+        "title": "الأسئلة الشائعة",
+        "q1": "ماذا لو لم يكن لدي حساب FIB؟",
+        "a1": "يمكنك أن تطلب من صديق أو أحد أفراد العائلة إرسال الدفعة نيابة عنك. فقط تأكد من تضمين بريدك الإلكتروني في الملاحظات.",
+        "q2": "كيف سأعرف أن دفعتي قد تم استلامها؟",
+        "a2": "ستتلقى رسالة تأكيد بالبريد الإلكتروني عندما نقوم بتفعيل خطتك. يمكنك أيضاً التحقق من لوحة التحكم الخاصة بك.",
+        "q3": "ماذا لو لم تتم معالجة دفعتي بعد 24 ساعة؟",
+        "a3": "اتصل بنا على support@resumeai.app مع تفاصيل دفعتك وسنساعدك على الفور."
+      },
+      "buttons": {
+        "backToPlans": "العودة إلى الخطط",
+        "paymentSent": "لقد أرسلت الدفعة",
+        "backToBilling": "العودة إلى الفواتير"
+      },
+      "loading": "جاري تحميل تفاصيل الخطة...",
+      "planNotFound": "لم يتم العثور على الخطة. يرجى العودة واختيار خطة صالحة."
+    }
   },
   "forms": {
     "workExperience": {
@@ -673,24 +726,24 @@
         "name": "متقدم",
         "description": "الأفضل للمهنيين",
         "buttonText": "ترقَ الآن"
-      },
-      "features": {
-        "resumesPerMonth": "سيرة ذاتية شهرياً",
-        "aiSuggestionsPerMonth": "اقتراح ذكي شهرياً",
-        "exportsPerMonth": "تصدير شهرياً",
-        "unlimitedResumes": "سير ذاتية غير محدودة",
-        "unlimitedAI": "معالجة ذكية غير محدودة",
-        "unlimitedExports": "تصديرات غير محدودة",
-        "basicTemplates": "قوالب أساسية",
-        "allTemplates": "جميع خيارات القوالب",
-        "premiumTemplates": "جميع القوالب المتقدمة",
-        "advancedAI": "تحسين ذكي متقدم",
-        "pdfExport": "تصدير PDF",
-        "multipleFormats": "تنسيقات تصدير متعددة",
-        "prioritySupport": "دعم ذو أولوية",
-        "customBranding": "علامة تجارية مخصصة",
-        "analytics": "تحليلات متقدمة"
       }
+    },
+    "features": {
+      "resumesPerMonth": "{count} سيرة ذاتية شهرياً",
+      "aiSuggestionsPerMonth": "{count} اقتراح ذكاء اصطناعي شهرياً",
+      "exportsPerMonth": "{count} تصدير شهرياً",
+      "unlimitedResumes": "سير ذاتية غير محدودة",
+      "unlimitedAI": "معالجة ذكاء اصطناعي غير محدودة",
+      "unlimitedExports": "تصديرات غير محدودة",
+      "basicTemplates": "قوالب أساسية",
+      "allTemplates": "جميع خيارات القوالب",
+      "premiumTemplates": "جميع القوالب المميزة",
+      "advancedAI": "تحسين متقدم بالذكاء الاصطناعي",
+      "pdfExport": "تصدير PDF",
+      "multipleFormats": "صيغ تصدير متعددة",
+      "prioritySupport": "دعم ذو أولوية",
+      "customBranding": "علامة تجارية مخصصة",
+      "analytics": "تحليلات متقدمة"
     },
     "paymentMethods": {
       "title": "طرق الدفع قريباً",
