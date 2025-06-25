@@ -2,6 +2,39 @@ import React from 'react'
 import { pdf } from '@react-pdf/renderer'
 import { saveAs } from 'file-saver'
 import { ResumeData } from '../types/resume'
+
+// Browser detection utility
+const detectBrowser = () => {
+  const userAgent = navigator.userAgent.toLowerCase()
+  if (userAgent.includes('edg/')) return 'edge'
+  if (userAgent.includes('chrome') && !userAgent.includes('edg/')) return 'chrome'
+  if (userAgent.includes('firefox')) return 'firefox'
+  if (userAgent.includes('safari') && !userAgent.includes('chrome')) return 'safari'
+  return 'unknown'
+}
+
+// Safari-specific download function
+const downloadBlobSafari = (blob: Blob, filename: string) => {
+  // Create a new blob with octet-stream MIME type to force download
+  const downloadBlob = new Blob([blob], { type: 'application/octet-stream' })
+  const url = URL.createObjectURL(downloadBlob)
+  
+  // Create anchor element and trigger download
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  link.style.display = 'none'
+  
+  // Add to DOM, click, and remove
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  
+  // Clean up the object URL
+  setTimeout(() => {
+    URL.revokeObjectURL(url)
+  }, 100)
+}
 import EnhancedModernTemplate from '../components/resume-pdf/EnhancedModernTemplate'
 import { CreativeTemplate } from '../components/resume-pdf/CreativeTemplate'
 import { ExecutiveProfessionalTemplate } from '../components/resume-pdf/ExecutiveProfessionalTemplate'
@@ -38,7 +71,16 @@ export const generateResumePDF = async (resumeData: ResumeData, fileName?: strin
     }
     const blob = await pdf(templateComponent).toBlob()
     const defaultFileName = `${resumeData.personal.fullName.replace(/\s+/g, '_')}_Resume.pdf`
-    saveAs(blob, fileName || defaultFileName)
+    const finalFileName = fileName || defaultFileName
+    
+    // Use Safari-specific download for Safari, regular saveAs for other browsers
+    const browser = detectBrowser()
+    if (browser === 'safari') {
+      downloadBlobSafari(blob, finalFileName)
+    } else {
+      saveAs(blob, finalFileName)
+    }
+    
     return true
   } catch (error) {
     console.error('Error generating PDF:', error)
