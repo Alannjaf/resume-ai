@@ -11,7 +11,9 @@ import {
   Settings, 
   DollarSign,
   Save,
-  RefreshCw
+  RefreshCw,
+  Clock,
+  AlertTriangle
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
@@ -23,6 +25,31 @@ interface Stats {
   totalResumes: number
   activeSubscriptions: number
   revenue: number
+}
+
+interface SubscriptionStatus {
+  expired: {
+    count: number
+    subscriptions: Array<{
+      userId: string
+      userEmail: string
+      userName: string
+      plan: string
+      endDate: string
+      daysOverdue: number
+    }>
+  }
+  expiringSoon: {
+    count: number
+    subscriptions: Array<{
+      userId: string
+      userEmail: string
+      userName: string
+      plan: string
+      endDate: string
+      daysUntilExpiry: number
+    }>
+  }
 }
 
 interface SystemSettings {
@@ -63,6 +90,8 @@ export function AdminDashboard() {
   const { t } = useLanguage()
   const availableTemplates = getTemplateIds() // Get all templates dynamically
   const [stats, setStats] = useState<Stats | null>(null)
+  const [subscriptionStatus, setSubscriptionStatus] = useState<SubscriptionStatus | null>(null)
+  const [checkingSubscriptions, setCheckingSubscriptions] = useState(false)
   const [settings, setSettings] = useState<SystemSettings>({
     // Free Plan Limits
     maxFreeResumes: 10,
@@ -101,6 +130,7 @@ export function AdminDashboard() {
   useEffect(() => {
     fetchStats()
     fetchSettings()
+    fetchSubscriptionStatus()
   }, [])
 
   const fetchStats = async () => {
@@ -160,6 +190,39 @@ export function AdminDashboard() {
       // Silent error handling
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchSubscriptionStatus = async () => {
+    try {
+      const response = await fetch('/api/subscriptions/check-expired')
+      const data = await response.json()
+      setSubscriptionStatus(data)
+    } catch (error) {
+      // Silent error handling
+    }
+  }
+
+  const checkExpiredSubscriptions = async () => {
+    setCheckingSubscriptions(true)
+    try {
+      const response = await fetch('/api/subscriptions/check-expired', {
+        method: 'POST'
+      })
+      const data = await response.json()
+      
+      if (response.ok) {
+        toast.success(`Processed ${data.processed} subscriptions. ${data.successful} successful.`)
+        // Refresh the data
+        fetchStats()
+        fetchSubscriptionStatus()
+      } else {
+        toast.error('Failed to check subscriptions')
+      }
+    } catch (error) {
+      toast.error('Failed to check subscriptions')
+    } finally {
+      setCheckingSubscriptions(false)
     }
   }
 
@@ -248,6 +311,90 @@ export function AdminDashboard() {
             </div>
           </Card>
         </div>
+
+        {/* Subscription Status Section */}
+        {subscriptionStatus && (
+          <Card className="p-6 mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-semibold flex items-center gap-2">
+                <Clock className="h-5 w-5" />
+                Subscription Status
+              </h2>
+              <Button 
+                onClick={checkExpiredSubscriptions}
+                disabled={checkingSubscriptions}
+                variant="outline"
+                size="sm"
+              >
+                {checkingSubscriptions ? (
+                  <>
+                    <div className="animate-spin h-4 w-4 mr-2 border-2 border-gray-400 border-t-transparent rounded-full" />
+                    Checking...
+                  </>
+                ) : (
+                  <>
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Check & Process Expired
+                  </>
+                )}
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Expired Subscriptions */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-red-500" />
+                  <h3 className="font-medium text-red-700">
+                    Expired Subscriptions ({subscriptionStatus.expired.count})
+                  </h3>
+                </div>
+                {subscriptionStatus.expired.count > 0 ? (
+                  <div className="space-y-2 max-h-40 overflow-y-auto">
+                    {subscriptionStatus.expired.subscriptions.map((sub) => (
+                      <div key={sub.userId} className="bg-red-50 p-3 rounded border border-red-200">
+                        <p className="font-medium text-sm">{sub.userEmail}</p>
+                        <p className="text-xs text-gray-600">
+                          {sub.plan} plan • {sub.daysOverdue} days overdue
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500 bg-green-50 p-3 rounded border border-green-200">
+                    No expired subscriptions found
+                  </p>
+                )}
+              </div>
+
+              {/* Expiring Soon */}
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-orange-500" />
+                  <h3 className="font-medium text-orange-700">
+                    Expiring Soon ({subscriptionStatus.expiringSoon.count})
+                  </h3>
+                </div>
+                {subscriptionStatus.expiringSoon.count > 0 ? (
+                  <div className="space-y-2 max-h-40 overflow-y-auto">
+                    {subscriptionStatus.expiringSoon.subscriptions.map((sub) => (
+                      <div key={sub.userId} className="bg-orange-50 p-3 rounded border border-orange-200">
+                        <p className="font-medium text-sm">{sub.userEmail}</p>
+                        <p className="text-xs text-gray-600">
+                          {sub.plan} plan • expires in {sub.daysUntilExpiry} days
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500 bg-gray-50 p-3 rounded border border-gray-200">
+                    No subscriptions expiring soon
+                  </p>
+                )}
+              </div>
+            </div>
+          </Card>
+        )}
 
         {/* Settings Section */}
         <Card className="p-6">
@@ -639,7 +786,7 @@ export function AdminDashboard() {
         {/* Quick Actions */}
         <Card className="p-6 mt-6">
           <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Button 
               variant="outline"
               onClick={() => window.location.href = '/admin/users'}
@@ -653,13 +800,6 @@ export function AdminDashboard() {
             >
               <FileText className="h-4 w-4 mr-2" />
               View All Resumes
-            </Button>
-            <Button 
-              variant="outline"
-              onClick={() => window.location.href = '/admin/subscriptions'}
-            >
-              <DollarSign className="h-4 w-4 mr-2" />
-              Manage Subscriptions
             </Button>
           </div>
         </Card>
