@@ -1,11 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "windows", "rhel-openssl-1.0.x"]
 }
 
@@ -15,132 +9,101 @@ datasource db {
 }
 
 model User {
-  id             String         @id @default(cuid())
-  clerkId        String         @unique
-  email          String         @unique
-  name           String?
-  role           UserRole       @default(USER)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  
-  resumes        Resume[]
-  subscription   Subscription?
-  
+  id           String        @id @default(cuid())
+  clerkId      String        @unique
+  email        String        @unique
+  name         String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  role         UserRole      @default(USER)
+  resumes      Resume[]
+  subscription Subscription?
+
   @@index([clerkId])
   @@index([email])
 }
 
 model Resume {
-  id             String         @id @default(cuid())
-  userId         String
-  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  title          String
-  template       String         @default("modern")
-  status         ResumeStatus   @default(DRAFT)
-  isPublic       Boolean        @default(false)
-  publicSlug     String?        @unique
-  
-  personalInfo   Json?          // Name, email, phone, address, etc.
-  summary        String?        @db.Text
-  
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  
-  sections       ResumeSection[]
-  
+  id           String          @id @default(cuid())
+  userId       String
+  title        String
+  template     String          @default("modern")
+  status       ResumeStatus    @default(DRAFT)
+  isPublic     Boolean         @default(false)
+  publicSlug   String?         @unique
+  personalInfo Json?
+  summary      String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sections     ResumeSection[]
+
   @@index([userId])
   @@index([publicSlug])
 }
 
 model ResumeSection {
-  id             String         @id @default(cuid())
-  resumeId       String
-  resume         Resume         @relation(fields: [resumeId], references: [id], onDelete: Cascade)
-  
-  type           SectionType
-  title          String
-  content        Json           // Flexible JSON for different section types
-  order          Int
-  isVisible      Boolean        @default(true)
-  
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  
-  @@index([resumeId])
+  id        String      @id @default(cuid())
+  resumeId  String
+  type      SectionType
+  title     String
+  content   Json
+  order     Int
+  isVisible Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  resume    Resume      @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
   @@unique([resumeId, order])
+  @@index([resumeId])
 }
 
 model Subscription {
-  id             String         @id @default(cuid())
-  userId         String         @unique
-  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  plan           SubscriptionPlan @default(FREE)
-  status         SubscriptionStatus @default(ACTIVE)
-  
-  // Payment details
-  paymentMethod  String?        // FIB or Nasspay
-  paymentId      String?        // External payment ID
-  
-  // Subscription dates
-  startDate      DateTime       @default(now())
-  endDate        DateTime?
-  cancelledAt    DateTime?
-  
-  // Usage limits
-  resumeCount    Int            @default(0)
-  aiUsageCount   Int            @default(0)
-  exportCount    Int            @default(0)
-  importCount    Int            @default(0)
-  
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  
+  id            String             @id @default(cuid())
+  userId        String             @unique
+  plan          SubscriptionPlan   @default(FREE)
+  status        SubscriptionStatus @default(ACTIVE)
+  paymentMethod String?
+  paymentId     String?
+  startDate     DateTime           @default(now())
+  endDate       DateTime?
+  cancelledAt   DateTime?
+  resumeCount   Int                @default(0)
+  aiUsageCount  Int                @default(0)
+  exportCount   Int                @default(0)
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  importCount   Int                @default(0)
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
   @@index([status])
 }
 
 model SystemSettings {
-  id             Int            @id @default(autoincrement())
-  
-  // Free Plan Limits
-  maxFreeResumes Int            @default(10)
-  maxFreeAIUsage Int            @default(100)
-  maxFreeExports Int            @default(20)
-  maxFreeImports Int            @default(0)
-  
-  // Basic Plan Limits
-  maxBasicResumes Int           @default(50)
-  maxBasicAIUsage Int           @default(500)
-  maxBasicExports Int           @default(100)
-  maxBasicImports Int           @default(0)
-  
-  // Pro Plan Limits (-1 means unlimited)
-  maxProResumes  Int            @default(-1)
-  maxProAIUsage  Int            @default(-1)
-  maxProExports  Int            @default(-1)
-  maxProImports  Int            @default(-1)
-  
-  // Template Access Control (JSON arrays of template IDs)
-  freeTemplates  Json           @default("[\"modern\"]")
-  basicTemplates Json           @default("[\"modern\", \"creative\"]")
-  proTemplates   Json           @default("[\"modern\", \"creative\", \"executive\"]")
-  
-  // Profile Photo Upload Access Control (JSON arrays of plan names)
-  photoUploadPlans Json         @default("[\"BASIC\", \"PRO\"]")
-  
-  // Pricing (in IQD)
-  basicPlanPrice Int            @default(5000)
-  proPlanPrice   Int            @default(10000)
-  
-  // System Settings
-  maintenanceMode Boolean       @default(false)
-  
-  updatedAt      DateTime       @updatedAt @default(now())
+  id               Int      @id @default(autoincrement())
+  maxFreeResumes   Int      @default(10)
+  maxFreeAIUsage   Int      @default(100)
+  maxFreeExports   Int      @default(20)
+  maxBasicResumes  Int      @default(50)
+  maxBasicAIUsage  Int      @default(500)
+  maxBasicExports  Int      @default(100)
+  maxProResumes    Int      @default(-1)
+  maxProAIUsage    Int      @default(-1)
+  maxProExports    Int      @default(-1)
+  basicPlanPrice   Int      @default(5000)
+  proPlanPrice     Int      @default(10000)
+  maintenanceMode  Boolean  @default(false)
+  updatedAt        DateTime @default(now()) @updatedAt
+  maxBasicImports  Int      @default(0)
+  maxFreeImports   Int      @default(0)
+  maxProImports    Int      @default(-1)
+  basicTemplates   Json     @default("[\"modern\", \"creative\"]")
+  freeTemplates    Json     @default("[\"modern\"]")
+  photoUploadPlans Json     @default("[\"BASIC\", \"PRO\"]")
+  proTemplates     Json     @default("[\"modern\", \"creative\", \"executive\"]")
 }
 
-// Enums
 enum UserRole {
   USER
   ADMIN
