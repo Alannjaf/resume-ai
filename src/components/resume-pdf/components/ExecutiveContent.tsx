@@ -18,8 +18,8 @@ export const ExecutiveContent = ({ data }: ExecutiveContentProps) => {
       <ExecutiveExperience experience={data.experience} />
       <ExecutiveEducation education={data.education} />
       <ExecutiveSkills skills={data.skills} />
-      <ExecutiveProjects projects={data.projects} />
-      <ExecutiveCertifications certifications={data.certifications} />
+      <ExecutiveProjects projects={data.projects || []} />
+      <ExecutiveCertifications certifications={data.certifications || []} />
       <ExecutiveLanguages languages={data.languages} />
     </View>
   )

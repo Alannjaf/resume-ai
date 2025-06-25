@@ -1,11 +1,11 @@
 import { Text, View } from '@react-pdf/renderer'
-import { Experience } from '@/types/resume'
+import { WorkExperience } from '@/types/resume'
 import { executiveStyles } from '../styles/executiveStyles'
 import { formatDate } from '../utils/dateUtils'
 import { parseHtmlToPdf } from '../utils/htmlToPdfParser'
 
 interface ExecutiveExperienceProps {
-  experience: Experience[]
+  experience: WorkExperience[]
 }
 
 export const ExecutiveExperience = ({ experience }: ExecutiveExperienceProps) => {
