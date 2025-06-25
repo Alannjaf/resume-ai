@@ -327,7 +327,7 @@ export const styles = StyleSheet.create({
 
   demographicsText: {
     fontSize: 8,
-    color: colors.green,
+    color: colors.secondary,
     fontFamily: 'Courier',
     lineHeight: 1.2,
   },
