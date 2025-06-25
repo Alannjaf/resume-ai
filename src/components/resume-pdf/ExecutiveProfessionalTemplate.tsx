@@ -11,13 +11,13 @@ interface ExecutiveProfessionalTemplateProps {
 export const ExecutiveProfessionalTemplate = ({ data }: ExecutiveProfessionalTemplateProps) => {
   return (
     <Document>
-      <Page size="A4" style={executiveStyles.page} wrap={true}>
+      <Page size="A4" style={executiveStyles.page} wrap={true} break={true}>
         {/* Executive header with contact info */}
         <ExecutiveHeader personal={data.personal} />
         
         {/* Professional summary section */}
         {data.summary && (
-          <View style={executiveStyles.summarySection} wrap={false}>
+          <View style={executiveStyles.summarySection}>
             <Text style={executiveStyles.sectionTitle}>PROFESSIONAL SUMMARY</Text>
             <Text style={executiveStyles.summaryText}>{data.summary}</Text>
           </View>

@@ -111,6 +111,7 @@ export const executiveStyles = StyleSheet.create({
   // Experience Styles
   experienceItem: {
     marginBottom: 20,
+    pageBreakInside: 'avoid',
   },
 
   experienceHeader: {
