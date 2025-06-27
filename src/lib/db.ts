@@ -232,13 +232,13 @@ export async function checkUserLimits(clerkUserId: string) {
       resumes: systemSettings.maxFreeResumes ?? 10, 
       ai: systemSettings.maxFreeAIUsage ?? 100, 
       exports: systemSettings.maxFreeExports ?? 0,
-      imports: systemSettings.maxFreeImports ?? 0
+      imports: systemSettings.maxFreeImports ?? 1
     },
     BASIC: { 
       resumes: systemSettings.maxBasicResumes ?? 50, 
       ai: systemSettings.maxBasicAIUsage ?? 500, 
       exports: systemSettings.maxBasicExports ?? 100,
-      imports: systemSettings.maxBasicImports ?? 0
+      imports: systemSettings.maxBasicImports ?? 5
     },
     PRO: { 
       resumes: systemSettings.maxProResumes ?? -1, 

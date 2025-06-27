@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     
     if (!limits.canImport) {
       return NextResponse.json({ 
-        error: 'Resume import is a PRO feature. Please upgrade your plan to import resumes.' 
+        error: 'You have reached your import limit. Please upgrade your plan to import more resumes.' 
       }, { status: 403 })
     }
 

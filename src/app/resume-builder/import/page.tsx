@@ -32,10 +32,14 @@ export default function ImportResumePage() {
     // Check if user can import
     const checkImportAccess = async () => {
       try {
-        const response = await fetch('/api/user/subscription')
-        const data = await response.json()
-        setUserPlan(data.currentPlan)
-        setCanImport(data.currentPlan === 'PRO')
+        const [subscriptionResponse, permissionsResponse] = await Promise.all([
+          fetch('/api/user/subscription'),
+          fetch('/api/user/permissions')
+        ])
+        const subscriptionData = await subscriptionResponse.json()
+        const permissionsData = await permissionsResponse.json()
+        setUserPlan(subscriptionData.currentPlan)
+        setCanImport(permissionsData.canImport)
       } catch (error) {
         setCanImport(false)
       }
