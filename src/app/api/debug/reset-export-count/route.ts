@@ -18,7 +18,6 @@ export async function POST() {
 
     return NextResponse.json({ message: 'Export count reset to 0' })
   } catch (error) {
-    console.error('Reset error:', error)
     return NextResponse.json({ error: 'Internal error' }, { status: 500 })
   }
 }

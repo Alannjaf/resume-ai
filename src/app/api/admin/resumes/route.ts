@@ -31,7 +31,6 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
       }
     } catch (dbError) {
-      console.error('Database error checking user:', dbError);
       // If role column doesn't exist, just check if user exists
       const userExists = await prisma.user.findUnique({
         where: { clerkId: userId },
@@ -94,7 +93,6 @@ export async function GET(req: NextRequest) {
         prisma.resume.count({ where }),
       ]);
     } catch (dbError) {
-      console.error('Error querying resumes:', dbError);
       // Return empty array if tables don't exist yet
     }
 
@@ -108,7 +106,6 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Error fetching resumes:', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
@@ -142,7 +139,6 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting resumes:', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

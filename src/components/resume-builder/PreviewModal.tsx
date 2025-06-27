@@ -54,7 +54,6 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       const pdfDoc = await PDFDocument.load(arrayBuffer)
       return pdfDoc.getPageCount()
     } catch (error) {
-      console.error('Error getting PDF page count:', error)
       return 1
     }
   }
@@ -157,11 +156,8 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
         setPdfArrayBuffer(null)
       }
     } catch (error) {
-      console.error('Error generating PDF preview:', error)
-      
       // Retry up to 2 times if generation fails
       if (retryCount < 2) {
-        console.log(`Retrying PDF generation... (attempt ${retryCount + 1})`)
         setTimeout(() => generatePDFPreview(retryCount + 1), 1000 * (retryCount + 1))
         return
       }
@@ -218,7 +214,6 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       
       toast.success('Resume downloaded successfully!')
     } catch (error) {
-      console.error('Error downloading PDF:', error)
       toast.error('Failed to download resume')
     } finally {
       setIsGeneratingPDF(false)
@@ -408,7 +403,6 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
               pdfData={pdfArrayBuffer}
               className="w-full h-full"
               onLoadError={(error) => {
-                console.error('PDF.js load error:', error)
                 toast.error('Failed to load PDF preview')
               }}
             />

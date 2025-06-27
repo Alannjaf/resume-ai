@@ -23,7 +23,6 @@ export async function GET() {
       canExportToPDF: limits.canExport
     })
   } catch (error) {
-    console.error('Error fetching user permissions:', error)
     return NextResponse.json({ 
       error: 'Failed to fetch permissions' 
     }, { status: 500 })

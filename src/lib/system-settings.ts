@@ -34,7 +34,7 @@ export async function getSystemSettings() {
     
     return settings
   } catch (error) {
-    console.error('Error getting system settings:', error)
+    // Error getting system settings
     // Return default settings on error
     return {
       id: 1,
@@ -120,7 +120,7 @@ export async function updateSystemSettings(data: any) {
       })
     }
   } catch (error) {
-    console.error('Error updating system settings:', error)
+    // Error updating system settings
     throw error
   }
 }

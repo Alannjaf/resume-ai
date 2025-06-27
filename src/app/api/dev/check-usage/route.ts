@@ -33,7 +33,6 @@ export async function GET() {
       }
     })
   } catch (error) {
-    console.error('Error checking usage:', error)
     return NextResponse.json({ 
       error: 'Failed to check usage' 
     }, { status: 500 })

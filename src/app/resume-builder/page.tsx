@@ -104,7 +104,6 @@ function ResumeBuilderContent() {
         setLastSavedData({ ...formData })
         return true
       } catch (error) {
-        console.error('Create resume failed:', error)
         return false
       }
     }
@@ -129,7 +128,6 @@ function ResumeBuilderContent() {
       setLastSavedData({ ...formData })
       return true
     } catch (error) {
-      console.error('Quick save failed:', error)
       return false
     }
   }
@@ -446,17 +444,13 @@ function ResumeBuilderContent() {
       }
 
       if (translationTasks.length === 0) {
-        console.log('No translation tasks found')
         return formData // No translation needed
       }
-
-      console.log(`Found ${translationTasks.length} items to translate:`, translationTasks.map(t => ({ content: t.content.substring(0, 30) + '...', type: t.contentType })))
 
       // Process translations in smaller batches of 3 to avoid overwhelming the API
       const batchSize = 3
       for (let i = 0; i < translationTasks.length; i += batchSize) {
         const batch = translationTasks.slice(i, i + batchSize)
-        console.log(`Processing translation batch ${Math.floor(i/batchSize) + 1}/${Math.ceil(translationTasks.length/batchSize)}`)
         
         // Process batch in parallel
         const batchPromises = batch.map(task => 
@@ -471,14 +465,11 @@ function ResumeBuilderContent() {
           }).then(async response => {
             if (response.ok) {
               const result = await response.json()
-              console.log(`Translated: "${task.content.substring(0, 30)}..." -> "${result.enhancedContent.substring(0, 30)}..."`)
               return { ...task, translatedContent: result.enhancedContent }
             } else {
-              console.error(`Translation failed for: "${task.content.substring(0, 30)}..." - Status: ${response.status}`)
               return null
             }
           }).catch(error => {
-            console.error(`Translation error for: "${task.content.substring(0, 30)}..."`, error)
             return null
           })
         )
@@ -489,7 +480,6 @@ function ResumeBuilderContent() {
         batchResults.forEach(result => {
           if (result?.translatedContent) {
             const { updatePath, index, translatedContent } = result
-            console.log(`Applying translation to ${updatePath.join('.')}${index !== undefined ? `[${index}]` : ''}`)
             
             if (updatePath.length === 2 && typeof index === 'number') {
               // Array item update (experience, education, skills, etc.)
@@ -497,7 +487,6 @@ function ResumeBuilderContent() {
               if (translatedData[section as keyof ResumeData] && Array.isArray(translatedData[section as keyof ResumeData])) {
                 (translatedData[section as keyof ResumeData] as any)[index][field] = translatedContent
                 hasTranslations = true
-                console.log(`Updated ${section}[${index}].${field}`)
               }
             } else if (updatePath.length === 2) {
               // Nested object update (personal info)
@@ -505,14 +494,12 @@ function ResumeBuilderContent() {
               if (translatedData[section as keyof ResumeData]) {
                 (translatedData[section as keyof ResumeData] as any)[field] = translatedContent
                 hasTranslations = true
-                console.log(`Updated ${section}.${field}`)
               }
             } else if (updatePath.length === 1) {
               // Direct field update (summary)
               const [field] = updatePath
               translatedData[field as keyof ResumeData] = translatedContent as any
               hasTranslations = true
-              console.log(`Updated ${field}`)
             }
           }
         })
@@ -524,7 +511,6 @@ function ResumeBuilderContent() {
 
       return translatedData
     } catch (error) {
-      console.error('Auto-translation error:', error)
       toast.error(t('pages.resumeBuilder.messages.translationError'))
       return formData // Return original data if translation fails
     }
@@ -543,14 +529,11 @@ function ResumeBuilderContent() {
         setIsAutoTranslating(true)
         
         try {
-          console.log('Starting auto-translation...')
           const translatedData = await autoTranslateToEnglish()
-          console.log('Translation completed, updating form data...')
           setFormData(translatedData)
           
           // Force save the translated data immediately
           if (resumeId) {
-            console.log('Saving translated data...')
             await fetch(`/api/resumes/${resumeId}`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
@@ -560,10 +543,8 @@ function ResumeBuilderContent() {
                 formData: translatedData
               })
             })
-            console.log('Translated data saved successfully')
           }
         } catch (error) {
-          console.error('Auto-translation failed:', error)
           toast.error(t('pages.resumeBuilder.messages.translationError'))
         } finally {
           setIsAutoTranslating(false)

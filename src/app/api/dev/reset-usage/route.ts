@@ -32,7 +32,6 @@ export async function POST() {
       userId: user.id
     })
   } catch (error) {
-    console.error('Error resetting usage:', error)
     return NextResponse.json({ 
       error: 'Failed to reset usage counts' 
     }, { status: 500 })

@@ -30,7 +30,6 @@ export async function GET() {
       maintenanceMode: settings.maintenanceMode
     })
   } catch (error) {
-    console.error('Admin settings API error:', error)
     return NextResponse.json({ 
       error: 'Unauthorized' 
     }, { status: 403 })
@@ -49,7 +48,6 @@ export async function POST(req: Request) {
       settings: savedSettings 
     })
   } catch (error) {
-    console.error('Error updating settings:', error)
     return NextResponse.json({ 
       error: 'Failed to update settings' 
     }, { status: 500 })

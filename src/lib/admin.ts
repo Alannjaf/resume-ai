@@ -19,7 +19,7 @@ export async function isAdmin(): Promise<boolean> {
       return false
     }
   } catch (error) {
-    console.error('Error checking admin status:', error)
+    // Error checking admin status
     return false
   }
 }

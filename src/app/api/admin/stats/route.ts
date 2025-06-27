@@ -38,7 +38,6 @@ export async function GET() {
       }
     })
   } catch (error) {
-    console.error('Error fetching admin stats:', error)
     return NextResponse.json({ 
       error: 'Unauthorized or failed to fetch stats' 
     }, { status: 403 })

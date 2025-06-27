@@ -43,7 +43,7 @@ export async function GET(
     try {
       personalInfo = resume.personalInfo ? (typeof resume.personalInfo === 'string' ? JSON.parse(resume.personalInfo) : resume.personalInfo) : {};
     } catch (e) {
-      console.log('Failed to parse personalInfo:', e);
+      // Failed to parse personalInfo
     }
 
     // Transform database resume to ResumeData format
@@ -73,13 +73,9 @@ export async function GET(
       certifications: [],
     };
 
-    console.log('Resume sections found:', resume.sections.length);
-    console.log('Personal info:', transformedData.personal);
-
     // Transform sections based on their type
     resume.sections.forEach((section) => {
       const content = section.content as any;
-      console.log(`Processing section: ${section.type}`, content);
       
       switch (section.type) {
         case 'WORK_EXPERIENCE':
@@ -180,15 +176,8 @@ export async function GET(
       }
     });
 
-    console.log('Final transformed data:');
-    console.log('- Experience items:', transformedData.experience.length);
-    console.log('- Education items:', transformedData.education.length);
-    console.log('- Skills items:', transformedData.skills.length);
-    console.log('- Summary length:', transformedData.summary.length);
-
     return NextResponse.json(transformedData);
   } catch (error) {
-    console.error('Error fetching resume preview:', error);
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

@@ -39,7 +39,7 @@ export async function initializeDatabase() {
           "updatedAt" TIMESTAMP DEFAULT NOW()
         )
       `
-      console.log('Created SystemSettings table')
+      // Created SystemSettings table
     }
 
     // Add any missing columns (for migration purposes)
@@ -73,14 +73,14 @@ export async function initializeDatabase() {
         ("maxFreeResumes", "maxFreeAIUsage", "maxFreeExports", "maxBasicResumes", "maxBasicAIUsage", "maxBasicExports", "maxProResumes", "maxProAIUsage", "maxProExports", "basicPlanPrice", "proPlanPrice", "maintenanceMode")
         VALUES (10, 100, 20, 50, 500, 100, -1, -1, -1, 5000, 10000, FALSE)
       `
-      console.log('Initialized SystemSettings with default values')
+      // Initialized SystemSettings with default values
     } else {
-      console.log(`SystemSettings table has ${settingsCount[0].count} existing records`)
+      // SystemSettings table has existing records
     }
 
     // Mark as initialized for this session
     isInitialized = true
   } catch (error) {
-    console.error('Error initializing database:', error)
+    // Error initializing database
   }
 }

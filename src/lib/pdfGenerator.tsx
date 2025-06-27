@@ -83,7 +83,7 @@ export const generateResumePDF = async (resumeData: ResumeData, fileName?: strin
     
     return true
   } catch (error) {
-    console.error('Error generating PDF:', error)
+    // Error generating PDF
     throw new Error('Failed to generate PDF')
   }
 }
@@ -97,7 +97,7 @@ export const getResumePDFBlob = async (resumeData: ResumeData, template: string 
     const blob = await pdf(templateComponent).toBlob()
     return blob
   } catch (error) {
-    console.error('Error generating PDF blob:', error)
+    // Error generating PDF blob
     throw new Error('Failed to generate PDF blob')
   }
 }

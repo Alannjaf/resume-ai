@@ -52,7 +52,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ enhancedDescription })
   } catch (error) {
-    console.error('Error enhancing description:', error)
     return NextResponse.json({ 
       error: error instanceof Error ? error.message : 'Failed to enhance description' 
     }, { status: 500 })

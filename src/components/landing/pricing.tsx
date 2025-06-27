@@ -49,7 +49,7 @@ export function Pricing() {
           setPlans(data.plans)
         }
       } catch (error) {
-        console.error('Error fetching pricing:', error)
+        // Error fetching pricing
       } finally {
         setLoading(false)
       }

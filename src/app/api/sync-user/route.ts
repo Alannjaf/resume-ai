@@ -61,7 +61,6 @@ export async function GET() {
       }
     })
   } catch (error) {
-    console.error('User sync error:', error)
     return NextResponse.json({ 
       error: 'Failed to sync user',
       details: error instanceof Error ? error.message : 'Unknown error'

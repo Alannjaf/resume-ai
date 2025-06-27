@@ -27,7 +27,7 @@ export async function POST() {
       }
     })
 
-    console.log(`🔍 Found ${expiredSubscriptions.length} expired subscriptions`)
+    // Found expired subscriptions
 
     if (expiredSubscriptions.length === 0) {
       return NextResponse.json({ 
@@ -50,7 +50,7 @@ export async function POST() {
             }
           })
 
-          console.log(`✅ Downgraded user ${subscription.user.email} from ${subscription.plan} to FREE`)
+          // User downgraded successfully
           
           return {
             success: true,
@@ -60,7 +60,7 @@ export async function POST() {
             newPlan: 'FREE'
           }
         } catch (error) {
-          console.error(`❌ Failed to downgrade user ${subscription.user.email}:`, error)
+          // Failed to downgrade user
           return {
             success: false,
             userId: subscription.userId,
@@ -97,7 +97,6 @@ export async function POST() {
     })
 
   } catch (error) {
-    console.error('Error checking expired subscriptions:', error)
     return NextResponse.json({ 
       error: 'Failed to check expired subscriptions',
       details: error instanceof Error ? error.message : 'Unknown error'
@@ -181,7 +180,6 @@ export async function GET() {
     })
 
   } catch (error) {
-    console.error('Error checking subscription status:', error)
     return NextResponse.json({ 
       error: 'Failed to check subscription status',
       details: error instanceof Error ? error.message : 'Unknown error'

@@ -37,7 +37,7 @@ export async function scrollToTop(options: ScrollOptions = {}): Promise<void> {
         
         resolve(true)
       } catch (error) {
-        console.warn('Scroll attempt failed:', error)
+        // Scroll attempt failed
         resolve(false)
       }
     })
@@ -79,7 +79,7 @@ export async function scrollToTop(options: ScrollOptions = {}): Promise<void> {
     
     // If not the last attempt, wait before retrying
     if (attempt < maxRetries) {
-      console.warn(`Scroll attempt ${attempt} failed, retrying...`)
+      // Scroll attempt failed, retrying
       await new Promise(resolve => setTimeout(resolve, 100))
       
       // Use 'auto' behavior for retries to ensure immediate scroll
@@ -93,7 +93,7 @@ export async function scrollToTop(options: ScrollOptions = {}): Promise<void> {
   
   // Final validation
   if (validateScroll && !isAtTop()) {
-    console.warn('Scroll to top may have failed after all attempts')
+    // Scroll to top may have failed after all attempts
   }
 }
 

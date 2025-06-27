@@ -13,7 +13,7 @@ export async function GET() {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    console.log('🕒 Cron job started: Checking for expired subscriptions')
+    // Cron job started: Checking for expired subscriptions
     
     // Call the check-expired endpoint internally
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
@@ -31,7 +31,7 @@ export async function GET() {
 
     const result = await response.json()
     
-    console.log('✅ Cron job completed:', result)
+    // Cron job completed
     
     return NextResponse.json({
       success: true,
@@ -40,7 +40,6 @@ export async function GET() {
     })
 
   } catch (error) {
-    console.error('❌ Cron job failed:', error)
     return NextResponse.json({ 
       success: false,
       error: 'Cron job failed',
@@ -54,7 +53,7 @@ export async function GET() {
 export async function POST() {
   try {
     // This would require admin authentication in a real scenario
-    console.log('🔧 Manual subscription check triggered')
+    // Manual subscription check triggered
     
     // Call the check-expired endpoint internally
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
@@ -80,7 +79,6 @@ export async function POST() {
     })
 
   } catch (error) {
-    console.error('❌ Manual subscription check failed:', error)
     return NextResponse.json({ 
       success: false,
       error: 'Manual subscription check failed',

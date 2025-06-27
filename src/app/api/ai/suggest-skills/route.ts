@@ -52,7 +52,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ skills })
   } catch (error) {
-    console.error('Error generating skill suggestions:', error)
     return NextResponse.json({ 
       error: error instanceof Error ? error.message : 'Failed to generate skill suggestions' 
     }, { status: 500 })

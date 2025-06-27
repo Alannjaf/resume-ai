@@ -81,7 +81,6 @@ export async function POST(req: Request) {
       detectedLanguage: detectedLanguage === 'auto' ? 'unknown' : detectedLanguage
     })
   } catch (error) {
-    console.error('Error translating and enhancing content:', error)
     return NextResponse.json({ 
       error: error instanceof Error ? error.message : 'Failed to translate and enhance content' 
     }, { status: 500 })

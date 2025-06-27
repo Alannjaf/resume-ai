@@ -53,7 +53,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ bulletPoints })
   } catch (error) {
-    console.error('Error generating bullet points:', error)
     return NextResponse.json({ 
       error: error instanceof Error ? error.message : 'Failed to generate bullet points' 
     }, { status: 500 })

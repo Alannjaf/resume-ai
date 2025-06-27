@@ -54,7 +54,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ summary })
   } catch (error) {
-    console.error('Error generating summary:', error)
     return NextResponse.json({ 
       error: error instanceof Error ? error.message : 'Failed to generate summary' 
     }, { status: 500 })

@@ -64,7 +64,7 @@ Please provide only the summary text without any additional formatting or explan
 
       return completion.choices[0]?.message?.content?.trim() || ''
     } catch (error) {
-      console.error('AI generation error:', error)
+      // AI generation error
       throw new Error('Failed to generate professional summary')
     }
   }
@@ -121,7 +121,7 @@ Please provide only the enhanced description without any additional formatting o
 
       return completion.choices[0]?.message?.content?.trim() || ''
     } catch (error) {
-      console.error('AI generation error:', error)
+      // AI generation error
       throw new Error('Failed to enhance job description')
     }
   }
@@ -174,7 +174,7 @@ Format: Return only skill names separated by newlines.`
       const skillsText = completion.choices[0]?.message?.content?.trim() || ''
       return skillsText.split('\n').map(skill => skill.trim()).filter(skill => skill.length > 0)
     } catch (error) {
-      console.error('AI generation error:', error)
+      // AI generation error
       throw new Error('Failed to generate skill suggestions')
     }
   }
@@ -238,7 +238,7 @@ Example format:
       const bulletsText = completion.choices[0]?.message?.content?.trim() || ''
       return bulletsText.split('\n').map(bullet => bullet.replace(/^[•\-\*]\s*/, '').trim()).filter(bullet => bullet.length > 0)
     } catch (error) {
-      console.error('AI generation error:', error)
+      // AI generation error
       throw new Error('Failed to generate bullet points')
     }
   }
@@ -298,7 +298,7 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
 
       return completion.choices[0]?.message?.content?.trim() || ''
     } catch (error) {
-      console.error('AI generation error:', error)
+      // AI generation error
       throw new Error('Failed to improve content')
     }
   }
@@ -348,7 +348,7 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
 
       return completion.choices[0]?.message?.content?.trim() || ''
     } catch (error) {
-      console.error('AI translation error:', error)
+      // AI translation error
       throw new Error('Failed to translate content')
     }
   }
@@ -436,7 +436,7 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
 
       return completion.choices[0]?.message?.content?.trim() || ''
     } catch (error) {
-      console.error('AI translate & enhance error:', error)
+      // AI translate & enhance error
       throw new Error('Failed to translate and enhance content')
     }
   }

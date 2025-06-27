@@ -41,18 +41,10 @@ export async function POST(request: NextRequest) {
       data: { exportCount: { increment: 1 } }
     })
 
-    // Log download event
-    console.log('PDF Download Event:', {
-      userId,
-      template,
-      timestamp,
-      userAgent: userAgent?.substring(0, 200), // Truncate for storage
-      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
-    })
+    // Log download event (removed console.log)
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Download tracking error:', error)
     return NextResponse.json({ error: 'Internal error' }, { status: 500 })
   }
 }

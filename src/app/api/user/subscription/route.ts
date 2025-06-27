@@ -68,9 +68,9 @@ export async function GET() {
     }
 
     const settings = await getSystemSettings()
-    console.log('🔧 System Settings from DB:', settings)
+    // System Settings from DB
     const plan = user.subscription.plan
-    console.log('👤 User Plan:', plan)
+    // User Plan loaded
     
     // Get limits based on plan and admin settings
     let resumesLimit, aiUsageLimit, exportLimit, importLimit
@@ -92,7 +92,7 @@ export async function GET() {
       importLimit = settings.maxProImports !== null && settings.maxProImports !== undefined ? settings.maxProImports : -1
     }
     
-    console.log(`📊 Final limits for ${plan}:`, { resumesLimit, aiUsageLimit, exportLimit, importLimit })
+    // Final limits calculated
     
     return NextResponse.json({
       currentPlan: plan,
@@ -106,7 +106,6 @@ export async function GET() {
       importLimit
     })
   } catch (error) {
-    console.error('Error fetching user subscription:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

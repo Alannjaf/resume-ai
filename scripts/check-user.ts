@@ -18,16 +18,16 @@ async function checkUser() {
       }
     })
     
-    console.log('Users in database:')
+    // Users in database (remove output for production)
     users.forEach(user => {
-      console.log(`- ${user.email} (${user.name})`)
-      console.log(`  ClerkID: ${user.clerkId}`)
-      console.log(`  Role: ${user.role}`)
-      console.log(`  Resumes: ${user.resumes.length}`)
-      console.log('---')
+      // User info
+      // Clerk ID
+      // User role
+      // Resume count
+      // Separator
     })
   } catch (error) {
-    console.error('Error checking users:', error)
+    // Error checking users
   } finally {
     await prisma.$disconnect()
   }

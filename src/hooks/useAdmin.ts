@@ -13,7 +13,7 @@ export function useAdmin() {
           setIsAdmin(data.isAdmin)
         }
       } catch (error) {
-        console.error('Error checking admin status:', error)
+        // Error checking admin status
       } finally {
         setLoading(false)
       }

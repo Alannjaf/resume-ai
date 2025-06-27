@@ -98,7 +98,6 @@ export async function PUT(
       resumeId: id
     })
   } catch (error) {
-    console.error('Quick save error:', error)
     return NextResponse.json({ 
       error: 'Failed to save progress' 
     }, { status: 500 })

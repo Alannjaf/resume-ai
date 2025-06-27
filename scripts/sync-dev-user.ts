@@ -23,7 +23,7 @@ async function syncDevUser() {
       const email = user.emailAddresses[0]?.emailAddress
       
       if (!email) {
-        console.log('Skipping user without email:', user.id)
+        // Skipping user without email
         continue
       }
 
@@ -47,22 +47,22 @@ async function syncDevUser() {
             role: 'USER'
           }
         })
-        console.log('Created user:', newUser.email)
+        // User created
       } else if (existingUser.clerkId !== user.id) {
         // Update existing user with clerkId if email matches but clerkId doesn't
         const updatedUser = await prisma.user.update({
           where: { id: existingUser.id },
           data: { clerkId: user.id }
         })
-        console.log('Updated user with clerkId:', updatedUser.email)
+        // User updated with clerk ID
       } else {
-        console.log('User already exists:', existingUser.email)
+        // User already exists
       }
     }
     
-    console.log('Sync complete!')
+    // Sync complete
   } catch (error) {
-    console.error('Error syncing users:', error)
+    // Error syncing users
   } finally {
     await prisma.$disconnect()
   }

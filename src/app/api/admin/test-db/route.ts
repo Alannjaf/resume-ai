@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
     try {
       resumeCount = await prisma.resume.count();
     } catch (e) {
-      console.log('Resume table might not exist yet');
+      // Resume table might not exist yet
     }
     
     return NextResponse.json({
@@ -21,7 +21,6 @@ export async function GET(req: NextRequest) {
       message: 'Database connection successful'
     });
   } catch (error) {
-    console.error('Database test error:', error);
     return NextResponse.json({
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
