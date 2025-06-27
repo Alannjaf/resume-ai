@@ -82,7 +82,7 @@ export default function BillingPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <AppHeader 
-        title="Subscription & Billing"
+        title={t('billing.title')}
         showBackButton={true}
         backButtonText={t('pages.resumeBuilder.backToDashboard')}
         backButtonHref="/dashboard"
@@ -91,8 +91,8 @@ export default function BillingPage() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Subscription & Billing</h1>
-          <p className="text-gray-600">Choose the plan that works best for you</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('billing.title')}</h1>
+          <p className="text-gray-600">{t('billing.subtitle')}</p>
         </div>
 
         {/* Manual Payment Banner */}
@@ -100,11 +100,8 @@ export default function BillingPage() {
           <div className="flex items-center justify-center space-x-3">
             <CreditCard className="h-6 w-6 text-green-600" />
             <div className="text-center">
-              <h2 className="text-lg font-semibold text-green-900">Manual Payment Available!</h2>
-              <p className="text-green-700 mt-1">
-                You can upgrade your plan by sending payment through FIB. 
-                We'll activate your subscription manually within 24 hours.
-              </p>
+              <h2 className="text-lg font-semibold text-green-900">{t('billing.manualPayment.title')}</h2>
+              <p className="text-green-700 mt-1">{t('billing.manualPayment.description')}</p>
             </div>
           </div>
         </div>
@@ -114,11 +111,11 @@ export default function BillingPage() {
           <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">Current Plan</h3>
-                <p className="text-gray-600">You are currently on the {subscription.plan} plan</p>
+                <h3 className="text-lg font-semibold text-gray-900">{t('billing.currentPlan.title')}</h3>
+                <p className="text-gray-600">{t('billing.currentPlan.description', { plan: subscription.plan })}</p>
               </div>
               <Badge variant="secondary" className="px-3 py-1">
-                {subscription.plan} Plan
+                {t('billing.currentPlan.planBadge', { plan: subscription.plan })}
               </Badge>
             </div>
             
@@ -127,7 +124,7 @@ export default function BillingPage() {
                 <div className="text-2xl font-bold text-gray-900">
                   {subscription.resumeCount}/{subscription.resumeLimit === -1 ? '∞' : subscription.resumeLimit}
                 </div>
-                <div className="text-sm text-gray-600">Resumes Used</div>
+                <div className="text-sm text-gray-600">{t('billing.currentPlan.stats.resumesUsed')}</div>
                 {subscription.resumeLimit !== -1 && (
                   <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
                     <div 
@@ -141,7 +138,7 @@ export default function BillingPage() {
                 <div className="text-2xl font-bold text-gray-900">
                   {subscription.aiUsageCount}/{subscription.aiUsageLimit === -1 ? '∞' : subscription.aiUsageLimit}
                 </div>
-                <div className="text-sm text-gray-600">AI Usage</div>
+                <div className="text-sm text-gray-600">{t('billing.currentPlan.stats.aiUsage')}</div>
                 <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
                   <div 
                     className="bg-green-600 h-2 rounded-full" 
@@ -157,7 +154,7 @@ export default function BillingPage() {
                 <div className="text-2xl font-bold text-gray-900">
                   {subscription.exportCount}/{subscription.exportLimit === -1 ? '∞' : subscription.exportLimit}
                 </div>
-                <div className="text-sm text-gray-600">PDF Exports</div>
+                <div className="text-sm text-gray-600">{t('billing.currentPlan.stats.pdfExports')}</div>
                 <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
                   <div 
                     className="bg-purple-600 h-2 rounded-full" 
@@ -173,7 +170,7 @@ export default function BillingPage() {
                 <div className="text-2xl font-bold text-gray-900">
                   {subscription.resumeImportsCount}/{subscription.resumeImportsLimit === -1 ? '∞' : subscription.resumeImportsLimit}
                 </div>
-                <div className="text-sm text-gray-600">Resume Imports</div>
+                <div className="text-sm text-gray-600">{t('billing.currentPlan.stats.resumeImports')}</div>
                 <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
                   <div 
                     className="bg-orange-600 h-2 rounded-full" 
@@ -193,7 +190,7 @@ export default function BillingPage() {
         {loading || subscriptionLoading ? (
           <div className="text-center py-12">
             <div className="animate-spin h-8 w-8 border-2 border-primary border-t-transparent rounded-full mx-auto mb-4" />
-            <p className="text-gray-600">Loading pricing plans...</p>
+            <p className="text-gray-600">{t('billing.loading')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -236,7 +233,7 @@ export default function BillingPage() {
 
                 {plan.current ? (
                   <Button variant="outline" className="w-full" disabled>
-                    Current Plan
+                    {t('billing.currentPlan.currentPlanButton')}
                   </Button>
                 ) : (
                   <Button 
@@ -245,7 +242,7 @@ export default function BillingPage() {
                     onClick={() => router.push(`/billing/payment-instructions?plan=${plan.name.toLowerCase()}`)}
                   >
                     <CreditCard className="h-4 w-4 mr-2" />
-                    Upgrade Now
+                    {t('billing.upgradeNow')}
                   </Button>
                 )}
               </Card>
@@ -255,7 +252,7 @@ export default function BillingPage() {
 
         {/* Payment Methods Section */}
         <div className="bg-white rounded-lg shadow-sm border p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Supported Payment Methods</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">{t('billing.paymentMethods.title')}</h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg opacity-60">
@@ -263,12 +260,12 @@ export default function BillingPage() {
                 <span className="text-white font-bold text-xs">FIB</span>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900">First Iraqi Bank (FIB)</h4>
-                <p className="text-sm text-gray-600">Secure local payment for Iraqi users</p>
+                <h4 className="font-semibold text-gray-900">{t('billing.paymentMethods.fib.name')}</h4>
+                <p className="text-sm text-gray-600">{t('billing.paymentMethods.fib.description')}</p>
               </div>
               <Badge variant="outline" className="ml-auto">
                 <Clock className="h-3 w-3 mr-1" />
-                Soon
+                {t('billing.paymentMethods.soon')}
               </Badge>
             </div>
             
@@ -277,12 +274,12 @@ export default function BillingPage() {
                 <span className="text-white font-bold text-xs">NP</span>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900">Nasspay</h4>
-                <p className="text-sm text-gray-600">Alternative payment solution</p>
+                <h4 className="font-semibold text-gray-900">{t('billing.paymentMethods.nasspay.name')}</h4>
+                <p className="text-sm text-gray-600">{t('billing.paymentMethods.nasspay.description')}</p>
               </div>
               <Badge variant="outline" className="ml-auto">
                 <Clock className="h-3 w-3 mr-1" />
-                Soon
+                {t('billing.paymentMethods.soon')}
               </Badge>
             </div>
           </div>

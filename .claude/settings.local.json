@@ -16,7 +16,10 @@
       "mcp__NEON__list_projects",
       "mcp__NEON__get_database_tables",
       "Bash(node:*)",
-      "Bash(xmllint:*)"
+      "Bash(xmllint:*)",
+      "mcp__NEON__describe_table_schema",
+      "WebFetch(domain:clerk.com)",
+      "Bash(python3:*)"
     ],
     "deny": []
   }

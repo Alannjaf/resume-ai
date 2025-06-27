@@ -11,13 +11,9 @@ This is an AI-powered resume builder web application with multilingual support f
 
 ## 🚀 When Starting a New Session
 
-### Step 1: Check Current Status
-```bash
-# Always read the project status first
-cat PROJECT_STATUS.md
-```
 
-### Step 2: Verify Environment
+
+### Step 1: Verify Environment
 ```bash
 # Check if the app runs correctly
 npm run dev
@@ -25,7 +21,7 @@ npm run dev
 # Test: Sign up/in should work, dashboard should be accessible
 ```
 
-### Step 3: Continue From Where We Left Off
+### Step 2: Continue From Where We Left Off
 **Current next task:** Set up database (Neon.tech + Prisma)
 
 ## 🛠️ Development Commands
@@ -103,3 +99,8 @@ cat .env.local
 - I always run npm run dev and npm run build on my windows cmd
 
 ---
+
+## IMPORTANT
+- Make sure each file should not be more than 100 lines of code
+- After adding each debug log or comment, make sure to remove it before committing
+- when i provide images the path should be in wsl path not in windows path
