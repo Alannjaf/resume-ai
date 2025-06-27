@@ -10,7 +10,18 @@ export default function Page() {
             Sign in to your Work.krd account
           </p>
         </div>
-        <SignIn />
+        <SignIn 
+          appearance={{
+            elements: {
+              formButtonPrimary: 'bg-blue-600 hover:bg-blue-700',
+            }
+          }}
+          routing="path"
+          path="/sign-in"
+          signUpUrl="/sign-up"
+          fallbackRedirectUrl="/dashboard"
+          forceRedirectUrl="/dashboard"
+        />
       </div>
     </div>
   )
