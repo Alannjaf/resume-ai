@@ -79,7 +79,37 @@
   },
   "billing": {
     "title": "Billing & Subscription",
-    "currentPlan": "Current Plan",
+    "subtitle": "Choose the plan that works best for you",
+    "manualPayment": {
+      "title": "Manual Payment Available!",
+      "description": "You can upgrade your plan by sending payment through FIB or contacting our support team."
+    },
+    "currentPlan": {
+      "title": "Current Plan",
+      "description": "You are currently on the {plan} plan",
+      "planBadge": "{plan} Plan",
+      "stats": {
+        "resumesUsed": "Resumes Used",
+        "aiUsage": "AI Usage", 
+        "pdfExports": "PDF Exports",
+        "resumeImports": "Resume Imports"
+      },
+      "currentPlanButton": "Current Plan"
+    },
+    "loading": "Loading pricing plans...",
+    "upgradeNow": "Upgrade Now",
+    "paymentMethods": {
+      "title": "Supported Payment Methods",
+      "fib": {
+        "name": "First Iraqi Bank (FIB)",
+        "description": "Secure local payment for Iraqi users"
+      },
+      "nasspay": {
+        "name": "Nasspay",
+        "description": "Alternative payment solution"
+      },
+      "soon": "Soon"
+    },
     "paymentInstructions": {
       "pageTitle": "Complete Your Upgrade",
       "mobileBanking": "Mobile Banking",
@@ -559,9 +589,14 @@
       "currentPlan": {
         "title": "Current Plan",
         "description": "You are currently on the {plan} plan",
-        "resumesUsed": "Resumes Used",
-        "aiUsage": "AI Usage",
-        "exportsUsed": "Exports Used"
+        "planBadge": "{plan} Plan",
+        "stats": {
+          "resumesUsed": "Resumes Used",
+          "aiUsage": "AI Usage", 
+          "pdfExports": "PDF Exports",
+          "resumeImports": "Resume Imports"
+        },
+        "currentPlanButton": "Current Plan"
       },
       "loading": "Loading pricing plans...",
       "upgradeNow": "Upgrade Now",
@@ -606,7 +641,7 @@
     },
     "proFeature": {
       "title": "PRO Feature",
-      "description": "Resume import is exclusively available for PRO users. Upgrade your plan to import existing resumes and convert them to our format.",
+      "description": "You've reached your resume import limit. Upgrade your plan to import more resumes.",
       "upgradeButton": "Upgrade to PRO"
     },
     "review": {

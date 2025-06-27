@@ -107,7 +107,37 @@
   },
   "billing": {
     "title": "الفواتير والاشتراك",
-    "currentPlan": "الخطة الحالية",
+    "subtitle": "اختر الخطة التي تناسبك",
+    "manualPayment": {
+      "title": "الدفع اليدوي متاح!",
+      "description": "يمكنك ترقية خطتك عن طريق إرسال الدفعة من خلال بنك FIB أو التواصل مع فريق الدعم."
+    },
+    "currentPlan": {
+      "title": "الخطة الحالية",
+      "description": "أنت حالياً على خطة {plan}",
+      "planBadge": "خطة {plan}",
+      "stats": {
+        "resumesUsed": "السير الذاتية المستخدمة",
+        "aiUsage": "استخدام الذكاء الاصطناعي",
+        "pdfExports": "تصدير PDF",
+        "resumeImports": "استيراد السير الذاتية"
+      },
+      "currentPlanButton": "الخطة الحالية"
+    },
+    "loading": "جاري تحميل خطط الأسعار...",
+    "upgradeNow": "ترقِ الآن",
+    "paymentMethods": {
+      "title": "طرق الدفع المدعومة",
+      "fib": {
+        "name": "البنك العراقي الأول (FIB)",
+        "description": "دفع محلي آمن للمستخدمين العراقيين"
+      },
+      "nasspay": {
+        "name": "ناسباي",
+        "description": "حل دفع بديل"
+      },
+      "soon": "قريباً"
+    },
     "paymentInstructions": {
       "pageTitle": "أكمل ترقية حسابك",
       "mobileBanking": "الخدمات المصرفية عبر الهاتف",
@@ -525,9 +555,14 @@
       "currentPlan": {
         "title": "الخطة الحالية",
         "description": "أنت حالياً على خطة {plan}",
-        "resumesUsed": "السير الذاتية المستخدمة",
-        "aiUsage": "استخدام الذكاء الاصطناعي",
-        "exportsUsed": "التصديرات المستخدمة"
+        "planBadge": "خطة {plan}",
+        "stats": {
+          "resumesUsed": "السير الذاتية المستخدمة",
+          "aiUsage": "استخدام الذكاء الاصطناعي",
+          "pdfExports": "تصدير PDF",
+          "resumeImports": "استيراد السير الذاتية"
+        },
+        "currentPlanButton": "الخطة الحالية"
       },
       "loading": "جاري تحميل خطط الأسعار...",
       "upgradeNow": "ترقِ الآن",
@@ -572,7 +607,7 @@
     },
     "proFeature": {
       "title": "ميزة PRO",
-      "description": "استيراد السيرة الذاتية متاح حصرياً لمستخدمي PRO. قم بترقية خطتك لاستيراد السير الذاتية الموجودة وتحويلها إلى تنسيقنا.",
+      "description": "لقد وصلت إلى حد استيراد السيرة الذاتية. قم بترقية خطتك لاستيراد المزيد من السير الذاتية.",
       "upgradeButton": "ترقية إلى PRO"
     },
     "review": {
