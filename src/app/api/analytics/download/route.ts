@@ -31,7 +31,9 @@ export async function POST(request: NextRequest) {
     // Check if user can use the selected template
     if (!limits.availableTemplates.includes(template)) {
       return NextResponse.json({ 
-        error: 'This template is not available for your current plan. Please upgrade to access premium templates.' 
+        error: `Template "${template}" is not available for your ${limits.subscription.plan} plan. Available templates: ${limits.availableTemplates.join(', ')}`,
+        template,
+        availableTemplates: limits.availableTemplates
       }, { status: 403 })
     }
 

@@ -194,6 +194,31 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
   const downloadPDF = async () => {
     setIsGeneratingPDF(true)
     try {
+      // Track the download before generating PDF
+      const trackingResponse = await fetch('/api/analytics/download', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          template: template,
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent
+        })
+      }).catch(error => {
+        // Handle network errors gracefully
+        throw new Error('Network error while tracking download')
+      })
+
+      if (!trackingResponse.ok) {
+        const error = await trackingResponse.json().catch(() => ({ error: 'Failed to track download' }))
+        if (trackingResponse.status === 403) {
+          toast.error(error.error || 'Export limit reached. Please upgrade your plan.')
+          window.open('/billing', '_blank')
+          return
+        }
+        throw new Error(error.error || error.message || 'Failed to track download')
+      }
+
+      // Generate and download PDF only if tracking succeeds
       const blob = await getResumePDFBlob(data, template)
       const filename = `${data.personal.fullName.replace(/\s+/g, '_')}_Resume.pdf`
       
@@ -310,7 +335,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
                 variant="secondary"
                 size="sm"
                 className="bg-white text-orange-600 hover:bg-gray-100"
-                onClick={() => window.open('/pricing', '_blank')}
+                onClick={() => window.open('/billing', '_blank')}
               >
                 <ArrowUp className="h-4 w-4 mr-1" />
                 Upgrade Now
@@ -365,9 +390,10 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
               </Button>
               <Button
                 onClick={downloadPDF}
-                disabled={isGeneratingPDF || isLoadingPreview || !data.personal.fullName}
+                disabled={isGeneratingPDF || isLoadingPreview || !data.personal.fullName || isTemplateRestricted}
                 size="sm"
                 className="text-xs sm:text-sm"
+                title={isTemplateRestricted ? 'This template requires a premium plan' : undefined}
               >
                 {isGeneratingPDF ? (
                   <>
@@ -377,7 +403,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
                 ) : (
                   <>
                     <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                    Download PDF
+                    {isTemplateRestricted ? 'Upgrade to Download' : 'Download PDF'}
                   </>
                 )}
               </Button>
