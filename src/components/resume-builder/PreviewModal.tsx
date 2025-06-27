@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { Button } from '@/components/ui/button'
-import { generateResumePDF, getResumePDFBlob } from '@/lib/pdfGenerator'
+import { getResumePDFBlob } from '@/lib/pdfGenerator'
 import { X, Download, RefreshCw, Crown, ArrowUp } from 'lucide-react'
 import { ResumeData } from '@/types/resume'
 import { useSubscription } from '@/contexts/SubscriptionContext'
 import toast from 'react-hot-toast'
 import { PDFDocument } from 'pdf-lib'
+import { shouldUsePDFJS } from '@/utils/browserDetection'
+import { PDFJSViewer } from '@/components/pdf/PDFJSViewer'
 
 interface PreviewModalProps {
   isOpen: boolean
@@ -17,16 +19,33 @@ interface PreviewModalProps {
 }
 
 export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: PreviewModalProps) {
-  const { availableTemplates, checkPermission } = useSubscription()
+  const { availableTemplates } = useSubscription()
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
   const [isLoadingPreview, setIsLoadingPreview] = useState(false)
   const [pdfUrl, setPdfUrl] = useState<string | null>(null)
+  const [pdfArrayBuffer, setPdfArrayBuffer] = useState<ArrayBuffer | null>(null)
+  const [usePDFJS, setUsePDFJS] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
   const [currentPdfPage, setCurrentPdfPage] = useState(1)
   const [totalPdfPages, setTotalPdfPages] = useState(1)
   const [currentPdfUrl, setCurrentPdfUrl] = useState<string | null>(null)
   const currentPdfUrlRef = useRef<string | null>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
+
+  // Check if we should use PDF.js and detect mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent))
+    }
+    
+    checkMobile()
+    const shouldUsePDFJSResult = shouldUsePDFJS()
+    setUsePDFJS(shouldUsePDFJSResult)
+    
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Function to get actual page count from PDF
   const getPDFPageCount = async (blob: Blob): Promise<number> => {
@@ -36,94 +55,11 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       return pdfDoc.getPageCount()
     } catch (error) {
       console.error('Error getting PDF page count:', error)
-      return 1 // Default to 1 page if parsing fails
+      return 1
     }
   }
 
-  const generatePDFPreview = useCallback(async () => {
-    if (!data.personal.fullName) {
-      toast.error('Please fill in your name before generating preview')
-      return
-    }
-
-    setIsLoadingPreview(true)
-    try {
-      // Clean up previous URL if it exists
-      if (currentPdfUrlRef.current) {
-        URL.revokeObjectURL(currentPdfUrlRef.current)
-        currentPdfUrlRef.current = null
-      }
-      
-      const blob = await getResumePDFBlob(data, template)
-      const url = URL.createObjectURL(blob)
-      currentPdfUrlRef.current = url
-      setPdfUrl(url)
-      setCurrentPdfPage(1) // Reset to first page
-      
-      // Get actual page count from the PDF
-      const pageCount = await getPDFPageCount(blob)
-      setTotalPdfPages(pageCount)
-      
-      // Update current PDF URL for page navigation
-      updatePdfUrl(url, 1)
-    } catch (error) {
-      toast.error('Failed to generate PDF preview')
-      console.error('PDF preview error:', error)
-    } finally {
-      setIsLoadingPreview(false)
-    }
-  }, [data, template]) // Include data and template as dependencies
-
-  const handleDownloadPDF = async () => {
-    if (!data.personal.fullName) {
-      toast.error('Please fill in your name before generating PDF')
-      return
-    }
-
-    setIsGeneratingPDF(true)
-    try {
-      // Track download event and check limits
-      const analyticsResponse = await fetch('/api/analytics/download', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          template,
-          timestamp: new Date().toISOString(),
-          userAgent: navigator.userAgent
-        })
-      })
-
-      if (!analyticsResponse.ok) {
-        const errorData = await analyticsResponse.json()
-        if (analyticsResponse.status === 403) {
-          // Check if it's a template restriction or export limit
-          if (errorData.error?.includes('template')) {
-            toast.error('This template requires a premium plan. Upgrade to download!', {
-              duration: 5000,
-              style: {
-                background: '#f97316',
-                color: '#fff',
-              },
-            })
-          } else {
-            toast.error(errorData.error || 'Export limit reached. Please upgrade your plan.')
-          }
-          return
-        }
-        throw new Error('Failed to track download')
-      }
-
-      await generateResumePDF(data, undefined, template)
-      toast.success('PDF downloaded successfully!')
-    } catch (error) {
-      toast.error('Failed to generate PDF. Please try again.')
-      console.error('PDF generation error:', error)
-    } finally {
-      setIsGeneratingPDF(false)
-    }
-  }
-
-  // Browser detection utility
+  // Browser detection utility for desktop PDF parameters
   const detectBrowser = () => {
     const userAgent = navigator.userAgent.toLowerCase()
     if (userAgent.includes('edg/')) return 'edge'
@@ -133,7 +69,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     return 'unknown'
   }
 
-  // Function to update PDF URL with page parameter
+  // Function to update PDF URL with page parameter for desktop
   const updatePdfUrl = (baseUrl: string, page: number) => {
     const browser = detectBrowser()
     let urlWithPage: string
@@ -141,20 +77,16 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     // Browser-specific PDF parameters to show full page within frame
     switch (browser) {
       case 'edge':
-        // Edge: Use explicit zoom percentage to ensure full page fits within frame
         urlWithPage = `${baseUrl}#toolbar=0&navpanes=0&scrollbar=1&view=Fit&zoom=65&page=${page}`
         break
       case 'firefox':
-        // Firefox: Use page-fit to show full page
         urlWithPage = `${baseUrl}#page=${page}&zoom=page-fit&view=Fit`
         break
       case 'safari':
-        // Safari: Basic parameters with page fit
         urlWithPage = `${baseUrl}#page=${page}&view=Fit`
         break
       case 'chrome':
       default:
-        // Chrome and default - show full page within frame
         urlWithPage = `${baseUrl}#toolbar=0&navpanes=0&scrollbar=1&view=Fit&zoom=page-fit&page=${page}`
         break
     }
@@ -162,7 +94,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     setCurrentPdfUrl(urlWithPage)
   }
 
-  // Page navigation functions
+  // Page navigation functions for desktop
   const goToNextPage = () => {
     if (currentPdfPage < totalPdfPages && pdfUrl) {
       const newPage = currentPdfPage + 1
@@ -186,7 +118,114 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     }
   }
 
-  // Right-click prevention handlers
+  const generatePDFPreview = useCallback(async (retryCount = 0) => {
+    if (!data.personal.fullName) {
+      toast.error('Please fill in your name before generating preview')
+      return
+    }
+
+    setIsLoadingPreview(true)
+    try {
+      const blob = await getResumePDFBlob(data, template)
+      
+      // Get page count
+      const pageCount = await getPDFPageCount(blob)
+      setTotalPdfPages(pageCount)
+      setCurrentPdfPage(1)
+
+      if (usePDFJS) {
+        // Use PDF.js for mobile browsers - convert blob to ArrayBuffer
+        const arrayBuffer = await blob.arrayBuffer()
+        // Create a copy to prevent detachment
+        const arrayBufferCopy = arrayBuffer.slice(0)
+        
+        // Add a small delay to ensure component is ready
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
+        setPdfArrayBuffer(arrayBufferCopy)
+        setPdfUrl(null)
+      } else {
+        // Use traditional iframe method for desktop browsers
+        if (currentPdfUrlRef.current) {
+          URL.revokeObjectURL(currentPdfUrlRef.current)
+        }
+        const url = URL.createObjectURL(blob)
+        setPdfUrl(url)
+        // Set initial PDF URL with page 1 and browser-specific parameters
+        updatePdfUrl(url, 1)
+        currentPdfUrlRef.current = url
+        setPdfArrayBuffer(null)
+      }
+    } catch (error) {
+      console.error('Error generating PDF preview:', error)
+      
+      // Retry up to 2 times if generation fails
+      if (retryCount < 2) {
+        console.log(`Retrying PDF generation... (attempt ${retryCount + 1})`)
+        setTimeout(() => generatePDFPreview(retryCount + 1), 1000 * (retryCount + 1))
+        return
+      }
+      
+      toast.error('Failed to generate PDF preview')
+    } finally {
+      setIsLoadingPreview(false)
+    }
+  }, [data, template, usePDFJS])
+
+  // Safari-specific download function
+  const downloadBlobSafari = (blob: Blob, filename: string) => {
+    // Create a new blob with octet-stream MIME type to force download
+    const downloadBlob = new Blob([blob], { type: 'application/octet-stream' })
+    const url = URL.createObjectURL(downloadBlob)
+    
+    // Create anchor element and trigger download
+    const link = document.createElement('a')
+    link.href = url
+    link.download = filename
+    link.style.display = 'none'
+    
+    // Add to DOM, click, and remove
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    
+    // Clean up the object URL
+    setTimeout(() => {
+      URL.revokeObjectURL(url)
+    }, 100)
+  }
+
+  const downloadPDF = async () => {
+    setIsGeneratingPDF(true)
+    try {
+      const blob = await getResumePDFBlob(data, template)
+      const filename = `${data.personal.fullName.replace(/\s+/g, '_')}_Resume.pdf`
+      
+      // Use Safari-specific download for Safari, regular blob download for other browsers
+      const browser = detectBrowser()
+      if (browser === 'safari') {
+        downloadBlobSafari(blob, filename)
+      } else {
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = filename
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        URL.revokeObjectURL(url)
+      }
+      
+      toast.success('Resume downloaded successfully!')
+    } catch (error) {
+      console.error('Error downloading PDF:', error)
+      toast.error('Failed to download resume')
+    } finally {
+      setIsGeneratingPDF(false)
+    }
+  }
+
+  // Prevent context menu and keyboard shortcuts
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault()
   }
@@ -195,39 +234,52 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     e.preventDefault()
   }
 
-  // Keyboard shortcut prevention
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    // Prevent Ctrl+S (save), Ctrl+P (print), Ctrl+A (select all)
     if (e.ctrlKey && (e.key === 's' || e.key === 'p' || e.key === 'a')) {
       e.preventDefault()
     }
-    // Prevent F12 (developer tools)
     if (e.key === 'F12') {
       e.preventDefault()
     }
   }
 
-  // Check if mobile device
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768 || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent))
-    }
-    
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
-
-
   // Generate PDF preview when modal opens or data changes
   useEffect(() => {
     if (isOpen && data.personal.fullName) {
-      generatePDFPreview()
+      // Reset states first
+      setIsLoadingPreview(true)
+      setPdfArrayBuffer(null)
+      setPdfUrl(null)
+      setCurrentPdfUrl(null)
+      
+      // Add a longer delay to ensure component is fully mounted and ready
+      const timer = setTimeout(() => {
+        generatePDFPreview()
+      }, 200)
+      return () => clearTimeout(timer)
     }
-  }, [isOpen, data, template, generatePDFPreview]) // Safe to include generatePDFPreview with proper dependencies
+  }, [isOpen, data, template, generatePDFPreview])
 
-  // Clean up URL object when modal closes or component unmounts
+  // Clean up and reset state when modal closes
+  useEffect(() => {
+    if (!isOpen) {
+      // Clear all PDF data when modal closes
+      setPdfArrayBuffer(null)
+      setPdfUrl(null)
+      setCurrentPdfUrl(null)
+      setCurrentPdfPage(1)
+      setTotalPdfPages(1)
+      setIsLoadingPreview(false)
+      
+      // Clean up URL object
+      if (currentPdfUrlRef.current) {
+        URL.revokeObjectURL(currentPdfUrlRef.current)
+        currentPdfUrlRef.current = null
+      }
+    }
+  }, [isOpen])
+
+  // Clean up URL object on unmount
   useEffect(() => {
     return () => {
       if (currentPdfUrlRef.current) {
@@ -235,7 +287,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
         currentPdfUrlRef.current = null
       }
     }
-  }, []) // Remove isOpen dependency to prevent unnecessary cleanup calls
+  }, [])
 
   if (!isOpen) return null
 
@@ -285,7 +337,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               {/* Page Navigation Controls - Desktop Only */}
-              {pdfUrl && !isLoadingPreview && !isMobile && (
+              {pdfUrl && !isLoadingPreview && !isMobile && !usePDFJS && (
                 <div className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-lg shadow-sm">
                   <button
                     onClick={goToPrevPage}
@@ -306,47 +358,31 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
                   </button>
                 </div>
               )}
-              
-              <Button 
-                variant="outline"
-                onClick={generatePDFPreview}
+              <Button
+                onClick={() => generatePDFPreview()}
                 disabled={isLoadingPreview}
+                variant="outline"
                 size="sm"
                 className="text-xs sm:text-sm"
               >
-                {isLoadingPreview ? (
-                  <>
-                    <div className="animate-spin h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 border-2 border-gray-600 border-t-transparent rounded-full" />
-                    <span className="hidden sm:inline">Loading...</span>
-                  </>
-                ) : (
-                  <>
-                    <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-                    <span className="hidden sm:inline">Refresh</span>
-                  </>
-                )}
+                <RefreshCw className={`h-3 w-3 sm:h-4 sm:w-4 mr-1 ${isLoadingPreview ? 'animate-spin' : ''}`} />
+                Refresh
               </Button>
-              <Button 
-                onClick={handleDownloadPDF}
-                disabled={isGeneratingPDF || isTemplateRestricted}
+              <Button
+                onClick={downloadPDF}
+                disabled={isGeneratingPDF || isLoadingPreview || !data.personal.fullName}
                 size="sm"
-                className={`text-xs sm:text-sm ${isTemplateRestricted ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className="text-xs sm:text-sm"
               >
                 {isGeneratingPDF ? (
                   <>
-                    <div className="animate-spin h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2 border-2 border-white border-t-transparent rounded-full" />
-                    <span className="hidden sm:inline">Downloading...</span>
-                  </>
-                ) : isTemplateRestricted ? (
-                  <>
-                    <Crown className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-                    <span className="hidden sm:inline">Upgrade</span>
-                    <span className="sm:hidden">Pro</span>
+                    <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 mr-1 animate-spin" />
+                    Downloading...
                   </>
                 ) : (
                   <>
-                    <Download className="h-3 w-3 sm:h-4 sm:w-4 sm:mr-2" />
-                    <span className="hidden sm:inline">Download</span>
+                    <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                    Download PDF
                   </>
                 )}
               </Button>
@@ -366,6 +402,16 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
                 <p className="text-gray-600">Generating PDF preview...</p>
               </div>
             </div>
+          ) : (usePDFJS && pdfArrayBuffer) ? (
+            // PDF.js viewer for mobile browsers
+            <PDFJSViewer 
+              pdfData={pdfArrayBuffer}
+              className="w-full h-full"
+              onLoadError={(error) => {
+                console.error('PDF.js load error:', error)
+                toast.error('Failed to load PDF preview')
+              }}
+            />
           ) : pdfUrl ? (
             <div className="w-full h-full">
               {isMobile ? (
@@ -427,7 +473,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
                   }
                 </p>
                 {data.personal.fullName && (
-                  <Button onClick={generatePDFPreview} disabled={isLoadingPreview}>
+                  <Button onClick={() => generatePDFPreview()} disabled={isLoadingPreview}>
                     Generate Preview
                   </Button>
                 )}
