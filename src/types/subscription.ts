@@ -4,8 +4,8 @@ export interface SubscriptionData {
   plan: SubscriptionPlan;
   resumeCount: number;
   resumeLimit: number;
-  photoUploadsCount: number;
-  photoUploadsLimit: number;
+  resumeImportsCount: number;
+  resumeImportsLimit: number;
   aiUsageCount: number;
   aiUsageLimit: number;
   exportCount: number;

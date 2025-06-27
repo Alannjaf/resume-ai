@@ -171,16 +171,16 @@ export default function BillingPage() {
               </div>
               <div className="text-center p-4 bg-gray-50 rounded-lg">
                 <div className="text-2xl font-bold text-gray-900">
-                  {subscription.photoUploadsCount}/{subscription.photoUploadsLimit === -1 ? '∞' : subscription.photoUploadsLimit}
+                  {subscription.resumeImportsCount}/{subscription.resumeImportsLimit === -1 ? '∞' : subscription.resumeImportsLimit}
                 </div>
-                <div className="text-sm text-gray-600">Photo Uploads</div>
+                <div className="text-sm text-gray-600">Resume Imports</div>
                 <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
                   <div 
                     className="bg-orange-600 h-2 rounded-full" 
                     style={{ 
-                      width: subscription.photoUploadsLimit === -1 
+                      width: subscription.resumeImportsLimit === -1 
                         ? '100%' 
-                        : `${Math.min((subscription.photoUploadsCount / subscription.photoUploadsLimit) * 100, 100)}%` 
+                        : `${Math.min((subscription.resumeImportsCount / subscription.resumeImportsLimit) * 100, 100)}%` 
                     }}
                   ></div>
                 </div>
