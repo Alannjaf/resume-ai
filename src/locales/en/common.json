@@ -622,7 +622,8 @@
       "errors": {
         "createFailed": "Failed to create resume",
         "saveFailed": "Failed to save progress",
-        "loadFailed": "Failed to load resume"
+        "loadFailed": "Failed to load resume",
+        "titleRequired": "Resume title is required"
       }
     },
     "billing": {

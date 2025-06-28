@@ -57,8 +57,9 @@ function ResumeBuilderContent() {
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [resumeId, setResumeId] = useState<string | null>(null)
-  const [resumeTitle, setResumeTitle] = useState('')
+  const [resumeTitle, setResumeTitle] = useState(`Resume - ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}`)
   const [showKeyboardHelp, setShowKeyboardHelp] = useState(false)
+  const [titleError, setTitleError] = useState(false)
   
   // Refs
   const summaryTextareaRef = useRef<HTMLTextAreaElement>(null)
@@ -171,6 +172,13 @@ function ResumeBuilderContent() {
   const handleSave = useCallback(async () => {
     if (isSaving) return
 
+    // Validate title
+    if (!resumeTitle || resumeTitle.trim() === '') {
+      setTitleError(true)
+      toast.error(t('pages.resumeBuilder.errors.titleRequired'))
+      return
+    }
+
     setIsSaving(true)
     try {
       if (!resumeId) {
@@ -218,7 +226,7 @@ function ResumeBuilderContent() {
     } finally {
       setIsSaving(false)
     }
-  }, [resumeId, formData, selectedTemplate, resumeTitle, isSaving, t, setLastSavedData])
+  }, [resumeId, formData, selectedTemplate, resumeTitle, isSaving, t, setLastSavedData, setTitleError])
 
 
   // Load existing resume on mount
@@ -389,10 +397,20 @@ function ResumeBuilderContent() {
                 id="resume-title"
                 type="text"
                 value={resumeTitle}
-                onChange={(e) => setResumeTitle(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                onChange={(e) => {
+                  setResumeTitle(e.target.value)
+                  setTitleError(false)
+                }}
+                className={`px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent ${
+                  titleError ? 'border-red-500' : 'border-gray-300'
+                }`}
                 placeholder={t('pages.resumeBuilder.resumeTitlePlaceholder')}
               />
+              {titleError && (
+                <p className="mt-1 text-sm text-red-600">
+                  {t('pages.resumeBuilder.errors.titleRequired')}
+                </p>
+              )}
             </div>
             
             {/* Action Buttons */}
