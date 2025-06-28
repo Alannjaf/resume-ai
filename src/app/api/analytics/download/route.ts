@@ -26,12 +26,12 @@ export async function POST(request: NextRequest) {
       }, { status: 404 })
     }
 
-    const { template, timestamp, userAgent } = await request.json()
+    const { template } = await request.json()
 
     // Check if user can use the selected template
-    if (!limits.availableTemplates.includes(template)) {
+    if (!limits.availableTemplates?.includes(template)) {
       return NextResponse.json({ 
-        error: `Template "${template}" is not available for your ${limits.subscription.plan} plan. Available templates: ${limits.availableTemplates.join(', ')}`,
+        error: `Template "${template}" is not available for your ${limits.subscription.plan} plan. Available templates: ${limits.availableTemplates?.join(', ') || 'none'}`,
         template,
         availableTemplates: limits.availableTemplates
       }, { status: 403 })
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     // Log download event (removed console.log)
 
     return NextResponse.json({ success: true })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Internal error' }, { status: 500 })
   }
 }

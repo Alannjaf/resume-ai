@@ -7,8 +7,7 @@ const openai = new OpenAI({
   defaultHeaders: {
     'HTTP-Referer': 'https://resumeai.app', // Your site URL for rankings
     'X-Title': 'ResumeAI', // Your site title for rankings
-  },
-})
+  }})
 
 export interface AIGenerationOptions {
   jobTitle?: string
@@ -59,11 +58,10 @@ Please provide only the summary text without any additional formatting or explan
         model: 'google/gemini-2.5-flash-preview-05-20',
         messages,
         max_tokens: 200,
-        temperature: 0.7,
-      })
+        temperature: 0.7})
 
       return completion.choices[0]?.message?.content?.trim() || ''
-    } catch (error) {
+    } catch {
       // AI generation error
       throw new Error('Failed to generate professional summary')
     }
@@ -116,11 +114,10 @@ Please provide only the enhanced description without any additional formatting o
         model: 'google/gemini-2.5-flash-preview-05-20',
         messages,
         max_tokens: 400,
-        temperature: 0.7,
-      })
+        temperature: 0.7})
 
       return completion.choices[0]?.message?.content?.trim() || ''
-    } catch (error) {
+    } catch {
       // AI generation error
       throw new Error('Failed to enhance job description')
     }
@@ -168,12 +165,11 @@ Format: Return only skill names separated by newlines.`
         model: 'google/gemini-2.5-flash-preview-05-20',
         messages,
         max_tokens: 300,
-        temperature: 0.6,
-      })
+        temperature: 0.6})
 
       const skillsText = completion.choices[0]?.message?.content?.trim() || ''
       return skillsText.split('\n').map(skill => skill.trim()).filter(skill => skill.length > 0)
-    } catch (error) {
+    } catch {
       // AI generation error
       throw new Error('Failed to generate skill suggestions')
     }
@@ -232,12 +228,11 @@ Example format:
         model: 'google/gemini-2.5-flash-preview-05-20',
         messages,
         max_tokens: 400,
-        temperature: 0.7,
-      })
+        temperature: 0.7})
 
       const bulletsText = completion.choices[0]?.message?.content?.trim() || ''
       return bulletsText.split('\n').map(bullet => bullet.replace(/^[•\-\*]\s*/, '').trim()).filter(bullet => bullet.length > 0)
-    } catch (error) {
+    } catch {
       // AI generation error
       throw new Error('Failed to generate bullet points')
     }
@@ -293,11 +288,10 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
         model: 'google/gemini-2.5-flash-preview-05-20',
         messages,
         max_tokens: 300,
-        temperature: 0.7,
-      })
+        temperature: 0.7})
 
       return completion.choices[0]?.message?.content?.trim() || ''
-    } catch (error) {
+    } catch {
       // AI generation error
       throw new Error('Failed to improve content')
     }
@@ -347,7 +341,7 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
       })
 
       return completion.choices[0]?.message?.content?.trim() || ''
-    } catch (error) {
+    } catch {
       // AI translation error
       throw new Error('Failed to translate content')
     }
@@ -431,11 +425,10 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
         model: 'google/gemini-2.5-flash-preview-05-20',
         messages,
         max_tokens: 500,
-        temperature: 0.5,
-      })
+        temperature: 0.5})
 
       return completion.choices[0]?.message?.content?.trim() || ''
-    } catch (error) {
+    } catch {
       // AI translate & enhance error
       throw new Error('Failed to translate and enhance content')
     }

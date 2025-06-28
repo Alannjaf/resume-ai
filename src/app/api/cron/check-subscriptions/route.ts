@@ -21,22 +21,20 @@ export async function GET() {
     const response = await fetch(`${baseUrl}/api/subscriptions/check-expired`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+        'Content-Type': 'application/json'}})
 
     if (!response.ok) {
       throw new Error(`Failed to check expired subscriptions: ${response.statusText}`)
     }
 
-    const result = await response.json()
+    const _result = await response.json()
     
     // Cron job completed
     
     return NextResponse.json({
       success: true,
       timestamp: new Date().toISOString(),
-      result
+      result: _result
     })
 
   } catch (error) {
@@ -61,21 +59,19 @@ export async function POST() {
     const response = await fetch(`${baseUrl}/api/subscriptions/check-expired`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+        'Content-Type': 'application/json'}})
 
     if (!response.ok) {
       throw new Error(`Failed to check expired subscriptions: ${response.statusText}`)
     }
 
-    const result = await response.json()
+    const _result = await response.json()
     
     return NextResponse.json({
       success: true,
       message: 'Manual subscription check completed',
       timestamp: new Date().toISOString(),
-      result
+      result: _result
     })
 
   } catch (error) {

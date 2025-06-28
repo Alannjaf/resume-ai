@@ -32,7 +32,7 @@ export async function GET() {
         exportCount: limits.subscription?.exportCount || 0
       }
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ 
       error: 'Failed to check usage' 
     }, { status: 500 })

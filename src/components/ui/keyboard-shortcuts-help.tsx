@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { X, Keyboard, ArrowRight, ArrowLeft, RotateCcw } from 'lucide-react'
+import { X, Keyboard, ArrowLeft, ArrowRight, RotateCcw } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 interface KeyboardShortcutsHelpProps {

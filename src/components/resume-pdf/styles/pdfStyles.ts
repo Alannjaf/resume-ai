@@ -9,8 +9,7 @@ export const styles = StyleSheet.create({
     lineHeight: 1.4,
     color: '#1a1a1a',
     paddingTop: 30,    // Padding for all pages
-    paddingHorizontal: 0,
-  },
+    paddingHorizontal: 0},
   
   // Header Section
   header: {
@@ -23,8 +22,7 @@ export const styles = StyleSheet.create({
     padding: '32 40',
     flexDirection: 'row',
     alignItems: 'center',
-    height: 140,
-  },
+    height: 140},
   
   profileImageContainer: {
     width: 90,
@@ -35,14 +33,12 @@ export const styles = StyleSheet.create({
     marginRight: 24,
     alignItems: 'center',
     justifyContent: 'center',
-    border: '4px solid #ffffff',
-  },
+    border: '4px solid #ffffff'},
   
   profileImage: {
     width: 90,
     height: 90,
-    objectFit: 'cover',
-  },
+    objectFit: 'cover'},
   
   profileImagePlaceholder: {
     width: 90,
@@ -50,55 +46,46 @@ export const styles = StyleSheet.create({
     backgroundColor: '#94a3b8',
     borderRadius: 45,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
+    justifyContent: 'center'},
   
   headerText: {
-    flex: 1,
-  },
+    flex: 1},
 
   headerTextNoPhoto: {
     marginLeft: 0,
-    paddingLeft: 0,
-  },
+    paddingLeft: 0},
   
   name: {
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 16, // Increased from 10 to 16
-    color: '#ffffff',
-  },
+    color: '#ffffff'},
   
   title: {
     fontSize: 16,
     color: '#e2e8f0',
     marginBottom: 12,
-    fontWeight: 'normal',
-  },
+    fontWeight: 'normal'},
   
   contactInfo: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 16,
-  },
+    gap: 16},
   
   contactItem: {
     fontSize: 10,
-    color: '#cbd5e1',
-  },
+    color: '#cbd5e1'},
 
   // Demographics Section
   demographicsInfo: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
-    marginTop: 8,
-  },
+    marginTop: 8},
 
   demographicItem: {
     fontSize: 9,
-    color: '#94a3b8',
-  },
+    color: '#94a3b8'},
   
   // Body Layout
   body: {
@@ -114,8 +101,7 @@ export const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: '#ffffff',
-  },
+    backgroundColor: '#ffffff'},
   
   leftBgOverlay: {
     position: 'absolute',
@@ -124,8 +110,7 @@ export const styles = StyleSheet.create({
     bottom: 0,
     width: '38%',
     backgroundColor: '#f8fafc',
-    borderRight: '1px solid #e2e8f0',
-  },
+    borderRight: '1px solid #e2e8f0'},
   
   leftColumnBg: {
     position: 'absolute',
@@ -134,23 +119,19 @@ export const styles = StyleSheet.create({
     bottom: 0,
     width: '38%',
     backgroundColor: '#f8fafc',
-    borderRight: '1px solid #e2e8f0',
-  },
+    borderRight: '1px solid #e2e8f0'},
   
   leftColumn: {
     width: '38%',
-    padding: '24 20',
-  },
+    padding: '24 20'},
   
   rightColumn: {
     width: '62%',
-    padding: '24 28',
-  },
+    padding: '24 28'},
   
   // Section Styling
   section: {
-    marginBottom: 24,
-  },
+    marginBottom: 24},
   
   sectionTitle: {
     fontSize: 14,
@@ -160,8 +141,7 @@ export const styles = StyleSheet.create({
     textTransform: 'uppercase',
     borderBottom: '3px solid #3b82f6',
     paddingBottom: 4,
-    paddingLeft: 2,
-  },
+    paddingLeft: 2},
   
   leftSectionTitle: {
     fontSize: 12,
@@ -170,8 +150,7 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
     textTransform: 'uppercase',
     borderBottom: '2px solid #6366f1',
-    paddingBottom: 3,
-  },
+    paddingBottom: 3},
   
   // Summary Section
   summary: {
@@ -182,6 +161,4 @@ export const styles = StyleSheet.create({
     padding: '16 20',
     backgroundColor: '#f9fafb',
     borderRadius: 8,
-    borderLeft: '4px solid #3b82f6',
-  },
-})
+    borderLeft: '4px solid #3b82f6'}})

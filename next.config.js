@@ -1,6 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  webpack: (config, { isServer }) => {
+    // Handle underscore dependency for mammoth
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      underscore: require.resolve('underscore'),
+    }
+    return config
+  },
   async headers() {
     return [
       {

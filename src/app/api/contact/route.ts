@@ -86,21 +86,20 @@ ${message}
 Sent from Work.krd contact form
     `.trim()
 
-    const result = await resend.emails.send({
+    await resend.emails.send({
       from: 'Work.krd Contact <contact@work.krd>', // Using verified domain
       to: ['info@work.krd'],
       subject: `Contact Form: ${subject}`,
       html: emailContent,
       text: textContent, // Added plain text version
-      replyTo: email,
-    })
+      replyTo: email})
 
 
     return NextResponse.json(
       { message: 'Message sent successfully' },
       { status: 200 }
     )
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to send message. Please try again.' },
       { status: 500 }

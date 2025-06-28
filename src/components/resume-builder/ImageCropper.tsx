@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useRef, useEffect, useState, useCallback } from 'react'
 import { Move, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { CropData, loadImage, calculateInitialCrop, validateCropBounds } from '@/lib/image-utils'

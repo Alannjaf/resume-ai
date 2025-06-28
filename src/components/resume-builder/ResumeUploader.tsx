@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react'
-import { Upload, FileText, X, AlertCircle } from 'lucide-react'
+import { useCallback, useState } from 'react'
+import { Upload, X, AlertCircle, FileText } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useLanguage } from '@/contexts/LanguageContext'
@@ -76,8 +76,7 @@ export function ResumeUploader({ onUploadComplete, onCancel }: ResumeUploaderPro
     try {
       const response = await fetch('/api/resume/upload', {
         method: 'POST',
-        body: formData,
-      })
+        body: formData})
 
       const result = await response.json()
 

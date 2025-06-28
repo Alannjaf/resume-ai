@@ -29,16 +29,4 @@ export interface SubscriptionContextType {
   error: string | null;
   refreshSubscription: () => Promise<void>;
   checkPermission: (permission: keyof SubscriptionPermissions) => boolean;
-}
-
-export interface SubscriptionResponse {
-  currentPlan: SubscriptionPlan;
-  resumesUsed: number;
-  resumesLimit: number;
-  aiUsageCount: number;
-  aiUsageLimit: number;
-  exportCount: number;
-  exportLimit: number;
-  importCount: number;
-  importLimit: number;
-}
+} 

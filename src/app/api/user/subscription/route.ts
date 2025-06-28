@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { checkUserLimits, getCurrentUser } from '@/lib/db'
+import { getCurrentUser } from '@/lib/db'
 import { prisma } from '@/lib/prisma'
 
 async function getSystemSettings() {
@@ -28,7 +28,7 @@ async function getSystemSettings() {
     if (settingsRecord && settingsRecord.length > 0) {
       return settingsRecord[0]
     }
-  } catch (error) {
+  } catch {
     // Silent error handling
   }
   
@@ -105,7 +105,7 @@ export async function GET() {
       importCount: user.subscription.importCount || 0,
       importLimit
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { Check, Lock, Crown } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
+import { Check, Lock } from 'lucide-react'
 import { TemplateThumbnail } from './TemplateThumbnail'
 import { getTierBadgeStyle } from '@/lib/templates'
 import { useLanguage } from '@/contexts/LanguageContext'

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export function useAdmin() {
   const [isAdmin, setIsAdmin] = useState(false)
@@ -12,7 +12,7 @@ export function useAdmin() {
           const data = await response.json()
           setIsAdmin(data.isAdmin)
         }
-      } catch (error) {
+      } catch {
         // Error checking admin status
       } finally {
         setLoading(false)

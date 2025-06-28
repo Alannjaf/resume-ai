@@ -22,7 +22,7 @@ export async function GET() {
       canAccessProTemplates: (limits.availableTemplates?.length ?? 0) > 2, // More than basic templates
       canExportToPDF: limits.canExport
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ 
       error: 'Failed to fetch permissions' 
     }, { status: 500 })

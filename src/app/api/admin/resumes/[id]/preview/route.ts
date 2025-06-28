@@ -16,8 +16,7 @@ export async function GET(
 
     // Check if user is admin
     const user = await prisma.user.findUnique({
-      where: { clerkId: userId },
-    });
+      where: { clerkId: userId }});
 
     if (!user || user.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -28,11 +27,8 @@ export async function GET(
       where: { id },
       include: {
         sections: {
-          orderBy: { order: 'asc' },
-        },
-        user: true,
-      },
-    });
+          orderBy: { order: 'asc' }},
+        user: true}});
 
     if (!resume) {
       return NextResponse.json({ error: 'Resume not found' }, { status: 404 });
@@ -40,10 +36,12 @@ export async function GET(
 
     // Parse personalInfo as JSON if it's stored as JSON
     let personalInfo: any = {};
-    try {
-      personalInfo = resume.personalInfo ? (typeof resume.personalInfo === 'string' ? JSON.parse(resume.personalInfo) : resume.personalInfo) : {};
-    } catch (e) {
-      // Failed to parse personalInfo
+    if (resume.personalInfo) {
+      try {
+        personalInfo = typeof resume.personalInfo === 'string' ? JSON.parse(resume.personalInfo) : resume.personalInfo;
+      } catch {
+        personalInfo = {};
+      }
     }
 
     // Transform database resume to ResumeData format
@@ -62,16 +60,14 @@ export async function GET(
         gender: personalInfo?.gender || '',
         nationality: personalInfo?.nationality || '',
         maritalStatus: personalInfo?.maritalStatus || '',
-        country: personalInfo?.country || '',
-      },
+        country: personalInfo?.country || ''},
       summary: resume.summary || '',
       experience: [],
       education: [],
       skills: [],
       languages: [],
       projects: [],
-      certifications: [],
-    };
+      certifications: []};
 
     // Transform sections based on their type
     resume.sections.forEach((section) => {
@@ -88,8 +84,7 @@ export async function GET(
               startDate: exp.startDate || '',
               endDate: exp.endDate || '',
               current: exp.current || false,
-              description: exp.description || '',
-            }));
+              description: exp.description || ''}));
           } else if (content && typeof content === 'object') {
             // Sometimes content might be directly the experience data
             const expArray = Object.values(content).filter(item => 
@@ -104,8 +99,7 @@ export async function GET(
                 startDate: exp.startDate || '',
                 endDate: exp.endDate || '',
                 current: exp.current || false,
-                description: exp.description || '',
-              }));
+                description: exp.description || ''}));
             }
           }
           break;
@@ -121,8 +115,7 @@ export async function GET(
               startDate: edu.startDate || '',
               endDate: edu.endDate || '',
               gpa: edu.gpa || '',
-              achievements: edu.achievements || '',
-            }));
+              achievements: edu.achievements || ''}));
           }
           break;
 
@@ -131,8 +124,7 @@ export async function GET(
             transformedData.skills = content.skills.map((skill: any) => ({
               id: skill.id || Math.random().toString(),
               name: skill.name || '',
-              level: skill.level || '',
-            }));
+              level: skill.level || ''}));
           }
           break;
 
@@ -141,8 +133,7 @@ export async function GET(
             transformedData.languages = content.languages.map((lang: any) => ({
               id: lang.id || Math.random().toString(),
               name: lang.name || '',
-              proficiency: lang.proficiency || '',
-            }));
+              proficiency: lang.proficiency || ''}));
           }
           break;
 
@@ -155,8 +146,7 @@ export async function GET(
               technologies: proj.technologies || '',
               link: proj.link || '',
               startDate: proj.startDate || '',
-              endDate: proj.endDate || '',
-            }));
+              endDate: proj.endDate || ''}));
           }
           break;
 
@@ -169,15 +159,14 @@ export async function GET(
               date: cert.date || '',
               expiryDate: cert.expiryDate || '',
               credentialId: cert.credentialId || '',
-              url: cert.url || '',
-            }));
+              url: cert.url || ''}));
           }
           break;
       }
     });
 
     return NextResponse.json(transformedData);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

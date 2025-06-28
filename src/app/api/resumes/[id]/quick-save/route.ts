@@ -44,8 +44,7 @@ export async function PUT(
             ...(changes.title && { title: changes.title }),
             ...(changes.template && { template: changes.template }),
             ...(changes.personal && { personalInfo: changes.personal }),
-            ...(changes.summary !== undefined && { summary: changes.summary }),
-          }
+            ...(changes.summary !== undefined && { summary: changes.summary })}
         })
       }
 
@@ -57,8 +56,7 @@ export async function PUT(
           'skills': SectionType.SKILLS,
           'languages': SectionType.LANGUAGES,
           'projects': SectionType.PROJECTS,
-          'certifications': SectionType.CERTIFICATIONS,
-        }
+          'certifications': SectionType.CERTIFICATIONS}
 
         const sectionType = sectionTypeMap[currentSection]
         if (sectionType) {
@@ -97,7 +95,7 @@ export async function PUT(
       message: 'Progress saved',
       resumeId: id
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ 
       error: 'Failed to save progress' 
     }, { status: 500 })

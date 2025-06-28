@@ -33,8 +33,7 @@ export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProp
     const newSkill: Skill = {
       id: Date.now().toString(),
       name: '',
-      level: 'Intermediate',
-    }
+      level: 'Intermediate'}
     onChange([...skills, newSkill])
   }
 

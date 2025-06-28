@@ -3,9 +3,9 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { AppHeader } from '@/components/shared/AppHeader'
-import { Plus, FileText, Settings, Edit, Trash2, Calendar, Upload } from 'lucide-react'
+import { Plus, Settings, Edit, Trash2, Calendar, Upload, FileText } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import toast from 'react-hot-toast'
 
@@ -36,7 +36,7 @@ export default function Dashboard() {
           const data = await response.json()
           setResumes(data.resumes || [])
         }
-      } catch (error) {
+      } catch {
       } finally {
         setIsLoading(false)
       }
@@ -47,7 +47,7 @@ export default function Dashboard() {
 
   const handleDeleteResume = async (resumeId: string) => {
     // Show a warning toast with confirmation
-    const toastId = toast.custom(
+    toast.custom(
       (toastData) => (
         <div className={`${
           toastData.visible ? 'animate-enter' : 'animate-leave'
@@ -82,7 +82,7 @@ export default function Dashboard() {
                         } else {
                           toast.error(t('pages.dashboard.resumes.messages.deleteError'))
                         }
-                      } catch (error) {
+                      } catch {
                         toast.error(t('pages.dashboard.resumes.messages.deleteErrorGeneric'))
                       } finally {
                         setDeletingId(null)
@@ -106,8 +106,7 @@ export default function Dashboard() {
       ),
       {
         duration: 10000,
-        position: 'top-center',
-      }
+        position: 'top-center'}
     )
   }
 

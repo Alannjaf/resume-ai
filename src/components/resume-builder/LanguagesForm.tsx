@@ -20,8 +20,7 @@ export function LanguagesForm({ languages, onChange }: LanguagesFormProps) {
     const newLanguage: Language = {
       id: Date.now().toString(),
       name: '',
-      proficiency: 'Conversational',
-    }
+      proficiency: 'Conversational'}
     onChange([...languages, newLanguage])
   }
 

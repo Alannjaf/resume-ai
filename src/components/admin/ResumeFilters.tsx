@@ -1,7 +1,7 @@
 'use client';
 
 import { ResumeStatus } from '@prisma/client';
-import { Search, Filter } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 interface ResumeFiltersProps {
   search: string;
@@ -18,8 +18,7 @@ export function ResumeFilters({
   template,
   onSearchChange,
   onStatusChange,
-  onTemplateChange,
-}: ResumeFiltersProps) {
+  onTemplateChange}: ResumeFiltersProps) {
   return (
     <div className="space-y-4">
       <div className="relative">

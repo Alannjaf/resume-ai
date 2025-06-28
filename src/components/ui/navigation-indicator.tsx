@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Keyboard, ArrowRight } from 'lucide-react'
+import { Keyboard } from 'lucide-react'
 
 interface NavigationIndicatorProps {
   currentSection: number

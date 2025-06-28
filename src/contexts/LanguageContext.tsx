@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 
 type Language = 'en' | 'ar' | 'ckb'
 
@@ -18,8 +18,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 const translations = {
   en: () => import('@/locales/en/common.json').then(m => m.default),
   ar: () => import('@/locales/ar/common.json').then(m => m.default),
-  ckb: () => import('@/locales/ckb/common.json').then(m => m.default),
-}
+  ckb: () => import('@/locales/ckb/common.json').then(m => m.default)}
 
 // Pre-import English translations for faster initial load
 import enTranslations from '@/locales/en/common.json'

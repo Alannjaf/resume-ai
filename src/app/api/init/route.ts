@@ -5,7 +5,7 @@ export async function GET() {
   try {
     await initializeDatabase()
     return NextResponse.json({ success: true, message: 'Database initialized' })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ 
       success: false, 
       error: 'Failed to initialize database' 

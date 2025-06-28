@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -19,7 +19,6 @@ export default function ImportResumePage() {
   const [resumeTitle, setResumeTitle] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [canImport, setCanImport] = useState<boolean | null>(null)
-  const [userPlan, setUserPlan] = useState<string>('')
 
   // Initialize default title when translations are ready
   useEffect(() => {
@@ -38,9 +37,8 @@ export default function ImportResumePage() {
         ])
         const subscriptionData = await subscriptionResponse.json()
         const permissionsData = await permissionsResponse.json()
-        setUserPlan(subscriptionData.currentPlan)
         setCanImport(permissionsData.canImport)
-      } catch (error) {
+      } catch {
         setCanImport(false)
       }
     }
@@ -68,8 +66,7 @@ export default function ImportResumePage() {
       const response = await fetch('/api/resumes', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-        },
+          'Content-Type': 'application/json'},
         body: JSON.stringify({
           title: resumeTitle,
           template: 'modern',

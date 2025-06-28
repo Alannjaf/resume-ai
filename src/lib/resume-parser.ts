@@ -17,7 +17,7 @@ export class ResumeParser {
     try {
       const result = await mammoth.extractRawText({ buffer })
       return result.value
-    } catch (error) {
+    } catch {
       throw new Error('Failed to parse DOCX file')
     }
   }
@@ -44,7 +44,7 @@ export class ResumeParser {
   static cleanText(text: string): string {
     return text
       .replace(/\s+/g, ' ') // Replace multiple spaces with single space
-      .replace(/\n{3,}/g, '\n\n') // Replace multiple newlines with double newline
+      .replace(/\n{3}/g, '\n\n') // Replace multiple newlines with double newline
       .trim()
   }
 
@@ -64,8 +64,7 @@ export class ResumeParser {
       skills: /(?:skills|competencies|مهارات|لێهاتووی)/i,
       languages: /(?:languages|لغات|زمان)/i,
       projects: /(?:projects|مشاريع|پڕۆژە)/i,
-      certifications: /(?:certifications|certificates|شهادات|بڕوانامە)/i,
-    }
+      certifications: /(?:certifications|certificates|شهادات|بڕوانامە)/i}
 
     // Split text into lines
     const lines = text.split('\n')
@@ -109,7 +108,7 @@ export class ResumeParser {
    * Basic email extraction
    */
   static extractEmail(text: string): string | null {
-    const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/
+    const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2}\b/
     const match = text.match(emailRegex)
     return match ? match[0] : null
   }
@@ -138,7 +137,7 @@ export class ResumeParser {
    */
   static extractWebsite(text: string): string | null {
     // Exclude common domains like email providers and LinkedIn
-    const websiteRegex = /(?:https?:\/\/)?(?:www\.)?(?!linkedin|gmail|yahoo|hotmail|outlook)[\w-]+\.[\w]{2,}(?:\/[\w-]*)?/i
+    const websiteRegex = /(?:https?:\/\/)?(?:www\.)?(?!linkedin|gmail|yahoo|hotmail|outlook)[\w-]+\.[\w]{2}(?:\/[\w-]*)?/i
     const match = text.match(websiteRegex)
     return match ? match[0] : null
   }
@@ -175,7 +174,7 @@ export class ResumeParser {
     for (const line of lines) {
       if (
         !line.includes('@') && 
-        !line.match(/\d{3,}/) && 
+        !line.match(/\d{3}/) && 
         !line.match(/https?:\/\//) &&
         line.length > 2 &&
         line.length < 50
@@ -192,8 +191,7 @@ export class ResumeParser {
         phone,
         location: '', // Will be extracted by AI
         linkedin,
-        website,
-      },
+        website},
       summary: sections.summary || '',
       experience: [], // Will be parsed by AI
       education: [], // Will be parsed by AI

@@ -27,28 +27,22 @@ export async function GET() {
       where: { clerkId: userId },
       update: {
         email,
-        name: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || null,
-      },
+        name: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || null},
       create: {
         clerkId: userId,
         email,
-        name: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || null,
-      },
-    })
+        name: `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() || null}})
 
     // Check if user has a subscription, if not create a free one
-    const subscription = await prisma.subscription.findUnique({
-      where: { userId: user.id },
-    })
+    const _subscription = await prisma.subscription.findUnique({
+      where: { userId: user.id }})
 
-    if (!subscription) {
+    if (!_subscription) {
       await prisma.subscription.create({
         data: {
           userId: user.id,
           plan: 'FREE',
-          status: 'ACTIVE',
-        },
-      })
+          status: 'ACTIVE'}})
     }
 
     return NextResponse.json({
@@ -57,8 +51,7 @@ export async function GET() {
         id: user.id,
         clerkId: user.clerkId,
         email: user.email,
-        name: user.name,
-      }
+        name: user.name}
     })
   } catch (error) {
     return NextResponse.json({ 

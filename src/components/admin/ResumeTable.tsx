@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Eye, Trash2, Archive, FileText } from 'lucide-react';
+import { Eye, Trash2 } from 'lucide-react';
 import { ResumeStatus } from '@prisma/client';
 
 interface ResumeWithUser {
@@ -36,8 +36,7 @@ export function ResumeTable({
   onSelectId,
   onSelectAll,
   onViewResume,
-  onDeleteResume,
-}: ResumeTableProps) {
+  onDeleteResume}: ResumeTableProps) {
   const getStatusColor = (status: ResumeStatus) => {
     switch (status) {
       case 'DRAFT':

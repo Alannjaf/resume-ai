@@ -5,8 +5,7 @@ import { useUser } from '@clerk/nextjs';
 import type { 
   SubscriptionContextType, 
   SubscriptionData, 
-  SubscriptionPermissions,
-  SubscriptionResponse 
+  SubscriptionPermissions
 } from '@/types/subscription';
 
 const SubscriptionContext = createContext<SubscriptionContextType | null>(null);
@@ -62,8 +61,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
         aiUsageLimit: subscriptionData.aiUsageLimit || 0,
         exportCount: subscriptionData.exportCount || 0,
         exportLimit: subscriptionData.exportLimit || 0,
-        isActive: true,
-      };
+        isActive: true};
 
       // Use permissions directly from API (dynamically configured by admin)
       const permissions: SubscriptionPermissions = {
@@ -71,8 +69,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
         canUploadPhoto: permissionsData.canUploadPhoto || false,
         canAccessProTemplates: permissionsData.canAccessProTemplates || false,
         canExportToPDF: permissionsData.canExportToPDF || false,
-        canUseAI: permissionsData.canUseAI || false,
-      };
+        canUseAI: permissionsData.canUseAI || false};
 
       setSubscription(subscription);
       setPermissions(permissions);
@@ -113,8 +110,7 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
     isLoading,
     error,
     refreshSubscription,
-    checkPermission,
-  };
+    checkPermission};
 
   return (
     <SubscriptionContext.Provider value={value}>

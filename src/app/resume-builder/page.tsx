@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect, useRef, Suspense } from 'react'
+import { useEffect, useRef, Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { FormInput } from '@/components/ui/form-input'
 import { AppHeader } from '@/components/shared/AppHeader'
-import { ArrowLeft, ArrowRight, Save, Eye, Keyboard } from 'lucide-react'
+import { ArrowLeft, Save, Eye, Keyboard, ArrowRight } from 'lucide-react'
 import { useFormNavigation } from '@/hooks/useFormNavigation'
 import { KeyboardShortcutsHelp } from '@/components/ui/keyboard-shortcuts-help'
 import { NavigationIndicator } from '@/components/ui/navigation-indicator'
@@ -67,16 +67,14 @@ function ResumeBuilderContent() {
       phone: '',
       location: '',
       linkedin: '',
-      website: '',
-    },
+      website: ''},
     summary: '',
     experience: [],
     education: [],
     skills: [],
     languages: [],
     projects: [],
-    certifications: [],
-  })
+    certifications: []})
 
   // Quick save function with debouncing
   const quickSave = async (changes: any, sectionType?: string) => {
@@ -86,8 +84,7 @@ function ResumeBuilderContent() {
         const response = await fetch('/api/resumes', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
-          },
+            'Content-Type': 'application/json'},
           body: JSON.stringify({
             title: resumeTitle,
             template: selectedTemplate,
@@ -103,7 +100,7 @@ function ResumeBuilderContent() {
         setResumeId(data.resume.id)
         setLastSavedData({ ...formData })
         return true
-      } catch (error) {
+      } catch {
         return false
       }
     }
@@ -112,8 +109,7 @@ function ResumeBuilderContent() {
       const response = await fetch(`/api/resumes/${resumeId}/quick-save`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
-        },
+          'Content-Type': 'application/json'},
         body: JSON.stringify({
           changes,
           currentSection: sectionType
@@ -127,7 +123,7 @@ function ResumeBuilderContent() {
       // Update last saved data
       setLastSavedData({ ...formData })
       return true
-    } catch (error) {
+    } catch {
       return false
     }
   }
@@ -602,8 +598,7 @@ function ResumeBuilderContent() {
       const response = await fetch(endpoint, {
         method,
         headers: {
-          'Content-Type': 'application/json',
-        },
+          'Content-Type': 'application/json'},
         body: JSON.stringify({
           title: resumeTitle,
           template: selectedTemplate,
@@ -752,7 +747,7 @@ function ResumeBuilderContent() {
           
           toast.success(t('pages.resumeBuilder.messages.importSuccess'))
           return
-        } catch (error) {
+        } catch {
           // Error parsing imported data
         }
       }
@@ -982,16 +977,16 @@ function ResumeBuilderContent() {
                         originalImage={formData.personal.originalProfileImage}
                         cropData={formData.personal.profileImageCrop}
                         templateId={selectedTemplate}
-                        onImageUpload={(imageDataUrl, originalImage) =>
+                        onImageUpload={(imageDataUrl, originalImage) => {
                           setFormData({
                             ...formData,
                             personal: {
                               ...formData.personal,
                               profileImage: imageDataUrl,
-                              originalProfileImage: originalImage || imageDataUrl,
-                            },
+                              originalProfileImage: originalImage || imageDataUrl
+                            }
                           })
-                        }
+                        }}
                         onImageRemove={() =>
                           setFormData({
                             ...formData,
@@ -999,9 +994,7 @@ function ResumeBuilderContent() {
                               ...formData.personal,
                               profileImage: undefined,
                               originalProfileImage: undefined,
-                              profileImageCrop: undefined,
-                            },
-                          })
+                              profileImageCrop: undefined}})
                         }
                         onCropUpdate={(croppedImage, cropData) =>
                           setFormData({
@@ -1009,9 +1002,7 @@ function ResumeBuilderContent() {
                             personal: {
                               ...formData.personal,
                               profileImage: croppedImage,
-                              profileImageCrop: cropData,
-                            },
-                          })
+                              profileImageCrop: cropData}})
                         }
                       />
                     </div>
@@ -1038,9 +1029,7 @@ function ResumeBuilderContent() {
                             ...formData,
                             personal: {
                               ...formData.personal,
-                              fullName: e.target.value,
-                            },
-                          })
+                              fullName: e.target.value}})
                         }
                       />
                       <TranslateAndEnhanceButton
@@ -1051,9 +1040,7 @@ function ResumeBuilderContent() {
                             ...formData,
                             personal: {
                               ...formData.personal,
-                              fullName: enhancedName,
-                            },
-                          })
+                              fullName: enhancedName}})
                         }
                       />
                     </div>
@@ -1069,9 +1056,7 @@ function ResumeBuilderContent() {
                             ...formData,
                             personal: {
                               ...formData.personal,
-                              title: e.target.value,
-                            },
-                          })
+                              title: e.target.value}})
                         }
                       />
                       <TranslateAndEnhanceButton
@@ -1082,9 +1067,7 @@ function ResumeBuilderContent() {
                             ...formData,
                             personal: {
                               ...formData.personal,
-                              title: enhancedTitle,
-                            },
-                          })
+                              title: enhancedTitle}})
                         }
                       />
                     </div>
@@ -1101,9 +1084,7 @@ function ResumeBuilderContent() {
                             ...formData,
                             personal: {
                               ...formData.personal,
-                              email: e.target.value,
-                            },
-                          })
+                              email: e.target.value}})
                         }
                       />
                     </div>
@@ -1119,9 +1100,7 @@ function ResumeBuilderContent() {
                             ...formData,
                             personal: {
                               ...formData.personal,
-                              phone: e.target.value,
-                            },
-                          })
+                              phone: e.target.value}})
                         }
                       />
                     </div>
@@ -1137,9 +1116,7 @@ function ResumeBuilderContent() {
                             ...formData,
                             personal: {
                               ...formData.personal,
-                              location: e.target.value,
-                            },
-                          })
+                              location: e.target.value}})
                         }
                       />
                       <TranslateAndEnhanceButton
@@ -1150,9 +1127,7 @@ function ResumeBuilderContent() {
                             ...formData,
                             personal: {
                               ...formData.personal,
-                              location: enhancedLocation,
-                            },
-                          })
+                              location: enhancedLocation}})
                         }
                       />
                     </div>
@@ -1168,9 +1143,7 @@ function ResumeBuilderContent() {
                             ...formData,
                             personal: {
                               ...formData.personal,
-                              linkedin: e.target.value,
-                            },
-                          })
+                              linkedin: e.target.value}})
                         }
                       />
                     </div>
@@ -1186,9 +1159,7 @@ function ResumeBuilderContent() {
                             ...formData,
                             personal: {
                               ...formData.personal,
-                              website: e.target.value,
-                            },
-                          })
+                              website: e.target.value}})
                         }
                       />
                     </div>
@@ -1221,9 +1192,7 @@ function ResumeBuilderContent() {
                               ...formData,
                               personal: {
                                 ...formData.personal,
-                                dateOfBirth: e.target.value,
-                              },
-                            })
+                                dateOfBirth: e.target.value}})
                           }
                         />
                       </div>
@@ -1239,9 +1208,7 @@ function ResumeBuilderContent() {
                               ...formData,
                               personal: {
                                 ...formData.personal,
-                                gender: e.target.value,
-                              },
-                            })
+                                gender: e.target.value}})
                           }
                         >
                           <option value="">{t('forms.personalInfo.demographics.selectGender')}</option>
@@ -1264,9 +1231,7 @@ function ResumeBuilderContent() {
                                 ...formData,
                                 personal: {
                                   ...formData.personal,
-                                  nationality: result,
-                                },
-                              })
+                                  nationality: result}})
                             }
                           />
                         </div>
@@ -1278,9 +1243,7 @@ function ResumeBuilderContent() {
                               ...formData,
                               personal: {
                                 ...formData.personal,
-                                nationality: e.target.value,
-                              },
-                            })
+                                nationality: e.target.value}})
                           }
                         />
                       </div>
@@ -1296,9 +1259,7 @@ function ResumeBuilderContent() {
                               ...formData,
                               personal: {
                                 ...formData.personal,
-                                maritalStatus: e.target.value,
-                              },
-                            })
+                                maritalStatus: e.target.value}})
                           }
                         >
                           <option value="">{t('forms.personalInfo.demographics.selectMaritalStatus')}</option>
@@ -1321,9 +1282,7 @@ function ResumeBuilderContent() {
                                 ...formData,
                                 personal: {
                                   ...formData.personal,
-                                  country: result,
-                                },
-                              })
+                                  country: result}})
                             }
                           />
                         </div>
@@ -1335,9 +1294,7 @@ function ResumeBuilderContent() {
                               ...formData,
                               personal: {
                                 ...formData.personal,
-                                country: e.target.value,
-                              },
-                            })
+                                country: e.target.value}})
                           }
                         />
                       </div>

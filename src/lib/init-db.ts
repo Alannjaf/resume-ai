@@ -56,7 +56,7 @@ export async function initializeDatabase() {
     for (const statement of alterStatements) {
       try {
         await prisma.$executeRawUnsafe(statement)
-      } catch (error) {
+      } catch {
         // Column already exists, continue
       }
     }
@@ -80,7 +80,7 @@ export async function initializeDatabase() {
 
     // Mark as initialized for this session
     isInitialized = true
-  } catch (error) {
+  } catch {
     // Error initializing database
   }
 }

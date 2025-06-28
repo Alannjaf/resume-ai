@@ -19,7 +19,12 @@
       "Bash(xmllint:*)",
       "mcp__NEON__describe_table_schema",
       "WebFetch(domain:clerk.com)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(npm run build:*)",
+      "Bash(for file in src/app/api/ai/*.ts)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(done)",
+      "Bash(for:*)"
     ],
     "deny": []
   }

@@ -45,10 +45,9 @@ export async function POST(req: Request) {
     evt = wh.verify(body, {
       "svix-id": svix_id,
       "svix-timestamp": svix_timestamp,
-      "svix-signature": svix_signature,
-    }) as WebhookEvent
+      "svix-signature": svix_signature}) as WebhookEvent
     // Webhook signature verified
-  } catch (err) {
+  } catch {
     // Webhook verification failed
     return new Response('Error occured', {
       status: 400
@@ -78,14 +77,11 @@ export async function POST(req: Request) {
         where: { clerkId: id },
         update: {
           email,
-          name: `${first_name || ''} ${last_name || ''}`.trim() || null,
-        },
+          name: `${first_name || ''} ${last_name || ''}`.trim() || null},
         create: {
           clerkId: id,
           email,
-          name: `${first_name || ''} ${last_name || ''}`.trim() || null,
-        },
-      })
+          name: `${first_name || ''} ${last_name || ''}`.trim() || null}})
 
       // User upserted
 
@@ -99,13 +95,11 @@ export async function POST(req: Request) {
         })
 
         if (!existingSubscription) {
-          const subscription = await prisma.subscription.create({
+          const _subscription = await prisma.subscription.create({
             data: {
               userId: user.id, // Use database user ID, not Clerk ID
               plan: 'FREE',
-              status: 'ACTIVE',
-            },
-          })
+              status: 'ACTIVE'}})
           // Subscription created
         } else {
           // Subscription already exists
@@ -132,8 +126,7 @@ export async function POST(req: Request) {
       if (user) {
         // Delete user (this will cascade delete resumes, subscriptions, etc.)
         await prisma.user.delete({
-          where: { clerkId: id },
-        })
+          where: { clerkId: id }})
         // User deleted
       } else {
         // User not found for deletion

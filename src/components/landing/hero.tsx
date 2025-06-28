@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { ArrowRight, Sparkles, FileText, Languages } from 'lucide-react'
+import { Sparkles, Languages, FileText, ArrowRight } from 'lucide-react'
 import { SignUpButton, SignedIn, SignedOut } from '@clerk/nextjs'
 import { useLanguage } from '@/contexts/LanguageContext'
 import Link from 'next/link'

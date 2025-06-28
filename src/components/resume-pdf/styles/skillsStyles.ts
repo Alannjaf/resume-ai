@@ -5,8 +5,7 @@ export const skillsStyles = StyleSheet.create({
   skillsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
-  },
+    gap: 6},
   
   skillItem: {
     backgroundColor: '#3b82f6',
@@ -14,8 +13,7 @@ export const skillsStyles = StyleSheet.create({
     padding: '6 12',
     borderRadius: 12,
     fontSize: 9,
-    marginBottom: 6,
-  },
+    marginBottom: 6},
   
   // Languages Section
   languageItem: {
@@ -26,22 +24,19 @@ export const skillsStyles = StyleSheet.create({
     padding: '8 12',
     backgroundColor: '#ffffff',
     borderRadius: 6,
-    border: '1px solid #e5e7eb',
-  },
+    border: '1px solid #e5e7eb'},
   
   languageName: {
     fontSize: 10,
     color: '#1e293b',
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold'},
   
   languageLevel: {
     fontSize: 9,
     color: '#059669',
     backgroundColor: '#ecfdf5',
     padding: '3 8',
-    borderRadius: 10,
-  },
+    borderRadius: 10},
   
   // Projects Section
   projectItem: {
@@ -57,27 +52,23 @@ export const skillsStyles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     color: '#1e293b',
-    marginBottom: 4,
-  },
+    marginBottom: 4},
   
   projectDescription: {
     fontSize: 10,
     color: '#4b5563',
     lineHeight: 1.4,
-    marginBottom: 4,
-  },
+    marginBottom: 4},
   
   projectTech: {
     fontSize: 9,
     color: '#6b7280',
-    marginBottom: 2,
-  },
+    marginBottom: 2},
   
   projectLink: {
     fontSize: 9,
     color: '#3b82f6',
-    textDecoration: 'none',
-  },
+    textDecoration: 'none'},
   
   // Certifications Section
   certificationItem: {
@@ -94,17 +85,13 @@ export const skillsStyles = StyleSheet.create({
     fontSize: 11,
     fontWeight: 'bold',
     color: '#1e293b',
-    marginBottom: 3,
-  },
+    marginBottom: 3},
   
   certificationIssuer: {
     fontSize: 10,
     color: '#3b82f6',
-    marginBottom: 2,
-  },
+    marginBottom: 2},
   
   certificationDate: {
     fontSize: 9,
-    color: '#6b7280',
-  },
-})
+    color: '#6b7280'}})

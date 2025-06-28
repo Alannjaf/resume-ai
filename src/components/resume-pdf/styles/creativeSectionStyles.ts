@@ -5,26 +5,21 @@ export const sectionStyles = StyleSheet.create({
   mainContent: {
     flexDirection: 'row',
     gap: 25,
-    marginTop: 20,
-  },
+    marginTop: 20},
 
   leftSide: {
-    width: '35%',
-  },
+    width: '35%'},
 
   rightSide: {
-    width: '65%',
-  },
+    width: '65%'},
 
   // Section containers
   section: {
-    marginBottom: 25,
-  },
+    marginBottom: 25},
 
   sectionTitleContainer: {
     marginBottom: 15,
-    position: 'relative',
-  },
+    position: 'relative'},
 
   sectionTitle: {
     fontSize: 14,
@@ -32,15 +27,13 @@ export const sectionStyles = StyleSheet.create({
     color: '#1e293b',
     textTransform: 'uppercase',
     letterSpacing: 1.5,
-    marginBottom: 8,
-  },
+    marginBottom: 8},
 
   sectionUnderline: {
     width: 40,
     height: 3,
     backgroundColor: '#3b82f6',
-    borderRadius: 2,
-  },
+    borderRadius: 2},
 
   // Summary section
   summary: {
@@ -51,8 +44,7 @@ export const sectionStyles = StyleSheet.create({
     backgroundColor: '#f8fafc',
     padding: 15,
     borderRadius: 8,
-    border: '1px solid #e2e8f0',
-  },
+    border: '1px solid #e2e8f0'},
 
   // Experience styles
   experienceItem: {
@@ -60,51 +52,42 @@ export const sectionStyles = StyleSheet.create({
     paddingBottom: 18,
     borderBottom: '1px solid #e2e8f0',
     breakInside: 'avoid',
-    keepTogether: true,
-  },
+    keepTogether: true},
 
   experienceHeader: {
-    marginBottom: 10,
-  },
+    marginBottom: 10},
 
   jobTitle: {
     fontSize: 13,
     fontWeight: 'bold',
     color: '#1e293b',
-    marginBottom: 4,
-  },
+    marginBottom: 4},
 
   company: {
     fontSize: 12,
     color: '#3b82f6',
     fontWeight: 'bold',
-    marginBottom: 2,
-  },
+    marginBottom: 2},
 
   jobMeta: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
-  },
+    marginBottom: 8},
 
   location: {
     fontSize: 10,
-    color: '#64748b',
-  },
+    color: '#64748b'},
 
   duration: {
     fontSize: 10,
     color: '#64748b',
     backgroundColor: '#f1f5f9',
     padding: '4 8',
-    borderRadius: 4,
-  },
+    borderRadius: 4},
 
   description: {
     fontSize: 10,
     lineHeight: 1.5,
     color: '#374151',
-    textAlign: 'justify',
-  },
-})
+    textAlign: 'justify'}})

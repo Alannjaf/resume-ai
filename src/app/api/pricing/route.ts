@@ -62,7 +62,7 @@ export async function GET() {
     ]
 
     return NextResponse.json({ plans })
-  } catch (error) {
+  } catch {
     
     // Return default pricing on error
     const defaultPlans = [

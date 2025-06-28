@@ -20,8 +20,7 @@ export const creativeArtisticStyles = StyleSheet.create({
     backgroundColor: colors.background,
     fontFamily: 'Helvetica',
     fontSize: 10,
-    lineHeight: 1.4,
-  },
+    lineHeight: 1.4},
 
   // Background Elements - Only on first page
   backgroundOverlay: {
@@ -30,8 +29,7 @@ export const creativeArtisticStyles = StyleSheet.create({
     left: -35,
     right: -35,
     height: 220,
-    backgroundColor: colors.gradient,
-  },
+    backgroundColor: colors.gradient},
 
   accentBar: {
     position: 'absolute',
@@ -39,27 +37,23 @@ export const creativeArtisticStyles = StyleSheet.create({
     left: -35,
     width: 8,
     height: 220,
-    backgroundColor: colors.primary,
-  },
+    backgroundColor: colors.primary},
 
   // Header Styles
   header: {
     paddingTop: 18,
     paddingBottom: 22,
     paddingHorizontal: 15,
-    marginBottom: 16,
-  },
+    marginBottom: 16},
 
   headerContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-  },
+    justifyContent: 'space-between'},
 
   headerLeft: {
     flex: 1,
-    paddingRight: 30,
-  },
+    paddingRight: 30},
 
   name: {
     fontSize: 28,
@@ -68,16 +62,14 @@ export const creativeArtisticStyles = StyleSheet.create({
     marginBottom: 16,
     textTransform: 'uppercase',
     letterSpacing: 1.5,
-    lineHeight: 1.2,
-  },
+    lineHeight: 1.2},
 
   title: {
     fontSize: 14,
     color: colors.secondary,
     marginBottom: 12,
     fontWeight: 'medium',
-    letterSpacing: 0.8,
-  },
+    letterSpacing: 0.8},
 
   contactGrid: {
     flexDirection: 'row',
@@ -90,22 +82,19 @@ export const creativeArtisticStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 2, // Further reduced from 4 to 2
-    minWidth: '45%',
-  },
+    minWidth: '45%'},
 
   contactIcon: {
     width: 12,
     height: 12,
     backgroundColor: colors.accent,
     borderRadius: 6,
-    marginRight: 8,
-  },
+    marginRight: 8},
 
   contactText: {
     fontSize: 10,
     color: colors.text,
-    fontWeight: 'medium',
-  },
+    fontWeight: 'medium'},
 
   // Photo Styles
   photoContainer: {
@@ -123,54 +112,46 @@ export const creativeArtisticStyles = StyleSheet.create({
     right: -5,
     bottom: -5,
     borderRadius: 65,
-    backgroundColor: colors.secondary,
-  },
+    backgroundColor: colors.secondary},
 
   profilePhoto: {
     width: 120,
     height: 120,
     borderRadius: 60,
-    border: `3px solid ${colors.white}`,
-  },
+    border: `3px solid ${colors.white}`},
 
   // Content Styles
   content: {
-    paddingHorizontal: 15,
-  },
+    paddingHorizontal: 15},
 
   // Section Styles
   section: {
-    marginBottom: 30,
-  },
+    marginBottom: 30},
 
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
-  },
+    marginBottom: 15},
 
   sectionIcon: {
     width: 20,
     height: 20,
     backgroundColor: colors.primary,
     borderRadius: 10,
-    marginRight: 15,
-  },
+    marginRight: 15},
 
   sectionTitle: {
     fontSize: 14,
     fontWeight: 'bold',
     color: colors.primary,
     textTransform: 'uppercase',
-    letterSpacing: 1.5,
-  },
+    letterSpacing: 1.5},
 
   sectionDivider: {
     height: 2,
     backgroundColor: colors.gradient,
     marginTop: 8,
-    marginBottom: 15,
-  },
+    marginBottom: 15},
 
   // Summary Section
   summaryCard: {
@@ -178,16 +159,14 @@ export const creativeArtisticStyles = StyleSheet.create({
     padding: 20,
     borderRadius: 8,
     borderLeft: `4px solid ${colors.secondary}`,
-    marginBottom: 5,
-  },
+    marginBottom: 5},
 
   summaryText: {
     fontSize: 11,
     color: colors.text,
     lineHeight: 1.6,
     textAlign: 'justify',
-    fontStyle: 'italic',
-  },
+    fontStyle: 'italic'},
 
   // Experience Styles
   experienceItem: {
@@ -197,37 +176,31 @@ export const creativeArtisticStyles = StyleSheet.create({
     marginBottom: 15,
     borderLeft: `4px solid ${colors.accent}`,
     breakInside: 'avoid',
-    keepTogether: true,
-  },
+    keepTogether: true},
 
   experienceHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 8,
-  },
+    marginBottom: 8},
 
   jobTitleContainer: {
     flex: 1,
-    paddingRight: 15,
-  },
+    paddingRight: 15},
 
   jobTitle: {
     fontSize: 13,
     fontWeight: 'bold',
     color: colors.primary,
-    marginBottom: 3,
-  },
+    marginBottom: 3},
 
   company: {
     fontSize: 11,
     color: colors.secondary,
-    fontWeight: 'medium',
-  },
+    fontWeight: 'medium'},
 
   dateContainer: {
-    alignItems: 'flex-end',
-  },
+    alignItems: 'flex-end'},
 
   dateRange: {
     fontSize: 9,
@@ -236,23 +209,20 @@ export const creativeArtisticStyles = StyleSheet.create({
     backgroundColor: colors.gradient,
     paddingHorizontal: 8,
     paddingVertical: 3,
-    borderRadius: 12,
-  },
+    borderRadius: 12},
 
   location: {
     fontSize: 9,
     color: colors.lightText,
     fontStyle: 'italic',
-    marginTop: 2,
-  },
+    marginTop: 2},
 
   description: {
     fontSize: 10,
     color: colors.text,
     lineHeight: 1.5,
     textAlign: 'justify',
-    marginTop: 10,
-  },
+    marginTop: 10},
 
   // Education Styles
   educationItem: {
@@ -262,48 +232,41 @@ export const creativeArtisticStyles = StyleSheet.create({
     marginBottom: 12,
     borderLeft: `4px solid ${colors.primary}`,
     breakInside: 'avoid',
-    keepTogether: true,
-  },
+    keepTogether: true},
 
   educationHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 6,
-  },
+    marginBottom: 6},
 
   degree: {
     fontSize: 12,
     fontWeight: 'bold',
     color: colors.primary,
     flex: 1,
-    marginRight: 15,
-  },
+    marginRight: 15},
 
   school: {
     fontSize: 11,
     color: colors.secondary,
-    marginBottom: 3,
-  },
+    marginBottom: 3},
 
   field: {
     fontSize: 10,
     color: colors.lightText,
-    marginBottom: 3,
-  },
+    marginBottom: 3},
 
   gpa: {
     fontSize: 9,
     color: colors.text,
-    fontStyle: 'italic',
-  },
+    fontStyle: 'italic'},
 
   // Skills Styles
   skillsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
-  },
+    gap: 8},
 
   skillChip: {
     backgroundColor: colors.gradient,
@@ -311,28 +274,24 @@ export const creativeArtisticStyles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 20,
     marginBottom: 8,
-    border: `1px solid ${colors.primary}`,
-  },
+    border: `1px solid ${colors.primary}`},
 
   skillText: {
     fontSize: 10,
     color: colors.primary,
-    fontWeight: 'medium',
-  },
+    fontWeight: 'medium'},
 
   // Languages Styles
   languagesContainer: {
     backgroundColor: colors.white,
     padding: 20,
     borderRadius: 8,
-    borderLeft: `4px solid ${colors.secondary}`,
-  },
+    borderLeft: `4px solid ${colors.secondary}`},
 
   languageGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
-  },
+    gap: 12},
 
   languageItem: {
     flexDirection: 'row',
@@ -342,37 +301,32 @@ export const creativeArtisticStyles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 16,
     marginBottom: 8,
-    minWidth: '40%',
-  },
+    minWidth: '40%'},
 
   languageDot: {
     width: 8,
     height: 8,
     backgroundColor: colors.secondary,
     borderRadius: 4,
-    marginRight: 8,
-  },
+    marginRight: 8},
 
   languageName: {
     fontSize: 10,
     fontWeight: 'bold',
     color: colors.text,
-    marginRight: 4,
-  },
+    marginRight: 4},
 
   languageLevel: {
     fontSize: 9,
     color: colors.lightText,
-    fontStyle: 'italic',
-  },
+    fontStyle: 'italic'},
 
   // Demographics Styles - Compact Layout
   demographicsCompact: {
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: -2, // Move up from the edge
-    paddingLeft: 2,
-  },
+    paddingLeft: 2},
 
   demographicIcon: {
     width: 4,
@@ -380,14 +334,11 @@ export const creativeArtisticStyles = StyleSheet.create({
     borderRadius: 2,
     backgroundColor: colors.accent,
     marginRight: 6,
-    marginTop: 1,
-  },
+    marginTop: 1},
 
   demographicsText: {
     fontSize: 10,
     color: colors.lightText,
     fontStyle: 'italic',
     lineHeight: 1.2,
-    flex: 1,
-  },
-})
+    flex: 1}})

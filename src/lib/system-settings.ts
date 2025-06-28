@@ -33,7 +33,7 @@ export async function getSystemSettings() {
     }
     
     return settings
-  } catch (error) {
+  } catch {
     // Error getting system settings
     // Return default settings on error
     return {

@@ -25,8 +25,7 @@ export function CertificationsForm({ certifications, onChange }: CertificationsF
       date: '',
       expiryDate: '',
       credentialId: '',
-      url: '',
-    }
+      url: ''}
     onChange([...certifications, newCertification])
   }
 

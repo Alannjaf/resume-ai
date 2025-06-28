@@ -10,12 +10,10 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Work.krd - Create Professional Resumes with AI',
-  description: 'Build stunning resumes with AI assistance in multiple languages including Kurdish, Arabic, and English.',
-}
+  description: 'Build stunning resumes with AI assistance in multiple languages including Kurdish, Arabic, and English.'}
 
 export default function RootLayout({
-  children,
-}: {
+  children}: {
   children: React.ReactNode
 }) {
   return (
@@ -37,23 +35,17 @@ export default function RootLayout({
                   duration: 4000,
                   style: {
                     background: '#363636',
-                    color: '#fff',
-                  },
+                    color: '#fff'},
                   success: {
                     duration: 3000,
                     iconTheme: {
                       primary: '#4aed88',
-                      secondary: '#fff',
-                    },
-                  },
+                      secondary: '#fff'}},
                   error: {
                     duration: 4000,
                     iconTheme: {
                       primary: '#ff4b4b',
-                      secondary: '#fff',
-                    },
-                  },
-                }}
+                      secondary: '#fff'}}}}
               />
             </LanguageProvider>
           </SubscriptionProvider>

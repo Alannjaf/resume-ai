@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Check, X, RefreshCw, Languages } from 'lucide-react'
 import toast from 'react-hot-toast'

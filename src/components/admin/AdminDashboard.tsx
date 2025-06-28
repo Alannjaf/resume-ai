@@ -1,19 +1,19 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { AppHeader } from '@/components/shared/AppHeader'
 import { 
   Users, 
-  FileText, 
   Settings, 
   DollarSign,
   Save,
   RefreshCw,
   Clock,
-  AlertTriangle
+  AlertTriangle,
+  FileText
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
@@ -86,7 +86,7 @@ interface SystemSettings {
 }
 
 export function AdminDashboard() {
-  const router = useRouter()
+  const _router = useRouter()
   const { t } = useLanguage()
   const availableTemplates = getTemplateIds() // Get all templates dynamically
   const [stats, setStats] = useState<Stats | null>(null)
@@ -138,7 +138,7 @@ export function AdminDashboard() {
       const response = await fetch('/api/admin/stats')
       const data = await response.json()
       setStats(data)
-    } catch (error) {
+    } catch {
       // Silent error handling
     }
   }
@@ -186,7 +186,7 @@ export function AdminDashboard() {
         maintenanceMode: data.maintenanceMode ?? false
       }
       setSettings(newSettings)
-    } catch (error) {
+    } catch {
       // Silent error handling
     } finally {
       setLoading(false)
@@ -198,7 +198,7 @@ export function AdminDashboard() {
       const response = await fetch('/api/subscriptions/check-expired')
       const data = await response.json()
       setSubscriptionStatus(data)
-    } catch (error) {
+    } catch {
       // Silent error handling
     }
   }
@@ -219,7 +219,7 @@ export function AdminDashboard() {
       } else {
         toast.error('Failed to check subscriptions')
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to check subscriptions')
     } finally {
       setCheckingSubscriptions(false)
@@ -239,7 +239,7 @@ export function AdminDashboard() {
       } else {
         toast.error('Failed to save settings')
       }
-    } catch (error) {
+    } catch {
       toast.error('Failed to save settings')
     } finally {
       setSaving(false)

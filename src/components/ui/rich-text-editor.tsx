@@ -21,15 +21,10 @@ const RichTextEditor = React.forwardRef<HTMLDivElement, RichTextEditorProps>(
         StarterKit.configure({
           bulletList: {
             HTMLAttributes: {
-              class: 'list-disc list-inside ml-4',
-            },
-          },
+              class: 'list-disc list-inside ml-4'}},
           orderedList: {
             HTMLAttributes: {
-              class: 'list-decimal list-inside ml-4',
-            },
-          },
-        }),
+              class: 'list-decimal list-inside ml-4'}}}),
       ],
       content: value,
       onUpdate: ({ editor }) => {
@@ -39,10 +34,7 @@ const RichTextEditor = React.forwardRef<HTMLDivElement, RichTextEditorProps>(
       immediatelyRender: false,
       editorProps: {
         attributes: {
-          class: 'prose prose-sm focus:outline-none min-h-[100px] max-w-none',
-        },
-      },
-    })
+          class: 'prose prose-sm focus:outline-none min-h-[100px] max-w-none'}}})
 
     React.useEffect(() => {
       if (!editor) return
@@ -51,8 +43,7 @@ const RichTextEditor = React.forwardRef<HTMLDivElement, RichTextEditorProps>(
       const currentContent = editor.getHTML()
       if (currentContent !== value) {
         editor.commands.setContent(value || '', false, {
-          preserveWhitespace: true,
-        })
+          preserveWhitespace: true})
       }
     }, [editor, value])
 

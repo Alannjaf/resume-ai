@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Dynamically import PDF.js to avoid SSR issues
 let pdfjsLib: any = null;
@@ -153,8 +153,7 @@ export const PDFJSViewer = ({
 
       const renderContext = {
         canvasContext: context,
-        viewport: viewport,
-      };
+        viewport: viewport};
 
       // Render the page
       await page.render(renderContext).promise;
@@ -170,15 +169,15 @@ export const PDFJSViewer = ({
     }
   };
 
-  const goToPage = async (pageNum: number) => {
+  const _goToPage = async (pageNum: number) => {
     if (!pdfDoc || pageNum < 1 || pageNum > totalPages) return;
     
     setCurrentPage(pageNum);
     await renderPage(pdfDoc, pageNum);
   };
 
-  const nextPage = () => goToPage(currentPage + 1);
-  const prevPage = () => goToPage(currentPage - 1);
+  const nextPage = () => _goToPage(currentPage + 1);
+  const prevPage = () => _goToPage(currentPage - 1);
 
   // Always show the canvas - don't hide it behind loading states
   const showLoadingOverlay = loading;

@@ -31,7 +31,7 @@ export function AISuggestionButton({
     setIsLoading(true)
     try {
       await onClick()
-    } catch (error) {
+    } catch {
       // AI suggestion error
     } finally {
       setIsLoading(false)

@@ -20,7 +20,7 @@ export async function GET() {
     const resumes = await getUserResumes(user.id)
     
     return NextResponse.json({ resumes })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ 
       error: 'Failed to fetch resumes' 
     }, { status: 500 })
@@ -153,7 +153,7 @@ export async function POST(req: Request) {
       resume,
       message: 'Resume created successfully' 
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ 
       error: 'Failed to create resume' 
     }, { status: 500 })

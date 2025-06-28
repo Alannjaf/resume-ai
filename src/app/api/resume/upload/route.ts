@@ -12,9 +12,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY || '',
   defaultHeaders: {
     'HTTP-Referer': 'https://resumeai.app',
-    'X-Title': 'ResumeAI',
-  },
-})
+    'X-Title': 'ResumeAI'}})
 
 export async function POST(request: NextRequest) {
   try {
@@ -279,8 +277,7 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
             location: aiData.personal?.location || '',
             linkedin: aiData.personal?.linkedin || '',
             website: aiData.personal?.website || '',
-            title: aiData.personal?.title || '',
-          },
+            title: aiData.personal?.title || ''},
           summary: aiData.summary || '',
           experience: (aiData.experience || []).map((exp: any, index: number) => ({
             id: exp.id || `exp_${index + 1}`,
@@ -290,8 +287,7 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
             startDate: convertDateFormat(exp.startDate || ''),
             endDate: exp.endDate?.toLowerCase().includes('present') ? '' : convertDateFormat(exp.endDate || ''),
             current: exp.endDate?.toLowerCase().includes('present') || exp.current || false,
-            description: Array.isArray(exp.description) ? exp.description.join('\n• ') : (exp.description || ''),
-          })),
+            description: Array.isArray(exp.description) ? exp.description.join('\n• ') : (exp.description || '')})),
           education: (aiData.education || []).map((edu: any, index: number) => ({
             id: edu.id || `edu_${index + 1}`,
             degree: edu.degree || '',
@@ -301,13 +297,11 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
             startDate: convertDateFormat(edu.startDate || ''),
             endDate: convertDateFormat(edu.endDate || edu.graduationDate || ''),
             gpa: edu.gpa || '',
-            achievements: edu.achievements || '',
-          })),
+            achievements: edu.achievements || ''})),
           skills: (aiData.skills || []).map((skill: any, index: number) => ({
             id: skill.id || `skill_${index + 1}`,
             name: typeof skill === 'string' ? skill : (skill.name || ''),
-            level: typeof skill === 'object' ? (skill.level || '') : '',
-          })),
+            level: typeof skill === 'object' ? (skill.level || '') : ''})),
           languages: (aiData.languages || []).map((lang: any, index: number) => {
             if (typeof lang === 'string') {
               // If language is a string, create object with name and default proficiency
@@ -321,8 +315,7 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
               return {
                 id: lang.id || `lang_${index + 1}`,
                 name: lang.name || '',
-                proficiency: lang.proficiency || 'Conversational',
-              }
+                proficiency: lang.proficiency || 'Conversational'}
             }
           }),
           projects: (aiData.projects || []).map((proj: any, index: number) => ({
@@ -332,8 +325,7 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
             technologies: proj.technologies || '',
             link: proj.link || '',
             startDate: proj.startDate || '',
-            endDate: proj.endDate || '',
-          })),
+            endDate: proj.endDate || ''})),
           certifications: (aiData.certifications || []).map((cert: any, index: number) => ({
             id: cert.id || `cert_${index + 1}`,
             name: cert.name || '',
@@ -341,9 +333,7 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
             date: cert.date || '',
             expiryDate: cert.expiryDate || '',
             credentialId: cert.credentialId || '',
-            url: cert.url || '',
-          })),
-        }
+            url: cert.url || ''}))}
 
         // Update import count
         await prisma.subscription.update({
@@ -356,7 +346,7 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
           extractedText: 'PDF processed with single API call'
         })
 
-      } catch (pdfError: any) {
+      } catch {
         return NextResponse.json(
           { error: 'Failed to process PDF. Please try again or convert to DOCX format.' },
           { status: 400 }
@@ -398,8 +388,7 @@ Return valid JSON only, no explanations.`
           model: 'google/gemini-2.5-flash-preview-05-20',
           messages,
           max_tokens: 2000,
-          temperature: 0.3,
-        })
+          temperature: 0.3})
 
         const aiText = completion.choices[0]?.message?.content?.trim() || ''
         
@@ -423,16 +412,14 @@ Return valid JSON only, no explanations.`
         const mergedData: ResumeData = {
           personal: {
             ...basicData.personal,
-            ...aiData.personal,
-          },
+            ...aiData.personal},
           summary: aiData.summary || basicData.summary || '',
           experience: aiData.experience || [],
           education: aiData.education || [],
           skills: (aiData.skills || []).map((skill: any, index: number) => ({
             id: skill.id || `skill_${index + 1}`,
             name: typeof skill === 'string' ? skill : (skill.name || ''),
-            level: typeof skill === 'object' ? (skill.level || '') : '',
-          })),
+            level: typeof skill === 'object' ? (skill.level || '') : ''})),
           languages: (aiData.languages || []).map((lang: any, index: number) => {
             if (typeof lang === 'string') {
               // If language is a string, create object with name and default proficiency
@@ -446,8 +433,7 @@ Return valid JSON only, no explanations.`
               return {
                 id: lang.id || `lang_${index + 1}`,
                 name: lang.name || '',
-                proficiency: lang.proficiency || 'Conversational',
-              }
+                proficiency: lang.proficiency || 'Conversational'}
             }
           }),
           projects: (aiData.projects || []).map((proj: any, index: number) => ({
@@ -457,8 +443,7 @@ Return valid JSON only, no explanations.`
             technologies: proj.technologies || '',
             link: proj.link || '',
             startDate: proj.startDate || '',
-            endDate: proj.endDate || '',
-          })),
+            endDate: proj.endDate || ''})),
           certifications: (aiData.certifications || []).map((cert: any, index: number) => ({
             id: cert.id || `cert_${index + 1}`,
             name: cert.name || '',
@@ -466,9 +451,7 @@ Return valid JSON only, no explanations.`
             date: cert.date || '',
             expiryDate: cert.expiryDate || '',
             credentialId: cert.credentialId || '',
-            url: cert.url || '',
-          })),
-        }
+            url: cert.url || ''}))}
 
         // Update import count
         await prisma.subscription.update({
@@ -479,10 +462,9 @@ Return valid JSON only, no explanations.`
         return NextResponse.json({
           success: true,
           data: mergedData,
-          extractedText: extractedText.slice(0, 500),
-        })
+          extractedText: extractedText.slice(0, 500)})
 
-      } catch (aiError: any) {
+      } catch {
         // Return basic extraction if AI fails
         const basicData = ResumeParser.basicExtraction(await ResumeParser.extractText(buffer, file.type))
         
@@ -496,12 +478,11 @@ Return valid JSON only, no explanations.`
           success: true,
           data: basicData as ResumeData,
           extractedText: (await ResumeParser.extractText(buffer, file.type)).slice(0, 500),
-          warning: 'AI extraction failed. Showing basic extraction results.',
-        })
+          warning: 'AI extraction failed. Showing basic extraction results.'})
       }
     }
 
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Failed to process resume. Please try again.' },
       { status: 500 }

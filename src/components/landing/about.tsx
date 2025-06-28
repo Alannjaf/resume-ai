@@ -17,23 +17,19 @@ export function About() {
     {
       icon: Users,
       title: t('about.values.community.title'),
-      description: t('about.values.community.description'),
-    },
+      description: t('about.values.community.description')},
     {
       icon: Target,
       title: t('about.values.quality.title'), 
-      description: t('about.values.quality.description'),
-    },
+      description: t('about.values.quality.description')},
     {
       icon: Zap,
       title: t('about.values.innovation.title'),
-      description: t('about.values.innovation.description'),
-    },
+      description: t('about.values.innovation.description')},
     {
       icon: CheckCircle,
       title: t('about.values.success.title'),
-      description: t('about.values.success.description'),
-    },
+      description: t('about.values.success.description')},
   ]
 
   return (

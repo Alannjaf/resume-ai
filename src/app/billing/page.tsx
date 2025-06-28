@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -25,15 +25,7 @@ interface Plan {
   limitations?: string[]
 }
 
-interface UserStats {
-  currentPlan: string
-  resumesUsed: number
-  resumesLimit: number
-  aiUsageCount: number
-  aiUsageLimit: number
-  exportCount: number
-  exportLimit: number
-}
+// Removed unused UserStats interface
 
 export default function BillingPage() {
   const router = useRouter()

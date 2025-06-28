@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 import { isAdmin } from '@/lib/admin';
-import { FileText } from 'lucide-react';
 import { ResumeManagement } from '@/components/admin/ResumeManagement';
 import { AppHeader } from '@/components/shared/AppHeader';
 

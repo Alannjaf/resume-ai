@@ -11,9 +11,7 @@ export async function getCurrentUser() {
   const user = await prisma.user.findUnique({
     where: { clerkId: userId },
     include: {
-      subscription: true,
-    },
-  })
+      subscription: true}})
 
   return user
 }
@@ -24,10 +22,7 @@ export async function getUserResumes(userId: string) {
     orderBy: { updatedAt: 'desc' },
     include: {
       sections: {
-        orderBy: { order: 'asc' },
-      },
-    },
-  })
+        orderBy: { order: 'asc' }}}})
 
   return resumes
 }
@@ -36,14 +31,10 @@ export async function getResumeById(resumeId: string, userId: string) {
   const resume = await prisma.resume.findFirst({
     where: {
       id: resumeId,
-      userId,
-    },
+      userId},
     include: {
       sections: {
-        orderBy: { order: 'asc' },
-      },
-    },
-  })
+        orderBy: { order: 'asc' }}}})
 
   return resume
 }
@@ -60,33 +51,25 @@ export async function createResume(userId: string, title: string, template?: str
             type: 'WORK_EXPERIENCE',
             title: 'Work Experience',
             content: {},
-            order: 1,
-          },
+            order: 1},
           {
             type: 'EDUCATION',
             title: 'Education',
             content: {},
-            order: 2,
-          },
+            order: 2},
           {
             type: 'SKILLS',
             title: 'Skills',
             content: {},
-            order: 3,
-          },
-        ],
-      },
-    },
+            order: 3},
+        ]}},
     include: {
-      sections: true,
-    },
-  })
+      sections: true}})
 
   // Update user's resume count
   await prisma.subscription.update({
     where: { userId },
-    data: { resumeCount: { increment: 1 } },
-  })
+    data: { resumeCount: { increment: 1 } }})
 
   return resume
 }
@@ -95,15 +78,12 @@ export async function deleteResume(resumeId: string, userId: string) {
   const resume = await prisma.resume.deleteMany({
     where: {
       id: resumeId,
-      userId,
-    },
-  })
+      userId}})
 
   // Update user's resume count
   await prisma.subscription.update({
     where: { userId },
-    data: { resumeCount: { decrement: 1 } },
-  })
+    data: { resumeCount: { decrement: 1 } }})
 
   return resume
 }
@@ -121,20 +101,17 @@ export async function updateResume(
   const resume = await prisma.resume.update({
     where: {
       id: resumeId,
-      userId,
-    },
-    data,
-  })
+      userId},
+    data})
 
   return resume
 }
 
 export async function getUserSubscription(userId: string) {
-  const subscription = await prisma.subscription.findUnique({
-    where: { userId },
-  })
+  const _subscription = await prisma.subscription.findUnique({
+    where: { userId }})
 
-  return subscription
+  return _subscription
 }
 
 async function getSystemSettings() {
@@ -178,7 +155,7 @@ async function getSystemSettings() {
       }
       return settings
     }
-  } catch (error) {
+  } catch {
     // Table might not exist, use defaults
   }
   
@@ -222,7 +199,7 @@ export async function checkUserLimits(clerkUserId: string) {
     return { canCreateResume: false, canUseAI: false, canExport: false, canImport: false }
   }
   
-  const subscription = user.subscription
+  const _subscription = user.subscription
 
   // Get admin-configurable settings
   const systemSettings = await getSystemSettings()
@@ -248,15 +225,15 @@ export async function checkUserLimits(clerkUserId: string) {
     }, // -1 means unlimited
   }
 
-  const userLimits = limits[subscription.plan]
+  const userLimits = limits[_subscription.plan]
 
 
   // Check photo upload permission
-  const canUploadPhoto = systemSettings.photoUploadPlans.includes(subscription.plan)
+  const canUploadPhoto = systemSettings.photoUploadPlans.includes(_subscription.plan)
   
   // Get available templates for user's plan
   let availableTemplates: string[] = []
-  switch (subscription.plan) {
+  switch (_subscription.plan) {
     case 'FREE':
       availableTemplates = systemSettings.freeTemplates || ['modern']
       break
@@ -269,12 +246,11 @@ export async function checkUserLimits(clerkUserId: string) {
   }
 
   return {
-    canCreateResume: userLimits.resumes === -1 || subscription.resumeCount < userLimits.resumes,
-    canUseAI: userLimits.ai === -1 || subscription.aiUsageCount < userLimits.ai,
-    canExport: userLimits.exports === -1 || (subscription.exportCount || 0) < userLimits.exports,
-    canImport: userLimits.imports === -1 || (subscription.importCount || 0) < userLimits.imports,
+    canCreateResume: userLimits.resumes === -1 || _subscription.resumeCount < userLimits.resumes,
+    canUseAI: userLimits.ai === -1 || _subscription.aiUsageCount < userLimits.ai,
+    canExport: userLimits.exports === -1 || (_subscription.exportCount || 0) < userLimits.exports,
+    canImport: userLimits.imports === -1 || (_subscription.importCount || 0) < userLimits.imports,
     canUploadPhoto,
     availableTemplates,
-    subscription,
-  }
+    subscription: _subscription}
 }

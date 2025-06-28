@@ -55,7 +55,7 @@ export async function POST(
       success: true,
       message: `User upgraded to ${plan} plan`
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ 
       error: 'Failed to upgrade user' 
     }, { status: 500 })

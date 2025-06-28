@@ -20,11 +20,11 @@ export async function GET() {
       return NextResponse.json({ 
         isAdmin: user?.[0]?.role === 'ADMIN' 
       })
-    } catch (e) {
+    } catch {
       // Role column might not exist yet
       return NextResponse.json({ isAdmin: false })
     }
-  } catch (error) {
+  } catch {
     return NextResponse.json({ isAdmin: false })
   }
 }

@@ -25,85 +25,71 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 35,
     backgroundColor: colors.background,
     color: colors.text,
-    lineHeight: 1.4,
-  },
+    lineHeight: 1.4},
 
   // Background elements - none needed for clean terminal look
   codeBackground: {
-    display: 'none',
-  },
+    display: 'none'},
 
   accentBorder: {
-    display: 'none',
-  },
+    display: 'none'},
 
   terminalWindow: {
-    display: 'none',
-  },
+    display: 'none'},
 
   // Layout - single column terminal style
   container: {
-    flex: 1,
-  },
+    flex: 1},
 
   // Header styles - terminal style with brackets
   header: {
     marginBottom: 15,
     flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
+    alignItems: 'flex-start'},
   
   profileImageContainer: {
     width: 60,
     height: 60,
     marginRight: 15,
-    marginTop: 5,
-  },
+    marginTop: 5},
   
   profileImage: {
     width: 60,
     height: 60,
     borderRadius: 6,
-    border: `2px solid ${colors.secondary}`,
-  },
+    border: `2px solid ${colors.secondary}`},
   
   headerTextContainer: {
-    flex: 1,
-  },
+    flex: 1},
 
   // Name with curly braces like in image
   nameContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 15,
-  },
+    marginBottom: 15},
 
   nameBrace: {
     fontSize: 32,
     color: colors.text,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold'},
 
   name: {
     fontSize: 32,
     color: colors.text,
     fontWeight: 'bold',
-    marginHorizontal: 8,
-  },
+    marginHorizontal: 8},
 
   // Job title below name
   jobTitleContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 15,
-  },
+    marginBottom: 15},
 
   jobTitleText: {
     fontSize: 16,
     color: colors.primary,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold'},
 
   // Contact info in header
   headerContactInfo: {
@@ -111,224 +97,185 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 15,
-    gap: 15,
-  },
+    gap: 15},
 
   headerContactItem: {
     fontSize: 11,
-    color: colors.gray,
-  },
+    color: colors.gray},
 
   // Contact info at bottom (to be removed)
   contactInfo: {
-    display: 'none',
-  },
+    display: 'none'},
 
   contactItem: {
-    display: 'none',
-  },
+    display: 'none'},
 
   // Section styles - code syntax highlighting
   section: {
-    marginBottom: 20,
-  },
+    marginBottom: 20},
 
   sectionTitle: {
     fontSize: 14,
     color: colors.accent,
     marginBottom: 8,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold'},
 
   // Comment style for section descriptions
   commentLine: {
     fontSize: 11,
     color: colors.lightGray,
     marginBottom: 4,
-    fontStyle: 'italic',
-  },
+    fontStyle: 'italic'},
 
   // Summary with comment syntax
   summary: {
     fontSize: 11,
     lineHeight: 1.5,
     color: colors.lightGray,
-    marginBottom: 12,
-  },
+    marginBottom: 12},
 
   // Experience - code syntax style with grouping
   experienceItem: {
     marginBottom: 15,
     paddingBottom: 10,
-    borderBottom: `1px solid ${colors.border}`,
-  },
+    borderBottom: `1px solid ${colors.border}`},
 
   jobTitle: {
     fontSize: 12,
     color: colors.secondary,
     marginBottom: 3,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold'},
 
   company: {
     fontSize: 11,
     color: colors.primary,
-    marginBottom: 3,
-  },
+    marginBottom: 3},
 
   dateRange: {
     fontSize: 10,
     color: colors.lightGray,
-    marginBottom: 6,
-  },
+    marginBottom: 6},
 
   description: {
     fontSize: 10,
     lineHeight: 1.4,
     color: colors.lightGray,
-    marginBottom: 8,
-  },
+    marginBottom: 8},
 
   // Education - code syntax style
   educationItem: {
-    marginBottom: 12,
-  },
+    marginBottom: 12},
 
   degree: {
     fontSize: 11,
     color: colors.secondary,
     marginBottom: 3,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold'},
 
   school: {
     fontSize: 11,
     color: colors.primary,
-    marginBottom: 3,
-  },
+    marginBottom: 3},
 
   educationDetails: {
     fontSize: 10,
-    color: colors.lightGray,
-  },
+    color: colors.lightGray},
 
   // Skills - code syntax highlighting
   skillItem: {
     fontSize: 10,
     color: colors.purple,
-    marginBottom: 3,
-  },
+    marginBottom: 3},
 
   skillLevel: {
     fontSize: 10,
     color: colors.lightGray,
-    marginLeft: 4,
-  },
+    marginLeft: 4},
 
   // Projects - code syntax style
   projectItem: {
     marginBottom: 12,
     paddingBottom: 8,
-    borderBottom: `1px solid ${colors.border}`,
-  },
+    borderBottom: `1px solid ${colors.border}`},
 
   projectName: {
     fontSize: 11,
     color: colors.secondary,
     marginBottom: 3,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold'},
 
   projectTech: {
     fontSize: 10,
     color: colors.accent,
-    marginBottom: 4,
-  },
+    marginBottom: 4},
 
   projectDescription: {
     fontSize: 10,
     lineHeight: 1.4,
     color: colors.lightGray,
-    marginBottom: 4,
-  },
+    marginBottom: 4},
 
   projectLink: {
     fontSize: 10,
-    color: colors.primary,
-  },
+    color: colors.primary},
 
   // Languages - code syntax style
   languageItem: {
     fontSize: 10,
     color: colors.purple,
-    marginBottom: 3,
-  },
+    marginBottom: 3},
 
   languageName: {
     fontSize: 10,
-    color: colors.purple,
-  },
+    color: colors.purple},
 
   languageLevel: {
     fontSize: 10,
     color: colors.lightGray,
-    marginLeft: 4,
-  },
+    marginLeft: 4},
 
   // Certifications - code syntax style
   certificationItem: {
-    marginBottom: 10,
-  },
+    marginBottom: 10},
 
   certificationName: {
     fontSize: 10,
     color: colors.secondary,
     marginBottom: 3,
-    fontWeight: 'bold',
-  },
+    fontWeight: 'bold'},
 
   certificationIssuer: {
     fontSize: 10,
     color: colors.primary,
-    marginBottom: 3,
-  },
+    marginBottom: 3},
 
   certificationDate: {
     fontSize: 10,
-    color: colors.lightGray,
-  },
+    color: colors.lightGray},
 
   // Code syntax elements
   codeKeyword: {
-    color: colors.accent,
-  },
+    color: colors.accent},
 
   codeString: {
-    color: colors.secondary,
-  },
+    color: colors.secondary},
 
   codeComment: {
     color: colors.lightGray,
-    fontStyle: 'italic',
-  },
+    fontStyle: 'italic'},
 
   codeFunction: {
-    color: colors.purple,
-  },
+    color: colors.purple},
 
   codeVariable: {
-    color: colors.primary,
-  },
+    color: colors.primary},
 
   // Demographics Styles - Compact Code Comment
   demographicsCompact: {
-    marginTop: 6,
-  },
+    marginTop: 6},
 
   demographicsText: {
     fontSize: 8,
     color: colors.secondary,
     fontFamily: 'Courier',
-    lineHeight: 1.2,
-  },
-})
+    lineHeight: 1.2}})

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Check, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -48,7 +48,7 @@ export function Pricing() {
           const data = await response.json()
           setPlans(data.plans)
         }
-      } catch (error) {
+      } catch {
         // Error fetching pricing
       } finally {
         setLoading(false)

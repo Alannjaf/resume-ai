@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { prisma } from '@/lib/prisma';
 import { Resume, ResumeStatus } from '@prisma/client';
+import { NextRequest, NextResponse } from 'next/server';
 
 interface ResumeWithUser extends Resume {
   user: {
@@ -24,17 +24,15 @@ export async function GET(req: NextRequest) {
     // Check if user table exists and has role column
     try {
       const user = await prisma.user.findUnique({
-        where: { clerkId: userId },
-      });
+        where: { clerkId: userId }});
 
       if (!user || user.role !== 'ADMIN') {
         return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
       }
-    } catch (dbError) {
+    } catch {
       // If role column doesn't exist, just check if user exists
       const userExists = await prisma.user.findUnique({
-        where: { clerkId: userId },
-      });
+        where: { clerkId: userId }});
       
       if (!userExists) {
         return NextResponse.json({ error: 'User not found' }, { status: 404 });
@@ -57,12 +55,10 @@ export async function GET(req: NextRequest) {
             { title: { contains: search, mode: 'insensitive' as const } },
             { user: { email: { contains: search, mode: 'insensitive' as const } } },
             { user: { name: { contains: search, mode: 'insensitive' as const } } },
-          ],
-        } : {},
+          ]} : {},
         status ? { status } : {},
         template ? { template } : {},
-      ],
-    };
+      ]};
 
     // Try to fetch resumes, but handle case where tables might not exist
     let resumes: ResumeWithUser[] = [];
@@ -77,22 +73,16 @@ export async function GET(req: NextRequest) {
               select: {
                 id: true,
                 email: true,
-                name: true,
-              },
-            },
+                name: true}},
             _count: {
               select: {
-                sections: true,
-              },
-            },
-          },
+                sections: true}}},
           skip: (page - 1) * limit,
           take: limit,
-          orderBy: { [sortBy]: sortOrder },
-        }),
+          orderBy: { [sortBy]: sortOrder }}),
         prisma.resume.count({ where }),
       ]);
-    } catch (dbError) {
+    } catch {
       // Return empty array if tables don't exist yet
     }
 
@@ -102,10 +92,8 @@ export async function GET(req: NextRequest) {
         total,
         page,
         limit,
-        totalPages: Math.ceil(total / limit),
-      },
-    });
-  } catch (error) {
+        totalPages: Math.ceil(total / limit)}});
+  } catch {
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }
@@ -121,8 +109,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     const user = await prisma.user.findUnique({
-      where: { clerkId: userId },
-    });
+      where: { clerkId: userId }});
 
     if (!user || user.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -134,11 +121,10 @@ export async function DELETE(req: NextRequest) {
     }
 
     await prisma.resume.deleteMany({
-      where: { id: { in: ids } },
-    });
+      where: { id: { in: ids } }});
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Internal Server Error' },
       { status: 500 }

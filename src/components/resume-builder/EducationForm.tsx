@@ -45,8 +45,7 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
       school: '',
       location: '',
       startDate: '',
-      endDate: '',
-    }
+      endDate: ''}
     onChange([...education, newEducation])
   }
 

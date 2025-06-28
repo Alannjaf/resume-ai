@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,9 +12,9 @@ import {
   User, 
   Mail, 
   Calendar,
-  Crown,
   CreditCard,
-  Check
+  Check,
+  Crown
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
@@ -37,7 +37,7 @@ interface UserData {
 }
 
 export function UserManagement() {
-  const router = useRouter()
+  const _router = useRouter()
   const [users, setUsers] = useState<UserData[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')

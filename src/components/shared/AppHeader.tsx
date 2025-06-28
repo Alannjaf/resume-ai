@@ -33,7 +33,7 @@ export function AppHeader({
   onBackClick,
   children 
 }: AppHeaderProps) {
-  const router = useRouter()
+  const _router = useRouter()
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { language, setLanguage } = useLanguage()
@@ -52,14 +52,14 @@ export function AppHeader({
     if (onBackClick) {
       onBackClick()
     } else if (backButtonHref) {
-      router.push(backButtonHref)
+      _router.push(backButtonHref)
     } else {
-      router.back()
+      _router.back()
     }
   }
 
   const handleLogoClick = () => {
-    router.push('/')
+    _router.push('/')
   }
 
   return (
@@ -137,7 +137,7 @@ export function AppHeader({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => router.push('/admin')}
+                onClick={() => _router.push('/admin')}
                 className="flex items-center gap-2"
               >
                 <Shield className="h-4 w-4" />
@@ -190,7 +190,7 @@ export function AppHeader({
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  router.push('/admin')
+                  _router.push('/admin')
                   setIsMobileMenuOpen(false)
                 }}
                 className="w-full justify-start gap-2"

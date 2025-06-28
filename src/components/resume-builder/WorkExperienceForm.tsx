@@ -48,8 +48,7 @@ export function WorkExperienceForm({ experiences, onChange }: WorkExperienceForm
       startDate: '',
       endDate: '',
       current: false,
-      description: '',
-    }
+      description: ''}
     onChange([...experiences, newExperience])
   }
 

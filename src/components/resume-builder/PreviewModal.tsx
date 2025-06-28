@@ -1,9 +1,9 @@
 'use client'
 
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { getResumePDFBlob } from '@/lib/pdfGenerator'
-import { X, Download, RefreshCw, Crown, ArrowUp } from 'lucide-react'
+import { X, Download, RefreshCw, ArrowUp, Crown } from 'lucide-react'
 import { ResumeData } from '@/types/resume'
 import { useSubscription } from '@/contexts/SubscriptionContext'
 import toast from 'react-hot-toast'
@@ -53,18 +53,18 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       const arrayBuffer = await blob.arrayBuffer()
       const pdfDoc = await PDFDocument.load(arrayBuffer)
       return pdfDoc.getPageCount()
-    } catch (error) {
+    } catch {
       return 1
     }
   }
 
   // Browser detection utility for desktop PDF parameters
   const detectBrowser = () => {
-    const userAgent = navigator.userAgent.toLowerCase()
-    if (userAgent.includes('edg/')) return 'edge'
-    if (userAgent.includes('chrome') && !userAgent.includes('edg/')) return 'chrome'
-    if (userAgent.includes('firefox')) return 'firefox'
-    if (userAgent.includes('safari') && !userAgent.includes('chrome')) return 'safari'
+    const _userAgent = navigator.userAgent.toLowerCase()
+    if (_userAgent.includes('edg/')) return 'edge'
+    if (_userAgent.includes('chrome') && !_userAgent.includes('edg/')) return 'chrome'
+    if (_userAgent.includes('firefox')) return 'firefox'
+    if (_userAgent.includes('safari') && !_userAgent.includes('chrome')) return 'safari'
     return 'unknown'
   }
 
@@ -110,7 +110,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     }
   }
 
-  const goToPage = (pageNum: number) => {
+  const _goToPage = (pageNum: number) => {
     if (pageNum >= 1 && pageNum <= totalPdfPages && pdfUrl) {
       setCurrentPdfPage(pageNum)
       updatePdfUrl(pdfUrl, pageNum)
@@ -155,7 +155,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
         currentPdfUrlRef.current = url
         setPdfArrayBuffer(null)
       }
-    } catch (error) {
+    } catch {
       // Retry up to 2 times if generation fails
       if (retryCount < 2) {
         setTimeout(() => generatePDFPreview(retryCount + 1), 1000 * (retryCount + 1))
@@ -238,7 +238,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       }
       
       toast.success('Resume downloaded successfully!')
-    } catch (error) {
+    } catch {
       toast.error('Failed to download resume')
     } finally {
       setIsGeneratingPDF(false)

@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { X, Download, ZoomIn, ZoomOut, RotateCcw, FileText } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { X, Download, ZoomIn, ZoomOut, FileText, RotateCcw } from 'lucide-react';
 import { ResumeData } from '@/types/resume';
 import { getResumePDFBlob } from '@/lib/pdfGenerator';
 import { ResumePreview } from '@/components/resume-builder/ResumePreview';

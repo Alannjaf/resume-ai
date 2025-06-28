@@ -1,11 +1,11 @@
 export const detectBrowser = () => {
   if (typeof window === 'undefined') return { isChromeMobile: false, isSafari: false, isIOS: false, isMobile: false, needsPDFJS: false };
   
-  const userAgent = navigator.userAgent.toLowerCase();
-  const isIOS = /iphone|ipad|ipod/.test(userAgent);
-  const isChrome = /chrome/.test(userAgent) && !/edge|edg/.test(userAgent);
-  const isSafari = /safari/.test(userAgent) && !/chrome/.test(userAgent);
-  const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent) || window.innerWidth < 768;
+  const _userAgent = navigator.userAgent.toLowerCase();
+  const isIOS = /iphone|ipad|ipod/.test(_userAgent);
+  const isChrome = /chrome/.test(_userAgent) && !/edge|edg/.test(_userAgent);
+  const isSafari = /safari/.test(_userAgent) && !/chrome/.test(_userAgent);
+  const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(_userAgent) || window.innerWidth < 768;
   
   return {
     isChromeMobile: isChrome && isMobile,

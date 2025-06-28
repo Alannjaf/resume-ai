@@ -26,8 +26,7 @@ export function ProjectsForm({ projects, onChange }: ProjectsFormProps) {
       technologies: '',
       link: '',
       startDate: '',
-      endDate: '',
-    }
+      endDate: ''}
     onChange([...projects, newProject])
   }
 

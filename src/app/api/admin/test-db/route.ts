@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     // Try to count users
     const userCount = await prisma.user.count();
@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
     let resumeCount = 0;
     try {
       resumeCount = await prisma.resume.count();
-    } catch (e) {
+    } catch {
       // Resume table might not exist yet
     }
     

@@ -40,10 +40,8 @@ export function Contact() {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
+          'Content-Type': 'application/json'},
+        body: JSON.stringify(formData)})
 
       const data = await response.json()
 
@@ -72,18 +70,15 @@ export function Contact() {
     {
       icon: Mail,
       title: t('contact.info.email.title'),
-      content: 'info@work.krd',
-    },
+      content: 'info@work.krd'},
     {
       icon: Phone,
       title: t('contact.info.phone.title'),
-      content: '+964 750 491 0348',
-    },
+      content: '+964 750 491 0348'},
     {
       icon: MapPin,
       title: t('contact.info.address.title'),
-      content: 'Erbil, Kurdistan Region, Iraq',
-    },
+      content: 'Erbil, Kurdistan Region, Iraq'},
   ]
 
   return (

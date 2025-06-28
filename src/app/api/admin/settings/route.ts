@@ -29,7 +29,7 @@ export async function GET() {
       proPlanPrice: settings.proPlanPrice,
       maintenanceMode: settings.maintenanceMode
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ 
       error: 'Unauthorized' 
     }, { status: 403 })
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
       success: true, 
       settings: savedSettings 
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ 
       error: 'Failed to update settings' 
     }, { status: 500 })

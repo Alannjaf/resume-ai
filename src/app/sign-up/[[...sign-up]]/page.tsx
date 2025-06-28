@@ -13,8 +13,7 @@ export default function Page() {
         <SignUp 
           appearance={{
             elements: {
-              formButtonPrimary: 'bg-blue-600 hover:bg-blue-700',
-            }
+              formButtonPrimary: 'bg-blue-600 hover:bg-blue-700'}
           }}
           routing="path"
           path="/sign-up"

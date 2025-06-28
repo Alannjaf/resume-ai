@@ -5,11 +5,11 @@ import { ResumeData } from '../types/resume'
 
 // Browser detection utility
 const detectBrowser = () => {
-  const userAgent = navigator.userAgent.toLowerCase()
-  if (userAgent.includes('edg/')) return 'edge'
-  if (userAgent.includes('chrome') && !userAgent.includes('edg/')) return 'chrome'
-  if (userAgent.includes('firefox')) return 'firefox'
-  if (userAgent.includes('safari') && !userAgent.includes('chrome')) return 'safari'
+  const _userAgent = navigator.userAgent.toLowerCase()
+  if (_userAgent.includes('edg/')) return 'edge'
+  if (_userAgent.includes('chrome') && !_userAgent.includes('edg/')) return 'chrome'
+  if (_userAgent.includes('firefox')) return 'firefox'
+  if (_userAgent.includes('safari') && !_userAgent.includes('chrome')) return 'safari'
   return 'unknown'
 }
 
@@ -82,7 +82,7 @@ export const generateResumePDF = async (resumeData: ResumeData, fileName?: strin
     }
     
     return true
-  } catch (error) {
+  } catch {
     // Error generating PDF
     throw new Error('Failed to generate PDF')
   }
@@ -96,7 +96,7 @@ export const getResumePDFBlob = async (resumeData: ResumeData, template: string 
     }
     const blob = await pdf(templateComponent).toBlob()
     return blob
-  } catch (error) {
+  } catch {
     // Error generating PDF blob
     throw new Error('Failed to generate PDF blob')
   }

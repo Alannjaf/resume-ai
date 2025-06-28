@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { ResumeStatus } from '@prisma/client';
 import { toast } from 'react-hot-toast';
 import { Loader2, Trash2, Download } from 'lucide-react';
@@ -50,8 +50,7 @@ export function ResumeManagement() {
         limit: '10',
         ...(debouncedSearch && { search: debouncedSearch }),
         ...(status && { status }),
-        ...(template && { template }),
-      });
+        ...(template && { template })});
 
       const response = await fetch(`/api/admin/resumes?${params}`);
       
@@ -99,8 +98,7 @@ export function ResumeManagement() {
       const response = await fetch('/api/admin/resumes', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ids }),
-      });
+        body: JSON.stringify({ ids })});
 
       if (!response.ok) throw new Error('Failed to delete resumes');
 
@@ -120,8 +118,7 @@ export function ResumeManagement() {
       status: resume.status,
       template: resume.template,
       sections: resume._count.sections,
-      created: resume.createdAt,
-    }));
+      created: resume.createdAt}));
 
     const csv = [
       ['Title', 'User', 'Status', 'Template', 'Sections', 'Created'],
