@@ -1,8 +1,7 @@
 'use client'
 
-import React, { useRef, useMemo } from 'react'
+import { useRef, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { FormInput } from '@/components/ui/form-input'
 import { Card } from '@/components/ui/card'
 import { RichTextEditor } from '@/components/ui/rich-text-editor'
@@ -56,7 +55,7 @@ export function WorkExperienceForm({ experiences, onChange }: WorkExperienceForm
     onChange(experiences.filter(exp => exp.id !== id))
   }
 
-  const updateExperience = (id: string, field: keyof WorkExperience, value: any) => {
+  const updateExperience = (id: string, field: keyof WorkExperience, value: string | boolean) => {
     onChange(
       experiences.map(exp =>
         exp.id === id ? { ...exp, [field]: value } : exp
@@ -123,12 +122,12 @@ export function WorkExperienceForm({ experiences, onChange }: WorkExperienceForm
               <FormInput
                 ref={(el) => registerField(`${exp.id}-location`, el)}
                 placeholder={t('forms.workExperience.placeholders.location')}
-                value={exp.location}
+                value={exp.location || ''}
                 onChange={(e) => updateExperience(exp.id, 'location', e.target.value)}
                 onEnterKey={() => focusNext(`${exp.id}-location`, fieldOrders[exp.id])}
               />
               <TranslateAndEnhanceButton
-                content={exp.location}
+                content={exp.location || ''}
                 contentType="personal"
                 onAccept={(location) => updateExperience(exp.id, 'location', location)}
               />

@@ -45,7 +45,7 @@ export function LanguagesForm({ languages, onChange }: LanguagesFormProps) {
       </div>
 
       <div className="space-y-3">
-        {languages.map((language, index) => (
+        {languages.map((language) => (
           <Card key={language.id} className="p-4">
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               <div className="flex-1">

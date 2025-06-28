@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
@@ -98,7 +98,7 @@ export function ProjectsForm({ projects, onChange }: ProjectsFormProps) {
                     onChange={(e) => updateProject(project.id, 'technologies', e.target.value)}
                   />
                   <TranslateAndEnhanceButton
-                    content={project.technologies}
+                    content={project.technologies || ''}
                     contentType="personal"
                     onAccept={(technologies) => updateProject(project.id, 'technologies', technologies)}
                   />
@@ -148,7 +148,7 @@ export function ProjectsForm({ projects, onChange }: ProjectsFormProps) {
                     className="w-full"
                   />
                   <TranslateAndEnhanceButton
-                    content={project.description}
+                    content={project.description || ''}
                     contentType="project"
                     onAccept={(description) => updateProject(project.id, 'description', description)}
                     contextInfo={{

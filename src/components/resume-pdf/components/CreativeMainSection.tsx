@@ -50,7 +50,7 @@ export const CreativeMainSection: React.FC<CreativeMainSectionProps> = ({ data }
                     </View>
                   </View>
                   <View style={{ marginTop: 2 }}>
-                    {parseHtmlToPdf(exp.description, { 
+                    {parseHtmlToPdf(exp.description || '', { 
                       text: { fontSize: 10, color: '#4b5563', lineHeight: 1.4 }
                     }).elements}
                   </View>
@@ -70,7 +70,7 @@ export const CreativeMainSection: React.FC<CreativeMainSectionProps> = ({ data }
                     </View>
                   </View>
                   <View style={{ marginTop: 2 }}>
-                    {parseHtmlToPdf(exp.description, { 
+                    {parseHtmlToPdf(exp.description || '', { 
                       text: { fontSize: 10, color: '#4b5563', lineHeight: 1.4 }
                     }).elements}
                   </View>

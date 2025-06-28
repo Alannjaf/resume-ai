@@ -21,7 +21,6 @@ interface ImageUploaderProps {
 export default function ImageUploader({ 
   currentImage, 
   originalImage, 
-  cropData, 
   templateId = 'modern',
   onImageUpload, 
   onImageRemove, 

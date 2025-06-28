@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState, useCallback } from 'react'
 import { Move, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { CropData, loadImage, calculateInitialCrop, validateCropBounds } from '@/lib/image-utils'
+import { CropData, loadImage } from '@/lib/image-utils'
 import { CropConfig } from '@/lib/template-config'
 
 interface ImageCropperProps {
@@ -26,51 +26,8 @@ export function ImageCropper({ imageDataURL, cropConfig, onCropChange, className
     displayScale: 1 
   })
 
-  // Load image and initialize crop
-  useEffect(() => {
-    const initializeImage = async () => {
-      try {
-        const img = await loadImage(imageDataURL)
-        setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight })
-        
-        // Calculate crop size as percentage of image for better proportions
-        const canvasSize = 350 // Reduced from 400 to fit better in container
-        const imageDisplaySize = Math.min(canvasSize / img.naturalWidth, canvasSize / img.naturalHeight) * img.naturalWidth
-        
-        // Make crop area about 40% of the displayed image size initially
-        const cropDisplaySize = imageDisplaySize * 0.4
-        
-        // Convert back to actual image coordinates
-        const imageSizeRatio = img.naturalWidth / imageDisplaySize
-        const cropWidth = cropDisplaySize * imageSizeRatio
-        const cropHeight = cropWidth / cropConfig.aspectRatio
-        
-        // Center the crop
-        const x = (img.naturalWidth * scale - cropWidth) / 2
-        const y = (img.naturalHeight * scale - cropHeight) / 2
-        
-        const initialCrop = {
-          x: Math.max(0, x),
-          y: Math.max(0, y),
-          width: cropWidth,
-          height: cropHeight,
-          scale
-        }
-        
-        setCrop(initialCrop)
-        onCropChange(initialCrop)
-        
-        drawCanvas(img, initialCrop)
-      } catch (error) {
-        console.error('Failed to load image:', error)
-      }
-    }
-
-    initializeImage()
-  }, [imageDataURL, cropConfig.aspectRatio, cropConfig.defaultSize, scale, onCropChange])
-
   // Draw canvas with image and crop overlay
-  const drawCanvas = (img: HTMLImageElement, currentCrop: CropData) => {
+  const drawCanvas = useCallback((img: HTMLImageElement, currentCrop: CropData) => {
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -143,7 +100,7 @@ export function ImageCropper({ imageDataURL, cropConfig, onCropChange, className
     } else {
       ctx.strokeRect(cropX, cropY, cropWidth, cropHeight)
     }
-  }
+  }, [cropConfig])
 
   // Helper function to draw rounded rectangle
   const drawRoundedRect = (ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) => {
@@ -159,6 +116,49 @@ export function ImageCropper({ imageDataURL, cropConfig, onCropChange, className
     ctx.quadraticCurveTo(x, y, x + radius, y)
     ctx.closePath()
   }
+
+  // Load image and initialize crop
+  useEffect(() => {
+    const initializeImage = async () => {
+      try {
+        const img = await loadImage(imageDataURL)
+        setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight })
+        
+        // Calculate crop size as percentage of image for better proportions
+        const canvasSize = 350 // Reduced from 400 to fit better in container
+        const imageDisplaySize = Math.min(canvasSize / img.naturalWidth, canvasSize / img.naturalHeight) * img.naturalWidth
+        
+        // Make crop area about 40% of the displayed image size initially
+        const cropDisplaySize = imageDisplaySize * 0.4
+        
+        // Convert back to actual image coordinates
+        const imageSizeRatio = img.naturalWidth / imageDisplaySize
+        const cropWidth = cropDisplaySize * imageSizeRatio
+        const cropHeight = cropWidth / cropConfig.aspectRatio
+        
+        // Center the crop
+        const x = (img.naturalWidth * scale - cropWidth) / 2
+        const y = (img.naturalHeight * scale - cropHeight) / 2
+        
+        const initialCrop = {
+          x: Math.max(0, x),
+          y: Math.max(0, y),
+          width: cropWidth,
+          height: cropHeight,
+          scale
+        }
+        
+        setCrop(initialCrop)
+        onCropChange(initialCrop)
+        
+        drawCanvas(img, initialCrop)
+      } catch (error) {
+        console.error('Failed to load image:', error)
+      }
+    }
+
+    initializeImage()
+  }, [imageDataURL, cropConfig.aspectRatio, onCropChange, scale, drawCanvas])
 
   // Handle mouse and touch events for dragging
   const handlePointerDown = (e: React.PointerEvent) => {

@@ -53,7 +53,7 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
     onChange(education.filter(edu => edu.id !== id))
   }
 
-  const updateEducation = (id: string, field: keyof Education, value: any) => {
+  const updateEducation = (id: string, field: keyof Education, value: string) => {
     onChange(
       education.map(edu =>
         edu.id === id ? { ...edu, [field]: value } : edu
@@ -110,7 +110,7 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
                 onEnterKey={() => focusNext(`${edu.id}-field`, fieldOrders[edu.id])}
               />
               <TranslateAndEnhanceButton
-                content={edu.field}
+                content={edu.field || ''}
                 contentType="personal"
                 onAccept={(field) => updateEducation(edu.id, 'field', field)}
               />
@@ -144,7 +144,7 @@ export function EducationForm({ education, onChange }: EducationFormProps) {
                 onEnterKey={() => focusNext(`${edu.id}-location`, fieldOrders[edu.id])}
               />
               <TranslateAndEnhanceButton
-                content={edu.location}
+                content={edu.location || ''}
                 contentType="personal"
                 onAccept={(location) => updateEducation(edu.id, 'location', location)}
               />

@@ -17,7 +17,7 @@ export async function initializeDatabase() {
         WHERE table_schema = 'public' 
         AND table_name = 'SystemSettings'
       ) as exists
-    ` as any[]
+    ` as { exists: boolean }[]
 
     if (!tableExists[0].exists) {
       // Create table only if it doesn't exist
@@ -64,7 +64,7 @@ export async function initializeDatabase() {
     // Check if SystemSettings has any records
     const settingsCount = await prisma.$queryRaw`
       SELECT COUNT(*) as count FROM "SystemSettings"
-    ` as any[]
+    ` as { count: string | number | null }[]
 
     // If no records exist, insert the default record
     if (settingsCount[0].count === '0' || settingsCount[0].count === 0 || settingsCount[0].count === null) {

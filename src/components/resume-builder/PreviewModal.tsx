@@ -60,16 +60,16 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
 
   // Browser detection utility for desktop PDF parameters
   const detectBrowser = () => {
-    const _userAgent = navigator.userAgent.toLowerCase()
-    if (_userAgent.includes('edg/')) return 'edge'
-    if (_userAgent.includes('chrome') && !_userAgent.includes('edg/')) return 'chrome'
-    if (_userAgent.includes('firefox')) return 'firefox'
-    if (_userAgent.includes('safari') && !_userAgent.includes('chrome')) return 'safari'
+    const userAgent = navigator.userAgent.toLowerCase()
+    if (userAgent.includes('edg/')) return 'edge'
+    if (userAgent.includes('chrome') && !userAgent.includes('edg/')) return 'chrome'
+    if (userAgent.includes('firefox')) return 'firefox'
+    if (userAgent.includes('safari') && !userAgent.includes('chrome')) return 'safari'
     return 'unknown'
   }
 
   // Function to update PDF URL with page parameter for desktop
-  const updatePdfUrl = (baseUrl: string, page: number) => {
+  const updatePdfUrl = useCallback((baseUrl: string, page: number) => {
     const browser = detectBrowser()
     let urlWithPage: string
     
@@ -91,7 +91,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     }
     
     setCurrentPdfUrl(urlWithPage)
-  }
+  }, [])
 
   // Page navigation functions for desktop
   const goToNextPage = () => {
@@ -110,7 +110,8 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     }
   }
 
-  const _goToPage = (pageNum: number) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const goToPage = (pageNum: number) => {
     if (pageNum >= 1 && pageNum <= totalPdfPages && pdfUrl) {
       setCurrentPdfPage(pageNum)
       updatePdfUrl(pdfUrl, pageNum)
@@ -166,7 +167,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     } finally {
       setIsLoadingPreview(false)
     }
-  }, [data, template, usePDFJS])
+  }, [data, template, usePDFJS, updatePdfUrl])
 
   // Safari-specific download function
   const downloadBlobSafari = (blob: Blob, filename: string) => {
@@ -203,7 +204,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
           timestamp: new Date().toISOString(),
           userAgent: navigator.userAgent
         })
-      }).catch(error => {
+      }).catch(() => {
         // Handle network errors gracefully
         throw new Error('Network error while tracking download')
       })
@@ -238,7 +239,8 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       }
       
       toast.success('Resume downloaded successfully!')
-    } catch {
+    } catch (error) {
+      console.error('Download error:', error)
       toast.error('Failed to download resume')
     } finally {
       setIsGeneratingPDF(false)
@@ -428,7 +430,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
             <PDFJSViewer 
               pdfData={pdfArrayBuffer}
               className="w-full h-full"
-              onLoadError={(error) => {
+              onLoadError={() => {
                 toast.error('Failed to load PDF preview')
               }}
             />
@@ -476,9 +478,8 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
                       WebkitTouchCallout: 'none',
                       WebkitTapHighlightColor: 'transparent',
                       pointerEvents: 'auto',
-                      cursor: 'default',
-                      ['WebkitUserDrag' as any]: 'none'
-                    }}
+                      cursor: 'default'
+                    } as React.CSSProperties}
                   />
                 </div>
               )}

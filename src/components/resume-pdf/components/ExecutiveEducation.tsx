@@ -21,7 +21,7 @@ export const ExecutiveEducation = ({ education }: ExecutiveEducationProps) => {
           <View style={executiveStyles.educationHeader} wrap={false}>
             <Text style={executiveStyles.degree}>{edu.degree}</Text>
             <Text style={executiveStyles.dateRange}>
-              {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
+              {formatDate(edu.startDate)} - {formatDate(edu.endDate || '')}
             </Text>
           </View>
           <Text style={executiveStyles.school}>{edu.school}</Text>

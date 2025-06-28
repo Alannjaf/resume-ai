@@ -14,7 +14,7 @@ export default function PrivacyPolicy() {
   }
   
   // Helper function to safely get object array translations
-  const getObjectArrayTranslation = (key: string): any[] => {
+  const getObjectArrayTranslation = (key: string): Array<{ title?: string; content?: string; name?: string; purpose?: string }> => {
     const translation = t(key)
     return Array.isArray(translation) ? translation : []
   }

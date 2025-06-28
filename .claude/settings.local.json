@@ -24,7 +24,12 @@
       "Bash(for file in src/app/api/ai/*.ts)",
       "Bash(do echo \"=== $file ===\")",
       "Bash(done)",
-      "Bash(for:*)"
+      "Bash(for:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run lint:*)",
+      "Bash(npx eslint:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx next build:*)"
     ],
     "deny": []
   }

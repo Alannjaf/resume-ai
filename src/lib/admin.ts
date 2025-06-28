@@ -11,7 +11,7 @@ export async function isAdmin(): Promise<boolean> {
         SELECT "role" FROM "User" 
         WHERE "clerkId" = ${userId}
         LIMIT 1
-      ` as any[]
+      ` as { role: string }[]
 
       return user?.[0]?.role === 'ADMIN'
     } catch {

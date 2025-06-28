@@ -31,7 +31,7 @@ export const MinimalistContent = ({ data }: MinimalistContentProps) => {
                     <View style={minimalistStyles.experienceHeader}>
                       <Text style={minimalistStyles.jobTitle}>{exp.jobTitle}</Text>
                       <Text style={minimalistStyles.dateRange}>
-                        {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
+                        {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate || '')}
                       </Text>
                     </View>
                     <Text style={minimalistStyles.company}>{exp.company}</Text>
@@ -52,7 +52,7 @@ export const MinimalistContent = ({ data }: MinimalistContentProps) => {
                   <View style={minimalistStyles.experienceHeader}>
                     <Text style={minimalistStyles.jobTitle}>{exp.jobTitle}</Text>
                     <Text style={minimalistStyles.dateRange}>
-                      {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
+                      {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate || '')}
                     </Text>
                   </View>
                   <Text style={minimalistStyles.company}>{exp.company}</Text>
@@ -83,7 +83,7 @@ export const MinimalistContent = ({ data }: MinimalistContentProps) => {
                     <View style={minimalistStyles.educationHeader}>
                       <Text style={minimalistStyles.degree}>{edu.degree}</Text>
                       <Text style={minimalistStyles.dateRange}>
-                        {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
+                        {formatDate(edu.startDate)} - {formatDate(edu.endDate || '')}
                       </Text>
                     </View>
                     <Text style={minimalistStyles.school}>{edu.school}</Text>
@@ -104,7 +104,7 @@ export const MinimalistContent = ({ data }: MinimalistContentProps) => {
                   <View style={minimalistStyles.educationHeader}>
                     <Text style={minimalistStyles.degree}>{edu.degree}</Text>
                     <Text style={minimalistStyles.dateRange}>
-                      {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
+                      {formatDate(edu.startDate)} - {formatDate(edu.endDate || '')}
                     </Text>
                   </View>
                   <Text style={minimalistStyles.school}>{edu.school}</Text>
@@ -153,7 +153,7 @@ export const MinimalistContent = ({ data }: MinimalistContentProps) => {
                       <Text style={minimalistStyles.jobTitle}>{project.name}</Text>
                       {(project.startDate || project.endDate) && (
                         <Text style={minimalistStyles.dateRange}>
-                          {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+                          {formatDate(project.startDate || '')} - {project.endDate ? formatDate(project.endDate) : 'Present'}
                         </Text>
                       )}
                     </View>
@@ -178,7 +178,7 @@ export const MinimalistContent = ({ data }: MinimalistContentProps) => {
                     <Text style={minimalistStyles.jobTitle}>{project.name}</Text>
                     {(project.startDate || project.endDate) && (
                       <Text style={minimalistStyles.dateRange}>
-                        {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+                        {formatDate(project.startDate || '')} - {project.endDate ? formatDate(project.endDate) : 'Present'}
                       </Text>
                     )}
                   </View>

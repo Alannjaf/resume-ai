@@ -3,13 +3,13 @@ import { View, Text, Link } from '@react-pdf/renderer'
 import { styles } from '../styles/pdfStyles'
 import { skillsStyles } from '../styles/skillsStyles'
 import { experienceStyles } from '../styles/experienceStyles'
-import { ResumeData } from '../../../types/resume'
+import { ResumeData, WorkExperience } from '../../../types/resume'
 import { formatDateRange } from '../utils/dateUtils'
 import { parseHtmlToPdf } from '../utils/htmlToPdfParser'
 
 interface RightColumnProps {
   data: ResumeData
-  experiences: any[]
+  experiences: WorkExperience[]
 }
 
 export const RightColumn: React.FC<RightColumnProps> = ({ data, experiences }) => {

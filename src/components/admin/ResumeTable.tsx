@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React from 'react';
 import { Eye, Trash2 } from 'lucide-react';
 import { ResumeStatus } from '@prisma/client';
 

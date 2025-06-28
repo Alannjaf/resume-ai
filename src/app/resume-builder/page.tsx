@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, Suspense, useState } from 'react'
+import { useEffect, useRef, Suspense, useState, useCallback } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -30,7 +30,7 @@ import { scrollToTopForSectionChange, scrollToTopAfterAsync } from '@/lib/scroll
 import toast from 'react-hot-toast'
 
 // Form sections
-const getFormSections = (t: any) => [
+const getFormSections = (t: (key: string) => string) => [
   { id: 'personal', title: t('pages.resumeBuilder.sections.personalInfo'), icon: '👤' },
   { id: 'summary', title: t('pages.resumeBuilder.sections.professionalSummary'), icon: '📝' },
   { id: 'experience', title: t('pages.resumeBuilder.sections.workExperience'), icon: '💼' },
@@ -46,7 +46,7 @@ function ResumeBuilderContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { t } = useLanguage()
-  const { permissions, checkPermission, isLoading: subscriptionLoading } = useSubscription()
+  const { checkPermission } = useSubscription()
   const [currentSection, setCurrentSection] = useState(0)
   const [showPreview, setShowPreview] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState('modern')
@@ -77,7 +77,7 @@ function ResumeBuilderContent() {
     certifications: []})
 
   // Quick save function with debouncing
-  const quickSave = async (changes: any, sectionType?: string) => {
+  const quickSave = useCallback(async (changes: Record<string, unknown>, sectionType?: string) => {
     if (!resumeId) {
       // If no resume exists yet, create it first
       try {
@@ -126,17 +126,17 @@ function ResumeBuilderContent() {
     } catch {
       return false
     }
-  }
+  }, [resumeId, formData, selectedTemplate, resumeTitle, t])
 
   // Detect changes and queue save
-  const queueSave = (sectionType?: string) => {
+  const queueSave = useCallback((sectionType?: string) => {
     // If no baseline data exists yet, initialize it
     if (!lastSavedData) {
       setLastSavedData({ ...formData })
       return
     }
 
-    const changes: any = {}
+    const changes: Record<string, unknown> = {}
     let hasChanges = false
 
     // Always include title in changes for save operations
@@ -154,8 +154,8 @@ function ResumeBuilderContent() {
 
     // Check section-specific changes
     if (sectionType) {
-      const currentSectionData = (formData as any)[sectionType]
-      const lastSectionData = (lastSavedData as any)[sectionType]
+      const currentSectionData = formData[sectionType as keyof ResumeData]
+      const lastSectionData = lastSavedData[sectionType as keyof ResumeData]
       
       if (JSON.stringify(currentSectionData) !== JSON.stringify(lastSectionData)) {
         changes.sectionData = currentSectionData
@@ -179,7 +179,7 @@ function ResumeBuilderContent() {
 
       setSaveQueue(timeoutId)
     }
-  }
+  }, [lastSavedData, formData, resumeTitle, saveQueue, quickSave])
 
   // Auto-translate all non-English content to English
   const autoTranslateToEnglish = async (): Promise<ResumeData> => {
@@ -191,7 +191,7 @@ function ResumeBuilderContent() {
       const translationTasks: Array<{
         content: string
         contentType: string
-        contextInfo?: any
+        contextInfo?: Record<string, string>
         updatePath: string[]
         index?: number
       }> = []
@@ -465,7 +465,7 @@ function ResumeBuilderContent() {
             } else {
               return null
             }
-          }).catch(error => {
+          }).catch(() => {
             return null
           })
         )
@@ -480,22 +480,29 @@ function ResumeBuilderContent() {
             if (updatePath.length === 2 && typeof index === 'number') {
               // Array item update (experience, education, skills, etc.)
               const [section, field] = updatePath
-              if (translatedData[section as keyof ResumeData] && Array.isArray(translatedData[section as keyof ResumeData])) {
-                (translatedData[section as keyof ResumeData] as any)[index][field] = translatedContent
-                hasTranslations = true
+              const sectionData = translatedData[section as keyof ResumeData]
+              if (sectionData && Array.isArray(sectionData)) {
+                const arrayItem = (sectionData as unknown as Record<string, unknown>[])[index]
+                if (arrayItem) {
+                  arrayItem[field] = translatedContent
+                  hasTranslations = true
+                }
               }
             } else if (updatePath.length === 2) {
               // Nested object update (personal info)
               const [section, field] = updatePath
-              if (translatedData[section as keyof ResumeData]) {
-                (translatedData[section as keyof ResumeData] as any)[field] = translatedContent
+              const sectionData = translatedData[section as keyof ResumeData]
+              if (sectionData && typeof sectionData === 'object' && !Array.isArray(sectionData)) {
+                (sectionData as unknown as Record<string, unknown>)[field] = translatedContent
                 hasTranslations = true
               }
             } else if (updatePath.length === 1) {
               // Direct field update (summary)
               const [field] = updatePath
-              translatedData[field as keyof ResumeData] = translatedContent as any
-              hasTranslations = true
+              if (field === 'summary') {
+                translatedData.summary = translatedContent
+                hasTranslations = true
+              }
             }
           }
         })
@@ -506,7 +513,7 @@ function ResumeBuilderContent() {
       }
 
       return translatedData
-    } catch (error) {
+    } catch {
       toast.error(t('pages.resumeBuilder.messages.translationError'))
       return formData // Return original data if translation fails
     }
@@ -540,7 +547,7 @@ function ResumeBuilderContent() {
               })
             })
           }
-        } catch (error) {
+        } catch {
           toast.error(t('pages.resumeBuilder.messages.translationError'))
         } finally {
           setIsAutoTranslating(false)
@@ -631,7 +638,7 @@ function ResumeBuilderContent() {
     }
   }
 
-  const handleSectionChange = async (newSection: number) => {
+  const handleSectionChange = useCallback(async (newSection: number) => {
     if (newSection === currentSection) return
     
     // Change section immediately (optimistic update)
@@ -644,7 +651,7 @@ function ResumeBuilderContent() {
     if (sectionKey) {
       queueSave(sectionKey)
     }
-  }
+  }, [currentSection, queueSave])
 
   // Set up form navigation
   const { formRef, focusFirstElement } = useFormNavigation({
@@ -668,7 +675,7 @@ function ResumeBuilderContent() {
     return () => {
       window.removeEventListener('navigate-to-section', handleSectionNavigation as EventListener)
     }
-  }, [])
+  }, [handleSectionChange])
 
   // Focus first element when section changes
   useEffect(() => {
@@ -775,27 +782,27 @@ function ResumeBuilderContent() {
         
         const formDataWithIds: ResumeData = {
           ...resume.formData,
-          experience: resume.formData.experience.map((exp: any) => ({
+          experience: resume.formData.experience.map((exp: Record<string, unknown>) => ({
             ...exp,
             id: exp.id || generateId()
           })),
-          education: resume.formData.education.map((edu: any) => ({
+          education: resume.formData.education.map((edu: Record<string, unknown>) => ({
             ...edu,
             id: edu.id || generateId()
           })),
-          skills: resume.formData.skills.map((skill: any) => ({
+          skills: resume.formData.skills.map((skill: Record<string, unknown>) => ({
             ...skill,
             id: skill.id || generateId()
           })),
-          languages: resume.formData.languages.map((lang: any) => ({
+          languages: resume.formData.languages.map((lang: Record<string, unknown>) => ({
             ...lang,
             id: lang.id || generateId()
           })),
-          projects: (resume.formData.projects || []).map((proj: any) => ({
+          projects: (resume.formData.projects || []).map((proj: Record<string, unknown>) => ({
             ...proj,
             id: proj.id || generateId()
           })),
-          certifications: (resume.formData.certifications || []).map((cert: any) => ({
+          certifications: (resume.formData.certifications || []).map((cert: Record<string, unknown>) => ({
             ...cert,
             id: cert.id || generateId()
           }))
@@ -809,7 +816,7 @@ function ResumeBuilderContent() {
         if (shouldPreview === 'true') {
           setShowPreview(true)
         }
-      } catch (error) {
+      } catch {
         toast.error(t('pages.resumeBuilder.messages.loadError'))
         router.push('/dashboard')
       } finally {
@@ -818,7 +825,7 @@ function ResumeBuilderContent() {
     }
 
     loadResume()
-  }, [searchParams, router])
+  }, [searchParams, router, t])
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -1120,7 +1127,7 @@ function ResumeBuilderContent() {
                         }
                       />
                       <TranslateAndEnhanceButton
-                        content={formData.personal.location}
+                        content={formData.personal.location || ''}
                         contentType="personal"
                         onAccept={(enhancedLocation) =>
                           setFormData({
@@ -1137,7 +1144,7 @@ function ResumeBuilderContent() {
                       </label>
                       <Input
                         placeholder={t('forms.personalInfo.placeholders.linkedin')}
-                        value={formData.personal.linkedin}
+                        value={formData.personal.linkedin || ''}
                         onChange={(e) =>
                           setFormData({
                             ...formData,
@@ -1153,7 +1160,7 @@ function ResumeBuilderContent() {
                       </label>
                       <Input
                         placeholder={t('forms.personalInfo.placeholders.website')}
-                        value={formData.personal.website}
+                        value={formData.personal.website || ''}
                         onChange={(e) =>
                           setFormData({
                             ...formData,
@@ -1321,7 +1328,6 @@ function ResumeBuilderContent() {
                         summaryTextareaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
                         summaryTextareaRef.current?.focus()
                       }}
-                      personalInfo={formData.personal}
                       experience={formData.experience}
                       skills={formData.skills}
                     />

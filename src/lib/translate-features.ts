@@ -1,4 +1,8 @@
-export function translatePlanFeatures(features: string[], t: (key: string, values?: any) => string, keyPrefix: string = 'pricing'): string[] {
+interface TranslationFunction {
+  (key: string, values?: Record<string, string | number>): string
+}
+
+export function translatePlanFeatures(features: string[], t: TranslationFunction, keyPrefix: string = 'pricing'): string[] {
   return features.map(feature => {
     // Dynamic features with counts
     const resumesMatch = feature.match(/^(\d+)\s+resumes?\s+per\s+month$/i);

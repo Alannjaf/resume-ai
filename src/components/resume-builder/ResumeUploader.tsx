@@ -6,7 +6,7 @@ import { useLanguage } from '@/contexts/LanguageContext'
 import toast from 'react-hot-toast'
 
 interface ResumeUploaderProps {
-  onUploadComplete: (data: any) => void
+  onUploadComplete: (data: unknown) => void
   onCancel: () => void
 }
 
@@ -26,17 +26,7 @@ export function ResumeUploader({ onUploadComplete, onCancel }: ResumeUploaderPro
     setIsDragging(false)
   }, [])
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-    
-    const files = e.dataTransfer.files
-    if (files.length > 0) {
-      handleFileSelect(files[0])
-    }
-  }, [])
-
-  const handleFileSelect = (file: File) => {
+  const handleFileSelect = useCallback((file: File) => {
     // Validate file type
     const allowedTypes = [
       'application/pdf',
@@ -57,7 +47,17 @@ export function ResumeUploader({ onUploadComplete, onCancel }: ResumeUploaderPro
     }
 
     setSelectedFile(file)
-  }
+  }, [t])
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    
+    const files = e.dataTransfer.files
+    if (files.length > 0) {
+      handleFileSelect(files[0])
+    }
+  }, [handleFileSelect])
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -76,7 +76,8 @@ export function ResumeUploader({ onUploadComplete, onCancel }: ResumeUploaderPro
     try {
       const response = await fetch('/api/resume/upload', {
         method: 'POST',
-        body: formData})
+        body: formData,
+      })
 
       const result = await response.json()
 

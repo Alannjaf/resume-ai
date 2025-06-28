@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { prisma } from '@/lib/prisma'
+import { DatabaseQueryResult } from '@/types/api'
 
 export async function GET() {
   try {
@@ -15,7 +16,7 @@ export async function GET() {
         SELECT "role" FROM "User" 
         WHERE "clerkId" = ${userId}
         LIMIT 1
-      ` as any[]
+      ` as DatabaseQueryResult[]
 
       return NextResponse.json({ 
         isAdmin: user?.[0]?.role === 'ADMIN' 

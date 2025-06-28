@@ -32,7 +32,7 @@ export const ElegantContent = ({ data }: ElegantContentProps) => {
                     <View style={elegantStyles.experienceHeader}>
                       <Text style={elegantStyles.jobTitle}>{exp.jobTitle}</Text>
                       <Text style={elegantStyles.dateRange}>
-                        {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
+                        {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate || '')}
                       </Text>
                     </View>
                     <View style={elegantStyles.companyInfo}>
@@ -53,7 +53,7 @@ export const ElegantContent = ({ data }: ElegantContentProps) => {
                   <View style={elegantStyles.experienceHeader}>
                     <Text style={elegantStyles.jobTitle}>{exp.jobTitle}</Text>
                     <Text style={elegantStyles.dateRange}>
-                      {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
+                      {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate || '')}
                     </Text>
                   </View>
                   <View style={elegantStyles.companyInfo}>
@@ -86,7 +86,7 @@ export const ElegantContent = ({ data }: ElegantContentProps) => {
                     <View style={elegantStyles.educationHeader}>
                       <Text style={elegantStyles.degree}>{edu.degree}</Text>
                       <Text style={elegantStyles.dateRange}>
-                        {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
+                        {formatDate(edu.startDate)} - {formatDate(edu.endDate || '')}
                       </Text>
                     </View>
                     <Text style={elegantStyles.school}>{edu.school}</Text>
@@ -109,7 +109,7 @@ export const ElegantContent = ({ data }: ElegantContentProps) => {
                   <View style={elegantStyles.educationHeader}>
                     <Text style={elegantStyles.degree}>{edu.degree}</Text>
                     <Text style={elegantStyles.dateRange}>
-                      {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
+                      {formatDate(edu.startDate)} - {formatDate(edu.endDate || '')}
                     </Text>
                   </View>
                   <Text style={elegantStyles.school}>{edu.school}</Text>
@@ -183,7 +183,7 @@ export const ElegantContent = ({ data }: ElegantContentProps) => {
                       <Text style={elegantStyles.jobTitle}>{project.name}</Text>
                       {(project.startDate || project.endDate) && (
                         <Text style={elegantStyles.dateRange}>
-                          {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+                          {formatDate(project.startDate || '')} - {project.endDate ? formatDate(project.endDate) : 'Present'}
                         </Text>
                       )}
                     </View>
@@ -210,7 +210,7 @@ export const ElegantContent = ({ data }: ElegantContentProps) => {
                     <Text style={elegantStyles.jobTitle}>{project.name}</Text>
                     {(project.startDate || project.endDate) && (
                       <Text style={elegantStyles.dateRange}>
-                        {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+                        {formatDate(project.startDate || '')} - {project.endDate ? formatDate(project.endDate) : 'Present'}
                       </Text>
                     )}
                   </View>

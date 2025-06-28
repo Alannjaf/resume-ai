@@ -88,21 +88,33 @@ export async function deleteResume(resumeId: string, userId: string) {
   return resume
 }
 
+interface ResumeUpdateData {
+  title?: string
+  personalInfo?: Record<string, unknown>
+  summary?: string
+  template?: string
+  userId?: string
+}
+
 export async function updateResume(
   resumeId: string,
   userId: string,
-  data: {
-    title?: string
-    personalInfo?: any
-    summary?: string
-    template?: string
-  }
+  data: ResumeUpdateData
 ) {
+  // Remove userId from data to avoid conflicts with where clause
+  const { userId: _, ...updateData } = data
+  
+  // Cast personalInfo to proper JSON type for Prisma
+  const prismaUpdateData = {
+    ...updateData,
+    personalInfo: updateData.personalInfo ? updateData.personalInfo as any : undefined
+  }
+  
   const resume = await prisma.resume.update({
     where: {
       id: resumeId,
       userId},
-    data})
+    data: prismaUpdateData})
 
   return resume
 }
@@ -116,6 +128,25 @@ export async function getUserSubscription(userId: string) {
 
 async function getSystemSettings() {
   try {
+    interface SystemSettingsRaw {
+      maxFreeResumes: number
+      maxFreeAIUsage: number
+      maxFreeExports: number
+      maxFreeImports: number
+      maxBasicResumes: number
+      maxBasicAIUsage: number
+      maxBasicExports: number
+      maxBasicImports: number
+      maxProResumes: number
+      maxProAIUsage: number
+      maxProExports: number
+      maxProImports: number
+      freeTemplates: string | string[]
+      basicTemplates: string | string[]
+      proTemplates: string | string[]
+      photoUploadPlans: string | string[]
+    }
+
     const settingsRecord = await prisma.$queryRawUnsafe(`
       SELECT 
         "maxFreeResumes",
@@ -136,7 +167,7 @@ async function getSystemSettings() {
         "photoUploadPlans"
       FROM "SystemSettings" 
       ORDER BY id LIMIT 1
-    `) as any[]
+    `) as SystemSettingsRaw[]
 
     if (settingsRecord && settingsRecord.length > 0) {
       const settings = settingsRecord[0]
@@ -229,19 +260,28 @@ export async function checkUserLimits(clerkUserId: string) {
 
 
   // Check photo upload permission
-  const canUploadPhoto = systemSettings.photoUploadPlans.includes(_subscription.plan)
+  const photoUploadPlans = Array.isArray(systemSettings.photoUploadPlans) 
+    ? systemSettings.photoUploadPlans 
+    : ['BASIC', 'PRO']
+  const canUploadPhoto = photoUploadPlans.includes(_subscription.plan)
   
   // Get available templates for user's plan
   let availableTemplates: string[] = []
   switch (_subscription.plan) {
     case 'FREE':
-      availableTemplates = systemSettings.freeTemplates || ['modern']
+      availableTemplates = Array.isArray(systemSettings.freeTemplates) 
+        ? systemSettings.freeTemplates 
+        : ['modern']
       break
     case 'BASIC':
-      availableTemplates = systemSettings.basicTemplates || ['modern', 'creative']
+      availableTemplates = Array.isArray(systemSettings.basicTemplates) 
+        ? systemSettings.basicTemplates 
+        : ['modern', 'creative']
       break
     case 'PRO':
-      availableTemplates = systemSettings.proTemplates || ['modern', 'creative', 'executive', 'elegant', 'minimalist', 'creative-artistic']
+      availableTemplates = Array.isArray(systemSettings.proTemplates) 
+        ? systemSettings.proTemplates 
+        : ['modern', 'creative', 'executive', 'elegant', 'minimalist', 'creative-artistic']
       break
   }
 

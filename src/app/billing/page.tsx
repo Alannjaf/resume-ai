@@ -278,8 +278,8 @@ export default function BillingPage() {
 
           <div className="mt-6 p-4 bg-blue-50 rounded-lg">
             <p className="text-sm text-blue-800">
-              <strong>Note:</strong> We're actively working on integrating these payment methods. 
-              Once available, you'll be able to upgrade your plan seamlessly. We'll notify you as soon as payments are ready!
+              <strong>Note:</strong> We&apos;re actively working on integrating these payment methods. 
+              Once available, you&apos;ll be able to upgrade your plan seamlessly. We&apos;ll notify you as soon as payments are ready!
             </p>
           </div>
         </div>

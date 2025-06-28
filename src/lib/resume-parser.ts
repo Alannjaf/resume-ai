@@ -6,7 +6,8 @@ export class ResumeParser {
    * Parse a PDF buffer and extract text
    * Note: PDF parsing is now handled directly by AI in the upload route
    */
-  static async parsePDF(buffer: Buffer): Promise<string> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  static async parsePDF(_buffer: Buffer): Promise<string> {
     throw new Error('PDF parsing is handled directly by AI. This method is deprecated.')
   }
 
@@ -17,7 +18,8 @@ export class ResumeParser {
     try {
       const result = await mammoth.extractRawText({ buffer })
       return result.value
-    } catch {
+    } catch (error) {
+      console.error('DOCX parsing error:', error)
       throw new Error('Failed to parse DOCX file')
     }
   }

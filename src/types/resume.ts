@@ -4,21 +4,21 @@ export interface WorkExperience {
   id: string
   jobTitle: string
   company: string
-  location: string
+  location?: string
   startDate: string
-  endDate: string
+  endDate?: string
   current: boolean
-  description: string
+  description?: string
 }
 
 export interface Education {
   id: string
   degree: string
-  field: string
+  field?: string
   school: string
-  location: string
+  location?: string
   startDate: string
-  endDate: string
+  endDate?: string
   gpa?: string
   achievements?: string
 }
@@ -38,30 +38,30 @@ export interface Language {
 export interface Project {
   id: string
   name: string
-  description: string
-  technologies: string
-  link: string
-  startDate: string
-  endDate: string
+  description?: string
+  technologies?: string
+  link?: string
+  startDate?: string
+  endDate?: string
 }
 
 export interface Certification {
   id: string
   name: string
   issuer: string
-  date: string
-  expiryDate: string
-  credentialId: string
-  url: string
+  date?: string
+  expiryDate?: string
+  credentialId?: string
+  url?: string
 }
 
 export interface PersonalInfo {
   fullName: string
   email: string
   phone: string
-  location: string
-  linkedin: string
-  website: string
+  location?: string
+  linkedin?: string
+  website?: string
   title?: string
   profileImage?: string
   originalProfileImage?: string

@@ -16,7 +16,6 @@ import {
   FileText
 } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { useRouter } from 'next/navigation'
 import { getTemplateIds } from '@/lib/templates'
 import { useLanguage } from '@/contexts/LanguageContext'
 
@@ -86,7 +85,6 @@ interface SystemSettings {
 }
 
 export function AdminDashboard() {
-  const _router = useRouter()
   const { t } = useLanguage()
   const availableTemplates = getTemplateIds() // Get all templates dynamically
   const [stats, setStats] = useState<Stats | null>(null)
@@ -131,7 +129,7 @@ export function AdminDashboard() {
     fetchStats()
     fetchSettings()
     fetchSubscriptionStatus()
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchStats = async () => {
     try {

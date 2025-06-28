@@ -1,11 +1,14 @@
 import { Text, View } from '@react-pdf/renderer'
 import { ReactElement } from 'react'
 
+// Use a more flexible type for styles that works with React-PDF
+type ReactPDFStyle = Record<string, any>
+
 interface ParsedContent {
   elements: ReactElement[]
 }
 
-export const parseDeveloperHtmlToPdf = (htmlContent: string, styles: any): ParsedContent => {
+export const parseDeveloperHtmlToPdf = (htmlContent: string, styles: Record<string, ReactPDFStyle>): ParsedContent => {
   if (!htmlContent || htmlContent.trim() === '') {
     return { elements: [] }
   }
@@ -27,7 +30,7 @@ export const parseDeveloperHtmlToPdf = (htmlContent: string, styles: any): Parse
   
   let currentList: ReactElement[] = []
   let listType: 'ul' | 'ol' | null = null
-  let listItemCounter = 0
+  // let listItemCounter = 0 // Currently unused in developer style
 
   for (let i = 0; i < blocks.length; i++) {
     const block = blocks[i].trim()
@@ -36,7 +39,7 @@ export const parseDeveloperHtmlToPdf = (htmlContent: string, styles: any): Parse
     // Start of unordered list
     if (block.match(/^<ul/i)) {
       listType = 'ul'
-      listItemCounter = 0
+      // listItemCounter = 0 // Currently unused in developer style
       currentList = []
       continue
     }
@@ -44,7 +47,7 @@ export const parseDeveloperHtmlToPdf = (htmlContent: string, styles: any): Parse
     // Start of ordered list
     if (block.match(/^<ol/i)) {
       listType = 'ol'
-      listItemCounter = 0
+      // listItemCounter = 0 // Currently unused in developer style
       currentList = []
       continue
     }
@@ -117,7 +120,7 @@ export const parseDeveloperHtmlToPdf = (htmlContent: string, styles: any): Parse
   return { elements }
 }
 
-const parseInlineElements = (content: string, styles: any): ReactElement[] => {
+const parseInlineElements = (content: string, styles: Record<string, ReactPDFStyle>): ReactElement[] => {
   const elements: ReactElement[] = []
   let currentKey = 0
 

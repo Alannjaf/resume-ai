@@ -22,7 +22,7 @@ export const ExecutiveProjects = ({ projects }: ExecutiveProjectsProps) => {
             <Text style={executiveStyles.jobTitle}>{project.name}</Text>
             {(project.startDate || project.endDate) && (
               <Text style={executiveStyles.dateRange}>
-                {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+                {formatDate(project.startDate || '')} - {project.endDate ? formatDate(project.endDate) : 'Present'}
               </Text>
             )}
           </View>

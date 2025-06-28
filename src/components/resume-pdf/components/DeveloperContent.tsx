@@ -96,9 +96,9 @@ export const DeveloperContent: React.FC<DeveloperContentProps> = ({ data }) => {
           {data.projects.map((project) => (
             <View key={project.id} wrap={false} style={styles.projectItem}>
               <Text style={styles.projectName}>-{project.name}</Text>
-              <Text style={styles.projectTech}>{`// ${project.technologies}`}</Text>
+              <Text style={styles.projectTech}>{`// ${project.technologies || 'N/A'}`}</Text>
               <View style={{ marginTop: 1 }}>
-                {parseDeveloperHtmlToPdf(project.description, styles).elements}
+                {parseDeveloperHtmlToPdf(project.description || '', styles).elements}
               </View>
               {project.link && (
                 <Text style={styles.projectLink}>{`// ${project.link}`}</Text>

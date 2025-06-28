@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 // Dynamically import PDF.js to avoid SSR issues
-let pdfjsLib: any = null;
+let pdfjsLib: typeof import('pdfjs-dist') | null = null;
 
 // Initialize PDF.js only on client side
-const initPDFJS = async () => {
+const initPDFJS = async (): Promise<typeof import('pdfjs-dist') | null> => {
   if (typeof window !== 'undefined' && !pdfjsLib) {
     pdfjsLib = await import('pdfjs-dist');
     // Use local PDF.js worker file to avoid CORS issues completely
@@ -34,7 +34,7 @@ export const PDFJSViewer = ({
   const [loading, setLoading] = useState(true);
   const [rendering, setRendering] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const [pdfDoc, setPdfDoc] = useState<any | null>(null);
+  const [pdfDoc, setPdfDoc] = useState<import('pdfjs-dist').PDFDocumentProxy | null>(null);
 
   // Ensure component is properly mounted
   useEffect(() => {
@@ -107,9 +107,9 @@ export const PDFJSViewer = ({
     return () => {
       isCancelled = true;
     };
-  }, [pdfData, mounted]);
+  }, [pdfData, mounted, onLoadError]);
 
-  const renderPage = async (pdf: any, pageNum: number) => {
+  const renderPage = useCallback(async (pdf: import('pdfjs-dist').PDFDocumentProxy, pageNum: number) => {
     if (!mounted) {
       return;
     }
@@ -167,17 +167,17 @@ export const PDFJSViewer = ({
     } finally {
       setRendering(false);
     }
-  };
+  }, [mounted, scale, onLoadError]);
 
-  const _goToPage = async (pageNum: number) => {
+  const goToPage = async (pageNum: number) => {
     if (!pdfDoc || pageNum < 1 || pageNum > totalPages) return;
     
     setCurrentPage(pageNum);
     await renderPage(pdfDoc, pageNum);
   };
 
-  const nextPage = () => _goToPage(currentPage + 1);
-  const prevPage = () => _goToPage(currentPage - 1);
+  const nextPage = () => goToPage(currentPage + 1);
+  const prevPage = () => goToPage(currentPage - 1);
 
   // Always show the canvas - don't hide it behind loading states
   const showLoadingOverlay = loading;

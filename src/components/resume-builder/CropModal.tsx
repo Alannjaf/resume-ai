@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X, Check, RotateCcw } from 'lucide-react'
+import { X, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ImageCropper } from './ImageCropper'
 import { applyCrop, CropData } from '@/lib/image-utils'
@@ -151,6 +151,7 @@ export function CropModal({ isOpen, onClose, imageDataURL, templateId, onSave }:
                           height: (cropConfig.defaultSize * 0.6) * (1 / cropConfig.aspectRatio)
                         }}
                       >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={previewImage}
                           alt="Preview"

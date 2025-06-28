@@ -5,6 +5,7 @@ import { ResumeData } from '@/types/resume'
 import { checkUserLimits } from '@/lib/db'
 import { prisma } from '@/lib/prisma'
 import OpenAI from 'openai'
+import { AIExtractedData } from '@/types/api'
 
 // Initialize OpenRouter client
 const openai = new OpenAI({
@@ -82,8 +83,8 @@ export async function POST(request: NextRequest) {
         const dataUrl = `data:application/pdf;base64,${base64Pdf}`
 
         // Single API call approach - extract structured data directly
-        // Use 'any' type to bypass OpenAI SDK's strict typing for OpenRouter's file format
-        const messages: any = [
+        // Custom message format for OpenRouter's file handling
+        const messages = [
           {
             role: 'system',
             content: `You are a resume data extractor. Your ONLY job is to read the PDF document provided and extract the REAL information from it.
@@ -183,7 +184,7 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
 
         const completion = await openai.chat.completions.create({
           model: 'google/gemini-2.5-flash-preview-05-20',
-          messages,
+          messages: messages as OpenAI.Chat.Completions.ChatCompletionMessageParam[],
           max_tokens: 2000,
           temperature: 0.0 // Zero temperature for exact extraction
         })
@@ -205,7 +206,7 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
         }
         
         // Parse the JSON
-        const aiData = JSON.parse(cleanedText) as any
+        const aiData = JSON.parse(cleanedText) as AIExtractedData
 
         // Helper function to convert various date formats to YYYY-MM
         const convertDateFormat = (date: string): string => {
@@ -279,7 +280,7 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
             website: aiData.personal?.website || '',
             title: aiData.personal?.title || ''},
           summary: aiData.summary || '',
-          experience: (aiData.experience || []).map((exp: any, index: number) => ({
+          experience: (aiData.experience || []).map((exp, index: number) => ({
             id: exp.id || `exp_${index + 1}`,
             jobTitle: exp.title || exp.jobTitle || '',
             company: exp.company || '',
@@ -288,7 +289,7 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
             endDate: exp.endDate?.toLowerCase().includes('present') ? '' : convertDateFormat(exp.endDate || ''),
             current: exp.endDate?.toLowerCase().includes('present') || exp.current || false,
             description: Array.isArray(exp.description) ? exp.description.join('\n• ') : (exp.description || '')})),
-          education: (aiData.education || []).map((edu: any, index: number) => ({
+          education: (aiData.education || []).map((edu, index: number) => ({
             id: edu.id || `edu_${index + 1}`,
             degree: edu.degree || '',
             field: edu.field || edu.major || '',
@@ -298,11 +299,11 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
             endDate: convertDateFormat(edu.endDate || edu.graduationDate || ''),
             gpa: edu.gpa || '',
             achievements: edu.achievements || ''})),
-          skills: (aiData.skills || []).map((skill: any, index: number) => ({
-            id: skill.id || `skill_${index + 1}`,
+          skills: (aiData.skills || []).map((skill, index: number) => ({
+            id: typeof skill === 'object' && skill.id ? skill.id : `skill_${index + 1}`,
             name: typeof skill === 'string' ? skill : (skill.name || ''),
             level: typeof skill === 'object' ? (skill.level || '') : ''})),
-          languages: (aiData.languages || []).map((lang: any, index: number) => {
+          languages: (aiData.languages || []).map((lang, index: number) => {
             if (typeof lang === 'string') {
               // If language is a string, create object with name and default proficiency
               return {
@@ -318,7 +319,7 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
                 proficiency: lang.proficiency || 'Conversational'}
             }
           }),
-          projects: (aiData.projects || []).map((proj: any, index: number) => ({
+          projects: (aiData.projects || []).map((proj, index: number) => ({
             id: proj.id || `proj_${index + 1}`,
             name: proj.name || '',
             description: proj.description || '',
@@ -326,7 +327,7 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
             link: proj.link || '',
             startDate: proj.startDate || '',
             endDate: proj.endDate || ''})),
-          certifications: (aiData.certifications || []).map((cert: any, index: number) => ({
+          certifications: (aiData.certifications || []).map((cert, index: number) => ({
             id: cert.id || `cert_${index + 1}`,
             name: cert.name || '',
             issuer: cert.issuer || '',
@@ -406,21 +407,44 @@ Return valid JSON only, no explanations.`
           cleanedText = cleanedText.substring(0, lastBrace + 1)
         }
 
-        const aiData = JSON.parse(cleanedText) as ResumeData
+        const aiData = JSON.parse(cleanedText) as AIExtractedData
 
         // Merge AI data with basic extraction and apply transformations
         const mergedData: ResumeData = {
           personal: {
+            fullName: '',
+            email: '',
+            phone: '',
+            location: '',
+            linkedin: '',
+            website: '',
             ...basicData.personal,
             ...aiData.personal},
           summary: aiData.summary || basicData.summary || '',
-          experience: aiData.experience || [],
-          education: aiData.education || [],
-          skills: (aiData.skills || []).map((skill: any, index: number) => ({
-            id: skill.id || `skill_${index + 1}`,
+          experience: (aiData.experience || []).map((exp, index: number) => ({
+            id: exp.id || `exp_${index + 1}`,
+            jobTitle: exp.jobTitle || exp.title || '',
+            company: exp.company || '',
+            location: exp.location || '',
+            startDate: exp.startDate || '',
+            endDate: exp.endDate || '',
+            current: exp.current || false,
+            description: Array.isArray(exp.description) ? exp.description.join('\n') : (exp.description || '')})),
+          education: (aiData.education || []).map((edu, index: number) => ({
+            id: edu.id || `edu_${index + 1}`,
+            degree: edu.degree || '',
+            field: edu.field || edu.major || '',
+            school: edu.school || edu.university || '',
+            location: edu.location || '',
+            startDate: edu.startDate || '',
+            endDate: edu.endDate || edu.graduationDate || '',
+            gpa: edu.gpa || '',
+            achievements: edu.achievements || ''})),
+          skills: (aiData.skills || []).map((skill, index: number) => ({
+            id: typeof skill === 'object' && skill.id ? skill.id : `skill_${index + 1}`,
             name: typeof skill === 'string' ? skill : (skill.name || ''),
             level: typeof skill === 'object' ? (skill.level || '') : ''})),
-          languages: (aiData.languages || []).map((lang: any, index: number) => {
+          languages: (aiData.languages || []).map((lang, index: number) => {
             if (typeof lang === 'string') {
               // If language is a string, create object with name and default proficiency
               return {
@@ -436,7 +460,7 @@ Return valid JSON only, no explanations.`
                 proficiency: lang.proficiency || 'Conversational'}
             }
           }),
-          projects: (aiData.projects || []).map((proj: any, index: number) => ({
+          projects: (aiData.projects || []).map((proj, index: number) => ({
             id: proj.id || `proj_${index + 1}`,
             name: proj.name || '',
             description: proj.description || '',
@@ -444,7 +468,7 @@ Return valid JSON only, no explanations.`
             link: proj.link || '',
             startDate: proj.startDate || '',
             endDate: proj.endDate || ''})),
-          certifications: (aiData.certifications || []).map((cert: any, index: number) => ({
+          certifications: (aiData.certifications || []).map((cert, index: number) => ({
             id: cert.id || `cert_${index + 1}`,
             name: cert.name || '',
             issuer: cert.issuer || '',

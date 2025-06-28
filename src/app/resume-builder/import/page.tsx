@@ -11,6 +11,34 @@ import { ResumeData } from '@/types/resume'
 import { useLanguage } from '@/contexts/LanguageContext'
 import toast from 'react-hot-toast'
 
+// Type guard to validate ResumeData structure
+function isValidResumeData(data: unknown): data is ResumeData {
+  if (!data || typeof data !== 'object') return false
+  
+  const resumeData = data as Record<string, unknown>
+  
+  // Check for required personal info structure
+  const personal = resumeData.personal
+  if (!personal || typeof personal !== 'object') return false
+  
+  const personalData = personal as Record<string, unknown>
+  
+  // Check for basic required fields
+  return (
+    typeof personalData.fullName === 'string' &&
+    typeof personalData.email === 'string' &&
+    typeof personalData.phone === 'string' &&
+    typeof personalData.location === 'string' &&
+    typeof personalData.linkedin === 'string' &&
+    typeof personalData.website === 'string' &&
+    typeof resumeData.summary === 'string' &&
+    Array.isArray(resumeData.experience) &&
+    Array.isArray(resumeData.education) &&
+    Array.isArray(resumeData.skills) &&
+    Array.isArray(resumeData.languages)
+  )
+}
+
 export default function ImportResumePage() {
   const router = useRouter()
   const { t } = useLanguage()
@@ -31,11 +59,7 @@ export default function ImportResumePage() {
     // Check if user can import
     const checkImportAccess = async () => {
       try {
-        const [subscriptionResponse, permissionsResponse] = await Promise.all([
-          fetch('/api/user/subscription'),
-          fetch('/api/user/permissions')
-        ])
-        const subscriptionData = await subscriptionResponse.json()
+        const permissionsResponse = await fetch('/api/user/permissions')
         const permissionsData = await permissionsResponse.json()
         setCanImport(permissionsData.canImport)
       } catch {
@@ -46,11 +70,17 @@ export default function ImportResumePage() {
     checkImportAccess()
   }, [])
 
-  const handleUploadComplete = (data: ResumeData) => {
-    setExtractedData(data)
-    setCurrentStep('review')
+  const handleUploadComplete = (data: unknown) => {
+    // Type guard to ensure the data matches ResumeData structure
+    if (isValidResumeData(data)) {
+      setExtractedData(data)
+      setCurrentStep('review')
+    } else {
+      toast.error(t('import.messages.invalidData'))
+      return
+    }
     
-    // Set title based on extracted name
+    // Set title based on extracted name (data is now guaranteed to be ResumeData)
     if (data.personal?.fullName) {
       setResumeTitle(`${data.personal.fullName}'s Resume`)
     } else {
@@ -83,7 +113,7 @@ export default function ImportResumePage() {
       
       // Redirect to edit the new resume
       router.push(`/resume-builder?id=${result.resume.id}`)
-    } catch (error) {
+    } catch {
       toast.error(t('import.messages.importError'))
     } finally {
       setIsSaving(false)

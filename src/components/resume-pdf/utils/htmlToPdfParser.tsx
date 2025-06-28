@@ -1,11 +1,14 @@
 import { Text, View } from '@react-pdf/renderer'
 import { ReactElement } from 'react'
 
+// Use a more flexible type for styles that works with React-PDF
+type ReactPDFStyle = Record<string, any>
+
 interface ParsedContent {
   elements: ReactElement[]
 }
 
-export const parseHtmlToPdf = (htmlContent: string, styles: any): ParsedContent => {
+export const parseHtmlToPdf = (htmlContent: string, styles: Record<string, ReactPDFStyle>): ParsedContent => {
   if (!htmlContent || htmlContent.trim() === '') {
     return { elements: [] }
   }
@@ -117,7 +120,7 @@ export const parseHtmlToPdf = (htmlContent: string, styles: any): ParsedContent 
   return { elements }
 }
 
-const parseInlineElements = (content: string, styles: any): ReactElement[] => {
+const parseInlineElements = (content: string, styles: Record<string, ReactPDFStyle>): ReactElement[] => {
   const elements: ReactElement[] = []
   let currentKey = 0
 

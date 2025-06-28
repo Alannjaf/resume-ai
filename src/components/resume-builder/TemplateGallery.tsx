@@ -36,7 +36,7 @@ export function TemplateGallery({
   allowedTemplates 
 }: TemplateGalleryProps) {
   const { t } = useLanguage()
-  const { availableTemplates, isLoading: subscriptionLoading } = useSubscription()
+  const { availableTemplates } = useSubscription()
   const [templatesByTier, setTemplatesByTier] = useState<TemplatesByTier | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   

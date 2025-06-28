@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/admin'
 import { prisma } from '@/lib/prisma'
+import { UserWithSubscription } from '@/types/api'
 
 export async function GET() {
   try {
@@ -25,9 +26,9 @@ export async function GET() {
     })
 
     // Handle users that might not have role column yet
-    const usersWithRole = users.map(user => ({
+    const usersWithRole = users.map((user: UserWithSubscription) => ({
       ...user,
-      role: (user as any).role || 'USER'
+      role: user.role || 'USER'
     }))
 
     return NextResponse.json({ users: usersWithRole })

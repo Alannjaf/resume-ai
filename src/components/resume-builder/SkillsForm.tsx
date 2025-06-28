@@ -2,7 +2,6 @@
 
 import { useMemo } from 'react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { FormInput } from '@/components/ui/form-input'
 import { Card } from '@/components/ui/card'
 import { Plus, Trash2, Zap } from 'lucide-react'
@@ -92,7 +91,7 @@ export function SkillsForm({ skills, onChange, experience = [] }: SkillsFormProp
       </div>
 
       <div className="space-y-3">
-        {skills.map((skill, index) => (
+        {skills.map((skill) => (
           <Card key={skill.id} className="p-4">
             <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               <div className="flex-1">

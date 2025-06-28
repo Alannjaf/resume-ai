@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs/server';
 import { prisma } from '@/lib/prisma';
-import { ResumeData } from '@/types/resume';
+import { ResumeData, PersonalInfo, WorkExperience, Education, Skill, Language, Project, Certification } from '@/types/resume';
 
 export async function GET(
   req: NextRequest,
@@ -35,19 +35,28 @@ export async function GET(
     }
 
     // Parse personalInfo as JSON if it's stored as JSON
-    let personalInfo: any = {};
+    const defaultPersonalInfo: PersonalInfo = {
+      fullName: '',
+      email: '',
+      phone: '',
+      location: '',
+      linkedin: '',
+      website: ''
+    };
+    
+    let personalInfo: PersonalInfo = defaultPersonalInfo;
     if (resume.personalInfo) {
       try {
         personalInfo = typeof resume.personalInfo === 'string' ? JSON.parse(resume.personalInfo) : resume.personalInfo;
       } catch {
-        personalInfo = {};
+        personalInfo = defaultPersonalInfo;
       }
     }
 
     // Transform database resume to ResumeData format
     const transformedData: ResumeData = {
       personal: {
-        fullName: personalInfo?.fullName || personalInfo?.name || resume.user.name || '',
+        fullName: personalInfo?.fullName || resume.user.name || '',
         email: personalInfo?.email || resume.user.email,
         phone: personalInfo?.phone || '',
         location: personalInfo?.location || '',
@@ -71,12 +80,12 @@ export async function GET(
 
     // Transform sections based on their type
     resume.sections.forEach((section) => {
-      const content = section.content as any;
+      const content = section.content as Record<string, unknown>;
       
       switch (section.type) {
         case 'WORK_EXPERIENCE':
           if (content.experiences && Array.isArray(content.experiences)) {
-            transformedData.experience = content.experiences.map((exp: any) => ({
+            transformedData.experience = (content.experiences as Array<Partial<WorkExperience> & Record<string, unknown>>).map((exp) => ({
               id: exp.id || Math.random().toString(),
               jobTitle: exp.jobTitle || '',
               company: exp.company || '',
@@ -88,10 +97,10 @@ export async function GET(
           } else if (content && typeof content === 'object') {
             // Sometimes content might be directly the experience data
             const expArray = Object.values(content).filter(item => 
-              item && typeof item === 'object' && (item as any).jobTitle
+              item && typeof item === 'object' && (item as Record<string, unknown>).jobTitle
             );
             if (expArray.length > 0) {
-              transformedData.experience = expArray.map((exp: any) => ({
+              transformedData.experience = (expArray as Array<Partial<WorkExperience> & Record<string, unknown>>).map((exp) => ({
                 id: exp.id || Math.random().toString(),
                 jobTitle: exp.jobTitle || '',
                 company: exp.company || '',
@@ -105,8 +114,8 @@ export async function GET(
           break;
 
         case 'EDUCATION':
-          if (content.education) {
-            transformedData.education = content.education.map((edu: any) => ({
+          if (content.education && Array.isArray(content.education)) {
+            transformedData.education = (content.education as Array<Partial<Education> & Record<string, unknown>>).map((edu) => ({
               id: edu.id || Math.random().toString(),
               degree: edu.degree || '',
               field: edu.field || '',
@@ -120,8 +129,8 @@ export async function GET(
           break;
 
         case 'SKILLS':
-          if (content.skills) {
-            transformedData.skills = content.skills.map((skill: any) => ({
+          if (content.skills && Array.isArray(content.skills)) {
+            transformedData.skills = (content.skills as Array<Partial<Skill> & Record<string, unknown>>).map((skill) => ({
               id: skill.id || Math.random().toString(),
               name: skill.name || '',
               level: skill.level || ''}));
@@ -129,8 +138,8 @@ export async function GET(
           break;
 
         case 'LANGUAGES':
-          if (content.languages) {
-            transformedData.languages = content.languages.map((lang: any) => ({
+          if (content.languages && Array.isArray(content.languages)) {
+            transformedData.languages = (content.languages as Array<Partial<Language> & Record<string, unknown>>).map((lang) => ({
               id: lang.id || Math.random().toString(),
               name: lang.name || '',
               proficiency: lang.proficiency || ''}));
@@ -138,8 +147,8 @@ export async function GET(
           break;
 
         case 'PROJECTS':
-          if (content.projects) {
-            transformedData.projects = content.projects.map((proj: any) => ({
+          if (content.projects && Array.isArray(content.projects)) {
+            transformedData.projects = (content.projects as Array<Partial<Project> & Record<string, unknown>>).map((proj) => ({
               id: proj.id || Math.random().toString(),
               name: proj.name || '',
               description: proj.description || '',
@@ -151,8 +160,8 @@ export async function GET(
           break;
 
         case 'CERTIFICATIONS':
-          if (content.certifications) {
-            transformedData.certifications = content.certifications.map((cert: any) => ({
+          if (content.certifications && Array.isArray(content.certifications)) {
+            transformedData.certifications = (content.certifications as Array<Partial<Certification> & Record<string, unknown>>).map((cert) => ({
               id: cert.id || Math.random().toString(),
               name: cert.name || '',
               issuer: cert.issuer || '',

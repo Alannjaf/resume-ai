@@ -62,7 +62,29 @@ export async function getSystemSettings() {
   }
 }
 
-export async function updateSystemSettings(data: any) {
+interface SystemSettingsUpdateData {
+  maxFreeResumes: number
+  maxFreeAIUsage: number
+  maxFreeExports: number
+  maxFreeImports: number
+  maxBasicResumes: number
+  maxBasicAIUsage: number
+  maxBasicExports: number
+  maxBasicImports: number
+  maxProResumes: number
+  maxProAIUsage: number
+  maxProExports: number
+  maxProImports: number
+  freeTemplates: string[]
+  basicTemplates: string[]
+  proTemplates: string[]
+  photoUploadPlans: string[]
+  basicPlanPrice: number
+  proPlanPrice: number
+  maintenanceMode: boolean
+}
+
+export async function updateSystemSettings(data: SystemSettingsUpdateData) {
   try {
     // Get the existing settings
     const existing = await prisma.systemSettings.findFirst()

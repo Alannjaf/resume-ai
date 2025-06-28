@@ -4,10 +4,14 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 
 type Language = 'en' | 'ar' | 'ckb'
 
+interface TranslationVariables {
+  [key: string]: string | number
+}
+
 interface LanguageContextType {
   language: Language
   setLanguage: (lang: Language) => void
-  t: (key: string, variables?: Record<string, any>) => string
+  t: (key: string, variables?: TranslationVariables) => string
   isRTL: boolean
   isLoading: boolean
 }
@@ -25,7 +29,7 @@ import enTranslations from '@/locales/en/common.json'
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>('en')
-  const [messages, setMessages] = useState<any>(enTranslations)
+  const [messages, setMessages] = useState<Record<string, unknown>>(enTranslations)
   const [isLoading, setIsLoading] = useState(false)
 
   // Load translations when language changes
@@ -55,13 +59,13 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   }, [language])
 
   // Translation function that supports nested keys and variable interpolation
-  const t = (key: string, variables?: Record<string, any>): string => {
+  const t = (key: string, variables?: TranslationVariables): string => {
     const keys = key.split('.')
-    let value = messages
+    let value: unknown = messages
     
     for (const k of keys) {
-      if (value && typeof value === 'object' && k in value) {
-        value = value[k]
+      if (value && typeof value === 'object' && value !== null && k in value) {
+        value = (value as Record<string, unknown>)[k]
       } else {
         return key // Return key if translation not found
       }

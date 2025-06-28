@@ -8,7 +8,7 @@ interface ResumePreviewProps {
   template?: string
 }
 
-export function ResumePreview({ data, template = 'modern' }: ResumePreviewProps) {
+export function ResumePreview({ data }: ResumePreviewProps) {
   // Transform data to ensure all required fields have default values
   const transformedData: ResumeData = useMemo(() => ({
     ...data,

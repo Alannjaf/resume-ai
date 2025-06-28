@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { getCurrentUser } from '@/lib/db'
 import { prisma } from '@/lib/prisma'
+import { SystemSettings } from '@/types/api'
 
 async function getSystemSettings() {
   try {
@@ -23,7 +24,7 @@ async function getSystemSettings() {
         "proPlanPrice"
       FROM "SystemSettings" 
       ORDER BY id LIMIT 1
-    `) as any[]
+    `) as SystemSettings[]
 
     if (settingsRecord && settingsRecord.length > 0) {
       return settingsRecord[0]
@@ -32,7 +33,7 @@ async function getSystemSettings() {
     // Silent error handling
   }
   
-  const defaults = {
+  const defaults: SystemSettings = {
     // Free Plan Limits
     maxFreeResumes: 10,
     maxFreeAIUsage: 100,

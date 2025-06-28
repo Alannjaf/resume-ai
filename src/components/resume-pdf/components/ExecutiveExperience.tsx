@@ -23,7 +23,7 @@ export const ExecutiveExperience = ({ experience }: ExecutiveExperienceProps) =>
                 <View style={executiveStyles.experienceHeader}>
                   <Text style={executiveStyles.jobTitle}>{exp.jobTitle}</Text>
                   <Text style={executiveStyles.dateRange}>
-                    {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
+                    {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate || '')}
                   </Text>
                 </View>
                 <View style={executiveStyles.companyInfo}>
@@ -47,7 +47,7 @@ export const ExecutiveExperience = ({ experience }: ExecutiveExperienceProps) =>
               <View style={executiveStyles.experienceHeader}>
                 <Text style={executiveStyles.jobTitle}>{exp.jobTitle}</Text>
                 <Text style={executiveStyles.dateRange}>
-                  {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
+                  {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate || '')}
                 </Text>
               </View>
               <View style={executiveStyles.companyInfo}>

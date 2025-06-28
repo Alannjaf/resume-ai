@@ -95,7 +95,7 @@ export async function POST(req: Request) {
         })
 
         if (!existingSubscription) {
-          const _subscription = await prisma.subscription.create({
+          await prisma.subscription.create({
             data: {
               userId: user.id, // Use database user ID, not Clerk ID
               plan: 'FREE',

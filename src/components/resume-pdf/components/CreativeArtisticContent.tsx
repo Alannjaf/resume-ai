@@ -45,7 +45,7 @@ export const CreativeArtisticContent = ({ data }: CreativeArtisticContentProps) 
                       </View>
                       <View style={creativeArtisticStyles.dateContainer}>
                         <Text style={creativeArtisticStyles.dateRange}>
-                          {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
+                          {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate || '')}
                         </Text>
                         {exp.location && (
                           <Text style={creativeArtisticStyles.location}>{exp.location}</Text>
@@ -72,7 +72,7 @@ export const CreativeArtisticContent = ({ data }: CreativeArtisticContentProps) 
                     </View>
                     <View style={creativeArtisticStyles.dateContainer}>
                       <Text style={creativeArtisticStyles.dateRange}>
-                        {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate)}
+                        {formatDate(exp.startDate)} - {exp.current ? 'Present' : formatDate(exp.endDate || '')}
                       </Text>
                       {exp.location && (
                         <Text style={creativeArtisticStyles.location}>{exp.location}</Text>
@@ -109,7 +109,7 @@ export const CreativeArtisticContent = ({ data }: CreativeArtisticContentProps) 
                     <View style={creativeArtisticStyles.educationHeader}>
                       <Text style={creativeArtisticStyles.degree}>{edu.degree}</Text>
                       <Text style={creativeArtisticStyles.dateRange}>
-                        {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
+                        {formatDate(edu.startDate)} - {formatDate(edu.endDate || '')}
                       </Text>
                     </View>
                     <Text style={creativeArtisticStyles.school}>{edu.school}</Text>
@@ -132,7 +132,7 @@ export const CreativeArtisticContent = ({ data }: CreativeArtisticContentProps) 
                   <View style={creativeArtisticStyles.educationHeader}>
                     <Text style={creativeArtisticStyles.degree}>{edu.degree}</Text>
                     <Text style={creativeArtisticStyles.dateRange}>
-                      {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
+                      {formatDate(edu.startDate)} - {formatDate(edu.endDate || '')}
                     </Text>
                   </View>
                   <Text style={creativeArtisticStyles.school}>{edu.school}</Text>
@@ -194,7 +194,7 @@ export const CreativeArtisticContent = ({ data }: CreativeArtisticContentProps) 
                       <View style={creativeArtisticStyles.dateContainer}>
                         {(project.startDate || project.endDate) && (
                           <Text style={creativeArtisticStyles.dateRange}>
-                            {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+                            {formatDate(project.startDate || '')} - {project.endDate ? formatDate(project.endDate) : 'Present'}
                           </Text>
                         )}
                         {project.link && (
@@ -225,7 +225,7 @@ export const CreativeArtisticContent = ({ data }: CreativeArtisticContentProps) 
                     <View style={creativeArtisticStyles.dateContainer}>
                       {(project.startDate || project.endDate) && (
                         <Text style={creativeArtisticStyles.dateRange}>
-                          {formatDate(project.startDate)} - {project.endDate ? formatDate(project.endDate) : 'Present'}
+                          {formatDate(project.startDate || '')} - {project.endDate ? formatDate(project.endDate) : 'Present'}
                         </Text>
                       )}
                       {project.link && (

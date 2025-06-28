@@ -17,7 +17,6 @@ import {
   Crown
 } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { useRouter } from 'next/navigation'
 
 interface UserData {
   id: string
@@ -37,7 +36,6 @@ interface UserData {
 }
 
 export function UserManagement() {
-  const _router = useRouter()
   const [users, setUsers] = useState<UserData[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -57,8 +55,8 @@ export function UserManagement() {
         const data = await response.json()
         setUsers(data.users)
       }
-    } catch (error) {
-      console.error('Error fetching users:', error)
+    } catch {
+      // Silent error handling
     } finally {
       setLoading(false)
     }
@@ -81,7 +79,7 @@ export function UserManagement() {
       } else {
         toast.error('Failed to upgrade user plan')
       }
-    } catch (error) {
+    } catch {
       toast.error('Error upgrading user plan')
     } finally {
       setUpgrading(false)
