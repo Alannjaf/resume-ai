@@ -45,6 +45,9 @@ export interface UserWithSubscription extends DatabaseUser {
     exportCount: number
     importCount: number
   } | null
+  _count?: {
+    resumes: number
+  }
 }
 
 // AI parsing types

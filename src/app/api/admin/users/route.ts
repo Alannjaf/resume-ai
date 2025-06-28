@@ -18,6 +18,11 @@ export async function GET() {
             exportCount: true,
             importCount: true
           }
+        },
+        _count: {
+          select: {
+            resumes: true
+          }
         }
       },
       orderBy: {
@@ -25,10 +30,14 @@ export async function GET() {
       }
     })
 
-    // Handle users that might not have role column yet
+    // Handle users that might not have role column yet and update resume count
     const usersWithRole = users.map((user: UserWithSubscription) => ({
       ...user,
-      role: user.role || 'USER'
+      role: user.role || 'USER',
+      subscription: user.subscription ? {
+        ...user.subscription,
+        resumeCount: user._count?.resumes || 0
+      } : null
     }))
 
     return NextResponse.json({ users: usersWithRole })
