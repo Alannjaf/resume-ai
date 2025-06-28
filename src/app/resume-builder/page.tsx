@@ -11,7 +11,7 @@ import { NavigationIndicator } from '@/components/ui/navigation-indicator'
 import { KeyboardShortcutsHelp } from '@/components/ui/keyboard-shortcuts-help'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useSubscription } from '@/contexts/SubscriptionContext'
-import { FormSectionRenderer } from '@/components/resume-builder/sections/FormSectionRenderer'
+import { FormSectionRenderer, FormSectionRendererRef } from '@/components/resume-builder/sections/FormSectionRenderer'
 import { useResumeData } from '@/hooks/useResumeData'
 import { useAutoSave } from '@/hooks/useAutoSave'
 import { useAutoTranslation } from '@/hooks/useAutoTranslation'
@@ -62,7 +62,7 @@ function ResumeBuilderContent() {
   
   // Refs
   const summaryTextareaRef = useRef<HTMLTextAreaElement>(null)
-  // const formRef = useRef<HTMLDivElement>(null) // TODO: Will be used for form validation
+  const formSectionRef = useRef<FormSectionRendererRef>(null) // Reference to current form section for forced updates
 
   // Custom hooks
   const { formData, setFormData, updatePersonalField, updateSummary, updateSection } = useResumeData()
@@ -82,6 +82,14 @@ function ResumeBuilderContent() {
   const handleNext = useCallback(async () => {
     if (currentSection < formSections.length - 1) {
       const nextSection = currentSection + 1
+      
+      // Force save current section data before navigation using section renderer ref
+      if (formSectionRef.current) {
+        formSectionRef.current.triggerSectionSave()
+      }
+      
+      // Also trigger a direct save to ensure current state is captured
+      queueSave(`section_${currentSection}`)
       
       // Progressive auto-translation: only translate if there's non-English content
       // Skip translation for template section (index 8) as there's no content to translate
@@ -123,19 +131,37 @@ function ResumeBuilderContent() {
         await scrollToTopForSectionChange()
       }
       
+      // Additional save after navigation to ensure state is persisted
       queueSave()
     }
   }, [currentSection, formSections.length, queueSave, autoTranslateToEnglish, hasNonEnglishContent, formData, setFormData, resumeId, resumeTitle, selectedTemplate, setIsAutoTranslating, t])
 
   const handlePrevious = useCallback(async () => {
     if (currentSection > 0) {
+      // Force save current section data before navigation using section renderer ref
+      if (formSectionRef.current) {
+        formSectionRef.current.triggerSectionSave()
+      }
+      
+      // Also trigger a direct save to ensure current state is captured
+      queueSave(`section_${currentSection}`)
+      
       setCurrentSection(currentSection - 1)
       await scrollToTopForSectionChange()
     }
-  }, [currentSection])
+  }, [currentSection, queueSave])
 
   const handleSectionChange = useCallback(async (newSection: number) => {
     if (newSection === currentSection) return
+    
+    // Force save current section data before navigation using section renderer ref
+    if (formSectionRef.current) {
+      formSectionRef.current.triggerSectionSave()
+    }
+    
+    // Also trigger a direct save to ensure current state is captured
+    queueSave(`section_${currentSection}`)
+    
     setCurrentSection(newSection)
     await scrollToTopForSectionChange()
     queueSave()
@@ -459,6 +485,7 @@ function ResumeBuilderContent() {
               </div>
 
               <FormSectionRenderer
+                ref={formSectionRef}
                 currentSection={currentSection}
                 formData={formData}
                 updatePersonalField={updatePersonalField}

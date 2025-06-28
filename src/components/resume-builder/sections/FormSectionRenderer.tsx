@@ -1,4 +1,4 @@
-import { RefObject } from 'react'
+import { RefObject, forwardRef, useImperativeHandle } from 'react'
 import { PersonalInfoSection } from './PersonalInfoSection'
 import { ProfessionalSummarySection } from './ProfessionalSummarySection'
 import { WorkExperienceForm } from '@/components/resume-builder/WorkExperienceForm'
@@ -27,7 +27,11 @@ interface FormSectionRendererProps {
   checkPermission?: (permission: keyof SubscriptionPermissions) => boolean
 }
 
-export function FormSectionRenderer({
+export interface FormSectionRendererRef {
+  triggerSectionSave: () => void
+}
+
+export const FormSectionRenderer = forwardRef<FormSectionRendererRef, FormSectionRendererProps>(function FormSectionRenderer({
   currentSection,
   formData,
   updatePersonalField,
@@ -39,7 +43,14 @@ export function FormSectionRenderer({
   summaryTextareaRef,
   queueSave,
   checkPermission
-}: FormSectionRendererProps) {
+}, ref) {
+  
+  useImperativeHandle(ref, () => ({
+    triggerSectionSave: () => {
+      // Force trigger save for the current section
+      queueSave(`section_exit_${currentSection}`)
+    }
+  }), [currentSection, queueSave])
   const renderSectionContent = () => {
     switch (currentSection) {
       case 0: // Personal Information
@@ -145,4 +156,4 @@ export function FormSectionRenderer({
       {renderSectionContent()}
     </div>
   )
-}
+})
