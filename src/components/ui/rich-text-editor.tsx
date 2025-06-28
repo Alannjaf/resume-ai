@@ -15,7 +15,8 @@ export interface RichTextEditorProps {
 }
 
 const RichTextEditor = React.forwardRef<HTMLDivElement, RichTextEditorProps>(
-  ({ className, value = '', onChange, placeholder, disabled = false }, ref) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ({ className, value = '', onChange, placeholder: _placeholder, disabled = false }, ref) => {
     const editor = useEditor({
       extensions: [
         StarterKit.configure({

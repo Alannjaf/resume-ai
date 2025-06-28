@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Check, X, RefreshCw, Languages } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { useLanguage } from '@/contexts/LanguageContext'
 import { shouldShowTranslateButton } from '@/lib/languageDetection'
 
 interface TranslateAndEnhanceButtonProps {
@@ -26,7 +25,6 @@ export function TranslateAndEnhanceButton({
   contextInfo,
   className = ''
 }: TranslateAndEnhanceButtonProps) {
-  const { t } = useLanguage()
   const [isProcessing, setIsProcessing] = useState(false)
   const [enhancedContent, setEnhancedContent] = useState('')
   const [showSuggestion, setShowSuggestion] = useState(false)

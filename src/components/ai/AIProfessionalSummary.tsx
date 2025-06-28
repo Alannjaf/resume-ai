@@ -12,10 +12,6 @@ interface AIProfessionalSummaryProps {
   currentSummary: string
   onAccept: (summary: string) => void
   onActionComplete?: () => void
-  personalInfo?: {
-    fullName?: string
-    email?: string
-  }
   experience?: Array<{
     jobTitle: string
     company: string
@@ -26,10 +22,8 @@ interface AIProfessionalSummaryProps {
 }
 
 export function AIProfessionalSummary({ 
-  currentSummary, 
   onAccept, 
   onActionComplete,
-  personalInfo,
   experience = [],
   skills = []
 }: AIProfessionalSummaryProps) {

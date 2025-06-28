@@ -40,8 +40,10 @@ export function Contact() {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'},
-        body: JSON.stringify(formData)})
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
 
       const data = await response.json()
 
@@ -58,7 +60,7 @@ export function Contact() {
         setSubmitStatus('error')
         setErrorMessage(data.error || 'Failed to send message')
       }
-    } catch (error) {
+    } catch {
       setSubmitStatus('error')
       setErrorMessage('Network error. Please try again.')
     } finally {
@@ -126,7 +128,7 @@ export function Contact() {
             {submitStatus === 'success' && (
               <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
                 <CheckCircle className="h-5 w-5 text-green-600" />
-                <p className="text-green-800">Message sent successfully! We'll get back to you soon.</p>
+                <p className="text-green-800">Message sent successfully! We&apos;ll get back to you soon.</p>
               </div>
             )}
 
