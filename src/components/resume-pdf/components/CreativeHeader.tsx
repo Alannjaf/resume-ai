@@ -15,10 +15,11 @@ export const CreativeHeader: React.FC<CreativeHeaderProps> = ({ personal }) => {
         {personal.profileImage && (
           <View style={styles.profileImageWrapper}>
             <View style={styles.profileImageBorder}>
+              {/* eslint-disable-next-line jsx-a11y/alt-text */}
               <Image 
                 src={personal.profileImage} 
                 style={styles.profileImage}
-              />
+                  />
             </View>
           </View>
         )}

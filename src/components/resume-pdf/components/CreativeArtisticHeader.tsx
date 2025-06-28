@@ -58,10 +58,11 @@ export const CreativeArtisticHeader = ({ personal }: CreativeArtisticHeaderProps
         {personal.profileImage && (
           <View style={creativeArtisticStyles.photoContainer}>
             <View style={creativeArtisticStyles.photoBorder} />
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
             <Image 
               src={personal.profileImage} 
               style={creativeArtisticStyles.profilePhoto}
-            />
+              />
           </View>
         )}
       </View>

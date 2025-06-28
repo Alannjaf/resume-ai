@@ -1,8 +1,8 @@
-import { Text, View } from '@react-pdf/renderer'
+import { Text, View, Styles } from '@react-pdf/renderer'
 import { ReactElement } from 'react'
 
-// Use a more flexible type for styles that works with React-PDF
-type ReactPDFStyle = Record<string, any>
+// Use the official React-PDF Styles type, but for a single style object
+type ReactPDFStyle = Styles[string]
 
 interface ParsedContent {
   elements: ReactElement[]

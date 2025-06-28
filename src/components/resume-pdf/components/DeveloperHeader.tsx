@@ -13,6 +13,7 @@ export const DeveloperHeader: React.FC<DeveloperHeaderProps> = ({ personal }) =>
       {/* Profile image if available */}
       {personal.profileImage && (
         <View style={styles.profileImageContainer}>
+          {/* eslint-disable-next-line jsx-a11y/alt-text */}
           <Image 
             src={personal.profileImage} 
             style={styles.profileImage}

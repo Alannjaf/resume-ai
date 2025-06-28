@@ -59,6 +59,7 @@ export const ExecutiveHeader = ({ personal }: ExecutiveHeaderProps) => {
         {/* Right side - Profile photo (only if photo exists) */}
         {personal.profileImage && (
           <View style={executiveStyles.photoContainer}>
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
             <Image 
               src={personal.profileImage} 
               style={executiveStyles.profilePhoto}

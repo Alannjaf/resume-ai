@@ -19,6 +19,7 @@ export const MinimalistHeader = ({ personal }: MinimalistHeaderProps) => {
       {/* Profile photo at the top if exists */}
       {personal.profileImage && (
         <View style={minimalistStyles.photoContainer}>
+          {/* eslint-disable-next-line jsx-a11y/alt-text */}
           <Image 
             src={personal.profileImage} 
             style={minimalistStyles.profilePhoto}

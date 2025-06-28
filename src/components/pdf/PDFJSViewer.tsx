@@ -42,6 +42,66 @@ export const PDFJSViewer = ({
     return () => setMounted(false);
   }, []);
 
+  const renderPage = useCallback(async (pdf: import('pdfjs-dist').PDFDocumentProxy, pageNum: number) => {
+    if (!mounted) {
+      return;
+    }
+
+    setRendering(true);
+    
+    try {
+      // Wait for canvas to be available with retries
+      let canvas = canvasRef.current;
+      let retries = 0;
+      const maxRetries = 20; // 2 seconds max wait
+      
+      while (!canvas && retries < maxRetries) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        canvas = canvasRef.current;
+        retries++;
+      }
+      
+      if (!canvas) {
+        setRendering(false);
+        return;
+      }
+      
+      const context = canvas.getContext('2d');
+      if (!context) {
+        setRendering(false);
+        return;
+      }
+
+      // Get the PDF page
+      const page = await pdf.getPage(pageNum);
+      const viewport = page.getViewport({ scale });
+      
+      // Set canvas dimensions
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+      
+      // Clear canvas with white background
+      context.fillStyle = 'white';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport};
+
+      // Render the page
+      await page.render(renderContext).promise;
+      
+      // Update current page after successful render
+      setCurrentPage(pageNum);
+      
+    } catch (error) {
+      console.error('Error rendering page:', error);
+      onLoadError?.(error as Error);
+    } finally {
+      setRendering(false);
+    }
+  }, [mounted, scale, onLoadError]);
+
   useEffect(() => {
     let isCancelled = false;
     
@@ -107,67 +167,7 @@ export const PDFJSViewer = ({
     return () => {
       isCancelled = true;
     };
-  }, [pdfData, mounted, onLoadError]);
-
-  const renderPage = useCallback(async (pdf: import('pdfjs-dist').PDFDocumentProxy, pageNum: number) => {
-    if (!mounted) {
-      return;
-    }
-
-    setRendering(true);
-    
-    try {
-      // Wait for canvas to be available with retries
-      let canvas = canvasRef.current;
-      let retries = 0;
-      const maxRetries = 20; // 2 seconds max wait
-      
-      while (!canvas && retries < maxRetries) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        canvas = canvasRef.current;
-        retries++;
-      }
-      
-      if (!canvas) {
-        setRendering(false);
-        return;
-      }
-      
-      const context = canvas.getContext('2d');
-      if (!context) {
-        setRendering(false);
-        return;
-      }
-
-      // Get the PDF page
-      const page = await pdf.getPage(pageNum);
-      const viewport = page.getViewport({ scale });
-      
-      // Set canvas dimensions
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-      
-      // Clear canvas with white background
-      context.fillStyle = 'white';
-      context.fillRect(0, 0, canvas.width, canvas.height);
-
-      const renderContext = {
-        canvasContext: context,
-        viewport: viewport};
-
-      // Render the page
-      await page.render(renderContext).promise;
-      
-      // Update current page after successful render
-      setCurrentPage(pageNum);
-      
-    } catch (error) {
-      console.error('Error rendering page:', error);
-      onLoadError?.(error as Error);
-    } finally {
-      setRendering(false);
-    }
-  }, [mounted, scale, onLoadError]);
+  }, [pdfData, mounted, onLoadError, renderPage]);
 
   const goToPage = async (pageNum: number) => {
     if (!pdfDoc || pageNum < 1 || pageNum > totalPages) return;

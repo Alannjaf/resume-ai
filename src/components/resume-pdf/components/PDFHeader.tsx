@@ -13,6 +13,7 @@ export const PDFHeader: React.FC<PDFHeaderProps> = ({ personal }) => {
       {/* Only show profile image container if photo exists */}
       {personal.profileImage && (
         <View style={styles.profileImageContainer}>
+          {/* eslint-disable-next-line jsx-a11y/alt-text */}
           <Image 
             src={personal.profileImage} 
             style={styles.profileImage}

@@ -1,5 +1,6 @@
 import { auth } from '@clerk/nextjs/server'
 import { prisma } from './prisma'
+import type { InputJsonValue } from '@prisma/client/runtime/library'
 
 export async function getCurrentUser() {
   const { userId } = await auth()
@@ -90,7 +91,7 @@ export async function deleteResume(resumeId: string, userId: string) {
 
 interface ResumeUpdateData {
   title?: string
-  personalInfo?: Record<string, unknown>
+  personalInfo?: InputJsonValue
   summary?: string
   template?: string
   userId?: string
@@ -102,12 +103,13 @@ export async function updateResume(
   data: ResumeUpdateData
 ) {
   // Remove userId from data to avoid conflicts with where clause
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { userId: _, ...updateData } = data
   
   // Cast personalInfo to proper JSON type for Prisma
   const prismaUpdateData = {
     ...updateData,
-    personalInfo: updateData.personalInfo ? updateData.personalInfo as any : undefined
+    personalInfo: updateData.personalInfo ? updateData.personalInfo as InputJsonValue : undefined
   }
   
   const resume = await prisma.resume.update({
@@ -120,10 +122,10 @@ export async function updateResume(
 }
 
 export async function getUserSubscription(userId: string) {
-  const _subscription = await prisma.subscription.findUnique({
+  const subscription = await prisma.subscription.findUnique({
     where: { userId }})
 
-  return _subscription
+  return subscription
 }
 
 async function getSystemSettings() {
@@ -230,7 +232,7 @@ export async function checkUserLimits(clerkUserId: string) {
     return { canCreateResume: false, canUseAI: false, canExport: false, canImport: false }
   }
   
-  const _subscription = user.subscription
+  const subscription = user.subscription
 
   // Get admin-configurable settings
   const systemSettings = await getSystemSettings()
@@ -256,18 +258,18 @@ export async function checkUserLimits(clerkUserId: string) {
     }, // -1 means unlimited
   }
 
-  const userLimits = limits[_subscription.plan]
+  const userLimits = limits[subscription.plan]
 
 
   // Check photo upload permission
   const photoUploadPlans = Array.isArray(systemSettings.photoUploadPlans) 
     ? systemSettings.photoUploadPlans 
     : ['BASIC', 'PRO']
-  const canUploadPhoto = photoUploadPlans.includes(_subscription.plan)
+  const canUploadPhoto = photoUploadPlans.includes(subscription.plan)
   
   // Get available templates for user's plan
   let availableTemplates: string[] = []
-  switch (_subscription.plan) {
+  switch (subscription.plan) {
     case 'FREE':
       availableTemplates = Array.isArray(systemSettings.freeTemplates) 
         ? systemSettings.freeTemplates 
@@ -286,11 +288,11 @@ export async function checkUserLimits(clerkUserId: string) {
   }
 
   return {
-    canCreateResume: userLimits.resumes === -1 || _subscription.resumeCount < userLimits.resumes,
-    canUseAI: userLimits.ai === -1 || _subscription.aiUsageCount < userLimits.ai,
-    canExport: userLimits.exports === -1 || (_subscription.exportCount || 0) < userLimits.exports,
-    canImport: userLimits.imports === -1 || (_subscription.importCount || 0) < userLimits.imports,
+    canCreateResume: userLimits.resumes === -1 || subscription.resumeCount < userLimits.resumes,
+    canUseAI: userLimits.ai === -1 || subscription.aiUsageCount < userLimits.ai,
+    canExport: userLimits.exports === -1 || (subscription.exportCount || 0) < userLimits.exports,
+    canImport: userLimits.imports === -1 || (subscription.importCount || 0) < userLimits.imports,
     canUploadPhoto,
     availableTemplates,
-    subscription: _subscription}
+    subscription}
 }

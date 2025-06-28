@@ -19,7 +19,7 @@ interface Plan {
 }
 
 // Function to translate plan data
-const translatePlan = (plan: Plan, t: (key: string, values?: any) => string) => {
+const translatePlan = (plan: Plan, t: (key: string, values?: Record<string, string | number>) => string) => {
   return {
     ...plan,
     name: plan.name === 'Free' ? t('pricing.plans.free.name') : 
