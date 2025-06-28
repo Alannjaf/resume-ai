@@ -104,3 +104,6 @@ cat .env.local
 - Make sure each file should not be more than 100 lines of code
 - After adding each debug log or comment, make sure to remove it before committing
 - when i provide images the path should be in wsl path not in windows path
+
+## 💡 Development Best Practices
+- When creating/editing/deleting files always check for lint errors and type errors

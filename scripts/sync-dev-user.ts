@@ -39,7 +39,7 @@ async function syncDevUser() {
 
       if (!existingUser) {
         // Create user in database
-        const newUser = await prisma.user.create({
+        await prisma.user.create({
           data: {
             clerkId: user.id,
             email: email,
@@ -50,7 +50,7 @@ async function syncDevUser() {
         // User created
       } else if (existingUser.clerkId !== user.id) {
         // Update existing user with clerkId if email matches but clerkId doesn't
-        const updatedUser = await prisma.user.update({
+        await prisma.user.update({
           where: { id: existingUser.id },
           data: { clerkId: user.id }
         })
