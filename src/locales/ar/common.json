@@ -510,6 +510,43 @@
         "projects": "المشاريع",
         "certifications": "الشهادات"
       },
+      "fields": {
+        "fullName": "الاسم الكامل",
+        "email": "عنوان البريد الإلكتروني",
+        "phone": "رقم الهاتف",
+        "location": "الموقع",
+        "website": "الموقع الإلكتروني",
+        "linkedin": "ملف لينكد إن",
+        "profileImage": "الصورة الشخصية",
+        "resumeTitle": "عنوان السيرة الذاتية",
+        "professionalSummary": "الملخص المهني"
+      },
+      "placeholders": {
+        "fullName": "أدخل اسمك الكامل",
+        "email": "your.email@example.com",
+        "phone": "+964 xxx xxx xxxx",
+        "location": "المدينة، البلد",
+        "website": "yourwebsite.com",
+        "linkedin": "linkedin.com/in/yourprofile",
+        "resumeTitle": "سيرتي الذاتية المهنية",
+        "professionalSummary": "اكتب ملخصاً موجزاً عن خلفيتك المهنية ومهاراتك الرئيسية وأهدافك المهنية..."
+      },
+      "buttons": {
+        "back": "العودة للوحة التحكم",
+        "save": "حفظ",
+        "preview": "معاينة",
+        "shortcuts": "اختصارات لوحة المفاتيح",
+        "previous": "السابق",
+        "next": "التالي"
+      },
+      "navigation": {
+        "sections": "أقسام السيرة الذاتية",
+        "of": "من"
+      },
+      "status": {
+        "saving": "جاري الحفظ...",
+        "autoSaving": "حفظ تلقائي..."
+      },
       "actions": {
         "preview": "معاينة",
         "save": "حفظ",
@@ -518,6 +555,12 @@
         "previous": "السابق",
         "next": "التالي",
         "viewResume": "عرض السيرة الذاتية"
+      },
+      "autoTranslate": {
+        "button": "ترجمة تلقائية إلى الإنجليزية",
+        "inProgress": "جاري الترجمة...",
+        "success": "تم ترجمة السيرة الذاتية بنجاح!",
+        "error": "فشلت الترجمة. يرجى المحاولة مرة أخرى."
       },
       "progress": "التقدم",
       "loading": {
@@ -530,7 +573,9 @@
         "importSuccess": "تم استيراد بيانات السيرة الذاتية. يمكنك الآن التعديل والحفظ.",
         "loadError": "فشل في تحميل السيرة الذاتية",
         "autoTranslated": "تم ترجمة محتوى السيرة الذاتية تلقائياً إلى الإنجليزية",
-        "translationError": "فشل في ترجمة بعض المحتوى. يرجى المحاولة مرة أخرى."
+        "translationError": "فشل في ترجمة بعض المحتوى. يرجى المحاولة مرة أخرى.",
+        "resumeCreated": "تم إنشاء السيرة الذاتية بنجاح!",
+        "resumeSaved": "تم حفظ السيرة الذاتية بنجاح!"
       },
       "defaults": {
         "resumeTitle": "سيرتي الذاتية",
@@ -542,7 +587,8 @@
       },
       "errors": {
         "createFailed": "فشل في إنشاء السيرة الذاتية",
-        "saveFailed": "فشل في حفظ التقدم"
+        "saveFailed": "فشل في حفظ التقدم",
+        "loadFailed": "فشل في تحميل السيرة الذاتية"
       }
     },
     "billing": {

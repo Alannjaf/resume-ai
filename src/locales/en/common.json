@@ -544,6 +544,43 @@
         "projects": "Projects",
         "certifications": "Certifications"
       },
+      "fields": {
+        "fullName": "Full Name",
+        "email": "Email Address",
+        "phone": "Phone Number",
+        "location": "Location",
+        "website": "Website",
+        "linkedin": "LinkedIn Profile",
+        "profileImage": "Profile Image",
+        "resumeTitle": "Resume Title",
+        "professionalSummary": "Professional Summary"
+      },
+      "placeholders": {
+        "fullName": "Enter your full name",
+        "email": "your.email@example.com",
+        "phone": "+964 xxx xxx xxxx",
+        "location": "City, Country",
+        "website": "yourwebsite.com",
+        "linkedin": "linkedin.com/in/yourprofile",
+        "resumeTitle": "My Professional Resume",
+        "professionalSummary": "Write a brief summary of your professional background, key skills, and career objectives..."
+      },
+      "buttons": {
+        "back": "Back to Dashboard",
+        "save": "Save",
+        "preview": "Preview",
+        "shortcuts": "Keyboard Shortcuts",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "navigation": {
+        "sections": "Resume Sections",
+        "of": "of"
+      },
+      "status": {
+        "saving": "Saving...",
+        "autoSaving": "Auto-saving..."
+      },
       "actions": {
         "preview": "Preview",
         "save": "Save",
@@ -552,6 +589,12 @@
         "previous": "Previous",
         "next": "Next",
         "viewResume": "View Resume"
+      },
+      "autoTranslate": {
+        "button": "Auto-translate to English",
+        "inProgress": "Translating...",
+        "success": "Resume translated successfully!",
+        "error": "Translation failed. Please try again."
       },
       "progress": "Progress",
       "loading": {
@@ -564,7 +607,9 @@
         "importSuccess": "Resume data imported. You can now edit and save.",
         "loadError": "Failed to load resume",
         "autoTranslated": "Resume content automatically translated to English",
-        "translationError": "Failed to translate some content. Please try again."
+        "translationError": "Failed to translate some content. Please try again.",
+        "resumeCreated": "Resume created successfully!",
+        "resumeSaved": "Resume saved successfully!"
       },
       "defaults": {
         "resumeTitle": "My Resume",
@@ -576,7 +621,8 @@
       },
       "errors": {
         "createFailed": "Failed to create resume",
-        "saveFailed": "Failed to save progress"
+        "saveFailed": "Failed to save progress",
+        "loadFailed": "Failed to load resume"
       }
     },
     "billing": {
