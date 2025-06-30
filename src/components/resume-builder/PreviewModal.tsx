@@ -501,6 +501,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
                     className="w-full h-full border-0"
                     title="Resume Preview"
                     style={{ minHeight: '100%' }}
+                    allow="fullscreen"
                   />
                   
                   {/* Watermark overlay for restricted templates */}
