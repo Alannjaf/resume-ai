@@ -107,3 +107,10 @@ cat .env.local
 
 ## 💡 Development Best Practices
 - When creating/editing/deleting files always check for lint errors and type errors
+
+## 💡 Advanced Development Strategies
+- Always use multiple parallel agents/tasks for complex works or searchs and make sure each of the agents are working on different files so they will not overlap each other
+- To test database you have access to NEON MCP which you can use it
+- If you didn't know an issue reason try to add debug for the user to test the app and show you the debug result and then fix the code. after the code fixed and user confirmed then remove the debug logs
+- If you create scripts for testing the app and the test passes then you need to remove the scripts
+- After each fix or edit or feature added you have to run command to check for lint errors and type errors and make sure npm run build are totally clean without any errors and warnings

@@ -51,7 +51,7 @@ npm run lint  # Ensure no lint errors
 **Status**: 🟡 IN PROGRESS
 
 #### Tasks
-- [x] Add bundle analyzer and monitoring ✅ ACHIEVED (`npm run analyze`)
+- [ ] Add bundle analyzer and monitoring ✅ ACHIEVED (`npm run analyze`)
 - [ ] Implement code splitting for heavy routes
 - [ ] Optimize PDF template styling  
 - [ ] Create shared utilities

@@ -31,7 +31,8 @@
       "Bash(npx tsc:*)",
       "Bash(npx next build:*)",
       "Bash(tree:*)",
-      "Bash(npx depcheck:*)"
+      "Bash(npx depcheck:*)",
+      "mcp__NEON__describe_branch"
     ],
     "deny": []
   }

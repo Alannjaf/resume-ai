@@ -1,7 +1,8 @@
-import React from 'react'
 import { pdf } from '@react-pdf/renderer'
 import { saveAs } from 'file-saver'
 import { ResumeData } from '../types/resume'
+import { getTemplate } from './getTemplate'
+import { generateWatermarkedPDF } from './watermarkedTemplate'
 
 // Browser detection utility
 const detectBrowser = () => {
@@ -35,41 +36,22 @@ const downloadBlobSafari = (blob: Blob, filename: string) => {
     URL.revokeObjectURL(url)
   }, 100)
 }
-import EnhancedModernTemplate from '../components/resume-pdf/EnhancedModernTemplate'
-import { CreativeTemplate } from '../components/resume-pdf/CreativeTemplate'
-import { ExecutiveProfessionalTemplate } from '../components/resume-pdf/ExecutiveProfessionalTemplate'
-import { ElegantProfessionalTemplate } from '../components/resume-pdf/ElegantProfessionalTemplate'
-import { MinimalistModernTemplate } from '../components/resume-pdf/MinimalistModernTemplate'
-import { CreativeArtisticTemplate } from '../components/resume-pdf/CreativeArtisticTemplate'
-import { DeveloperTemplate } from '../components/resume-pdf/DeveloperTemplate'
 
-const getTemplate = (template: string, data: ResumeData) => {
-  switch (template) {
-    case 'creative':
-      return <CreativeTemplate data={data} />
-    case 'executive':
-      return <ExecutiveProfessionalTemplate data={data} />
-    case 'elegant':
-      return <ElegantProfessionalTemplate data={data} />
-    case 'minimalist':
-      return <MinimalistModernTemplate data={data} />
-    case 'creative-artistic':
-      return <CreativeArtisticTemplate data={data} />
-    case 'developer':
-      return <DeveloperTemplate data={data} />
-    case 'modern':
-    default:
-      return <EnhancedModernTemplate data={data} />
-  }
-}
-
-export const generateResumePDF = async (resumeData: ResumeData, fileName?: string, template: string = 'modern') => {
+export const generateResumePDF = async (resumeData: ResumeData, fileName?: string, template: string = 'modern', withWatermark = false) => {
   try {
-    const templateComponent = getTemplate(template, resumeData)
-    if (!templateComponent) {
-      throw new Error('Template component could not be generated')
+    let blob: Blob;
+    
+    if (withWatermark) {
+      const watermarkedPDFBytes = await generateWatermarkedPDF(template, resumeData);
+      blob = new Blob([watermarkedPDFBytes], { type: 'application/pdf' });
+    } else {
+      const templateComponent = getTemplate(template, resumeData);
+      if (!templateComponent) {
+        throw new Error('Template component could not be generated');
+      }
+      blob = await pdf(templateComponent).toBlob();
     }
-    const blob = await pdf(templateComponent).toBlob()
+    
     const defaultFileName = `${resumeData.personal.fullName.replace(/\s+/g, '_')}_Resume.pdf`
     const finalFileName = fileName || defaultFileName
     
@@ -88,14 +70,18 @@ export const generateResumePDF = async (resumeData: ResumeData, fileName?: strin
   }
 }
 
-export const getResumePDFBlob = async (resumeData: ResumeData, template: string = 'modern') => {
+export const getResumePDFBlob = async (resumeData: ResumeData, template: string = 'modern', withWatermark = false) => {
   try {
-    const templateComponent = getTemplate(template, resumeData)
-    if (!templateComponent) {
-      throw new Error('Template component could not be generated')
+    if (withWatermark) {
+      const watermarkedPDFBytes = await generateWatermarkedPDF(template, resumeData);
+      return new Blob([watermarkedPDFBytes], { type: 'application/pdf' });
+    } else {
+      const templateComponent = getTemplate(template, resumeData);
+      if (!templateComponent) {
+        throw new Error('Template component could not be generated');
+      }
+      return await pdf(templateComponent).toBlob();
     }
-    const blob = await pdf(templateComponent).toBlob()
-    return blob
   } catch {
     // Error generating PDF blob
     throw new Error('Failed to generate PDF blob')

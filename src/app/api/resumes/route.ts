@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { getCurrentUser, getUserResumes, createResume } from '@/lib/db'
+import { getCurrentUser, getUserResumes, createResume, checkUserLimits } from '@/lib/db'
 import { SectionType } from '@prisma/client'
 
 // GET - List all resumes for the current user
@@ -55,6 +55,17 @@ export async function POST(req: Request) {
       return NextResponse.json({ 
         error: 'Resume limit reached. Please upgrade your plan.' 
       }, { status: 403 })
+    }
+
+    // Validate template access
+    if (template && template !== 'modern') {
+      const limits = await checkUserLimits(userId)
+      const availableTemplates = limits.availableTemplates || ['modern']
+      if (!availableTemplates.includes(template)) {
+        return NextResponse.json({ 
+          error: 'Template not available for your subscription plan. Please upgrade to access this template.' 
+        }, { status: 403 })
+      }
     }
 
     // Create resume with sections

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { getCurrentUser, getResumeById, updateResume, deleteResume } from '@/lib/db'
+import { getCurrentUser, getResumeById, updateResume, deleteResume, checkUserLimits } from '@/lib/db'
 import { SectionType } from '@prisma/client'
 
 // GET - Get a specific resume
@@ -74,6 +74,17 @@ export async function PUT(
     const existingResume = await getResumeById(id, user.id)
     if (!existingResume) {
       return NextResponse.json({ error: 'Resume not found' }, { status: 404 })
+    }
+
+    // Validate template access if template is being changed
+    if (template && template !== existingResume.template && template !== 'modern') {
+      const limits = await checkUserLimits(userId)
+      const availableTemplates = limits.availableTemplates || ['modern']
+      if (!availableTemplates.includes(template)) {
+        return NextResponse.json({ 
+          error: 'Template not available for your subscription plan. Please upgrade to access this template.' 
+        }, { status: 403 })
+      }
     }
 
     // Update basic resume info

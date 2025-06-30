@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { X, Download, ZoomIn, ZoomOut, FileText, RotateCcw } from 'lucide-react';
 import { ResumeData } from '@/types/resume';
-import { getResumePDFBlob } from '@/lib/pdfGenerator';
 import { ResumePreview } from '@/components/resume-builder/ResumePreview';
 import { toast } from 'react-hot-toast';
 
@@ -42,7 +41,23 @@ export function AdminResumePreview({
         pdfUrlRef.current = null;
       }
 
-      const blob = await getResumePDFBlob(data, template);
+      // Use admin-specific server-side PDF generation (no watermarks)
+      const response = await fetch('/api/admin/preview-pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          resumeData: data,
+          template: template,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF');
+      }
+
+      const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       pdfUrlRef.current = url;
       setPdfUrl(url);

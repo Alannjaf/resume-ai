@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
-import { getResumePDFBlob } from '@/lib/pdfGenerator'
 import { X, Download, RefreshCw, ArrowUp, Crown } from 'lucide-react'
 import { ResumeData } from '@/types/resume'
 import { useSubscription } from '@/contexts/SubscriptionContext'
@@ -10,6 +9,7 @@ import toast from 'react-hot-toast'
 import { PDFDocument } from 'pdf-lib'
 import { shouldUsePDFJS } from '@/utils/browserDetection'
 import { PDFJSViewer } from '@/components/pdf/PDFJSViewer'
+import { getResumePDFBlob } from '@/lib/pdfGenerator'
 
 interface PreviewModalProps {
   isOpen: boolean
@@ -17,6 +17,7 @@ interface PreviewModalProps {
   data: ResumeData
   template?: string
 }
+
 
 export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: PreviewModalProps) {
   const { availableTemplates } = useSubscription()
@@ -29,6 +30,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
   const [currentPdfPage, setCurrentPdfPage] = useState(1)
   const [totalPdfPages, setTotalPdfPages] = useState(1)
   const [currentPdfUrl, setCurrentPdfUrl] = useState<string | null>(null)
+  const [templateAccess, setTemplateAccess] = useState<string>('granted')
   const currentPdfUrlRef = useRef<string | null>(null)
   const iframeRef = useRef<HTMLIFrameElement>(null)
 
@@ -73,21 +75,27 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     const browser = detectBrowser()
     let urlWithPage: string
     
-    // Browser-specific PDF parameters to show full page within frame
-    switch (browser) {
-      case 'edge':
-        urlWithPage = `${baseUrl}#toolbar=0&navpanes=0&scrollbar=1&view=Fit&zoom=65&page=${page}`
-        break
-      case 'firefox':
-        urlWithPage = `${baseUrl}#page=${page}&zoom=page-fit&view=Fit`
-        break
-      case 'safari':
-        urlWithPage = `${baseUrl}#page=${page}&view=Fit`
-        break
-      case 'chrome':
-      default:
-        urlWithPage = `${baseUrl}#toolbar=0&navpanes=0&scrollbar=1&view=Fit&zoom=page-fit&page=${page}`
-        break
+    // Check if it's a blob URL (from server-side generation)
+    if (baseUrl.startsWith('blob:')) {
+      // For blob URLs, we can't use fragments reliably, just use the base URL
+      urlWithPage = baseUrl
+    } else {
+      // Browser-specific PDF parameters to show full page within frame
+      switch (browser) {
+        case 'edge':
+          urlWithPage = `${baseUrl}#toolbar=0&navpanes=0&scrollbar=1&view=Fit&zoom=65&page=${page}`
+          break
+        case 'firefox':
+          urlWithPage = `${baseUrl}#page=${page}&zoom=page-fit&view=Fit`
+          break
+        case 'safari':
+          urlWithPage = `${baseUrl}#page=${page}&view=Fit`
+          break
+        case 'chrome':
+        default:
+          urlWithPage = `${baseUrl}#toolbar=0&navpanes=0&scrollbar=1&view=Fit&zoom=page-fit&page=${page}`
+          break
+      }
     }
     
     setCurrentPdfUrl(urlWithPage)
@@ -126,7 +134,34 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
 
     setIsLoadingPreview(true)
     try {
-      const blob = await getResumePDFBlob(data, template)
+      // Use secure server-side PDF generation with base64 encoding
+      const response = await fetch('/api/session/pdf', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          resumeData: data,
+          template: template,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to generate secure preview')
+      }
+
+      const { pdf: base64Pdf, hasAccess, mimeType } = await response.json()
+      
+      // Set template access
+      setTemplateAccess(hasAccess ? 'granted' : 'restricted')
+      
+      // Convert base64 to blob
+      const binaryString = atob(base64Pdf)
+      const bytes = new Uint8Array(binaryString.length)
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i)
+      }
+      const blob = new Blob([bytes], { type: mimeType })
       
       // Get page count
       const pageCount = await getPDFPageCount(blob)
@@ -149,11 +184,14 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
         if (currentPdfUrlRef.current) {
           URL.revokeObjectURL(currentPdfUrlRef.current)
         }
-        const url = URL.createObjectURL(blob)
-        setPdfUrl(url)
+        
+        // Create data URL instead of object URL to prevent direct access
+        const base64DataUrl = `data:${mimeType};base64,${base64Pdf}`
+        
+        setPdfUrl(base64DataUrl)
         // Set initial PDF URL with page 1 and browser-specific parameters
-        updatePdfUrl(url, 1)
-        currentPdfUrlRef.current = url
+        updatePdfUrl(base64DataUrl, 1)
+        currentPdfUrlRef.current = null // Don't store data URLs for cleanup
         setPdfArrayBuffer(null)
       }
     } catch {
@@ -220,7 +258,9 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
       }
 
       // Generate and download PDF only if tracking succeeds
-      const blob = await getResumePDFBlob(data, template)
+      // Use watermark for restricted templates
+      const shouldWatermark = !availableTemplates?.includes(template)
+      const blob = await getResumePDFBlob(data, template, shouldWatermark)
       const filename = `${data.personal.fullName.replace(/\s+/g, '_')}_Resume.pdf`
       
       // Use Safari-specific download for Safari, regular blob download for other browsers
@@ -462,6 +502,26 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
                     title="Resume Preview"
                     style={{ minHeight: '100%' }}
                   />
+                  
+                  {/* Watermark overlay for restricted templates */}
+                  {templateAccess === 'restricted' && (
+                    <div className="absolute inset-0 pointer-events-none z-5 flex items-center justify-center">
+                      <div 
+                        className="transform -rotate-45 text-red-500 text-6xl font-bold opacity-20 select-none"
+                        style={{
+                          textShadow: '2px 2px 4px rgba(0,0,0,0.3)',
+                          fontSize: 'clamp(2rem, 8vw, 4rem)',
+                          lineHeight: '1.2',
+                          textAlign: 'center',
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        PREVIEW ONLY<br />
+                        <span className="text-4xl">Upgrade to Download</span>
+                      </div>
+                    </div>
+                  )}
+                  
                   {/* Enhanced protection overlay */}
                   <div 
                     className="absolute inset-0 bg-transparent z-10"
