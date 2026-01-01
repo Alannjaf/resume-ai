@@ -48,11 +48,12 @@ export async function applyCrop(
   canvas.width = outputSize.width
   canvas.height = outputSize.height
 
-  // Calculate source coordinates on the original image
-  const sourceX = cropData.x / cropData.scale
-  const sourceY = cropData.y / cropData.scale
-  const sourceWidth = cropData.width / cropData.scale
-  const sourceHeight = cropData.height / cropData.scale
+  // Crop coordinates are already in original image space
+  // Clamp values to valid ranges to prevent black areas
+  const sourceX = Math.max(0, Math.min(cropData.x, img.naturalWidth - 1))
+  const sourceY = Math.max(0, Math.min(cropData.y, img.naturalHeight - 1))
+  const sourceWidth = Math.min(cropData.width, img.naturalWidth - sourceX)
+  const sourceHeight = Math.min(cropData.height, img.naturalHeight - sourceY)
 
   // Draw the cropped portion
   ctx.drawImage(
