@@ -6,7 +6,6 @@ import { useSubscription } from '@/contexts/SubscriptionContext'
 import toast from 'react-hot-toast'
 import { PDFDocument } from 'pdf-lib'
 import { shouldUsePDFJS } from '@/utils/browserDetection'
-import { getResumePDFBlob } from '@/lib/pdfGenerator'
 import { detectBrowser, downloadBlob } from '@/lib/browser-utils'
 import { PreviewModalHeader } from './PreviewModalHeader'
 import { PreviewModalContent } from './PreviewModalContent'
@@ -101,10 +100,10 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
 
     setIsLoadingPreview(true)
     try {
-      const response = await fetch('/api/session/pdf', {
+      const response = await fetch('/api/pdf/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ resumeData: data, template }),
+        body: JSON.stringify({ resumeData: data, template, action: 'preview' }),
       })
 
       if (!response.ok) throw new Error('Failed to generate secure preview')
@@ -150,28 +149,33 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
   const handleDownloadPDF = async () => {
     setIsGeneratingPDF(true)
     try {
-      const trackingResponse = await fetch('/api/analytics/download', {
+      // Use server-side PDF generation for security
+      const response = await fetch('/api/pdf/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          template,
-          timestamp: new Date().toISOString(),
-          userAgent: navigator.userAgent
-        })
-      }).catch(() => { throw new Error('Network error') })
+        body: JSON.stringify({ resumeData: data, template, action: 'download' }),
+      })
 
-      if (!trackingResponse.ok) {
-        const error = await trackingResponse.json().catch(() => ({ error: 'Failed' }))
-        if (trackingResponse.status === 403) {
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: 'Failed' }))
+        if (response.status === 403) {
           toast.error(error.error || 'Export limit reached')
           window.open('/billing', '_blank')
           return
         }
-        throw new Error(error.error || 'Failed')
+        throw new Error(error.error || 'Failed to download')
       }
 
-      const shouldWatermark = !availableTemplates?.includes(template)
-      const blob = await getResumePDFBlob(data, template, shouldWatermark)
+      const { pdf: base64Pdf, mimeType } = await response.json()
+      
+      // Convert base64 to blob
+      const binaryString = atob(base64Pdf)
+      const bytes = new Uint8Array(binaryString.length)
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i)
+      }
+      const blob = new Blob([bytes], { type: mimeType })
+      
       downloadBlob(blob, `${data.personal.fullName.replace(/\s+/g, '_')}_Resume.pdf`)
       toast.success('Resume downloaded successfully!')
     } catch {

@@ -4,7 +4,17 @@ import { checkUserLimits } from '@/lib/db';
 import { getTemplate } from '@/lib/getTemplate';
 import { generateWatermarkedPDF } from '@/lib/watermarkedTemplate';
 import { pdf } from '@react-pdf/renderer';
+import { prisma } from '@/lib/prisma';
+import { ResumeData } from '@/types/resume';
 import React from 'react';
+
+type Action = 'preview' | 'download';
+
+interface RequestBody {
+  resumeData: ResumeData;
+  template: string;
+  action: Action;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,11 +23,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await request.json();
-    const { resumeData, template } = body;
+    const body: RequestBody = await request.json();
+    const { resumeData, template, action = 'preview' } = body;
 
     if (!resumeData || !template) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    }
+
+    if (!['preview', 'download'].includes(action)) {
+      return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     }
 
     // Get user limits and available templates
@@ -31,8 +45,39 @@ export async function POST(request: NextRequest) {
     const hasAccess = limits.availableTemplates?.includes(template) || false;
     
     let buffer: ArrayBuffer;
-    
-    if (hasAccess) {
+    let shouldWatermark = !hasAccess;
+
+    // For downloads, we need additional validation
+    if (action === 'download') {
+      // Check export limits
+      if (!limits.canExport) {
+        return NextResponse.json({ 
+          error: 'Export limit reached. Please upgrade your plan to download more resumes.' 
+        }, { status: 403 });
+      }
+
+      // If user doesn't have access to template, they cannot download clean PDF
+      // They can only download watermarked version
+      if (!hasAccess) {
+        shouldWatermark = true;
+      }
+
+      // Increment export count for downloads
+      await prisma.subscription.update({
+        where: { id: limits.subscription.id },
+        data: { exportCount: { increment: 1 } }
+      });
+    }
+
+    // Generate PDF
+    if (shouldWatermark) {
+      // Generate watermarked PDF for restricted templates
+      const watermarkedPDFBytes = await generateWatermarkedPDF(template, resumeData);
+      buffer = watermarkedPDFBytes.buffer.slice(
+        watermarkedPDFBytes.byteOffset,
+        watermarkedPDFBytes.byteOffset + watermarkedPDFBytes.byteLength
+      ) as ArrayBuffer;
+    } else {
       // Generate clean PDF for accessible templates
       const templateComponent = getTemplate(template, resumeData);
       
@@ -43,27 +88,25 @@ export async function POST(request: NextRequest) {
       const pdfDoc = pdf(React.createElement(templateComponent.type, templateComponent.props));
       const blob = await pdfDoc.toBlob();
       buffer = await blob.arrayBuffer();
-    } else {
-      // Generate watermarked PDF for restricted templates
-      const watermarkedPDFBytes = await generateWatermarkedPDF(template, resumeData);
-      buffer = watermarkedPDFBytes.buffer.slice() as ArrayBuffer;
     }
     
     // Convert buffer to base64 for secure transmission
     const base64 = Buffer.from(buffer).toString('base64');
-
 
     // Return base64 encoded PDF with access information
     return NextResponse.json({
       pdf: base64,
       hasAccess,
       template,
+      action,
+      watermarked: shouldWatermark,
       mimeType: 'application/pdf'
     });
   } catch {
     return NextResponse.json(
-      { error: 'Failed to generate preview PDF' },
+      { error: 'Failed to generate PDF' },
       { status: 500 }
     );
   }
 }
+
