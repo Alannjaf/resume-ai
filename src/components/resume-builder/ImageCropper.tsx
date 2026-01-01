@@ -234,7 +234,9 @@ export function ImageCropper({
     const img = imageRef.current;
     if (!img) return;
 
-    const minZoom = 0.1;
+    // Calculate minimum zoom so crop area doesn't exceed image dimensions
+    const minDimension = Math.min(img.naturalWidth, img.naturalHeight);
+    const minZoom = (cropRadius * 2) / minDimension;
     const maxZoom = 5;
     const zoomFactor = zoomIn ? 1.25 : 0.8;
     const newZoom = Math.max(minZoom, Math.min(maxZoom, zoom * zoomFactor));
