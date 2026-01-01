@@ -128,8 +128,8 @@ export function ImageCropper({ imageDataURL, cropConfig, onCropChange, className
         const canvasSize = 350 // Reduced from 400 to fit better in container
         const imageDisplaySize = Math.min(canvasSize / img.naturalWidth, canvasSize / img.naturalHeight) * img.naturalWidth
         
-        // Make crop area about 40% of the displayed image size initially
-        const cropDisplaySize = imageDisplaySize * 0.4
+        // Make crop area fill most of the frame (85%) for better default
+        const cropDisplaySize = imageDisplaySize * 0.85
         
         // Convert back to actual image coordinates
         const imageSizeRatio = img.naturalWidth / imageDisplaySize
@@ -261,8 +261,8 @@ export function ImageCropper({ imageDataURL, cropConfig, onCropChange, className
     const canvasSize = 350 // Reduced from 400 to fit better in container
     const imageDisplaySize = Math.min(canvasSize / imageDimensions.width, canvasSize / imageDimensions.height) * imageDimensions.width
     
-    // Make crop area about 40% of the displayed image size
-    const cropDisplaySize = imageDisplaySize * 0.4
+    // Make crop area fill most of the frame (85%) for better default
+    const cropDisplaySize = imageDisplaySize * 0.85
     
     // Convert back to actual image coordinates
     const imageSizeRatio = imageDimensions.width / imageDisplaySize
