@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { requireAdmin } from '@/lib/admin'
 
 export async function POST() {
   try {
+    await requireAdmin()
+    
     const now = new Date()
     
     // Find all active subscriptions that have passed their end date
@@ -97,16 +100,20 @@ export async function POST() {
     })
 
   } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    const isAuthError = message.includes('Unauthorized') || message.includes('Admin')
     return NextResponse.json({ 
-      error: 'Failed to check expired subscriptions',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
+      error: isAuthError ? 'Unauthorized: Admin access required' : 'Failed to check expired subscriptions',
+      details: isAuthError ? undefined : message
+    }, { status: isAuthError ? 403 : 500 })
   }
 }
 
 // GET endpoint to check expiration status without making changes
 export async function GET() {
   try {
+    await requireAdmin()
+    
     const now = new Date()
     
     // Find all active subscriptions that have passed their end date
@@ -180,9 +187,11 @@ export async function GET() {
     })
 
   } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error'
+    const isAuthError = message.includes('Unauthorized') || message.includes('Admin')
     return NextResponse.json({ 
-      error: 'Failed to check subscription status',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 })
+      error: isAuthError ? 'Unauthorized: Admin access required' : 'Failed to check subscription status',
+      details: isAuthError ? undefined : message
+    }, { status: isAuthError ? 403 : 500 })
   }
 }
