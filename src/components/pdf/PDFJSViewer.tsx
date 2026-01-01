@@ -95,7 +95,6 @@ export const PDFJSViewer = ({
       setCurrentPage(pageNum);
       
     } catch (error) {
-      console.error('Error rendering page:', error);
       onLoadError?.(error as Error);
     } finally {
       setRendering(false);
@@ -152,7 +151,6 @@ export const PDFJSViewer = ({
         }
       } catch (error) {
         if (!isCancelled) {
-          console.error('Error loading PDF:', error);
           onLoadError?.(error as Error);
         }
       } finally {

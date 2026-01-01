@@ -18,8 +18,7 @@ export class ResumeParser {
     try {
       const result = await mammoth.extractRawText({ buffer })
       return result.value
-    } catch (error) {
-      console.error('DOCX parsing error:', error)
+    } catch {
       throw new Error('Failed to parse DOCX file')
     }
   }

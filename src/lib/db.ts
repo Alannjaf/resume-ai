@@ -130,63 +130,46 @@ export async function getUserSubscription(userId: string) {
 
 async function getSystemSettings() {
   try {
-    interface SystemSettingsRaw {
-      maxFreeResumes: number
-      maxFreeAIUsage: number
-      maxFreeExports: number
-      maxFreeImports: number
-      maxBasicResumes: number
-      maxBasicAIUsage: number
-      maxBasicExports: number
-      maxBasicImports: number
-      maxProResumes: number
-      maxProAIUsage: number
-      maxProExports: number
-      maxProImports: number
-      freeTemplates: string | string[]
-      basicTemplates: string | string[]
-      proTemplates: string | string[]
-      photoUploadPlans: string | string[]
-    }
+    const settings = await prisma.systemSettings.findFirst({
+      orderBy: { id: 'asc' },
+      select: {
+        maxFreeResumes: true,
+        maxFreeAIUsage: true,
+        maxFreeExports: true,
+        maxFreeImports: true,
+        maxBasicResumes: true,
+        maxBasicAIUsage: true,
+        maxBasicExports: true,
+        maxBasicImports: true,
+        maxProResumes: true,
+        maxProAIUsage: true,
+        maxProExports: true,
+        maxProImports: true,
+        freeTemplates: true,
+        basicTemplates: true,
+        proTemplates: true,
+        photoUploadPlans: true,
+      }
+    })
 
-    const settingsRecord = await prisma.$queryRawUnsafe(`
-      SELECT 
-        "maxFreeResumes",
-        "maxFreeAIUsage", 
-        "maxFreeExports",
-        "maxFreeImports",
-        "maxBasicResumes",
-        "maxBasicAIUsage",
-        "maxBasicExports",
-        "maxBasicImports",
-        "maxProResumes",
-        "maxProAIUsage",
-        "maxProExports",
-        "maxProImports",
-        "freeTemplates",
-        "basicTemplates",
-        "proTemplates",
-        "photoUploadPlans"
-      FROM "SystemSettings" 
-      ORDER BY id LIMIT 1
-    `) as SystemSettingsRaw[]
-
-    if (settingsRecord && settingsRecord.length > 0) {
-      const settings = settingsRecord[0]
-      // Parse JSON fields
-      if (settings.freeTemplates && typeof settings.freeTemplates === 'string') {
-        settings.freeTemplates = JSON.parse(settings.freeTemplates)
+    if (settings) {
+      // Prisma returns JSON fields as parsed objects, but ensure arrays
+      // Cast to string[] since JSON fields are typed as JsonValue
+      return {
+        ...settings,
+        freeTemplates: Array.isArray(settings.freeTemplates) 
+          ? (settings.freeTemplates as string[])
+          : ['modern'],
+        basicTemplates: Array.isArray(settings.basicTemplates) 
+          ? (settings.basicTemplates as string[])
+          : ['modern', 'creative'],
+        proTemplates: Array.isArray(settings.proTemplates) 
+          ? (settings.proTemplates as string[])
+          : ['modern', 'creative', 'executive', 'elegant', 'minimalist', 'creative-artistic'],
+        photoUploadPlans: Array.isArray(settings.photoUploadPlans) 
+          ? (settings.photoUploadPlans as string[])
+          : ['BASIC', 'PRO'],
       }
-      if (settings.basicTemplates && typeof settings.basicTemplates === 'string') {
-        settings.basicTemplates = JSON.parse(settings.basicTemplates)
-      }
-      if (settings.proTemplates && typeof settings.proTemplates === 'string') {
-        settings.proTemplates = JSON.parse(settings.proTemplates)
-      }
-      if (settings.photoUploadPlans && typeof settings.photoUploadPlans === 'string') {
-        settings.photoUploadPlans = JSON.parse(settings.photoUploadPlans)
-      }
-      return settings
     }
   } catch {
     // Table might not exist, use defaults

@@ -65,7 +65,6 @@ export function ResumeManagement() {
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to fetch resumes';
       toast.error(message);
-      console.error('Error fetching resumes:', error);
     } finally {
       setLoading(false);
     }
@@ -105,9 +104,8 @@ export function ResumeManagement() {
       toast.success(`Deleted ${ids.length} resume(s)`);
       setSelectedIds([]);
       fetchResumes();
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete resumes');
-      console.error(error);
     }
   };
 

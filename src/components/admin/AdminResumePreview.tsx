@@ -61,9 +61,8 @@ export function AdminResumePreview({
       const url = URL.createObjectURL(blob);
       pdfUrlRef.current = url;
       setPdfUrl(url);
-    } catch (error) {
+    } catch {
       toast.error('Failed to generate PDF preview');
-      console.error('PDF generation error:', error);
     } finally {
       setLoading(false);
     }
@@ -84,9 +83,8 @@ export function AdminResumePreview({
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
       toast.success('Resume downloaded successfully!');
-    } catch (error) {
+    } catch {
       toast.error('Failed to download resume');
-      console.error('Download error:', error);
     }
   };
 

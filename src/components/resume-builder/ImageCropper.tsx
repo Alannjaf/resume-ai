@@ -152,8 +152,8 @@ export function ImageCropper({ imageDataURL, cropConfig, onCropChange, className
         onCropChange(initialCrop)
         
         drawCanvas(img, initialCrop)
-      } catch (error) {
-        console.error('Failed to load image:', error)
+      } catch {
+        // Image loading failed
       }
     }
 

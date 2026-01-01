@@ -57,8 +57,7 @@ export async function POST(request: NextRequest) {
         'X-Template-Access': hasAccess ? 'granted' : 'restricted',
       },
     });
-  } catch (error) {
-    console.error('Preview PDF generation error:', error);
+  } catch {
     return NextResponse.json(
       { error: 'Failed to generate preview PDF' },
       { status: 500 }

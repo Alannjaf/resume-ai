@@ -61,8 +61,8 @@ export default function BillingPage() {
             current: plan.name === subscription.plan
           })))
         }
-      } catch (error) {
-        console.error('Error fetching data:', error)
+      } catch {
+        // Data fetch failed
       } finally {
         setLoading(false)
       }

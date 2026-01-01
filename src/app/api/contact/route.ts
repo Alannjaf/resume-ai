@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Lazy initialization to avoid build-time errors when API key is not set
+const getResend = () => new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(request: NextRequest) {
   try {
@@ -86,7 +87,7 @@ ${message}
 Sent from Work.krd contact form
     `.trim()
 
-    await resend.emails.send({
+    await getResend().emails.send({
       from: 'Work.krd Contact <contact@work.krd>', // Using verified domain
       to: ['info@work.krd'],
       subject: `Contact Form: ${subject}`,

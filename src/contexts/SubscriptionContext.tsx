@@ -76,7 +76,6 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
       setAvailableTemplates(permissionsData.availableTemplates || ['modern']);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load subscription data');
-      console.error('Subscription fetch error:', err);
     } finally {
       setIsLoading(false);
     }

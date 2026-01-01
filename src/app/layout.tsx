@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import { LanguageProvider } from '@/contexts/LanguageContext'
 import { SubscriptionProvider } from '@/contexts/SubscriptionContext'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 import { Toaster } from 'react-hot-toast'
 import '@/styles/globals.css'
 
@@ -28,7 +29,9 @@ export default function RootLayout({
         <body className={inter.className}>
           <SubscriptionProvider>
             <LanguageProvider>
-              {children}
+              <ErrorBoundary>
+                {children}
+              </ErrorBoundary>
               <Toaster 
                 position="top-right"
                 toastOptions={{

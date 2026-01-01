@@ -36,8 +36,8 @@ export function CropModal({ isOpen, onClose, imageDataURL, templateId, onSave }:
           { width: cropConfig.defaultSize, height: cropConfig.defaultSize * (1 / cropConfig.aspectRatio) }
         )
         setPreviewImage(preview)
-      } catch (error) {
-        console.error('Failed to generate preview:', error)
+      } catch {
+        // Preview generation failed
       }
     }
 
@@ -56,8 +56,8 @@ export function CropModal({ isOpen, onClose, imageDataURL, templateId, onSave }:
       )
       onSave(croppedImage, currentCrop)
       onClose()
-    } catch (error) {
-      console.error('Failed to save cropped image:', error)
+    } catch {
+      // Crop save failed
     } finally {
       setIsProcessing(false)
     }

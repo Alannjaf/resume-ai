@@ -59,8 +59,7 @@ export async function POST(request: NextRequest) {
         'X-Frame-Options': 'SAMEORIGIN',
       },
     });
-  } catch (error) {
-    console.error('Admin preview PDF generation error:', error);
+  } catch {
     return NextResponse.json(
       { error: 'Failed to generate preview PDF' },
       { status: 500 }

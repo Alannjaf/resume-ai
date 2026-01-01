@@ -63,8 +63,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         'X-Template-Access': hasAccess ? 'granted' : 'restricted',
       },
     });
-  } catch (error) {
-    console.error('Temp PDF generation error:', error);
+  } catch {
     return NextResponse.json(
       { error: 'Failed to generate PDF' },
       { status: 500 }

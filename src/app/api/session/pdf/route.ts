@@ -60,8 +60,7 @@ export async function POST(request: NextRequest) {
       template,
       mimeType: 'application/pdf'
     });
-  } catch (error) {
-    console.error('Session PDF generation error:', error);
+  } catch {
     return NextResponse.json(
       { error: 'Failed to generate preview PDF' },
       { status: 500 }

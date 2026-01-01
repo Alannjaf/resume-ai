@@ -55,8 +55,7 @@ export function ResumeDetailsModal({ resume, onClose }: ResumeDetailsModalProps)
       const data = await response.json();
       setResumeData(data);
       setShowPreview(true);
-    } catch (error) {
-      console.error('Error fetching resume preview:', error);
+    } catch {
       // Fallback to opening in new tab
       window.open(`/resumes/${resume.id}`, '_blank');
     } finally {

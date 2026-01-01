@@ -113,8 +113,7 @@ function ResumeBuilderContent() {
               })
             })
           }
-        } catch (error) {
-          console.error('Translation error:', error)
+        } catch {
           toast.error(t('pages.resumeBuilder.messages.translationError'))
         } finally {
           setIsAutoTranslating(false)
@@ -221,7 +220,6 @@ function ResumeBuilderContent() {
         toast.success(t('pages.resumeBuilder.messages.resumeSaved'))
       }
     } catch (error) {
-      console.error('Save error:', error)
       toast.error(error instanceof Error ? error.message : t('pages.resumeBuilder.errors.saveFailed'))
     } finally {
       setIsSaving(false)
@@ -312,8 +310,7 @@ function ResumeBuilderContent() {
         if (shouldPreview === 'true') {
           setShowPreview(true)
         }
-      } catch (error) {
-        console.error('Load error:', error)
+      } catch {
         toast.error(t('pages.resumeBuilder.messages.loadError'))
         router.push('/dashboard')
       } finally {

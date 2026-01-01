@@ -28,8 +28,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ id });
-  } catch (error) {
-    console.error('Temp store error:', error);
+  } catch {
     return NextResponse.json(
       { error: 'Failed to store data' },
       { status: 500 }
