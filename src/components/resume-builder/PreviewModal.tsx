@@ -185,13 +185,6 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
     }
   }
 
-  const handleContextMenu = (e: React.MouseEvent) => e.preventDefault()
-  const handleDragStart = (e: React.DragEvent) => e.preventDefault()
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.ctrlKey && ['s', 'p', 'a'].includes(e.key)) e.preventDefault()
-    if (e.key === 'F12') e.preventDefault()
-  }
-
   useEffect(() => {
     if (isOpen && data.personal.fullName) {
       setIsLoadingPreview(true)
@@ -232,11 +225,7 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
   const isTemplateRestricted = !availableTemplates.includes(template)
 
   return (
-    <div
-      className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
-      onKeyDown={handleKeyDown}
-      tabIndex={-1}
-    >
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg max-w-6xl w-full max-h-[90vh] overflow-hidden pdf-preview-modal">
         <PreviewModalHeader
           template={template}
@@ -269,9 +258,6 @@ export function PreviewModal({ isOpen, onClose, data, template = 'modern' }: Pre
             hasName={!!data.personal.fullName}
             iframeRef={iframeRef}
             onGeneratePreview={() => generatePDFPreview()}
-            onContextMenu={handleContextMenu}
-            onDragStart={handleDragStart}
-            onKeyDown={handleKeyDown}
           />
         </div>
       </div>

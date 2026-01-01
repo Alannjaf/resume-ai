@@ -92,25 +92,35 @@ export function PreviewModalHeader({
               <RefreshCw className={`h-3 w-3 sm:h-4 sm:w-4 mr-1 ${isLoadingPreview ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
-            <Button
-              onClick={onDownload}
-              disabled={isGeneratingPDF || isLoadingPreview || !hasName || isTemplateRestricted}
-              size="sm"
-              className="text-xs sm:text-sm"
-              title={isTemplateRestricted ? 'This template requires a premium plan' : undefined}
-            >
-              {isGeneratingPDF ? (
-                <>
-                  <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 mr-1 animate-spin" />
-                  Downloading...
-                </>
-              ) : (
-                <>
-                  <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                  {isTemplateRestricted ? 'Upgrade to Download' : 'Download PDF'}
-                </>
-              )}
-            </Button>
+            {isTemplateRestricted ? (
+              <Button
+                onClick={() => window.open('/billing', '_blank')}
+                size="sm"
+                className="text-xs sm:text-sm bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600"
+              >
+                <Crown className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                Upgrade to Download
+              </Button>
+            ) : (
+              <Button
+                onClick={onDownload}
+                disabled={isGeneratingPDF || isLoadingPreview || !hasName}
+                size="sm"
+                className="text-xs sm:text-sm"
+              >
+                {isGeneratingPDF ? (
+                  <>
+                    <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 mr-1 animate-spin" />
+                    Downloading...
+                  </>
+                ) : (
+                  <>
+                    <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                    Download PDF
+                  </>
+                )}
+              </Button>
+            )}
             <Button variant="outline" onClick={onClose} size="sm" className="text-xs sm:text-sm">
               <X className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>

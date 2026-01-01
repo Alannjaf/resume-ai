@@ -17,9 +17,6 @@ interface PreviewModalContentProps {
   hasName: boolean
   iframeRef: React.RefObject<HTMLIFrameElement | null>
   onGeneratePreview: () => void
-  onContextMenu: (e: React.MouseEvent) => void
-  onDragStart: (e: React.DragEvent) => void
-  onKeyDown: (e: React.KeyboardEvent) => void
 }
 
 export function PreviewModalContent({
@@ -33,10 +30,7 @@ export function PreviewModalContent({
   currentPdfPage,
   hasName,
   iframeRef,
-  onGeneratePreview,
-  onContextMenu,
-  onDragStart,
-  onKeyDown
+  onGeneratePreview
 }: PreviewModalContentProps) {
   if (isLoadingPreview) {
     return (
@@ -73,9 +67,6 @@ export function PreviewModalContent({
             currentPdfPage={currentPdfPage}
             templateAccess={templateAccess}
             iframeRef={iframeRef}
-            onContextMenu={onContextMenu}
-            onDragStart={onDragStart}
-            onKeyDown={onKeyDown}
           />
         )}
       </div>
@@ -124,9 +115,6 @@ interface DesktopPreviewProps {
   currentPdfPage: number
   templateAccess: string
   iframeRef: React.RefObject<HTMLIFrameElement | null>
-  onContextMenu: (e: React.MouseEvent) => void
-  onDragStart: (e: React.DragEvent) => void
-  onKeyDown: (e: React.KeyboardEvent) => void
 }
 
 function DesktopPreview({
@@ -134,10 +122,7 @@ function DesktopPreview({
   currentPdfUrl,
   currentPdfPage,
   templateAccess,
-  iframeRef,
-  onContextMenu,
-  onDragStart,
-  onKeyDown
+  iframeRef
 }: DesktopPreviewProps) {
   return (
     <div className="w-full h-full relative">
@@ -168,25 +153,6 @@ function DesktopPreview({
           </div>
         </div>
       )}
-
-      <div
-        className="absolute inset-0 bg-transparent z-10"
-        onContextMenu={onContextMenu}
-        onDragStart={onDragStart}
-        onMouseDown={(e) => e.preventDefault()}
-        onKeyDown={onKeyDown}
-        tabIndex={-1}
-        style={{
-          userSelect: 'none',
-          WebkitUserSelect: 'none',
-          MozUserSelect: 'none',
-          msUserSelect: 'none',
-          WebkitTouchCallout: 'none',
-          WebkitTapHighlightColor: 'transparent',
-          pointerEvents: 'auto',
-          cursor: 'default'
-        } as React.CSSProperties}
-      />
     </div>
   )
 }

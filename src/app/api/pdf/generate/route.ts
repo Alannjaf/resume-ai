@@ -49,17 +49,18 @@ export async function POST(request: NextRequest) {
 
     // For downloads, we need additional validation
     if (action === 'download') {
+      // Block download for restricted templates - user must upgrade
+      if (!hasAccess) {
+        return NextResponse.json({ 
+          error: 'Upgrade required to download this template. Please upgrade your plan.' 
+        }, { status: 403 });
+      }
+
       // Check export limits
       if (!limits.canExport) {
         return NextResponse.json({ 
           error: 'Export limit reached. Please upgrade your plan to download more resumes.' 
         }, { status: 403 });
-      }
-
-      // If user doesn't have access to template, they cannot download clean PDF
-      // They can only download watermarked version
-      if (!hasAccess) {
-        shouldWatermark = true;
       }
 
       // Increment export count for downloads
