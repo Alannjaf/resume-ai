@@ -15,92 +15,104 @@ interface ImageCropperProps {
 
 export function ImageCropper({ imageDataURL, cropConfig, onCropChange, className = '' }: ImageCropperProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [crop, setCrop] = useState<CropData | null>(null)
+  const imageRef = useRef<HTMLImageElement | null>(null)
+  
+  // Image position and scale (image moves, crop stays fixed)
+  const [imageX, setImageX] = useState(0)
+  const [imageY, setImageY] = useState(0)
+  const [zoom, setZoom] = useState(1)
+  
+  // Drag state
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
-  const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 })
-  const [scale, setScale] = useState(1)
-  const [canvasTransform, setCanvasTransform] = useState({ 
-    offsetX: 0, 
-    offsetY: 0, 
-    displayScale: 1 
-  })
+  
+  // Canvas and crop dimensions
+  const canvasSize = 350
+  const cropRadius = canvasSize * 0.42 // Circle takes 84% of canvas (diameter)
+  const cropCenterX = canvasSize / 2
+  const cropCenterY = canvasSize / 2
 
-  // Draw canvas with image and crop overlay
-  const drawCanvas = useCallback((img: HTMLImageElement, currentCrop: CropData) => {
+  // Draw the canvas
+  const draw = useCallback(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    const img = imageRef.current
+    if (!canvas || !img) return
 
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const canvasSize = 350 // Reduced from 400 to fit better in container
-    canvas.width = canvasSize
-    canvas.height = canvasSize
-
-    // Calculate display dimensions based on crop scale
-    const baseScale = Math.min(canvasSize / img.naturalWidth, canvasSize / img.naturalHeight)
-    const displayScale = baseScale * currentCrop.scale
-    const displayWidth = img.naturalWidth * displayScale
-    const displayHeight = img.naturalHeight * displayScale
-    const offsetX = (canvasSize - displayWidth) / 2
-    const offsetY = (canvasSize - displayHeight) / 2
-
-    // Store transform for coordinate conversion
-    setCanvasTransform({ offsetX, offsetY, displayScale })
-
     // Clear canvas
     ctx.clearRect(0, 0, canvasSize, canvasSize)
 
-    // Draw image
-    ctx.drawImage(img, offsetX, offsetY, displayWidth, displayHeight)
+    // Calculate scaled image dimensions
+    const scaledWidth = img.naturalWidth * zoom
+    const scaledHeight = img.naturalHeight * zoom
 
-    // Draw overlay
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
+    // Draw image at current position
+    ctx.drawImage(img, imageX, imageY, scaledWidth, scaledHeight)
+
+    // Draw dark overlay
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)'
     ctx.fillRect(0, 0, canvasSize, canvasSize)
 
-    // Calculate crop area on canvas - crop size should be independent of zoom
-    const cropX = offsetX + (currentCrop.x / currentCrop.scale) * displayScale
-    const cropY = offsetY + (currentCrop.y / currentCrop.scale) * displayScale
-    
-    // Crop area should scale with image but maintain aspect ratio
-    const baseCropScale = Math.min(canvasSize / img.naturalWidth, canvasSize / img.naturalHeight)
-    
-    // Scale crop area with the base image scale but not with zoom
-    const cropWidth = currentCrop.width * baseCropScale
-    const cropHeight = currentCrop.height * baseCropScale
-
-    // Clear crop area
+    // Cut out the crop circle (reveal image underneath)
     ctx.globalCompositeOperation = 'destination-out'
     
     if (cropConfig.shape === 'circle') {
       ctx.beginPath()
-      ctx.arc(cropX + cropWidth / 2, cropY + cropHeight / 2, Math.min(cropWidth, cropHeight) / 2, 0, 2 * Math.PI)
-      ctx.fill()
-    } else if (cropConfig.shape === 'rounded-square' && cropConfig.borderRadius) {
-      drawRoundedRect(ctx, cropX, cropY, cropWidth, cropHeight, (cropConfig.borderRadius || 16) * baseCropScale)
+      ctx.arc(cropCenterX, cropCenterY, cropRadius, 0, 2 * Math.PI)
       ctx.fill()
     } else {
-      ctx.fillRect(cropX, cropY, cropWidth, cropHeight)
+      // For square/rounded shapes
+      const cropSize = cropRadius * 2
+      const cropX = cropCenterX - cropRadius
+      const cropY = cropCenterY - cropRadius
+      
+      if (cropConfig.shape === 'rounded-square' && cropConfig.borderRadius) {
+        drawRoundedRect(ctx, cropX, cropY, cropSize, cropSize, cropConfig.borderRadius)
+        ctx.fill()
+      } else {
+        ctx.fillRect(cropX, cropY, cropSize, cropSize)
+      }
     }
 
     ctx.globalCompositeOperation = 'source-over'
 
     // Draw crop border
-    ctx.strokeStyle = cropConfig.safeArea.color
-    ctx.lineWidth = 2
+    ctx.strokeStyle = '#3b82f6'
+    ctx.lineWidth = 3
     
     if (cropConfig.shape === 'circle') {
       ctx.beginPath()
-      ctx.arc(cropX + cropWidth / 2, cropY + cropHeight / 2, Math.min(cropWidth, cropHeight) / 2, 0, 2 * Math.PI)
-      ctx.stroke()
-    } else if (cropConfig.shape === 'rounded-square' && cropConfig.borderRadius) {
-      drawRoundedRect(ctx, cropX, cropY, cropWidth, cropHeight, (cropConfig.borderRadius || 16) * baseCropScale)
+      ctx.arc(cropCenterX, cropCenterY, cropRadius, 0, 2 * Math.PI)
       ctx.stroke()
     } else {
-      ctx.strokeRect(cropX, cropY, cropWidth, cropHeight)
+      const cropSize = cropRadius * 2
+      const cropX = cropCenterX - cropRadius
+      const cropY = cropCenterY - cropRadius
+      
+      if (cropConfig.shape === 'rounded-square' && cropConfig.borderRadius) {
+        drawRoundedRect(ctx, cropX, cropY, cropSize, cropSize, cropConfig.borderRadius)
+        ctx.stroke()
+      } else {
+        ctx.strokeRect(cropX, cropY, cropSize, cropSize)
+      }
     }
-  }, [cropConfig])
+
+    // Update crop data for parent component
+    // Convert canvas coordinates to image coordinates
+    const cropX = (cropCenterX - cropRadius - imageX) / zoom
+    const cropY = (cropCenterY - cropRadius - imageY) / zoom
+    const cropSize = (cropRadius * 2) / zoom
+
+    onCropChange({
+      x: cropX,
+      y: cropY,
+      width: cropSize,
+      height: cropSize / cropConfig.aspectRatio,
+      scale: zoom
+    })
+  }, [imageX, imageY, zoom, cropConfig, onCropChange, cropCenterX, cropCenterY, cropRadius])
 
   // Helper function to draw rounded rectangle
   const drawRoundedRect = (ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, radius: number) => {
@@ -117,213 +129,145 @@ export function ImageCropper({ imageDataURL, cropConfig, onCropChange, className
     ctx.closePath()
   }
 
-  // Load image and initialize crop
+  // Load image and center it
   useEffect(() => {
-    const initializeImage = async () => {
-      try {
-        const img = await loadImage(imageDataURL)
-        setImageDimensions({ width: img.naturalWidth, height: img.naturalHeight })
-        
-        // Calculate crop size as percentage of image for better proportions
-        const canvasSize = 350 // Reduced from 400 to fit better in container
-        const imageDisplaySize = Math.min(canvasSize / img.naturalWidth, canvasSize / img.naturalHeight) * img.naturalWidth
-        
-        // Make crop area fill most of the frame (85%) for better default
-        const cropDisplaySize = imageDisplaySize * 0.85
-        
-        // Convert back to actual image coordinates
-        const imageSizeRatio = img.naturalWidth / imageDisplaySize
-        const cropWidth = cropDisplaySize * imageSizeRatio
-        const cropHeight = cropWidth / cropConfig.aspectRatio
-        
-        // Center the crop
-        const x = (img.naturalWidth * scale - cropWidth) / 2
-        const y = (img.naturalHeight * scale - cropHeight) / 2
-        
-        const initialCrop = {
-          x: Math.max(0, x),
-          y: Math.max(0, y),
-          width: cropWidth,
-          height: cropHeight,
-          scale
-        }
-        
-        setCrop(initialCrop)
-        onCropChange(initialCrop)
-        
-        drawCanvas(img, initialCrop)
-      } catch {
-        // Image loading failed
-      }
-    }
+    const canvas = canvasRef.current
+    if (!canvas) return
 
-    initializeImage()
-  }, [imageDataURL, cropConfig.aspectRatio, onCropChange, scale, drawCanvas])
+    canvas.width = canvasSize
+    canvas.height = canvasSize
 
-  // Handle mouse and touch events for dragging
+    loadImage(imageDataURL).then(img => {
+      imageRef.current = img
+      
+      // Calculate initial zoom to fit the smaller dimension to the crop circle
+      const minDimension = Math.min(img.naturalWidth, img.naturalHeight)
+      const initialZoom = (cropRadius * 2) / minDimension
+      
+      // Center the image so the crop circle is in the middle
+      const scaledWidth = img.naturalWidth * initialZoom
+      const scaledHeight = img.naturalHeight * initialZoom
+      const initialX = (canvasSize - scaledWidth) / 2
+      const initialY = (canvasSize - scaledHeight) / 2
+      
+      setZoom(initialZoom)
+      setImageX(initialX)
+      setImageY(initialY)
+    })
+  }, [imageDataURL, cropRadius])
+
+  // Redraw when state changes
+  useEffect(() => {
+    draw()
+  }, [draw])
+
+  // Handle pointer down
   const handlePointerDown = (e: React.PointerEvent) => {
     e.preventDefault()
     setIsDragging(true)
     setDragStart({ x: e.clientX, y: e.clientY })
     
-    // Capture pointer for better mobile support
     if (e.currentTarget instanceof Element) {
       e.currentTarget.setPointerCapture(e.pointerId)
     }
   }
 
+  // Handle pointer move (drag image)
   const handlePointerMove = (e: React.PointerEvent) => {
-    if (!isDragging || !crop) return
+    if (!isDragging) return
     e.preventDefault()
 
-    const canvas = canvasRef.current
-    if (!canvas) return
+    const deltaX = e.clientX - dragStart.x
+    const deltaY = e.clientY - dragStart.y
 
-    // Get canvas-relative coordinates
-    const rect = canvas.getBoundingClientRect()
-    const canvasX = e.clientX - rect.left
-    const canvasY = e.clientY - rect.top
-    
-    const prevCanvasX = dragStart.x - rect.left
-    const prevCanvasY = dragStart.y - rect.top
-
-    // Convert canvas pixels to crop coordinates
-    const deltaCanvasX = canvasX - prevCanvasX
-    const deltaCanvasY = canvasY - prevCanvasY
-    
-    // Convert to crop coordinate space
-    const cropDeltaX = (deltaCanvasX / canvasTransform.displayScale) * crop.scale
-    const cropDeltaY = (deltaCanvasY / canvasTransform.displayScale) * crop.scale
-
-    // Apply movement with bounds checking
-    const newX = Math.max(0, Math.min(crop.x + cropDeltaX, (imageDimensions.width * crop.scale) - crop.width))
-    const newY = Math.max(0, Math.min(crop.y + cropDeltaY, (imageDimensions.height * crop.scale) - crop.height))
-
-    const newCrop = { ...crop, x: newX, y: newY }
-
-    setCrop(newCrop)
-    onCropChange(newCrop)
+    setImageX(prev => prev + deltaX)
+    setImageY(prev => prev + deltaY)
     setDragStart({ x: e.clientX, y: e.clientY })
-
-    loadImage(imageDataURL).then(img => drawCanvas(img, newCrop))
   }
 
+  // Handle pointer up
   const handlePointerUp = (e: React.PointerEvent) => {
     setIsDragging(false)
     
-    // Release pointer capture
     if (e.currentTarget instanceof Element) {
       e.currentTarget.releasePointerCapture(e.pointerId)
     }
   }
 
-  // Handle zoom - only affects image scale, crop area stays same size
+  // Zoom in/out - zoom towards center of crop area
   const handleZoom = (zoomIn: boolean) => {
-    if (!crop) return
-    
-    const newScale = zoomIn ? Math.min(scale * 1.2, 3) : Math.max(scale / 1.2, 0.5)
-    
-    // Keep crop area same size but adjust position for new image scale
-    const centerX = crop.x + crop.width / 2
-    const centerY = crop.y + crop.height / 2
-    
-    // Scale the center position
-    const scaleFactor = newScale / crop.scale
-    const newCenterX = centerX * scaleFactor
-    const newCenterY = centerY * scaleFactor
-    
-    // Calculate new position maintaining crop size
-    const maxX = (imageDimensions.width * newScale) - crop.width
-    const maxY = (imageDimensions.height * newScale) - crop.height
-    
-    const newX = Math.max(0, Math.min(newCenterX - crop.width / 2, maxX))
-    const newY = Math.max(0, Math.min(newCenterY - crop.height / 2, maxY))
-    
-    const newCrop = { 
-      ...crop,
-      x: newX, 
-      y: newY, 
-      scale: newScale 
-    }
-    
-    setCrop(newCrop)
-    onCropChange(newCrop)
-    setScale(newScale)
-    
-    loadImage(imageDataURL).then(img => drawCanvas(img, newCrop))
+    const img = imageRef.current
+    if (!img) return
+
+    const minZoom = 0.1
+    const maxZoom = 5
+    const zoomFactor = zoomIn ? 1.25 : 0.8
+    const newZoom = Math.max(minZoom, Math.min(maxZoom, zoom * zoomFactor))
+
+    // Zoom towards the center of the crop circle
+    const zoomRatio = newZoom / zoom
+    const newImageX = cropCenterX - (cropCenterX - imageX) * zoomRatio
+    const newImageY = cropCenterY - (cropCenterY - imageY) * zoomRatio
+
+    setZoom(newZoom)
+    setImageX(newImageX)
+    setImageY(newImageY)
   }
 
-  // Reset crop to initial state
+  // Reset to initial centered state
   const handleReset = () => {
-    const resetScale = 1
+    const img = imageRef.current
+    if (!img) return
+
+    const minDimension = Math.min(img.naturalWidth, img.naturalHeight)
+    const initialZoom = (cropRadius * 2) / minDimension
     
-    // Recalculate proportional crop size like in initialization
-    const canvasSize = 350 // Reduced from 400 to fit better in container
-    const imageDisplaySize = Math.min(canvasSize / imageDimensions.width, canvasSize / imageDimensions.height) * imageDimensions.width
+    const scaledWidth = img.naturalWidth * initialZoom
+    const scaledHeight = img.naturalHeight * initialZoom
+    const initialX = (canvasSize - scaledWidth) / 2
+    const initialY = (canvasSize - scaledHeight) / 2
     
-    // Make crop area fill most of the frame (85%) for better default
-    const cropDisplaySize = imageDisplaySize * 0.85
-    
-    // Convert back to actual image coordinates
-    const imageSizeRatio = imageDimensions.width / imageDisplaySize
-    const cropWidth = cropDisplaySize * imageSizeRatio
-    const cropHeight = cropWidth / cropConfig.aspectRatio
-    
-    // Center the crop
-    const x = (imageDimensions.width * resetScale - cropWidth) / 2
-    const y = (imageDimensions.height * resetScale - cropHeight) / 2
-    
-    const initialCrop = {
-      x: Math.max(0, x),
-      y: Math.max(0, y),
-      width: cropWidth,
-      height: cropHeight,
-      scale: resetScale
-    }
-    
-    setCrop(initialCrop)
-    onCropChange(initialCrop)
-    setScale(resetScale)
-    
-    loadImage(imageDataURL).then(img => drawCanvas(img, initialCrop))
+    setZoom(initialZoom)
+    setImageX(initialX)
+    setImageY(initialY)
   }
 
   return (
     <div className={`flex flex-col space-y-4 ${className}`}>
-      {/* Controls at top */}
+      {/* Zoom controls */}
       <div className="flex items-center justify-center space-x-2">
-        <Button variant="outline" size="sm" onClick={() => handleZoom(false)}>
+        <Button variant="outline" size="sm" onClick={() => handleZoom(false)} title="Zoom out">
           <ZoomOut className="h-4 w-4" />
         </Button>
-        <Button variant="outline" size="sm" onClick={() => handleZoom(true)}>
+        <Button variant="outline" size="sm" onClick={() => handleZoom(true)} title="Zoom in">
           <ZoomIn className="h-4 w-4" />
         </Button>
-        <Button variant="outline" size="sm" onClick={handleReset}>
+        <Button variant="outline" size="sm" onClick={handleReset} title="Reset">
           <RotateCcw className="h-4 w-4" />
         </Button>
       </div>
       
-      {/* Image area with padding */}
-      <div className="flex justify-center p-6 bg-white border border-gray-200 rounded-lg">
-        <div className="relative max-w-full overflow-hidden">
-          <canvas
-            ref={canvasRef}
-            className="border border-gray-300 rounded-lg cursor-move touch-none shadow-sm max-w-full h-auto"
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerLeave={handlePointerUp}
-          />
-        </div>
+      {/* Canvas area */}
+      <div className="flex justify-center p-4 bg-gray-100 rounded-lg">
+        <canvas
+          ref={canvasRef}
+          className="rounded-lg cursor-move touch-none shadow-md"
+          style={{ maxWidth: '100%', height: 'auto' }}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerLeave={handlePointerUp}
+        />
       </div>
       
+      {/* Instructions */}
       <div className="text-center">
         <p className="text-sm text-gray-600 mb-1">
           <Move className="inline h-4 w-4 mr-1" />
           Drag to reposition • Zoom to resize
         </p>
         <p className="text-xs text-gray-500">
-          {cropConfig.shape === 'circle' ? 'Circular' : cropConfig.shape.replace('-', ' ')} crop for {cropConfig.safeArea.showGuide ? 'optimal' : 'standard'} display
+          {cropConfig.shape === 'circle' ? 'Circular' : cropConfig.shape.replace('-', ' ')} crop for optimal display
         </p>
       </div>
     </div>
