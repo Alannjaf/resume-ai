@@ -183,7 +183,7 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
         ]
 
         const completion = await openai.chat.completions.create({
-          model: 'google/gemini-2.5-flash-lite-preview-06-17',
+          model: 'google/gemini-3-flash-preview',
           messages: messages as OpenAI.Chat.Completions.ChatCompletionMessageParam[],
           max_tokens: 2000,
           temperature: 0.0 // Zero temperature for exact extraction
@@ -388,7 +388,7 @@ Return valid JSON only, no explanations.`
         ]
 
         const completion = await openai.chat.completions.create({
-          model: 'google/gemini-2.5-flash-lite-preview-06-17',
+          model: 'google/gemini-3-flash-preview',
           messages,
           max_tokens: 2000,
           temperature: 0.3})

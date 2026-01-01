@@ -55,7 +55,7 @@ Please provide only the summary text without any additional formatting or explan
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-2.5-flash-lite-preview-06-17',
+        model: 'google/gemini-3-flash-preview',
         messages,
         max_tokens: 200,
         temperature: 0.7})
@@ -111,7 +111,7 @@ Please provide only the enhanced description without any additional formatting o
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-2.5-flash-lite-preview-06-17',
+        model: 'google/gemini-3-flash-preview',
         messages,
         max_tokens: 400,
         temperature: 0.7})
@@ -162,7 +162,7 @@ Format: Return only skill names separated by newlines.`
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-2.5-flash-lite-preview-06-17',
+        model: 'google/gemini-3-flash-preview',
         messages,
         max_tokens: 300,
         temperature: 0.6})
@@ -225,7 +225,7 @@ Example format:
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-2.5-flash-lite-preview-06-17',
+        model: 'google/gemini-3-flash-preview',
         messages,
         max_tokens: 400,
         temperature: 0.7})
@@ -285,7 +285,7 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-2.5-flash-lite-preview-06-17',
+        model: 'google/gemini-3-flash-preview',
         messages,
         max_tokens: 300,
         temperature: 0.7})
@@ -334,7 +334,7 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-2.5-flash-lite-preview-06-17',
+        model: 'google/gemini-3-flash-preview',
         messages,
         max_tokens: 400,
         temperature: 0.3, // Lower temperature for more consistent translation
@@ -422,7 +422,7 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-2.5-flash-lite-preview-06-17',
+        model: 'google/gemini-3-flash-preview',
         messages,
         max_tokens: 500,
         temperature: 0.5})
