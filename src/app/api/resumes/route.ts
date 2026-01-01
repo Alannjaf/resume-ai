@@ -1,18 +1,24 @@
 import { NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
-import { getCurrentUser, getUserResumes, createResume, checkUserLimits } from '@/lib/db'
+import { getUserResumes, createResume, checkUserLimits } from '@/lib/db'
 import { SectionType } from '@prisma/client'
 
 // GET - List all resumes for the current user
 export async function GET() {
   try {
-    const { userId } = await auth()
+    const { userId: clerkId } = await auth()
     
-    if (!userId) {
+    if (!clerkId) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    const user = await getCurrentUser()
+    // Use a single optimized query to get user and resumes
+    const { prisma } = await import('@/lib/prisma')
+    const user = await prisma.user.findUnique({
+      where: { clerkId },
+      select: { id: true }
+    })
+    
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
@@ -30,13 +36,19 @@ export async function GET() {
 // POST - Create a new resume
 export async function POST(req: Request) {
   try {
-    const { userId } = await auth()
+    const { userId: clerkId } = await auth()
     
-    if (!userId) {
+    if (!clerkId) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    const user = await getCurrentUser()
+    // Get user with single query
+    const { prisma } = await import('@/lib/prisma')
+    const user = await prisma.user.findUnique({
+      where: { clerkId },
+      select: { id: true }
+    })
+    
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 })
     }
@@ -50,7 +62,7 @@ export async function POST(req: Request) {
     }
 
     // Check user limits using Clerk ID
-    const { canCreateResume } = await import('@/lib/db').then(m => m.checkUserLimits(userId))
+    const { canCreateResume } = await import('@/lib/db').then(m => m.checkUserLimits(clerkId))
     if (!canCreateResume) {
       return NextResponse.json({ 
         error: 'Resume limit reached. Please upgrade your plan.' 
@@ -59,7 +71,7 @@ export async function POST(req: Request) {
 
     // Validate template access
     if (template && template !== 'modern') {
-      const limits = await checkUserLimits(userId)
+      const limits = await checkUserLimits(clerkId)
       const availableTemplates = limits.availableTemplates || ['modern']
       if (!availableTemplates.includes(template)) {
         return NextResponse.json({ 

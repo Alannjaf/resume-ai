@@ -17,13 +17,35 @@ export async function getCurrentUser() {
   return user
 }
 
+// Light version for dashboard listing (faster)
 export async function getUserResumes(userId: string) {
+  const resumes = await prisma.resume.findMany({
+    where: { userId },
+    orderBy: { updatedAt: 'desc' },
+    select: {
+      id: true,
+      title: true,
+      createdAt: true,
+      updatedAt: true,
+      personalInfo: true,
+      template: true,
+    },
+  })
+
+  return resumes
+}
+
+// Full version with sections for editing
+export async function getUserResumesWithSections(userId: string) {
   const resumes = await prisma.resume.findMany({
     where: { userId },
     orderBy: { updatedAt: 'desc' },
     include: {
       sections: {
-        orderBy: { order: 'asc' }}}})
+        orderBy: { order: 'asc' }
+      }
+    },
+  })
 
   return resumes
 }
