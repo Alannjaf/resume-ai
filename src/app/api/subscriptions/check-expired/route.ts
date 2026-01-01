@@ -35,7 +35,9 @@ export async function POST() {
     if (expiredSubscriptions.length === 0) {
       return NextResponse.json({ 
         message: 'No expired subscriptions found',
-        processed: 0
+        processed: 0,
+        successful: 0,
+        failed: 0
       })
     }
 

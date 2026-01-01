@@ -120,7 +120,11 @@ export function AdminDashboard() {
       const data = await response.json()
 
       if (response.ok) {
-        toast.success(`Processed ${data.processed} subscriptions. ${data.successful} successful.`)
+        if (data.processed === 0) {
+          toast.success('No expired subscriptions found')
+        } else {
+          toast.success(`Processed ${data.processed} subscriptions. ${data.successful} successful, ${data.failed} failed.`)
+        }
         fetchStats()
         fetchSubscriptionStatus()
       } else {
