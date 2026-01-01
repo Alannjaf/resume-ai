@@ -347,9 +347,11 @@ CRITICAL: Use the real person's name, email, phone, and details from the PDF. Do
           extractedText: 'PDF processed with single API call'
         })
 
-      } catch {
+      } catch (error) {
+        // Return more specific error for debugging
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
         return NextResponse.json(
-          { error: 'Failed to process PDF. Please try again or convert to DOCX format.' },
+          { error: `Failed to process PDF: ${errorMessage}. Please try again or convert to DOCX format.` },
           { status: 400 }
         )
       }
