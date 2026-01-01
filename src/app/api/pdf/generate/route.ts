@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     const hasAccess = limits.availableTemplates?.includes(template) || false;
     
     let buffer: ArrayBuffer;
-    let shouldWatermark = !hasAccess;
+    const shouldWatermark = !hasAccess;
 
     // For downloads, we need additional validation
     if (action === 'download') {
