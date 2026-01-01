@@ -20,6 +20,7 @@ interface FormSectionRendererProps {
   setFormData: (data: ResumeData) => void
   selectedTemplate: string
   setSelectedTemplate: (template: string) => void
+  onPreviewTemplate?: (templateId: string) => void
   summaryTextareaRef: RefObject<HTMLTextAreaElement | null>
   formSections: Array<{ id: string; title: string; icon: string }>
   isAutoSaving: boolean
@@ -40,6 +41,7 @@ export const FormSectionRenderer = forwardRef<FormSectionRendererRef, FormSectio
   setFormData,
   selectedTemplate,
   setSelectedTemplate,
+  onPreviewTemplate,
   summaryTextareaRef,
   queueSave,
   checkPermission
@@ -143,6 +145,7 @@ export const FormSectionRenderer = forwardRef<FormSectionRendererRef, FormSectio
           <TemplateGallery
             selectedTemplate={selectedTemplate}
             onTemplateSelect={setSelectedTemplate}
+            onPreview={onPreviewTemplate}
           />
         )
 

@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Check, Lock } from 'lucide-react'
+import { Check, Lock, Eye } from 'lucide-react'
 import { TemplateThumbnail } from './TemplateThumbnail'
 import { getTierBadgeStyle } from '@/lib/templates'
 import { useLanguage } from '@/contexts/LanguageContext'
@@ -25,13 +25,15 @@ interface TemplatesByTier {
 interface TemplateGalleryProps {
   selectedTemplate: string
   onTemplateSelect: (templateId: string) => void
+  onPreview?: (templateId: string) => void
   className?: string
   allowedTemplates?: string[]
 }
 
 export function TemplateGallery({ 
   selectedTemplate, 
-  onTemplateSelect, 
+  onTemplateSelect,
+  onPreview,
   className = '',
   allowedTemplates 
 }: TemplateGalleryProps) {
@@ -112,12 +114,27 @@ export function TemplateGallery({
               </div>
             )}
             
-            {/* Thumbnail */}
-            <div className="aspect-[3/4] bg-gray-100 rounded-t-lg overflow-hidden">
+            {/* Thumbnail with preview overlay */}
+            <div className="aspect-[3/4] bg-gray-100 rounded-t-lg overflow-hidden relative group/thumb">
               <TemplateThumbnail 
                 templateId={template.id} 
                 className="w-full h-full"
               />
+              {/* Preview button overlay - appears on hover */}
+              {onPreview && (
+                <div className="absolute inset-0 bg-black/0 group-hover/thumb:bg-black/40 transition-all duration-200 flex items-center justify-center opacity-0 group-hover/thumb:opacity-100">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      onPreview(template.id)
+                    }}
+                    className="bg-white text-gray-800 px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 hover:bg-gray-100 transition-colors transform scale-90 group-hover/thumb:scale-100"
+                  >
+                    <Eye className="h-4 w-4" />
+                    <span className="font-medium text-sm">{t('templateGallery.preview')}</span>
+                  </button>
+                </div>
+              )}
             </div>
             
             {/* Template info */}

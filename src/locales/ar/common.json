@@ -442,6 +442,7 @@
     "description": "اختر قالباً يناسب أسلوبك والصناعة التي تعمل بها",
     "loading": "جاري تحميل القوالب...",
     "upgradeToAccess": "قم بالترقية للوصول إلى هذا القالب",
+    "preview": "معاينة",
     "categories": {
       "professional": "مهني",
       "creative": "إبداعي",

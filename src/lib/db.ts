@@ -175,22 +175,21 @@ async function getSystemSettings() {
     })
 
     if (settings) {
-      // Prisma returns JSON fields as parsed objects, but ensure arrays
-      // Cast to string[] since JSON fields are typed as JsonValue
+      // Helper to parse JSON strings or use array directly
+      const parseJsonArray = (value: unknown, fallback: string[]): string[] => {
+        if (Array.isArray(value)) return value as string[]
+        if (typeof value === 'string') {
+          try { return JSON.parse(value) as string[] } catch { return fallback }
+        }
+        return fallback
+      }
+
       return {
         ...settings,
-        freeTemplates: Array.isArray(settings.freeTemplates) 
-          ? (settings.freeTemplates as string[])
-          : ['modern'],
-        basicTemplates: Array.isArray(settings.basicTemplates) 
-          ? (settings.basicTemplates as string[])
-          : ['modern', 'creative'],
-        proTemplates: Array.isArray(settings.proTemplates) 
-          ? (settings.proTemplates as string[])
-          : ['modern', 'creative', 'executive', 'elegant', 'minimalist', 'creative-artistic'],
-        photoUploadPlans: Array.isArray(settings.photoUploadPlans) 
-          ? (settings.photoUploadPlans as string[])
-          : ['BASIC', 'PRO'],
+        freeTemplates: parseJsonArray(settings.freeTemplates, ['modern']),
+        basicTemplates: parseJsonArray(settings.basicTemplates, ['modern', 'creative']),
+        proTemplates: parseJsonArray(settings.proTemplates, ['modern', 'creative', 'executive', 'elegant', 'minimalist', 'creative-artistic', 'developer']),
+        photoUploadPlans: parseJsonArray(settings.photoUploadPlans, ['BASIC', 'PRO']),
       }
     }
   } catch {
@@ -219,7 +218,7 @@ async function getSystemSettings() {
     // Template Access Control
     freeTemplates: ['modern'],
     basicTemplates: ['modern', 'creative'],
-    proTemplates: ['modern', 'creative', 'executive', 'elegant', 'minimalist', 'creative-artistic'],
+    proTemplates: ['modern', 'creative', 'executive', 'elegant', 'minimalist', 'creative-artistic', 'developer'],
     
     // Profile Photo Upload Access Control
     photoUploadPlans: ['BASIC', 'PRO']
@@ -273,22 +272,17 @@ export async function checkUserLimits(clerkUserId: string) {
   const canUploadPhoto = photoUploadPlans.includes(subscription.plan)
   
   // Get available templates for user's plan
+  // systemSettings already has parsed arrays from getSystemSettings()
   let availableTemplates: string[] = []
   switch (subscription.plan) {
     case 'FREE':
-      availableTemplates = Array.isArray(systemSettings.freeTemplates) 
-        ? systemSettings.freeTemplates 
-        : ['modern']
+      availableTemplates = systemSettings.freeTemplates
       break
     case 'BASIC':
-      availableTemplates = Array.isArray(systemSettings.basicTemplates) 
-        ? systemSettings.basicTemplates 
-        : ['modern', 'creative']
+      availableTemplates = systemSettings.basicTemplates
       break
     case 'PRO':
-      availableTemplates = Array.isArray(systemSettings.proTemplates) 
-        ? systemSettings.proTemplates 
-        : ['modern', 'creative', 'executive', 'elegant', 'minimalist', 'creative-artistic']
+      availableTemplates = systemSettings.proTemplates
       break
   }
 

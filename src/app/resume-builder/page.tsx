@@ -509,6 +509,10 @@ function ResumeBuilderContent() {
                 setFormData={setFormData}
                 selectedTemplate={selectedTemplate}
                 setSelectedTemplate={setSelectedTemplate}
+                onPreviewTemplate={(templateId) => {
+                  setSelectedTemplate(templateId)
+                  setShowPreview(true)
+                }}
                 summaryTextareaRef={summaryTextareaRef}
                 formSections={formSections}
                 isAutoSaving={isAutoSaving}

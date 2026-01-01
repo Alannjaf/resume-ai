@@ -476,6 +476,7 @@
     "description": "Select a template that best fits your style and industry",
     "loading": "Loading templates...",
     "upgradeToAccess": "Upgrade to access this template",
+    "preview": "Preview",
     "categories": {
       "professional": "Professional",
       "creative": "Creative",
