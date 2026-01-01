@@ -159,14 +159,17 @@ async function getSystemSettings() {
         maxFreeAIUsage: true,
         maxFreeExports: true,
         maxFreeImports: true,
+        maxFreeATSChecks: true,
         maxBasicResumes: true,
         maxBasicAIUsage: true,
         maxBasicExports: true,
         maxBasicImports: true,
+        maxBasicATSChecks: true,
         maxProResumes: true,
         maxProAIUsage: true,
         maxProExports: true,
         maxProImports: true,
+        maxProATSChecks: true,
         freeTemplates: true,
         basicTemplates: true,
         proTemplates: true,
@@ -202,18 +205,21 @@ async function getSystemSettings() {
     maxFreeAIUsage: 10,
     maxFreeExports: 0,
     maxFreeImports: 0,
+    maxFreeATSChecks: 0,
     
     // Basic Plan Limits
     maxBasicResumes: 5,
     maxBasicAIUsage: 100,
     maxBasicExports: 10,
     maxBasicImports: 0,
+    maxBasicATSChecks: 5,
     
     // Pro Plan Limits
     maxProResumes: -1,
     maxProAIUsage: -1,
     maxProExports: -1,
     maxProImports: -1,
+    maxProATSChecks: -1,
     
     // Template Access Control
     freeTemplates: ['modern'],
@@ -246,19 +252,22 @@ export async function checkUserLimits(clerkUserId: string) {
       resumes: systemSettings.maxFreeResumes ?? 10, 
       ai: systemSettings.maxFreeAIUsage ?? 100, 
       exports: systemSettings.maxFreeExports ?? 0,
-      imports: systemSettings.maxFreeImports ?? 1
+      imports: systemSettings.maxFreeImports ?? 1,
+      atsChecks: systemSettings.maxFreeATSChecks ?? 0
     },
     BASIC: { 
       resumes: systemSettings.maxBasicResumes ?? 50, 
       ai: systemSettings.maxBasicAIUsage ?? 500, 
       exports: systemSettings.maxBasicExports ?? 100,
-      imports: systemSettings.maxBasicImports ?? 5
+      imports: systemSettings.maxBasicImports ?? 5,
+      atsChecks: systemSettings.maxBasicATSChecks ?? 5
     },
     PRO: { 
       resumes: systemSettings.maxProResumes ?? -1, 
       ai: systemSettings.maxProAIUsage ?? -1, 
       exports: systemSettings.maxProExports ?? -1,
-      imports: systemSettings.maxProImports ?? -1
+      imports: systemSettings.maxProImports ?? -1,
+      atsChecks: systemSettings.maxProATSChecks ?? -1
     }, // -1 means unlimited
   }
 
@@ -291,7 +300,11 @@ export async function checkUserLimits(clerkUserId: string) {
     canUseAI: userLimits.ai === -1 || subscription.aiUsageCount < userLimits.ai,
     canExport: userLimits.exports === -1 || (subscription.exportCount || 0) < userLimits.exports,
     canImport: userLimits.imports === -1 || (subscription.importCount || 0) < userLimits.imports,
+    canUseATS: userLimits.atsChecks === -1 || (subscription.atsUsageCount || 0) < userLimits.atsChecks,
     canUploadPhoto,
     availableTemplates,
-    subscription}
+    subscription,
+    atsLimit: userLimits.atsChecks,
+    atsUsed: subscription.atsUsageCount || 0
+  }
 }

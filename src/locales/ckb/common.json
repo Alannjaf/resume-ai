@@ -555,7 +555,9 @@
         "translating": "وەرگێڕان بۆ ئینگلیزی...",
         "previous": "پێشوو",
         "next": "دواتر",
-        "viewResume": "ڕیزیومێ ببینە"
+        "viewResume": "ڕیزیومێ ببینە",
+        "ats": "ATS",
+        "atsOptimization": "باشترکردنی ATS - پشکنینی گونجاوی ڕیزیومە"
       },
       "autoTranslate": {
         "button": "وەرگێڕانی خۆکار بۆ ئینگلیزی",

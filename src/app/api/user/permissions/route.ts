@@ -18,6 +18,7 @@ export async function GET() {
       canExport: limits.canExport,
       canImport: limits.canImport,
       canUploadPhoto: limits.canUploadPhoto,
+      canUseATS: limits.canUseATS,
       availableTemplates: limits.availableTemplates,
       canAccessProTemplates: (limits.availableTemplates?.length ?? 0) > 2, // More than basic templates
       canExportToPDF: limits.canExport

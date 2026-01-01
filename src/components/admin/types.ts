@@ -35,14 +35,17 @@ export interface SystemSettings {
   maxFreeAIUsage: number
   maxFreeExports: number
   maxFreeImports: number
+  maxFreeATSChecks: number
   maxBasicResumes: number
   maxBasicAIUsage: number
   maxBasicExports: number
   maxBasicImports: number
+  maxBasicATSChecks: number
   maxProResumes: number
   maxProAIUsage: number
   maxProExports: number
   maxProImports: number
+  maxProATSChecks: number
   freeTemplates: string[]
   basicTemplates: string[]
   proTemplates: string[]

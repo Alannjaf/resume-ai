@@ -43,6 +43,7 @@ export function AdminSystemSettings({
           aiUsage={settings.maxFreeAIUsage}
           exports={settings.maxFreeExports}
           imports={settings.maxFreeImports}
+          atsChecks={settings.maxFreeATSChecks}
           onChange={(field, value) => setSettings({ ...settings, [field]: value })}
           fieldPrefix="maxFree"
         />
@@ -53,6 +54,7 @@ export function AdminSystemSettings({
           aiUsage={settings.maxBasicAIUsage}
           exports={settings.maxBasicExports}
           imports={settings.maxBasicImports}
+          atsChecks={settings.maxBasicATSChecks}
           onChange={(field, value) => setSettings({ ...settings, [field]: value })}
           fieldPrefix="maxBasic"
         />
@@ -63,6 +65,7 @@ export function AdminSystemSettings({
           aiUsage={settings.maxProAIUsage}
           exports={settings.maxProExports}
           imports={settings.maxProImports}
+          atsChecks={settings.maxProATSChecks}
           onChange={(field, value) => setSettings({ ...settings, [field]: value })}
           fieldPrefix="maxPro"
           allowUnlimited
@@ -106,6 +109,7 @@ interface PlanLimitsSectionProps {
   aiUsage: number
   exports: number
   imports: number
+  atsChecks: number
   onChange: (field: string, value: number) => void
   fieldPrefix: string
   allowUnlimited?: boolean
@@ -117,6 +121,7 @@ function PlanLimitsSection({
   aiUsage,
   exports,
   imports,
+  atsChecks,
   onChange,
   fieldPrefix,
   allowUnlimited
@@ -127,7 +132,7 @@ function PlanLimitsSection({
   return (
     <div>
       <h3 className="text-lg font-medium text-gray-900 mb-4 pb-2 border-b">{title}</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <div>
           <label className="block text-sm font-medium mb-2">Max Resumes{suffix}</label>
           <Input
@@ -162,6 +167,15 @@ function PlanLimitsSection({
             min={min}
             value={imports}
             onChange={(e) => onChange(`${fieldPrefix}Imports`, parseInt(e.target.value) || 0)}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-2">Max ATS Checks{suffix}</label>
+          <Input
+            type="number"
+            min={min}
+            value={atsChecks}
+            onChange={(e) => onChange(`${fieldPrefix}ATSChecks`, parseInt(e.target.value) || 0)}
           />
         </div>
       </div>

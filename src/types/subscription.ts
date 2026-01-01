@@ -10,6 +10,8 @@ export interface SubscriptionData {
   aiUsageLimit: number;
   exportCount: number;
   exportLimit: number;
+  atsUsageCount: number;
+  atsUsageLimit: number;
   isActive: boolean;
 }
 
@@ -19,6 +21,7 @@ export interface SubscriptionPermissions {
   canAccessProTemplates: boolean;
   canExportToPDF: boolean;
   canUseAI: boolean;
+  canUseATS: boolean;
 }
 
 export interface SubscriptionContextType {

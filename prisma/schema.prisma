@@ -74,6 +74,7 @@ model Subscription {
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @updatedAt
   importCount   Int                @default(0)
+  atsUsageCount Int                @default(0)
   user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
@@ -81,27 +82,30 @@ model Subscription {
 }
 
 model SystemSettings {
-  id               Int      @id @default(autoincrement())
-  maxFreeResumes   Int      @default(10)
-  maxFreeAIUsage   Int      @default(100)
-  maxFreeExports   Int      @default(20)
-  maxBasicResumes  Int      @default(50)
-  maxBasicAIUsage  Int      @default(500)
-  maxBasicExports  Int      @default(100)
-  maxProResumes    Int      @default(-1)
-  maxProAIUsage    Int      @default(-1)
-  maxProExports    Int      @default(-1)
-  basicPlanPrice   Int      @default(5000)
-  proPlanPrice     Int      @default(10000)
-  maintenanceMode  Boolean  @default(false)
-  updatedAt        DateTime @default(now()) @updatedAt
-  maxBasicImports  Int      @default(0)
-  maxFreeImports   Int      @default(0)
-  maxProImports    Int      @default(-1)
-  basicTemplates   Json     @default("[\"modern\", \"creative\"]")
-  freeTemplates    Json     @default("[\"modern\"]")
-  photoUploadPlans Json     @default("[\"BASIC\", \"PRO\"]")
-  proTemplates     Json     @default("[\"modern\", \"creative\", \"executive\"]")
+  id                 Int      @id @default(autoincrement())
+  maxFreeResumes     Int      @default(10)
+  maxFreeAIUsage     Int      @default(100)
+  maxFreeExports     Int      @default(20)
+  maxBasicResumes    Int      @default(50)
+  maxBasicAIUsage    Int      @default(500)
+  maxBasicExports    Int      @default(100)
+  maxProResumes      Int      @default(-1)
+  maxProAIUsage      Int      @default(-1)
+  maxProExports      Int      @default(-1)
+  basicPlanPrice     Int      @default(5000)
+  proPlanPrice       Int      @default(10000)
+  maintenanceMode    Boolean  @default(false)
+  updatedAt          DateTime @default(now()) @updatedAt
+  maxBasicImports    Int      @default(0)
+  maxFreeImports     Int      @default(0)
+  maxProImports      Int      @default(-1)
+  basicTemplates     Json     @default("[\"modern\", \"creative\"]")
+  freeTemplates      Json     @default("[\"modern\"]")
+  photoUploadPlans   Json     @default("[\"BASIC\", \"PRO\"]")
+  proTemplates       Json     @default("[\"modern\", \"creative\", \"executive\"]")
+  maxFreeATSChecks   Int      @default(0)
+  maxBasicATSChecks  Int      @default(5)
+  maxProATSChecks    Int      @default(-1)
 }
 
 enum UserRole {

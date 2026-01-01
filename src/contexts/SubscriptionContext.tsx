@@ -61,6 +61,8 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
         aiUsageLimit: subscriptionData.aiUsageLimit || 0,
         exportCount: subscriptionData.exportCount || 0,
         exportLimit: subscriptionData.exportLimit || 0,
+        atsUsageCount: subscriptionData.atsUsageCount || 0,
+        atsUsageLimit: subscriptionData.atsUsageLimit || 0,
         isActive: true};
 
       // Use permissions directly from API (dynamically configured by admin)
@@ -69,7 +71,8 @@ export const SubscriptionProvider: React.FC<SubscriptionProviderProps> = ({ chil
         canUploadPhoto: permissionsData.canUploadPhoto || false,
         canAccessProTemplates: permissionsData.canAccessProTemplates || false,
         canExportToPDF: permissionsData.canExportToPDF || false,
-        canUseAI: permissionsData.canUseAI || false};
+        canUseAI: permissionsData.canUseAI || false,
+        canUseATS: permissionsData.canUseATS || false};
 
       setSubscription(subscription);
       setPermissions(permissions);

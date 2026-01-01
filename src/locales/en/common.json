@@ -589,7 +589,9 @@
         "translating": "Translating to English...",
         "previous": "Previous",
         "next": "Next",
-        "viewResume": "View Resume"
+        "viewResume": "View Resume",
+        "ats": "ATS",
+        "atsOptimization": "ATS Optimization - Check resume compatibility"
       },
       "autoTranslate": {
         "button": "Auto-translate to English",

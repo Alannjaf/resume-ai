@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { AppHeader } from '@/components/shared/AppHeader'
-import { ArrowLeft, Save, Eye, Keyboard, ArrowRight } from 'lucide-react'
+import { ArrowLeft, Save, Eye, Keyboard, ArrowRight, Target } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { NavigationIndicator } from '@/components/ui/navigation-indicator'
 import { KeyboardShortcutsHelp } from '@/components/ui/keyboard-shortcuts-help'
@@ -31,6 +31,10 @@ const PreviewModal = dynamic(() => import('@/components/resume-builder/PreviewMo
   )
 })
 
+const ATSOptimization = dynamic(() => import('@/components/resume-builder/ATSOptimization').then(mod => ({ default: mod.ATSOptimization })), {
+  ssr: false
+})
+
 // Form sections configuration
 const getFormSections = (t: (key: string) => string) => [
   { id: 'personal', title: t('pages.resumeBuilder.sections.personalInfo'), icon: '👤' },
@@ -48,11 +52,12 @@ function ResumeBuilderContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { t } = useLanguage()
-  const { checkPermission } = useSubscription()
+  const { checkPermission, subscription } = useSubscription()
   
   // State management
   const [currentSection, setCurrentSection] = useState(0)
   const [showPreview, setShowPreview] = useState(false)
+  const [showATS, setShowATS] = useState(false)
   const [selectedTemplate, setSelectedTemplate] = useState('modern')
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -423,6 +428,15 @@ function ResumeBuilderContent() {
               <Button 
                 variant="outline" 
                 size="sm"
+                onClick={() => setShowATS(true)}
+                title={t('pages.resumeBuilder.actions.atsOptimization')}
+              >
+                <Target className="h-4 w-4 mr-2" />
+                {t('pages.resumeBuilder.actions.ats')}
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
                 onClick={() => setShowPreview(true)}
               >
                 <Eye className="h-4 w-4 mr-2" />
@@ -587,6 +601,15 @@ function ResumeBuilderContent() {
         onClose={() => setShowPreview(false)}
         data={formData}
         template={selectedTemplate}
+      />
+
+      <ATSOptimization
+        isOpen={showATS}
+        onClose={() => setShowATS(false)}
+        resumeData={formData}
+        canUseATS={checkPermission('canUseATS')}
+        atsLimit={subscription?.atsUsageLimit ?? 0}
+        atsUsed={subscription?.atsUsageCount ?? 0}
       />
 
       <KeyboardShortcutsHelp

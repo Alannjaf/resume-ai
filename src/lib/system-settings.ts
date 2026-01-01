@@ -13,14 +13,17 @@ export async function getSystemSettings() {
           maxFreeAIUsage: 100,
           maxFreeExports: 20,
           maxFreeImports: 0,
+          maxFreeATSChecks: 0,
           maxBasicResumes: 50,
           maxBasicAIUsage: 500,
           maxBasicExports: 100,
           maxBasicImports: 0,
+          maxBasicATSChecks: 5,
           maxProResumes: -1,
           maxProAIUsage: -1,
           maxProExports: -1,
           maxProImports: -1,
+          maxProATSChecks: -1,
           freeTemplates: JSON.stringify(['modern']),
           basicTemplates: JSON.stringify(['modern', 'creative']),
           proTemplates: JSON.stringify(['modern', 'creative', 'executive']),
@@ -42,14 +45,17 @@ export async function getSystemSettings() {
       maxFreeAIUsage: 100,
       maxFreeExports: 20,
       maxFreeImports: 0,
+      maxFreeATSChecks: 0,
       maxBasicResumes: 50,
       maxBasicAIUsage: 500,
       maxBasicExports: 100,
       maxBasicImports: 0,
+      maxBasicATSChecks: 5,
       maxProResumes: -1,
       maxProAIUsage: -1,
       maxProExports: -1,
       maxProImports: -1,
+      maxProATSChecks: -1,
       freeTemplates: JSON.stringify(['modern']),
       basicTemplates: JSON.stringify(['modern', 'creative']),
       proTemplates: JSON.stringify(['modern', 'creative', 'executive']),
@@ -67,14 +73,17 @@ interface SystemSettingsUpdateData {
   maxFreeAIUsage: number
   maxFreeExports: number
   maxFreeImports: number
+  maxFreeATSChecks: number
   maxBasicResumes: number
   maxBasicAIUsage: number
   maxBasicExports: number
   maxBasicImports: number
+  maxBasicATSChecks: number
   maxProResumes: number
   maxProAIUsage: number
   maxProExports: number
   maxProImports: number
+  maxProATSChecks: number
   freeTemplates: string[]
   basicTemplates: string[]
   proTemplates: string[]
@@ -98,14 +107,17 @@ export async function updateSystemSettings(data: SystemSettingsUpdateData) {
           maxFreeAIUsage: data.maxFreeAIUsage,
           maxFreeExports: data.maxFreeExports,
           maxFreeImports: data.maxFreeImports,
+          maxFreeATSChecks: data.maxFreeATSChecks,
           maxBasicResumes: data.maxBasicResumes,
           maxBasicAIUsage: data.maxBasicAIUsage,
           maxBasicExports: data.maxBasicExports,
           maxBasicImports: data.maxBasicImports,
+          maxBasicATSChecks: data.maxBasicATSChecks,
           maxProResumes: data.maxProResumes,
           maxProAIUsage: data.maxProAIUsage,
           maxProExports: data.maxProExports,
           maxProImports: data.maxProImports,
+          maxProATSChecks: data.maxProATSChecks,
           freeTemplates: JSON.stringify(data.freeTemplates),
           basicTemplates: JSON.stringify(data.basicTemplates),
           proTemplates: JSON.stringify(data.proTemplates),
@@ -123,14 +135,17 @@ export async function updateSystemSettings(data: SystemSettingsUpdateData) {
           maxFreeAIUsage: data.maxFreeAIUsage,
           maxFreeExports: data.maxFreeExports,
           maxFreeImports: data.maxFreeImports,
+          maxFreeATSChecks: data.maxFreeATSChecks,
           maxBasicResumes: data.maxBasicResumes,
           maxBasicAIUsage: data.maxBasicAIUsage,
           maxBasicExports: data.maxBasicExports,
           maxBasicImports: data.maxBasicImports,
+          maxBasicATSChecks: data.maxBasicATSChecks,
           maxProResumes: data.maxProResumes,
           maxProAIUsage: data.maxProAIUsage,
           maxProExports: data.maxProExports,
           maxProImports: data.maxProImports,
+          maxProATSChecks: data.maxProATSChecks,
           freeTemplates: JSON.stringify(data.freeTemplates),
           basicTemplates: JSON.stringify(data.basicTemplates),
           proTemplates: JSON.stringify(data.proTemplates),

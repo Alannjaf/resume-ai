@@ -433,4 +433,196 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
       throw new Error('Failed to translate and enhance content')
     }
   }
+
+  static async analyzeATSScore(resumeData: {
+    personal: { fullName?: string; email?: string; phone?: string; jobTitle?: string };
+    summary?: string;
+    experience?: Array<{ title?: string; company?: string; description?: string }>;
+    education?: Array<{ degree?: string; institution?: string }>;
+    skills?: Array<{ name?: string }>;
+  }): Promise<{
+    score: number;
+    issues: Array<{ type: string; severity: 'high' | 'medium' | 'low'; message: string; suggestion: string }>;
+    strengths: string[];
+    suggestions: string[];
+  }> {
+    const resumeText = `
+Name: ${resumeData.personal?.fullName || 'Not provided'}
+Email: ${resumeData.personal?.email || 'Not provided'}
+Phone: ${resumeData.personal?.phone || 'Not provided'}
+Job Title: ${resumeData.personal?.jobTitle || 'Not provided'}
+
+Summary: ${resumeData.summary || 'Not provided'}
+
+Experience:
+${resumeData.experience?.map(exp => `- ${exp.title || 'Unknown'} at ${exp.company || 'Unknown'}: ${exp.description || 'No description'}`).join('\n') || 'No experience listed'}
+
+Education:
+${resumeData.education?.map(edu => `- ${edu.degree || 'Unknown'} from ${edu.institution || 'Unknown'}`).join('\n') || 'No education listed'}
+
+Skills:
+${resumeData.skills?.map(skill => skill.name).filter(Boolean).join(', ') || 'No skills listed'}
+`
+
+    const messages = [
+      {
+        role: 'system' as const,
+        content: `You are an ATS (Applicant Tracking System) expert who analyzes resumes for ATS compatibility. You must respond in valid JSON format only.`
+      },
+      {
+        role: 'user' as const,
+        content: `Analyze this resume for ATS compatibility and provide a detailed assessment:
+
+${resumeText}
+
+Respond with a JSON object containing:
+{
+  "score": <number 0-100>,
+  "issues": [
+    {
+      "type": "<format|content|keywords|structure>",
+      "severity": "<high|medium|low>",
+      "message": "<what the issue is>",
+      "suggestion": "<how to fix it>"
+    }
+  ],
+  "strengths": ["<list of positive ATS-friendly aspects>"],
+  "suggestions": ["<top 3-5 improvement suggestions>"]
+}
+
+Evaluation criteria:
+1. Contact information completeness (10 points)
+2. Professional summary presence and quality (15 points)
+3. Work experience with quantifiable achievements (25 points)
+4. Skills section with relevant keywords (20 points)
+5. Education section completeness (10 points)
+6. Overall structure and formatting (10 points)
+7. Use of action verbs and professional language (10 points)
+
+IMPORTANT: Return ONLY the JSON object, no markdown formatting, no code blocks, no explanations.`
+      }
+    ]
+
+    try {
+      const completion = await openai.chat.completions.create({
+        model: 'google/gemini-3-flash-preview',
+        messages,
+        max_tokens: 1000,
+        temperature: 0.3
+      })
+
+      const responseText = completion.choices[0]?.message?.content?.trim() || ''
+      
+      // Clean up the response in case it has markdown code blocks
+      const cleanedResponse = responseText
+        .replace(/```json\n?/g, '')
+        .replace(/```\n?/g, '')
+        .trim()
+      
+      const result = JSON.parse(cleanedResponse)
+      return {
+        score: Math.max(0, Math.min(100, result.score || 0)),
+        issues: result.issues || [],
+        strengths: result.strengths || [],
+        suggestions: result.suggestions || []
+      }
+    } catch {
+      throw new Error('Failed to analyze ATS score')
+    }
+  }
+
+  static async matchKeywords(
+    resumeData: {
+      personal: { fullName?: string; jobTitle?: string };
+      summary?: string;
+      experience?: Array<{ title?: string; description?: string }>;
+      skills?: Array<{ name?: string }>;
+    },
+    jobDescription: string
+  ): Promise<{
+    matchScore: number;
+    matchedKeywords: Array<{ keyword: string; found: boolean; importance: 'critical' | 'important' | 'nice-to-have' }>;
+    missingKeywords: Array<{ keyword: string; importance: 'critical' | 'important' | 'nice-to-have'; suggestion: string }>;
+    suggestions: string[];
+  }> {
+    const resumeText = `
+Job Title: ${resumeData.personal?.jobTitle || 'Not specified'}
+Summary: ${resumeData.summary || ''}
+Experience: ${resumeData.experience?.map(exp => `${exp.title}: ${exp.description}`).join('; ') || ''}
+Skills: ${resumeData.skills?.map(skill => skill.name).filter(Boolean).join(', ') || ''}
+`
+
+    const messages = [
+      {
+        role: 'system' as const,
+        content: `You are an ATS keyword matching expert who compares resumes against job descriptions. You must respond in valid JSON format only.`
+      },
+      {
+        role: 'user' as const,
+        content: `Compare this resume against the job description and identify keyword matches:
+
+RESUME:
+${resumeText}
+
+JOB DESCRIPTION:
+${jobDescription}
+
+Respond with a JSON object containing:
+{
+  "matchScore": <number 0-100>,
+  "matchedKeywords": [
+    {
+      "keyword": "<keyword from job description>",
+      "found": true,
+      "importance": "<critical|important|nice-to-have>"
+    }
+  ],
+  "missingKeywords": [
+    {
+      "keyword": "<missing keyword>",
+      "importance": "<critical|important|nice-to-have>",
+      "suggestion": "<how to incorporate this keyword>"
+    }
+  ],
+  "suggestions": ["<top 3-5 suggestions to improve keyword match>"]
+}
+
+Guidelines:
+1. Extract key skills, technologies, qualifications, and requirements from the job description
+2. Check if each keyword exists in the resume (exact or semantic match)
+3. Rate importance: critical (required qualifications), important (preferred), nice-to-have (bonus)
+4. Calculate match score based on how many critical/important keywords are matched
+5. Provide actionable suggestions for missing keywords
+
+IMPORTANT: Return ONLY the JSON object, no markdown formatting, no code blocks, no explanations.`
+      }
+    ]
+
+    try {
+      const completion = await openai.chat.completions.create({
+        model: 'google/gemini-3-flash-preview',
+        messages,
+        max_tokens: 1500,
+        temperature: 0.3
+      })
+
+      const responseText = completion.choices[0]?.message?.content?.trim() || ''
+      
+      // Clean up the response in case it has markdown code blocks
+      const cleanedResponse = responseText
+        .replace(/```json\n?/g, '')
+        .replace(/```\n?/g, '')
+        .trim()
+      
+      const result = JSON.parse(cleanedResponse)
+      return {
+        matchScore: Math.max(0, Math.min(100, result.matchScore || 0)),
+        matchedKeywords: result.matchedKeywords || [],
+        missingKeywords: result.missingKeywords || [],
+        suggestions: result.suggestions || []
+      }
+    } catch {
+      throw new Error('Failed to match keywords')
+    }
+  }
 }

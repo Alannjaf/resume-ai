@@ -16,7 +16,8 @@ export async function GET() {
             resumeCount: true,
             aiUsageCount: true,
             exportCount: true,
-            importCount: true
+            importCount: true,
+            atsUsageCount: true
           }
         },
         _count: {

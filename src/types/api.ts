@@ -34,6 +34,7 @@ export interface DatabaseSubscription {
   aiUsageCount: number
   exportCount: number
   importCount: number
+  atsUsageCount: number
 }
 
 export interface UserWithSubscription extends DatabaseUser {
@@ -44,6 +45,7 @@ export interface UserWithSubscription extends DatabaseUser {
     aiUsageCount: number
     exportCount: number
     importCount: number
+    atsUsageCount: number
   } | null
   _count?: {
     resumes: number
@@ -108,14 +110,17 @@ export interface SystemSettings {
   maxFreeAIUsage: number
   maxFreeExports: number
   maxFreeImports: number
+  maxFreeATSChecks: number
   maxBasicResumes: number
   maxBasicAIUsage: number
   maxBasicExports: number
   maxBasicImports: number
+  maxBasicATSChecks: number
   maxProResumes: number
   maxProAIUsage: number
   maxProExports: number
   maxProImports: number
+  maxProATSChecks: number
   basicPlanPrice?: number
   proPlanPrice?: number
 }
