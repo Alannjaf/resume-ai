@@ -7,6 +7,9 @@ import { ElegantProfessionalTemplate } from '../components/resume-pdf/ElegantPro
 import { MinimalistModernTemplate } from '../components/resume-pdf/MinimalistModernTemplate';
 import { CreativeArtisticTemplate } from '../components/resume-pdf/CreativeArtisticTemplate';
 import { DeveloperTemplate } from '../components/resume-pdf/DeveloperTemplate';
+import { CorporateProfessionalTemplate } from '../components/resume-pdf/CorporateProfessionalTemplate';
+import { CreativeModernTemplate } from '../components/resume-pdf/CreativeModernTemplate';
+import { ClassicTraditionalTemplate } from '../components/resume-pdf/ClassicTraditionalTemplate';
 
 export const getTemplate = (template: string, data: ResumeData) => {
   // Note: watermarking is now handled at the API level using pdf-lib
@@ -25,6 +28,12 @@ export const getTemplate = (template: string, data: ResumeData) => {
       return <CreativeArtisticTemplate data={data} />;
     case 'developer':
       return <DeveloperTemplate data={data} />;
+    case 'corporate':
+      return <CorporateProfessionalTemplate data={data} />;
+    case 'creative-modern':
+      return <CreativeModernTemplate data={data} />;
+    case 'classic':
+      return <ClassicTraditionalTemplate data={data} />;
     case 'modern':
     default:
       return <EnhancedModernTemplate data={data} />;
