@@ -435,10 +435,10 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
   }
 
   static async analyzeATSScore(resumeData: {
-    personal: { fullName?: string; email?: string; phone?: string; jobTitle?: string };
+    personal: { fullName?: string; email?: string; phone?: string; title?: string };
     summary?: string;
-    experience?: Array<{ title?: string; company?: string; description?: string }>;
-    education?: Array<{ degree?: string; institution?: string }>;
+    experience?: Array<{ jobTitle?: string; company?: string; description?: string; startDate?: string; endDate?: string; current?: boolean }>;
+    education?: Array<{ degree?: string; field?: string; school?: string }>;
     skills?: Array<{ name?: string }>;
   }): Promise<{
     score: number;
@@ -446,19 +446,43 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
     strengths: string[];
     suggestions: string[];
   }> {
+    // Helper to strip HTML tags and convert to plain text
+    const stripHtml = (html?: string): string => {
+      if (!html) return ''
+      return html
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<\/p>/gi, '\n')
+        .replace(/<\/li>/gi, '\n')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/\n\s*\n/g, '\n')
+        .trim()
+    }
+
+    // Helper to format date range for experience
+    const formatDateRange = (startDate?: string, endDate?: string, current?: boolean): string => {
+      if (!startDate) return ''
+      const start = startDate
+      const end = current ? 'Present' : (endDate || 'Present')
+      return ` (${start} - ${end})`
+    }
+
     const resumeText = `
 Name: ${resumeData.personal?.fullName || 'Not provided'}
 Email: ${resumeData.personal?.email || 'Not provided'}
 Phone: ${resumeData.personal?.phone || 'Not provided'}
-Job Title: ${resumeData.personal?.jobTitle || 'Not provided'}
+Job Title: ${resumeData.personal?.title || 'Not provided'}
 
-Summary: ${resumeData.summary || 'Not provided'}
+Summary: ${stripHtml(resumeData.summary) || 'Not provided'}
 
 Experience:
-${resumeData.experience?.map(exp => `- ${exp.title || 'Unknown'} at ${exp.company || 'Unknown'}: ${exp.description || 'No description'}`).join('\n') || 'No experience listed'}
+${resumeData.experience?.length ? resumeData.experience.map(exp => `- ${exp.jobTitle || 'No title'} at ${exp.company || 'No company'}${formatDateRange(exp.startDate, exp.endDate, exp.current)}: ${stripHtml(exp.description) || 'No description'}`).join('\n') : 'No experience listed'}
 
 Education:
-${resumeData.education?.map(edu => `- ${edu.degree || 'Unknown'} from ${edu.institution || 'Unknown'}`).join('\n') || 'No education listed'}
+${resumeData.education?.length ? resumeData.education.map(edu => `- ${edu.degree || 'No degree'}${edu.field ? ` in ${edu.field}` : ''} from ${edu.school || 'No institution'}`).join('\n') : 'No education listed'}
 
 Skills:
 ${resumeData.skills?.map(skill => skill.name).filter(Boolean).join(', ') || 'No skills listed'}
@@ -533,9 +557,9 @@ IMPORTANT: Return ONLY the JSON object, no markdown formatting, no code blocks, 
 
   static async matchKeywords(
     resumeData: {
-      personal: { fullName?: string; jobTitle?: string };
+      personal: { fullName?: string; title?: string };
       summary?: string;
-      experience?: Array<{ title?: string; description?: string }>;
+      experience?: Array<{ jobTitle?: string; description?: string }>;
       skills?: Array<{ name?: string }>;
     },
     jobDescription: string
@@ -545,10 +569,26 @@ IMPORTANT: Return ONLY the JSON object, no markdown formatting, no code blocks, 
     missingKeywords: Array<{ keyword: string; importance: 'critical' | 'important' | 'nice-to-have'; suggestion: string }>;
     suggestions: string[];
   }> {
+    // Helper to strip HTML tags and convert to plain text
+    const stripHtml = (html?: string): string => {
+      if (!html) return ''
+      return html
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<\/p>/gi, '\n')
+        .replace(/<\/li>/gi, '\n')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/\n\s*\n/g, '\n')
+        .trim()
+    }
+
     const resumeText = `
-Job Title: ${resumeData.personal?.jobTitle || 'Not specified'}
-Summary: ${resumeData.summary || ''}
-Experience: ${resumeData.experience?.map(exp => `${exp.title}: ${exp.description}`).join('; ') || ''}
+Job Title: ${resumeData.personal?.title || 'Not specified'}
+Summary: ${stripHtml(resumeData.summary) || ''}
+Experience: ${resumeData.experience?.map(exp => `${exp.jobTitle}: ${stripHtml(exp.description)}`).join('; ') || ''}
 Skills: ${resumeData.skills?.map(skill => skill.name).filter(Boolean).join(', ') || ''}
 `
 
