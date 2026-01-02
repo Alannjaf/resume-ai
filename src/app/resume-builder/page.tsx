@@ -610,6 +610,10 @@ function ResumeBuilderContent() {
         canUseATS={checkPermission('canUseATS')}
         atsLimit={subscription?.atsUsageLimit ?? 0}
         atsUsed={subscription?.atsUsageCount ?? 0}
+        onNavigateToSection={(sectionIndex) => {
+          setShowATS(false)
+          handleSectionChange(sectionIndex)
+        }}
       />
 
       <KeyboardShortcutsHelp

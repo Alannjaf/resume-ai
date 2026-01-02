@@ -2,9 +2,24 @@
 
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { X, Target, FileSearch, CheckCircle, AlertCircle, AlertTriangle, Loader2, Crown } from 'lucide-react'
+import { X, Target, FileSearch, CheckCircle, AlertCircle, AlertTriangle, Loader2, Crown, ArrowRight } from 'lucide-react'
 import { ResumeData } from '@/types/resume'
 import toast from 'react-hot-toast'
+
+type SectionType = 'personal' | 'summary' | 'experience' | 'education' | 'skills' | 'languages' | 'projects' | 'certifications' | 'general'
+
+// Map section names to form section indices
+const SECTION_INDEX_MAP: Record<SectionType, number> = {
+  personal: 0,
+  summary: 1,
+  experience: 2,
+  education: 3,
+  skills: 4,
+  languages: 5,
+  projects: 6,
+  certifications: 7,
+  general: 0 // Default to personal for general issues
+}
 
 interface ATSOptimizationProps {
   isOpen: boolean
@@ -13,11 +28,12 @@ interface ATSOptimizationProps {
   canUseATS: boolean
   atsLimit: number
   atsUsed: number
+  onNavigateToSection?: (sectionIndex: number) => void
 }
 
 interface ATSScoreResult {
   score: number
-  issues: Array<{ type: string; severity: 'high' | 'medium' | 'low'; message: string; suggestion: string }>
+  issues: Array<{ type: string; severity: 'high' | 'medium' | 'low'; message: string; suggestion: string; section?: SectionType }>
   strengths: string[]
   suggestions: string[]
   usage: { used: number; limit: number }
@@ -26,7 +42,7 @@ interface ATSScoreResult {
 interface KeywordMatchResult {
   matchScore: number
   matchedKeywords: Array<{ keyword: string; found: boolean; importance: 'critical' | 'important' | 'nice-to-have' }>
-  missingKeywords: Array<{ keyword: string; importance: 'critical' | 'important' | 'nice-to-have'; suggestion: string }>
+  missingKeywords: Array<{ keyword: string; importance: 'critical' | 'important' | 'nice-to-have'; suggestion: string; section?: SectionType }>
   suggestions: string[]
   usage: { used: number; limit: number }
 }
@@ -37,7 +53,8 @@ export function ATSOptimization({
   resumeData,
   canUseATS,
   atsLimit,
-  atsUsed
+  atsUsed,
+  onNavigateToSection
 }: ATSOptimizationProps) {
   const [activeTab, setActiveTab] = useState<'score' | 'keywords'>('score')
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -230,6 +247,8 @@ export function ATSOptimization({
               getScoreColor={getScoreColor}
               getScoreBgColor={getScoreBgColor}
               getSeverityIcon={getSeverityIcon}
+              onNavigateToSection={onNavigateToSection}
+              onClose={onClose}
             />
           ) : (
             <KeywordsTab
@@ -242,6 +261,8 @@ export function ATSOptimization({
               getScoreColor={getScoreColor}
               getScoreBgColor={getScoreBgColor}
               getImportanceBadge={getImportanceBadge}
+              onNavigateToSection={onNavigateToSection}
+              onClose={onClose}
             />
           )}
         </div>
@@ -258,9 +279,21 @@ interface ScoreTabProps {
   getScoreColor: (score: number) => string
   getScoreBgColor: (score: number) => string
   getSeverityIcon: (severity: 'high' | 'medium' | 'low') => React.ReactNode
+  onNavigateToSection?: (sectionIndex: number) => void
+  onClose: () => void
 }
 
-function ScoreTab({ result, isAnalyzing, canUseATS, onAnalyze, getScoreColor, getScoreBgColor, getSeverityIcon }: ScoreTabProps) {
+function ScoreTab({ result, isAnalyzing, canUseATS, onAnalyze, getScoreColor, getScoreBgColor, getSeverityIcon, onNavigateToSection, onClose }: ScoreTabProps) {
+  const handleIssueClick = (section?: SectionType) => {
+    if (section && onNavigateToSection) {
+      const sectionIndex = SECTION_INDEX_MAP[section]
+      onClose()
+      // Small delay to allow modal to close before navigating
+      setTimeout(() => {
+        onNavigateToSection(sectionIndex)
+      }, 100)
+    }
+  }
   if (!result) {
     return (
       <div className="text-center py-12">
@@ -326,17 +359,34 @@ function ScoreTab({ result, isAnalyzing, canUseATS, onAnalyze, getScoreColor, ge
             Issues to Fix
           </h4>
           <ul className="space-y-2">
-            {result.issues.map((issue, index) => (
-              <li key={index} className="bg-gray-50 p-3 rounded-lg">
-                <div className="flex items-start gap-2">
-                  {getSeverityIcon(issue.severity)}
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{issue.message}</p>
-                    <p className="text-sm text-gray-600 mt-1">{issue.suggestion}</p>
+            {result.issues.map((issue, index) => {
+              const isClickable = issue.section && issue.section !== 'general' && onNavigateToSection
+              return (
+                <li
+                  key={index}
+                  onClick={() => isClickable && handleIssueClick(issue.section)}
+                  className={`bg-gray-50 p-3 rounded-lg transition-colors ${
+                    isClickable
+                      ? 'cursor-pointer hover:bg-gray-100 hover:shadow-sm border border-transparent hover:border-gray-200'
+                      : ''
+                  }`}
+                >
+                  <div className="flex items-start gap-2">
+                    {getSeverityIcon(issue.severity)}
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-900">{issue.message}</p>
+                      <p className="text-sm text-gray-600 mt-1">{issue.suggestion}</p>
+                    </div>
+                    {isClickable && (
+                      <div className="flex items-center gap-1 text-xs text-blue-600 font-medium shrink-0">
+                        <span>Edit</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </div>
+                    )}
                   </div>
-                </div>
-              </li>
-            ))}
+                </li>
+              )
+            })}
           </ul>
         </div>
       )}
@@ -369,6 +419,8 @@ interface KeywordsTabProps {
   getScoreColor: (score: number) => string
   getScoreBgColor: (score: number) => string
   getImportanceBadge: (importance: 'critical' | 'important' | 'nice-to-have') => React.ReactNode
+  onNavigateToSection?: (sectionIndex: number) => void
+  onClose: () => void
 }
 
 function KeywordsTab({ 
@@ -380,8 +432,20 @@ function KeywordsTab({
   onMatch, 
   getScoreColor, 
   getScoreBgColor,
-  getImportanceBadge 
+  getImportanceBadge,
+  onNavigateToSection,
+  onClose
 }: KeywordsTabProps) {
+  const handleKeywordClick = (section?: SectionType) => {
+    if (section && onNavigateToSection) {
+      const sectionIndex = SECTION_INDEX_MAP[section]
+      onClose()
+      // Small delay to allow modal to close before navigating
+      setTimeout(() => {
+        onNavigateToSection(sectionIndex)
+      }, 100)
+    }
+  }
   return (
     <div className="space-y-6">
       {/* Job Description Input */}
@@ -453,15 +517,34 @@ function KeywordsTab({
                 Missing Keywords ({result.missingKeywords.length})
               </h4>
               <ul className="space-y-2">
-                {result.missingKeywords.map((keyword, index) => (
-                  <li key={index} className="bg-red-50 p-3 rounded-lg">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-medium text-gray-900">{keyword.keyword}</span>
-                      {getImportanceBadge(keyword.importance)}
-                    </div>
-                    <p className="text-sm text-gray-600">{keyword.suggestion}</p>
-                  </li>
-                ))}
+                {result.missingKeywords.map((keyword, index) => {
+                  const isClickable = keyword.section && keyword.section !== 'general' && onNavigateToSection
+                  return (
+                    <li
+                      key={index}
+                      onClick={() => isClickable && handleKeywordClick(keyword.section)}
+                      className={`bg-red-50 p-3 rounded-lg transition-colors ${
+                        isClickable
+                          ? 'cursor-pointer hover:bg-red-100 hover:shadow-sm border border-transparent hover:border-red-200'
+                          : ''
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-medium text-gray-900">{keyword.keyword}</span>
+                        <div className="flex items-center gap-2">
+                          {getImportanceBadge(keyword.importance)}
+                          {isClickable && (
+                            <div className="flex items-center gap-1 text-xs text-blue-600 font-medium">
+                              <span>Add</span>
+                              <ArrowRight className="h-3 w-3" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-600">{keyword.suggestion}</p>
+                    </li>
+                  )
+                })}
               </ul>
             </div>
           )}

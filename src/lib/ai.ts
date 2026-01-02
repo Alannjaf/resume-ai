@@ -442,7 +442,7 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
     skills?: Array<{ name?: string }>;
   }): Promise<{
     score: number;
-    issues: Array<{ type: string; severity: 'high' | 'medium' | 'low'; message: string; suggestion: string }>;
+    issues: Array<{ type: string; severity: 'high' | 'medium' | 'low'; message: string; suggestion: string; section: 'personal' | 'summary' | 'experience' | 'education' | 'skills' | 'languages' | 'projects' | 'certifications' | 'general' }>;
     strengths: string[];
     suggestions: string[];
   }> {
@@ -507,7 +507,8 @@ Respond with a JSON object containing:
       "type": "<format|content|keywords|structure>",
       "severity": "<high|medium|low>",
       "message": "<what the issue is>",
-      "suggestion": "<how to fix it>"
+      "suggestion": "<how to fix it>",
+      "section": "<personal|summary|experience|education|skills|languages|projects|certifications|general>"
     }
   ],
   "strengths": ["<list of positive ATS-friendly aspects>"],
@@ -523,7 +524,10 @@ Evaluation criteria:
 6. Overall structure and formatting (10 points)
 7. Use of action verbs and professional language (10 points)
 
-IMPORTANT: Return ONLY the JSON object, no markdown formatting, no code blocks, no explanations.`
+IMPORTANT RULES:
+- Return ONLY the JSON object, no markdown formatting, no code blocks, no explanations.
+- DO NOT flag date format inconsistencies as issues. The platform uses a consistent date format, so date formatting is not a concern.
+- Each issue MUST include a "section" field indicating which resume section it relates to.`
       }
     ]
 
@@ -566,7 +570,7 @@ IMPORTANT: Return ONLY the JSON object, no markdown formatting, no code blocks, 
   ): Promise<{
     matchScore: number;
     matchedKeywords: Array<{ keyword: string; found: boolean; importance: 'critical' | 'important' | 'nice-to-have' }>;
-    missingKeywords: Array<{ keyword: string; importance: 'critical' | 'important' | 'nice-to-have'; suggestion: string }>;
+    missingKeywords: Array<{ keyword: string; importance: 'critical' | 'important' | 'nice-to-have'; suggestion: string; section: 'personal' | 'summary' | 'experience' | 'education' | 'skills' | 'languages' | 'projects' | 'certifications' | 'general' }>;
     suggestions: string[];
   }> {
     // Helper to strip HTML tags and convert to plain text
@@ -621,7 +625,8 @@ Respond with a JSON object containing:
     {
       "keyword": "<missing keyword>",
       "importance": "<critical|important|nice-to-have>",
-      "suggestion": "<how to incorporate this keyword>"
+      "suggestion": "<how to incorporate this keyword>",
+      "section": "<personal|summary|experience|education|skills|languages|projects|certifications|general>"
     }
   ],
   "suggestions": ["<top 3-5 suggestions to improve keyword match>"]
@@ -633,6 +638,7 @@ Guidelines:
 3. Rate importance: critical (required qualifications), important (preferred), nice-to-have (bonus)
 4. Calculate match score based on how many critical/important keywords are matched
 5. Provide actionable suggestions for missing keywords
+6. Each missing keyword MUST include a "section" field indicating the best resume section to add it to (skills for technical skills, experience for job duties, etc.)
 
 IMPORTANT: Return ONLY the JSON object, no markdown formatting, no code blocks, no explanations.`
       }
