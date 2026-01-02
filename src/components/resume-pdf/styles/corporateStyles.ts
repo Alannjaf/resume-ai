@@ -44,7 +44,7 @@ export const corporateStyles = StyleSheet.create({
     fontSize: 26,
     fontWeight: 'bold',
     color: colors.primary,
-    marginBottom: 6,
+    marginBottom: 8,
     letterSpacing: 0.5,
   },
 
@@ -53,6 +53,7 @@ export const corporateStyles = StyleSheet.create({
     color: colors.secondary,
     fontWeight: 'bold',
     marginBottom: 10,
+    marginTop: 2,
   },
 
   contactInfo: {
