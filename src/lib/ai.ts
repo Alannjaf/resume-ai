@@ -1,44 +1,53 @@
-import OpenAI from 'openai'
+import OpenAI from "openai";
 
 // Initialize OpenRouter client
 const openai = new OpenAI({
-  baseURL: 'https://openrouter.ai/api/v1',
-  apiKey: process.env.OPENROUTER_API_KEY || '',
+  baseURL: "https://openrouter.ai/api/v1",
+  apiKey: process.env.OPENROUTER_API_KEY || "",
   defaultHeaders: {
-    'HTTP-Referer': 'https://resumeai.app', // Your site URL for rankings
-    'X-Title': 'ResumeAI', // Your site title for rankings
-  }})
+    "HTTP-Referer": "https://resumeai.app", // Your site URL for rankings
+    "X-Title": "ResumeAI", // Your site title for rankings
+  },
+});
 
 export interface AIGenerationOptions {
-  jobTitle?: string
-  industry?: string
-  experience?: string
-  skills?: string[]
-  language?: 'en' | 'ar' | 'ku'
+  jobTitle?: string;
+  industry?: string;
+  experience?: string;
+  skills?: string[];
+  language?: "en" | "ar" | "ku";
 }
 
 export class AIService {
-  static async generateProfessionalSummary(options: AIGenerationOptions): Promise<string> {
-    const { jobTitle = '', industry = '', experience = '', skills = [], language = 'en' } = options
+  static async generateProfessionalSummary(
+    options: AIGenerationOptions
+  ): Promise<string> {
+    const {
+      jobTitle = "",
+      industry = "",
+      experience = "",
+      skills = [],
+      language = "en",
+    } = options;
 
     const languageInstructions = {
-      en: 'Write in English',
-      ar: 'Write in Arabic with proper RTL formatting',
-      ku: 'Write in Kurdish Sorani'
-    }
+      en: "Write in English",
+      ar: "Write in Arabic with proper RTL formatting",
+      ku: "Write in Kurdish Sorani",
+    };
 
     const messages = [
       {
-        role: 'system' as const,
-        content: `You are a professional resume writer specializing in creating compelling professional summaries. Always follow the language requirements and formatting guidelines exactly.`
+        role: "system" as const,
+        content: `You are a professional resume writer specializing in creating compelling professional summaries. Always follow the language requirements and formatting guidelines exactly.`,
       },
       {
-        role: 'user' as const,
+        role: "user" as const,
         content: `Generate a professional resume summary for the following profile:
 - Job Title: ${jobTitle}
 - Industry: ${industry}
 - Experience Level: ${experience}
-- Key Skills: ${skills.join(', ')}
+- Key Skills: ${skills.join(", ")}
 
 Requirements:
 - ${languageInstructions[language]}
@@ -49,21 +58,22 @@ Requirements:
 - Make it ATS-friendly
 - Sound professional but not overly formal
 
-Please provide only the summary text without any additional formatting or explanations.`
-      }
-    ]
+Please provide only the summary text without any additional formatting or explanations.`,
+      },
+    ];
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-3-flash-preview',
+        model: "google/gemini-3-flash-preview",
         messages,
         max_tokens: 200,
-        temperature: 0.7})
+        temperature: 0.7,
+      });
 
-      return completion.choices[0]?.message?.content?.trim() || ''
+      return completion.choices[0]?.message?.content?.trim() || "";
     } catch {
       // AI generation error
-      throw new Error('Failed to generate professional summary')
+      throw new Error("Failed to generate professional summary");
     }
   }
 
@@ -72,21 +82,21 @@ Please provide only the summary text without any additional formatting or explan
     jobTitle: string,
     options: AIGenerationOptions
   ): Promise<string> {
-    const { language = 'en' } = options
+    const { language = "en" } = options;
 
     const languageInstructions = {
-      en: 'Write in English',
-      ar: 'Write in Arabic with proper RTL formatting', 
-      ku: 'Write in Kurdish Sorani'
-    }
+      en: "Write in English",
+      ar: "Write in Arabic with proper RTL formatting",
+      ku: "Write in Kurdish Sorani",
+    };
 
     const messages = [
       {
-        role: 'system' as const,
-        content: `You are a professional resume writer who enhances job descriptions to make them more impactful and ATS-friendly. Always use proper bullet formatting with "• " (bullet + space).`
+        role: "system" as const,
+        content: `You are a professional resume writer who enhances job descriptions to make them more impactful and ATS-friendly. Always use proper bullet formatting with "• " (bullet + space).`,
       },
       {
-        role: 'user' as const,
+        role: "user" as const,
         content: `Enhance the following job description to make it more impactful and ATS-friendly:
 
 Original Description: "${originalDescription}"
@@ -105,21 +115,22 @@ Requirements:
 
 IMPORTANT: Use only "• " (bullet + space) to start each point, never use "*" or "-" or numbers.
 
-Please provide only the enhanced description without any additional formatting or explanations.`
-      }
-    ]
+Please provide only the enhanced description without any additional formatting or explanations.`,
+      },
+    ];
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-3-flash-preview',
+        model: "google/gemini-3-flash-preview",
         messages,
         max_tokens: 400,
-        temperature: 0.7})
+        temperature: 0.7,
+      });
 
-      return completion.choices[0]?.message?.content?.trim() || ''
+      return completion.choices[0]?.message?.content?.trim() || "";
     } catch {
       // AI generation error
-      throw new Error('Failed to enhance job description')
+      throw new Error("Failed to enhance job description");
     }
   }
 
@@ -128,21 +139,21 @@ Please provide only the enhanced description without any additional formatting o
     industry: string,
     options: AIGenerationOptions
   ): Promise<string[]> {
-    const { language = 'en' } = options
+    const { language = "en" } = options;
 
     const languageInstructions = {
-      en: 'Provide skills in English',
-      ar: 'Provide skills in Arabic',
-      ku: 'Provide skills in Kurdish Sorani'
-    }
+      en: "Provide skills in English",
+      ar: "Provide skills in Arabic",
+      ku: "Provide skills in Kurdish Sorani",
+    };
 
     const messages = [
       {
-        role: 'system' as const,
-        content: `You are a career advisor who suggests relevant skills for specific job roles. Provide only skill names, one per line.`
+        role: "system" as const,
+        content: `You are a career advisor who suggests relevant skills for specific job roles. Provide only skill names, one per line.`,
       },
       {
-        role: 'user' as const,
+        role: "user" as const,
         content: `Suggest 8-12 relevant skills for the following position:
 - Job Title: ${jobTitle}
 - Industry: ${industry}
@@ -156,22 +167,26 @@ Requirements:
 - Provide only the skill names, one per line
 - No descriptions or explanations
 
-Format: Return only skill names separated by newlines.`
-      }
-    ]
+Format: Return only skill names separated by newlines.`,
+      },
+    ];
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-3-flash-preview',
+        model: "google/gemini-3-flash-preview",
         messages,
         max_tokens: 300,
-        temperature: 0.6})
+        temperature: 0.6,
+      });
 
-      const skillsText = completion.choices[0]?.message?.content?.trim() || ''
-      return skillsText.split('\n').map(skill => skill.trim()).filter(skill => skill.length > 0)
+      const skillsText = completion.choices[0]?.message?.content?.trim() || "";
+      return skillsText
+        .split("\n")
+        .map((skill) => skill.trim())
+        .filter((skill) => skill.length > 0);
     } catch {
       // AI generation error
-      throw new Error('Failed to generate skill suggestions')
+      throw new Error("Failed to generate skill suggestions");
     }
   }
 
@@ -181,21 +196,21 @@ Format: Return only skill names separated by newlines.`
     industry: string,
     options: AIGenerationOptions
   ): Promise<string[]> {
-    const { language = 'en' } = options
+    const { language = "en" } = options;
 
     const languageInstructions = {
-      en: 'Write in English',
-      ar: 'Write in Arabic with proper RTL formatting',
-      ku: 'Write in Kurdish Sorani'
-    }
+      en: "Write in English",
+      ar: "Write in Arabic with proper RTL formatting",
+      ku: "Write in Kurdish Sorani",
+    };
 
     const messages = [
       {
-        role: 'system' as const,
-        content: `You are a professional resume writer who creates impactful bullet points for work experience sections. Always use "• " (bullet + space) formatting.`
+        role: "system" as const,
+        content: `You are a professional resume writer who creates impactful bullet points for work experience sections. Always use "• " (bullet + space) formatting.`,
       },
       {
-        role: 'user' as const,
+        role: "user" as const,
         content: `Generate 3-5 impactful bullet points for a resume work experience section:
 - Job Title: ${jobTitle}
 - Company: ${company}
@@ -219,51 +234,55 @@ FORMATTING REQUIREMENTS:
 Example format:
 • Developed and implemented new software features
 • Led cross-functional team of 8 developers
-• Increased system performance by 40%`
-      }
-    ]
+• Increased system performance by 40%`,
+      },
+    ];
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-3-flash-preview',
+        model: "google/gemini-3-flash-preview",
         messages,
         max_tokens: 400,
-        temperature: 0.7})
+        temperature: 0.7,
+      });
 
-      const bulletsText = completion.choices[0]?.message?.content?.trim() || ''
-      return bulletsText.split('\n').map(bullet => bullet.replace(/^[•\-\*]\s*/, '').trim()).filter(bullet => bullet.length > 0)
+      const bulletsText = completion.choices[0]?.message?.content?.trim() || "";
+      return bulletsText
+        .split("\n")
+        .map((bullet) => bullet.replace(/^[•\-\*]\s*/, "").trim())
+        .filter((bullet) => bullet.length > 0);
     } catch {
       // AI generation error
-      throw new Error('Failed to generate bullet points')
+      throw new Error("Failed to generate bullet points");
     }
   }
 
   static async improveContent(
     content: string,
-    contentType: 'summary' | 'description' | 'achievement',
+    contentType: "summary" | "description" | "achievement",
     options: AIGenerationOptions
   ): Promise<string> {
-    const { language = 'en' } = options
+    const { language = "en" } = options;
 
     const languageInstructions = {
-      en: 'Write in English',
-      ar: 'Write in Arabic with proper RTL formatting',
-      ku: 'Write in Kurdish Sorani'
-    }
+      en: "Write in English",
+      ar: "Write in Arabic with proper RTL formatting",
+      ku: "Write in Kurdish Sorani",
+    };
 
     const typeInstructions = {
-      summary: 'professional summary',
-      description: 'job description',
-      achievement: 'achievement or accomplishment'
-    }
+      summary: "professional summary",
+      description: "job description",
+      achievement: "achievement or accomplishment",
+    };
 
     const messages = [
       {
-        role: 'system' as const,
-        content: `You are a professional resume writer who improves content to make it more impactful and ATS-friendly.`
+        role: "system" as const,
+        content: `You are a professional resume writer who improves content to make it more impactful and ATS-friendly.`,
       },
       {
-        role: 'user' as const,
+        role: "user" as const,
         content: `Improve the following ${typeInstructions[contentType]} for a resume:
 
 Original Content: "${content}"
@@ -279,41 +298,42 @@ Requirements:
 
 Please provide only the improved content without any additional formatting or explanations.
 
-IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other symbols. Provide plain text only.`
-      }
-    ]
+IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other symbols. Provide plain text only.`,
+      },
+    ];
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-3-flash-preview',
+        model: "google/gemini-3-flash-preview",
         messages,
         max_tokens: 300,
-        temperature: 0.7})
+        temperature: 0.7,
+      });
 
-      return completion.choices[0]?.message?.content?.trim() || ''
+      return completion.choices[0]?.message?.content?.trim() || "";
     } catch {
       // AI generation error
-      throw new Error('Failed to improve content')
+      throw new Error("Failed to improve content");
     }
   }
 
   static async translateToEnglish(
     content: string,
-    sourceLanguage: 'ar' | 'ku' | 'auto' = 'auto'
+    sourceLanguage: "ar" | "ku" | "auto" = "auto"
   ): Promise<string> {
     const languageNames = {
-      ar: 'Arabic',
-      ku: 'Kurdish Sorani',
-      auto: 'the source language'
-    }
+      ar: "Arabic",
+      ku: "Kurdish Sorani",
+      auto: "the source language",
+    };
 
     const messages = [
       {
-        role: 'system' as const,
-        content: `You are a professional translator specializing in translating resume content from Arabic and Kurdish to English. Always maintain the professional tone and meaning.`
+        role: "system" as const,
+        content: `You are a professional translator specializing in translating resume content from Arabic and Kurdish to English. Always maintain the professional tone and meaning.`,
       },
       {
-        role: 'user' as const,
+        role: "user" as const,
         content: `Translate the following text from ${languageNames[sourceLanguage]} to English:
 
 "${content}"
@@ -328,66 +348,74 @@ Requirements:
 
 Please provide only the English translation without any additional formatting or explanations.
 
-IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other symbols. Provide plain text only.`
-      }
-    ]
+IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other symbols. Provide plain text only.`,
+      },
+    ];
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-3-flash-preview',
+        model: "google/gemini-3-flash-preview",
         messages,
         max_tokens: 400,
         temperature: 0.3, // Lower temperature for more consistent translation
-      })
+      });
 
-      return completion.choices[0]?.message?.content?.trim() || ''
+      return completion.choices[0]?.message?.content?.trim() || "";
     } catch {
       // AI translation error
-      throw new Error('Failed to translate content')
+      throw new Error("Failed to translate content");
     }
   }
 
   static async translateAndEnhance(
     content: string,
-    contentType: 'personal' | 'summary' | 'description' | 'achievement' | 'project',
-    sourceLanguage: 'ar' | 'ku' | 'auto' = 'auto',
+    contentType:
+      | "personal"
+      | "summary"
+      | "description"
+      | "achievement"
+      | "project",
+    sourceLanguage: "ar" | "ku" | "auto" = "auto",
     contextInfo?: {
-      jobTitle?: string
-      company?: string
-      projectName?: string
+      jobTitle?: string;
+      company?: string;
+      projectName?: string;
     }
   ): Promise<string> {
     const languageNames = {
-      ar: 'Arabic',
-      ku: 'Kurdish Sorani', 
-      auto: 'the source language'
-    }
+      ar: "Arabic",
+      ku: "Kurdish Sorani",
+      auto: "the source language",
+    };
 
     const typeInstructions = {
-      personal: 'personal information (like professional title, location, etc.)',
-      summary: 'professional summary for resume',
-      description: 'job description or role responsibilities',
-      achievement: 'achievement or accomplishment',
-      project: 'project description'
-    }
+      personal:
+        "personal information (like professional title, location, etc.)",
+      summary: "professional summary for resume",
+      description: "job description or role responsibilities",
+      achievement: "achievement or accomplishment",
+      project: "project description",
+    };
 
-    const contextText = contextInfo ? `
+    const contextText = contextInfo
+      ? `
 Context Information:
-${contextInfo.jobTitle ? `- Job Title: ${contextInfo.jobTitle}` : ''}
-${contextInfo.company ? `- Company: ${contextInfo.company}` : ''}
-${contextInfo.projectName ? `- Project: ${contextInfo.projectName}` : ''}
-` : ''
+${contextInfo.jobTitle ? `- Job Title: ${contextInfo.jobTitle}` : ""}
+${contextInfo.company ? `- Company: ${contextInfo.company}` : ""}
+${contextInfo.projectName ? `- Project: ${contextInfo.projectName}` : ""}
+`
+      : "";
 
-    const wordCount = content.trim().split(/\s+/).length
-    const isShortContent = wordCount <= 5
-    
+    const wordCount = content.trim().split(/\s+/).length;
+    const isShortContent = wordCount <= 5;
+
     const messages = [
       {
-        role: 'system' as const,
-        content: `You are a professional resume writer and translator. You specialize in translating resume content from Arabic/Kurdish to English and then enhancing it to make it professional and ATS-friendly.`
+        role: "system" as const,
+        content: `You are a professional resume writer and translator. You specialize in translating resume content from Arabic/Kurdish to English and then enhancing it to make it professional and ATS-friendly.`,
       },
       {
-        role: 'user' as const,
+        role: "user" as const,
         content: `Translate and enhance the following ${typeInstructions[contentType]} from ${languageNames[sourceLanguage]} to professional English:
 
 "${content}"
@@ -403,106 +431,155 @@ Requirements:
    - Suitable for English-speaking employers
 
 CRITICAL LENGTH REQUIREMENT:
-${isShortContent ? 
-`- The input has EXACTLY ${wordCount} word(s). You MUST return EXACTLY ${wordCount} word(s).
+${
+  isShortContent
+    ? `- The input has EXACTLY ${wordCount} word(s). You MUST return EXACTLY ${wordCount} word(s).
 - If the input is a single word (like a nationality, country, or title), return ONLY the direct translation.
 - DO NOT add articles (a, an, the), prepositions, or any extra words.
-- Examples: "العراق" → "Iraq" (NOT "The Republic of Iraq"), "مهندس" → "Engineer" (NOT "Software Engineer")` :
-`- Maintain approximately the same length as the original content.
-- Do not significantly expand or reduce the content length.`}
+- Examples: "العراق" → "Iraq" (NOT "The Republic of Iraq"), "مهندس" → "Engineer" (NOT "Software Engineer")`
+    : `- Maintain approximately the same length as the original content.
+- Do not significantly expand or reduce the content length.`
+}
 
-${contentType === 'description' ? '- Format as bullet points using "• " if it contains multiple achievements or responsibilities' : ''}
-${contentType === 'project' ? '- Focus on technical achievements and impact' : ''}
+${contentType === "description" ? '- Format as bullet points using "• " if it contains multiple achievements or responsibilities' : ""}
+${contentType === "project" ? "- Focus on technical achievements and impact" : ""}
 
 Please provide only the final enhanced English version without showing the translation steps or any additional explanations.
 
-IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other symbols. Provide plain text only.`
-      }
-    ]
+IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other symbols. Provide plain text only.`,
+      },
+    ];
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-3-flash-preview',
+        model: "google/gemini-3-flash-preview",
         messages,
         max_tokens: 500,
-        temperature: 0.5})
+        temperature: 0.5,
+      });
 
-      return completion.choices[0]?.message?.content?.trim() || ''
+      return completion.choices[0]?.message?.content?.trim() || "";
     } catch {
       // AI translate & enhance error
-      throw new Error('Failed to translate and enhance content')
+      throw new Error("Failed to translate and enhance content");
     }
   }
 
   static async analyzeATSScore(resumeData: {
-    personal: { fullName?: string; email?: string; phone?: string; title?: string };
+    personal: {
+      fullName?: string;
+      email?: string;
+      phone?: string;
+      title?: string;
+    };
     summary?: string;
-    experience?: Array<{ jobTitle?: string; company?: string; description?: string; startDate?: string; endDate?: string; current?: boolean }>;
-    education?: Array<{ degree?: string; field?: string; school?: string; startDate?: string; endDate?: string }>;
+    experience?: Array<{
+      jobTitle?: string;
+      company?: string;
+      description?: string;
+      startDate?: string;
+      endDate?: string;
+      current?: boolean;
+    }>;
+    education?: Array<{
+      degree?: string;
+      field?: string;
+      school?: string;
+      startDate?: string;
+      endDate?: string;
+      location?: string;
+    }>;
     skills?: Array<{ name?: string }>;
   }): Promise<{
     score: number;
-    issues: Array<{ type: string; severity: 'high' | 'medium' | 'low'; message: string; suggestion: string; section: 'personal' | 'summary' | 'experience' | 'education' | 'skills' | 'languages' | 'projects' | 'certifications' | 'general' }>;
+    issues: Array<{
+      type: string;
+      severity: "high" | "medium" | "low";
+      message: string;
+      suggestion: string;
+      section:
+        | "personal"
+        | "summary"
+        | "experience"
+        | "education"
+        | "skills"
+        | "languages"
+        | "projects"
+        | "certifications"
+        | "general";
+    }>;
     strengths: string[];
     suggestions: string[];
   }> {
     // Helper to strip HTML tags and convert to plain text
     const stripHtml = (html?: string): string => {
-      if (!html) return ''
+      if (!html) return "";
       return html
-        .replace(/<br\s*\/?>/gi, '\n')
-        .replace(/<\/p>/gi, '\n')
-        .replace(/<\/li>/gi, '\n')
-        .replace(/<[^>]+>/g, '')
-        .replace(/&nbsp;/g, ' ')
-        .replace(/&amp;/g, '&')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/\n\s*\n/g, '\n')
-        .trim()
-    }
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/<\/p>/gi, "\n")
+        .replace(/<\/li>/gi, "\n")
+        .replace(/<[^>]+>/g, "")
+        .replace(/&nbsp;/g, " ")
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/\n\s*\n/g, "\n")
+        .trim();
+    };
 
     // Helper to format date range for experience
-    const formatDateRange = (startDate?: string, endDate?: string, current?: boolean): string => {
-      if (!startDate) return ''
-      const start = startDate
-      const end = current ? 'Present' : (endDate || 'Present')
-      return ` (${start} - ${end})`
-    }
+    const formatDateRange = (
+      startDate?: string,
+      endDate?: string,
+      current?: boolean
+    ): string => {
+      if (!startDate) return "";
+      const start = startDate;
+      const end = current ? "Present" : endDate || "Present";
+      return ` (${start} - ${end})`;
+    };
 
     // Helper to format date range for education
-    const formatEducationDateRange = (startDate?: string, endDate?: string): string => {
-      if (!startDate && !endDate) return ''
-      const start = startDate || 'Unknown'
-      const end = endDate || 'Unknown'
-      return ` (${start} - ${end})`
-    }
+    const formatEducationDateRange = (
+      startDate?: string,
+      endDate?: string
+    ): string => {
+      if (!startDate && !endDate) return "";
+      const start = startDate || "Unknown";
+      const end = endDate || "Unknown";
+      return ` (${start} - ${end})`;
+    };
 
     const resumeText = `
-Name: ${resumeData.personal?.fullName || 'Not provided'}
-Email: ${resumeData.personal?.email || 'Not provided'}
-Phone: ${resumeData.personal?.phone || 'Not provided'}
-Job Title: ${resumeData.personal?.title || 'Not provided'}
+Name: ${resumeData.personal?.fullName || "Not provided"}
+Email: ${resumeData.personal?.email || "Not provided"}
+Phone: ${resumeData.personal?.phone || "Not provided"}
+Job Title: ${resumeData.personal?.title || "Not provided"}
 
-Summary: ${stripHtml(resumeData.summary) || 'Not provided'}
+Summary: ${stripHtml(resumeData.summary) || "Not provided"}
 
 Experience:
-${resumeData.experience?.length ? resumeData.experience.map(exp => `- ${exp.jobTitle || 'No title'} at ${exp.company || 'No company'}${formatDateRange(exp.startDate, exp.endDate, exp.current)}: ${stripHtml(exp.description) || 'No description'}`).join('\n') : 'No experience listed'}
+${resumeData.experience?.length ? resumeData.experience.map((exp) => `- ${exp.jobTitle || "No title"} at ${exp.company || "No company"}${formatDateRange(exp.startDate, exp.endDate, exp.current)}: ${stripHtml(exp.description) || "No description"}`).join("\n") : "No experience listed"}
 
 Education:
-${resumeData.education?.length ? resumeData.education.map(edu => `- ${edu.degree || 'No degree'}${edu.field ? ` in ${edu.field}` : ''} from ${edu.school || 'No institution'}${formatEducationDateRange(edu.startDate, edu.endDate)}`).join('\n') : 'No education listed'}
+${resumeData.education?.length ? resumeData.education.map((edu) => `- ${edu.degree || "No degree"}${edu.field ? ` in ${edu.field}` : ""} from ${edu.school || "No institution"}${edu.location ? `, ${edu.location}` : ""}${formatEducationDateRange(edu.startDate, edu.endDate)}`).join("\n") : "No education listed"}
 
 Skills:
-${resumeData.skills?.map(skill => skill.name).filter(Boolean).join(', ') || 'No skills listed'}
-`
+${
+  resumeData.skills
+    ?.map((skill) => skill.name)
+    .filter(Boolean)
+    .join(", ") || "No skills listed"
+}
+`;
 
     const messages = [
       {
-        role: 'system' as const,
-        content: `You are an ATS (Applicant Tracking System) expert who analyzes resumes for ATS compatibility. You must respond in valid JSON format only.`
+        role: "system" as const,
+        content: `You are an ATS (Applicant Tracking System) expert who analyzes resumes for ATS compatibility. You must respond in valid JSON format only.`,
       },
       {
-        role: 'user' as const,
+        role: "user" as const,
         content: `Analyze this resume for ATS compatibility and provide a detailed assessment:
 
 ${resumeText}
@@ -536,35 +613,36 @@ IMPORTANT RULES:
 - Return ONLY the JSON object, no markdown formatting, no code blocks, no explanations.
 - DO NOT flag date format inconsistencies as issues. The platform uses a consistent date format, so date formatting is not a concern.
 - DO NOT flag formatting, structure, or organization issues related to bullet points, lists, labels, section headers, or text organization. The platform automatically formats content appropriately (e.g., bullet points are handled automatically, labels like "Key Responsibilities" are formatted by the system).
-- Each issue MUST include a "section" field indicating which resume section it relates to.`
-      }
-    ]
+- Each issue MUST include a "section" field indicating which resume section it relates to.`,
+      },
+    ];
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-3-flash-preview',
+        model: "google/gemini-3-flash-preview",
         messages,
         max_tokens: 1000,
-        temperature: 0.3
-      })
+        temperature: 0.3,
+      });
 
-      const responseText = completion.choices[0]?.message?.content?.trim() || ''
-      
+      const responseText =
+        completion.choices[0]?.message?.content?.trim() || "";
+
       // Clean up the response in case it has markdown code blocks
       const cleanedResponse = responseText
-        .replace(/```json\n?/g, '')
-        .replace(/```\n?/g, '')
-        .trim()
-      
-      const result = JSON.parse(cleanedResponse)
+        .replace(/```json\n?/g, "")
+        .replace(/```\n?/g, "")
+        .trim();
+
+      const result = JSON.parse(cleanedResponse);
       return {
         score: Math.max(0, Math.min(100, result.score || 0)),
         issues: result.issues || [],
         strengths: result.strengths || [],
-        suggestions: result.suggestions || []
-      }
+        suggestions: result.suggestions || [],
+      };
     } catch {
-      throw new Error('Failed to analyze ATS score')
+      throw new Error("Failed to analyze ATS score");
     }
   }
 
@@ -578,40 +656,63 @@ IMPORTANT RULES:
     jobDescription: string
   ): Promise<{
     matchScore: number;
-    matchedKeywords: Array<{ keyword: string; found: boolean; importance: 'critical' | 'important' | 'nice-to-have' }>;
-    missingKeywords: Array<{ keyword: string; importance: 'critical' | 'important' | 'nice-to-have'; suggestion: string; section: 'personal' | 'summary' | 'experience' | 'education' | 'skills' | 'languages' | 'projects' | 'certifications' | 'general' }>;
+    matchedKeywords: Array<{
+      keyword: string;
+      found: boolean;
+      importance: "critical" | "important" | "nice-to-have";
+    }>;
+    missingKeywords: Array<{
+      keyword: string;
+      importance: "critical" | "important" | "nice-to-have";
+      suggestion: string;
+      section:
+        | "personal"
+        | "summary"
+        | "experience"
+        | "education"
+        | "skills"
+        | "languages"
+        | "projects"
+        | "certifications"
+        | "general";
+    }>;
     suggestions: string[];
   }> {
     // Helper to strip HTML tags and convert to plain text
     const stripHtml = (html?: string): string => {
-      if (!html) return ''
+      if (!html) return "";
       return html
-        .replace(/<br\s*\/?>/gi, '\n')
-        .replace(/<\/p>/gi, '\n')
-        .replace(/<\/li>/gi, '\n')
-        .replace(/<[^>]+>/g, '')
-        .replace(/&nbsp;/g, ' ')
-        .replace(/&amp;/g, '&')
-        .replace(/&lt;/g, '<')
-        .replace(/&gt;/g, '>')
-        .replace(/\n\s*\n/g, '\n')
-        .trim()
-    }
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/<\/p>/gi, "\n")
+        .replace(/<\/li>/gi, "\n")
+        .replace(/<[^>]+>/g, "")
+        .replace(/&nbsp;/g, " ")
+        .replace(/&amp;/g, "&")
+        .replace(/&lt;/g, "<")
+        .replace(/&gt;/g, ">")
+        .replace(/\n\s*\n/g, "\n")
+        .trim();
+    };
 
     const resumeText = `
-Job Title: ${resumeData.personal?.title || 'Not specified'}
-Summary: ${stripHtml(resumeData.summary) || ''}
-Experience: ${resumeData.experience?.map(exp => `${exp.jobTitle}: ${stripHtml(exp.description)}`).join('; ') || ''}
-Skills: ${resumeData.skills?.map(skill => skill.name).filter(Boolean).join(', ') || ''}
-`
+Job Title: ${resumeData.personal?.title || "Not specified"}
+Summary: ${stripHtml(resumeData.summary) || ""}
+Experience: ${resumeData.experience?.map((exp) => `${exp.jobTitle}: ${stripHtml(exp.description)}`).join("; ") || ""}
+Skills: ${
+      resumeData.skills
+        ?.map((skill) => skill.name)
+        .filter(Boolean)
+        .join(", ") || ""
+    }
+`;
 
     const messages = [
       {
-        role: 'system' as const,
-        content: `You are an ATS keyword matching expert who compares resumes against job descriptions. You must respond in valid JSON format only.`
+        role: "system" as const,
+        content: `You are an ATS keyword matching expert who compares resumes against job descriptions. You must respond in valid JSON format only.`,
       },
       {
-        role: 'user' as const,
+        role: "user" as const,
         content: `Compare this resume against the job description and identify keyword matches:
 
 RESUME:
@@ -649,35 +750,36 @@ Guidelines:
 5. Provide actionable suggestions for missing keywords
 6. Each missing keyword MUST include a "section" field indicating the best resume section to add it to (skills for technical skills, experience for job duties, etc.)
 
-IMPORTANT: Return ONLY the JSON object, no markdown formatting, no code blocks, no explanations.`
-      }
-    ]
+IMPORTANT: Return ONLY the JSON object, no markdown formatting, no code blocks, no explanations.`,
+      },
+    ];
 
     try {
       const completion = await openai.chat.completions.create({
-        model: 'google/gemini-3-flash-preview',
+        model: "google/gemini-3-flash-preview",
         messages,
         max_tokens: 1500,
-        temperature: 0.3
-      })
+        temperature: 0.3,
+      });
 
-      const responseText = completion.choices[0]?.message?.content?.trim() || ''
-      
+      const responseText =
+        completion.choices[0]?.message?.content?.trim() || "";
+
       // Clean up the response in case it has markdown code blocks
       const cleanedResponse = responseText
-        .replace(/```json\n?/g, '')
-        .replace(/```\n?/g, '')
-        .trim()
-      
-      const result = JSON.parse(cleanedResponse)
+        .replace(/```json\n?/g, "")
+        .replace(/```\n?/g, "")
+        .trim();
+
+      const result = JSON.parse(cleanedResponse);
       return {
         matchScore: Math.max(0, Math.min(100, result.matchScore || 0)),
         matchedKeywords: result.matchedKeywords || [],
         missingKeywords: result.missingKeywords || [],
-        suggestions: result.suggestions || []
-      }
+        suggestions: result.suggestions || [],
+      };
     } catch {
-      throw new Error('Failed to match keywords')
+      throw new Error("Failed to match keywords");
     }
   }
 }
