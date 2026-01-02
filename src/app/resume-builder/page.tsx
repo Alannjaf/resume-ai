@@ -84,6 +84,22 @@ function ResumeBuilderContent() {
   // Form sections
   const formSections = getFormSections(t)
 
+  // Wrapper functions for auto-save on each step
+  const updatePersonalFieldWithSave = useCallback((field: string, value: string) => {
+    updatePersonalField(field, value)
+    queueSave('personal')
+  }, [updatePersonalField, queueSave])
+
+  const updateSummaryWithSave = useCallback((summary: string) => {
+    updateSummary(summary)
+    queueSave()
+  }, [updateSummary, queueSave])
+
+  const setSelectedTemplateWithSave = useCallback((template: string) => {
+    setSelectedTemplate(template)
+    queueSave()
+  }, [setSelectedTemplate, queueSave])
+
   // Navigation handlers
   const handleNext = useCallback(async () => {
     if (currentSection < formSections.length - 1) {
@@ -517,14 +533,14 @@ function ResumeBuilderContent() {
                 ref={formSectionRef}
                 currentSection={currentSection}
                 formData={formData}
-                updatePersonalField={updatePersonalField}
-                updateSummary={updateSummary}
+                updatePersonalField={updatePersonalFieldWithSave}
+                updateSummary={updateSummaryWithSave}
                 updateSection={updateSection}
                 setFormData={setFormData}
                 selectedTemplate={selectedTemplate}
-                setSelectedTemplate={setSelectedTemplate}
+                setSelectedTemplate={setSelectedTemplateWithSave}
                 onPreviewTemplate={(templateId) => {
-                  setSelectedTemplate(templateId)
+                  setSelectedTemplateWithSave(templateId)
                   setShowPreview(true)
                 }}
                 summaryTextareaRef={summaryTextareaRef}
