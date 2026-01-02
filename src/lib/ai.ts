@@ -438,7 +438,7 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
     personal: { fullName?: string; email?: string; phone?: string; title?: string };
     summary?: string;
     experience?: Array<{ jobTitle?: string; company?: string; description?: string; startDate?: string; endDate?: string; current?: boolean }>;
-    education?: Array<{ degree?: string; field?: string; school?: string }>;
+    education?: Array<{ degree?: string; field?: string; school?: string; startDate?: string; endDate?: string }>;
     skills?: Array<{ name?: string }>;
   }): Promise<{
     score: number;
@@ -470,6 +470,14 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
       return ` (${start} - ${end})`
     }
 
+    // Helper to format date range for education
+    const formatEducationDateRange = (startDate?: string, endDate?: string): string => {
+      if (!startDate && !endDate) return ''
+      const start = startDate || 'Unknown'
+      const end = endDate || 'Unknown'
+      return ` (${start} - ${end})`
+    }
+
     const resumeText = `
 Name: ${resumeData.personal?.fullName || 'Not provided'}
 Email: ${resumeData.personal?.email || 'Not provided'}
@@ -482,7 +490,7 @@ Experience:
 ${resumeData.experience?.length ? resumeData.experience.map(exp => `- ${exp.jobTitle || 'No title'} at ${exp.company || 'No company'}${formatDateRange(exp.startDate, exp.endDate, exp.current)}: ${stripHtml(exp.description) || 'No description'}`).join('\n') : 'No experience listed'}
 
 Education:
-${resumeData.education?.length ? resumeData.education.map(edu => `- ${edu.degree || 'No degree'}${edu.field ? ` in ${edu.field}` : ''} from ${edu.school || 'No institution'}`).join('\n') : 'No education listed'}
+${resumeData.education?.length ? resumeData.education.map(edu => `- ${edu.degree || 'No degree'}${edu.field ? ` in ${edu.field}` : ''} from ${edu.school || 'No institution'}${formatEducationDateRange(edu.startDate, edu.endDate)}`).join('\n') : 'No education listed'}
 
 Skills:
 ${resumeData.skills?.map(skill => skill.name).filter(Boolean).join(', ') || 'No skills listed'}
@@ -527,6 +535,7 @@ Evaluation criteria:
 IMPORTANT RULES:
 - Return ONLY the JSON object, no markdown formatting, no code blocks, no explanations.
 - DO NOT flag date format inconsistencies as issues. The platform uses a consistent date format, so date formatting is not a concern.
+- DO NOT flag formatting, structure, or organization issues related to bullet points, lists, labels, section headers, or text organization. The platform automatically formats content appropriately (e.g., bullet points are handled automatically, labels like "Key Responsibilities" are formatted by the system).
 - Each issue MUST include a "section" field indicating which resume section it relates to.`
       }
     ]
