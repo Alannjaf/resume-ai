@@ -18,7 +18,9 @@ export async function getCurrentUser() {
 }
 
 // Light version for dashboard listing (faster)
-export async function getUserResumes(userId: string) {
+export async function getUserResumes(userId: string, options?: { limit?: number; offset?: number }) {
+  const { limit, offset } = options || {}
+  
   const resumes = await prisma.resume.findMany({
     where: { userId },
     orderBy: { updatedAt: 'desc' },
@@ -30,6 +32,8 @@ export async function getUserResumes(userId: string) {
       personalInfo: true,
       template: true,
     },
+    ...(limit && { take: limit }),
+    ...(offset && { skip: offset }),
   })
 
   return resumes

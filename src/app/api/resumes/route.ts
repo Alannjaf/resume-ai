@@ -4,7 +4,7 @@ import { getUserResumes, createResume, checkUserLimits } from '@/lib/db'
 import { SectionType } from '@prisma/client'
 
 // GET - List all resumes for the current user
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const { userId: clerkId } = await auth()
     
@@ -12,23 +12,64 @@ export async function GET() {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    // Use a single optimized query to get user and resumes
+    // Parse pagination parameters
+    const { searchParams } = new URL(req.url)
+    const limit = Math.min(parseInt(searchParams.get('limit') || '50', 10), 100) // Max 100
+    const offset = parseInt(searchParams.get('offset') || '0', 10)
+
+    // Use a single optimized query with relation filtering to get resumes directly
     const { prisma } = await import('@/lib/prisma')
-    const user = await prisma.user.findUnique({
-      where: { clerkId },
-      select: { id: true }
+    const resumes = await prisma.resume.findMany({
+      where: { user: { clerkId } },
+      orderBy: { updatedAt: 'desc' },
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+        updatedAt: true,
+        personalInfo: true,
+        template: true,
+      },
+      take: limit,
+      skip: offset,
+    })
+
+    // Get total count for pagination metadata
+    const totalCount = await prisma.resume.count({
+      where: { user: { clerkId } },
     })
     
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 })
-    }
+    // Extract only needed fields from personalInfo JSON
+    const optimizedResumes = resumes.map(resume => {
+      const personalInfo = resume.personalInfo as { fullName?: string; email?: string } | null
+      return {
+        ...resume,
+        personalInfo: personalInfo ? {
+          fullName: personalInfo.fullName || '',
+          email: personalInfo.email || ''
+        } : null
+      }
+    })
 
-    const resumes = await getUserResumes(user.id)
+    const response = NextResponse.json({ 
+      resumes: optimizedResumes,
+      pagination: {
+        total: totalCount,
+        limit,
+        offset,
+        hasMore: offset + limit < totalCount
+      }
+    })
+
+    // Add cache headers for client-side caching (5 minutes)
+    response.headers.set('Cache-Control', 'private, max-age=300, stale-while-revalidate=60')
     
-    return NextResponse.json({ resumes })
-  } catch {
+    return response
+  } catch (error) {
+    console.error('Error fetching resumes:', error)
     return NextResponse.json({ 
-      error: 'Failed to fetch resumes' 
+      error: 'Failed to fetch resumes',
+      details: process.env.NODE_ENV === 'development' ? String(error) : undefined
     }, { status: 500 })
   }
 }
