@@ -2,35 +2,36 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { FileText, Sparkles, Palette, Download, ArrowRight } from 'lucide-react'
+import { useLanguage } from '@/contexts/LanguageContext'
 
-const steps = [
+const getSteps = (t: (key: string) => string) => [
   {
     icon: FileText,
-    title: 'Sign Up & Start',
-    description: 'Create your free account in seconds. No credit card required to get started.',
+    title: t('howItWorks.steps.step1.title'),
+    description: t('howItWorks.steps.step1.description'),
     gradient: 'from-blue-500 to-blue-600',
   },
   {
     icon: Sparkles,
-    title: 'AI-Powered Creation',
-    description: 'Let our AI help you write compelling content, optimize keywords, and enhance your resume.',
+    title: t('howItWorks.steps.step2.title'),
+    description: t('howItWorks.steps.step2.description'),
     gradient: 'from-purple-500 to-pink-600',
   },
   {
     icon: Palette,
-    title: 'Choose Template',
-    description: 'Select from professional, ATS-friendly templates that match your style and industry.',
+    title: t('howItWorks.steps.step3.title'),
+    description: t('howItWorks.steps.step3.description'),
     gradient: 'from-indigo-500 to-purple-600',
   },
   {
     icon: Download,
-    title: 'Export & Apply',
-    description: 'Download your resume as PDF or share it online. Start applying to your dream jobs!',
+    title: t('howItWorks.steps.step4.title'),
+    description: t('howItWorks.steps.step4.description'),
     gradient: 'from-green-500 to-emerald-600',
   },
 ]
 
-function StepCard({ step, index, isVisible, isLast }: { step: typeof steps[0], index: number, isVisible: boolean, isLast: boolean }) {
+function StepCard({ step, index, isVisible, isLast }: { step: ReturnType<typeof getSteps>[0], index: number, isVisible: boolean, isLast: boolean }) {
   return (
     <div className="relative">
       <div
@@ -85,6 +86,8 @@ function StepCard({ step, index, isVisible, isLast }: { step: typeof steps[0], i
 }
 
 export function HowItWorks() {
+  const { t } = useLanguage()
+  const steps = getSteps(t)
   const [visibleSteps, setVisibleSteps] = useState<boolean[]>(new Array(steps.length).fill(false))
   const sectionRef = useRef<HTMLElement>(null)
 
@@ -110,7 +113,7 @@ export function HowItWorks() {
         observer.unobserve(currentRef)
       }
     }
-  }, [])
+  }, [steps.length])
 
   return (
     <section ref={sectionRef} className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
@@ -124,11 +127,11 @@ export function HowItWorks() {
         <div className="text-center mb-16">
           <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900">
-              How It Works
+              {t('howItWorks.title')}
             </span>
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-            Get started in 4 simple steps
+            {t('howItWorks.subtitle')}
           </p>
         </div>
 
@@ -149,4 +152,3 @@ export function HowItWorks() {
     </section>
   )
 }
-

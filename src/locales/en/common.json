@@ -62,6 +62,54 @@
       }
     }
   },
+  "howItWorks": {
+    "title": "How It Works",
+    "subtitle": "Get started in 4 simple steps",
+    "steps": {
+      "step1": {
+        "title": "Sign Up & Start",
+        "description": "Create your free account in seconds. No credit card required to get started."
+      },
+      "step2": {
+        "title": "AI-Powered Creation",
+        "description": "Let our AI help you write compelling content, optimize keywords, and enhance your resume."
+      },
+      "step3": {
+        "title": "Choose Template",
+        "description": "Select from professional, ATS-friendly templates that match your style and industry."
+      },
+      "step4": {
+        "title": "Export & Apply",
+        "description": "Download your resume as PDF or share it online. Start applying to your dream jobs!"
+      }
+    }
+  },
+  "testimonials": {
+    "title": "Loved by Professionals",
+    "subtitle": "See what our users are saying about Work.krd",
+    "items": {
+      "testimonial1": {
+        "name": "Sarah Johnson",
+        "role": "Software Engineer",
+        "content": "Work.krd helped me create a stunning resume that got me multiple interviews. The AI suggestions were incredibly helpful!"
+      },
+      "testimonial2": {
+        "name": "Ahmed Al-Mansoori",
+        "role": "Marketing Manager",
+        "content": "The multilingual support is amazing. I created resumes in both Arabic and English with ease. Highly recommended!"
+      },
+      "testimonial3": {
+        "name": "Lisa Chen",
+        "role": "Product Designer",
+        "content": "The templates are professional and ATS-friendly. Landed my dream job within weeks of using Work.krd!"
+      },
+      "testimonial4": {
+        "name": "Mohammed Hassan",
+        "role": "Data Analyst",
+        "content": "Best resume builder I've used. The AI optimization feature helped me identify and fix key issues."
+      }
+    }
+  },
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome back, {name}",

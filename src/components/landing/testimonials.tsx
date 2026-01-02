@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { Star, Quote } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface Testimonial {
   name: string
@@ -12,29 +13,29 @@ interface Testimonial {
   avatar?: string
 }
 
-const testimonials: Testimonial[] = [
+const getTestimonials = (t: (key: string) => string): Testimonial[] => [
   {
-    name: 'Sarah Johnson',
-    role: 'Software Engineer',
-    content: 'Work.krd helped me create a stunning resume that got me multiple interviews. The AI suggestions were incredibly helpful!',
+    name: t('testimonials.items.testimonial1.name'),
+    role: t('testimonials.items.testimonial1.role'),
+    content: t('testimonials.items.testimonial1.content'),
     rating: 5,
   },
   {
-    name: 'Ahmed Al-Mansoori',
-    role: 'Marketing Manager',
-    content: 'The multilingual support is amazing. I created resumes in both Arabic and English with ease. Highly recommended!',
+    name: t('testimonials.items.testimonial2.name'),
+    role: t('testimonials.items.testimonial2.role'),
+    content: t('testimonials.items.testimonial2.content'),
     rating: 5,
   },
   {
-    name: 'Lisa Chen',
-    role: 'Product Designer',
-    content: 'The templates are professional and ATS-friendly. Landed my dream job within weeks of using Work.krd!',
+    name: t('testimonials.items.testimonial3.name'),
+    role: t('testimonials.items.testimonial3.role'),
+    content: t('testimonials.items.testimonial3.content'),
     rating: 5,
   },
   {
-    name: 'Mohammed Hassan',
-    role: 'Data Analyst',
-    content: 'Best resume builder I\'ve used. The AI optimization feature helped me identify and fix key issues.',
+    name: t('testimonials.items.testimonial4.name'),
+    role: t('testimonials.items.testimonial4.role'),
+    content: t('testimonials.items.testimonial4.content'),
     rating: 5,
   },
 ]
@@ -90,6 +91,8 @@ function TestimonialCard({ testimonial, index, isVisible }: { testimonial: Testi
 }
 
 export function Testimonials() {
+  const { t } = useLanguage()
+  const testimonials = getTestimonials(t)
   const [visibleCards, setVisibleCards] = useState<boolean[]>(new Array(testimonials.length).fill(false))
   const sectionRef = useRef<HTMLElement>(null)
 
@@ -115,7 +118,7 @@ export function Testimonials() {
         observer.unobserve(currentRef)
       }
     }
-  }, [])
+  }, [testimonials.length])
 
   return (
     <section ref={sectionRef} className="py-20 bg-white relative overflow-hidden">
@@ -129,11 +132,11 @@ export function Testimonials() {
         <div className="text-center mb-16">
           <h2 className="text-4xl sm:text-5xl font-extrabold text-gray-900 mb-4">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900">
-              Loved by Professionals
+              {t('testimonials.title')}
             </span>
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-            See what our users are saying about Work.krd
+            {t('testimonials.subtitle')}
           </p>
         </div>
 
@@ -151,4 +154,3 @@ export function Testimonials() {
     </section>
   )
 }
-
