@@ -18,9 +18,6 @@ const EnhancedModernTemplate: React.FC<EnhancedModernTemplateProps> = ({ data })
         style={styles.page}
         wrap={true} // Enable automatic pagination
       >
-        {/* Fixed background for left column on all pages */}
-        <View style={styles.leftBgOverlay} fixed />
-        
         {/* Header Section - Only on first page */}
         <PDFHeader personal={data.personal} />
 

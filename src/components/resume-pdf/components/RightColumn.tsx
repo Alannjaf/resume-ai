@@ -64,17 +64,18 @@ export const RightColumn: React.FC<RightColumnProps> = ({ data, experiences }) =
                     experienceStyles.experienceItem,
                     index === experiences.length - 1 ? { borderBottom: 'none' } : {}
                   ]}
-                  wrap={false}
                 >
-                  <View style={experienceStyles.experienceHeader}>
-                    <View style={{ flex: 1 }}>
-                      <Text style={experienceStyles.jobTitle}>{exp.jobTitle}</Text>
-                      <Text style={experienceStyles.company}>{exp.company}</Text>
-                      <Text style={experienceStyles.jobLocation}>{exp.location}</Text>
+                  <View wrap={false}>
+                    <View style={experienceStyles.experienceHeader}>
+                      <View style={{ flex: 1 }}>
+                        <Text style={experienceStyles.jobTitle}>{exp.jobTitle}</Text>
+                        <Text style={experienceStyles.company}>{exp.company}</Text>
+                        <Text style={experienceStyles.jobLocation}>{exp.location}</Text>
+                      </View>
+                      <Text style={experienceStyles.duration}>
+                        {formatDateRange(exp.startDate, exp.endDate, exp.current)}
+                      </Text>
                     </View>
-                    <Text style={experienceStyles.duration}>
-                      {formatDateRange(exp.startDate, exp.endDate, exp.current)}
-                    </Text>
                   </View>
                   {exp.description && (
                     <View style={{ marginTop: 4 }}>
