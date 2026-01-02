@@ -472,6 +472,9 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
       email?: string;
       phone?: string;
       title?: string;
+      location?: string;
+      linkedin?: string;
+      website?: string;
     };
     summary?: string;
     experience?: Array<{
@@ -491,6 +494,21 @@ IMPORTANT: Do NOT use any markdown formatting like **bold**, *italic*, or other 
       location?: string;
     }>;
     skills?: Array<{ name?: string }>;
+    languages?: Array<{
+      name?: string;
+      proficiency?: string;
+    }>;
+    projects?: Array<{
+      name?: string;
+      description?: string;
+      technologies?: string;
+    }>;
+    certifications?: Array<{
+      name?: string;
+      issuer?: string;
+      date?: string;
+      credentialId?: string;
+    }>;
   }): Promise<{
     score: number;
     issues: Array<{
@@ -556,6 +574,9 @@ Name: ${resumeData.personal?.fullName || "Not provided"}
 Email: ${resumeData.personal?.email || "Not provided"}
 Phone: ${resumeData.personal?.phone || "Not provided"}
 Job Title: ${resumeData.personal?.title || "Not provided"}
+${resumeData.personal?.location ? `Location: ${resumeData.personal.location}` : ""}
+${resumeData.personal?.linkedin ? `LinkedIn: ${resumeData.personal.linkedin}` : ""}
+${resumeData.personal?.website ? `Website: ${resumeData.personal.website}` : ""}
 
 Summary: ${stripHtml(resumeData.summary) || "Not provided"}
 
@@ -572,6 +593,15 @@ ${
     .filter(Boolean)
     .join(", ") || "No skills listed"
 }
+
+Languages:
+${resumeData.languages?.length ? resumeData.languages.map((lang) => `- ${lang.name || "Unknown"}${lang.proficiency ? ` (${lang.proficiency})` : ""}`).join("\n") : "No languages listed"}
+
+Projects:
+${resumeData.projects?.length ? resumeData.projects.map((proj) => `- ${proj.name || "Unnamed project"}${proj.technologies ? ` - ${proj.technologies}` : ""}: ${stripHtml(proj.description) || "No description"}`).join("\n") : "No projects listed"}
+
+Certifications:
+${resumeData.certifications?.length ? resumeData.certifications.map((cert) => `- ${cert.name || "Unnamed certification"} from ${cert.issuer || "Unknown issuer"}${cert.date ? ` (${cert.date})` : ""}${cert.credentialId ? ` - ID: ${cert.credentialId}` : ""}`).join("\n") : "No certifications listed"}
 `;
 
     const messages = [
