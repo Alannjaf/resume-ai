@@ -3,19 +3,18 @@ import { StyleSheet } from '@react-pdf/renderer'
 export const experienceStyles = StyleSheet.create({
   // Experience Section
   experienceItem: {
-    marginBottom: 14,
-    paddingBottom: 12,
+    marginBottom: 18,
+    paddingBottom: 16,
     borderBottom: '1px solid #e5e7eb',
-    // Allow experience items to break across pages for better space utilization
+    breakInside: 'avoid', // Keep experience group together
+    keepTogether: true,   // Ensure all parts stay as one unit
   },
   
   experienceHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 8,
-    // Keep header together (title, company, dates) but allow description to break
-  },
+    marginBottom: 8},
   
   jobTitle: {
     fontSize: 13,

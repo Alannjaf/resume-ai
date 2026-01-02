@@ -122,13 +122,11 @@ export const styles = StyleSheet.create({
     borderRight: '1px solid #e2e8f0'},
   
   leftColumn: {
-    width: '30%',
-    padding: '24 20',
-    backgroundColor: '#f8fafc',
-    borderRight: '1px solid #e2e8f0'},
+    width: '38%',
+    padding: '24 20'},
   
   rightColumn: {
-    width: '70%',
+    width: '62%',
     padding: '24 28'},
   
   // Section Styling
