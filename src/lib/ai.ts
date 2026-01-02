@@ -51,8 +51,9 @@ export class AIService {
 
 Requirements:
 - ${languageInstructions[language]}
-- 2-3 sentences maximum
-- Focus on value proposition and key achievements
+- 3-4 punchy lines (concise, impactful statements)
+- Condense information to avoid redundancy
+- Focus on years of experience and top-tier achievements
 - Use action-oriented language
 - Highlight relevant skills and experience
 - Make it ATS-friendly
@@ -613,6 +614,9 @@ IMPORTANT RULES:
 - Return ONLY the JSON object, no markdown formatting, no code blocks, no explanations.
 - DO NOT flag date format inconsistencies as issues. The platform uses a consistent date format, so date formatting is not a concern.
 - DO NOT flag formatting, structure, or organization issues related to bullet points, lists, labels, section headers, or text organization. The platform automatically formats content appropriately (e.g., bullet points are handled automatically, labels like "Key Responsibilities" are formatted by the system).
+- Before flagging skills as missing from the Skills section, ALWAYS verify they are NOT already listed in the Skills section.
+- Only flag skills mentioned in the summary or experience as missing if they are genuinely absent from the Skills section.
+- Cross-reference the Skills section content before suggesting additions to avoid false positives.
 - Each issue MUST include a "section" field indicating which resume section it relates to.`,
       },
     ];
