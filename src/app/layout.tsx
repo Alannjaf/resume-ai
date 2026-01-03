@@ -11,7 +11,13 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Work.krd - Create Professional Resumes with AI',
-  description: 'Build stunning resumes with AI assistance in multiple languages including Kurdish, Arabic, and English.'}
+  description: 'Build stunning resumes with AI assistance in multiple languages including Kurdish, Arabic, and English.',
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
+}
 
 export default function RootLayout({
   children}: {
