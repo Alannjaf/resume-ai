@@ -1,6 +1,14 @@
 import { useState, useCallback } from 'react'
 import { ResumeData } from '@/types/resume'
-import { isNonEnglishContent, hasArabicIndicNumerals, normalizePhoneNumber } from '@/lib/languageDetection'
+import { 
+  isNonEnglishContent, 
+  hasArabicIndicNumerals, 
+  hasNonAsciiChars,
+  normalizePhoneNumber,
+  normalizeEmail,
+  normalizeWebsite,
+  normalizeLinkedIn
+} from '@/lib/languageDetection'
 import { useLanguage } from '@/contexts/LanguageContext'
 import toast from 'react-hot-toast'
 
@@ -19,6 +27,11 @@ export function useAutoTranslation() {
     
     // Phone number - check for Arabic-Indic numerals
     if (formData.personal.phone && hasArabicIndicNumerals(formData.personal.phone)) return true
+    
+    // Email, website, linkedin - check for non-ASCII characters
+    if (formData.personal.email && hasNonAsciiChars(formData.personal.email)) return true
+    if (formData.personal.website && hasNonAsciiChars(formData.personal.website)) return true
+    if (formData.personal.linkedin && hasNonAsciiChars(formData.personal.linkedin)) return true
 
     // Professional summary
     if (formData.summary && isNonEnglishContent(formData.summary)) return true
@@ -80,6 +93,26 @@ export function useAutoTranslation() {
     // This is done locally without AI, just numeral conversion
     if (formData.personal.phone && hasArabicIndicNumerals(formData.personal.phone)) {
       translatedData.personal.phone = normalizePhoneNumber(formData.personal.phone)
+      hasTranslations = true
+    }
+
+    // Normalize email if it contains non-ASCII characters
+    // Emails must be ASCII-only to be valid
+    if (formData.personal.email && hasNonAsciiChars(formData.personal.email)) {
+      translatedData.personal.email = normalizeEmail(formData.personal.email)
+      hasTranslations = true
+    }
+
+    // Normalize website if it contains non-ASCII characters
+    // URLs should be ASCII-only
+    if (formData.personal.website && hasNonAsciiChars(formData.personal.website)) {
+      translatedData.personal.website = normalizeWebsite(formData.personal.website)
+      hasTranslations = true
+    }
+
+    // Normalize LinkedIn if it contains non-ASCII characters
+    if (formData.personal.linkedin && hasNonAsciiChars(formData.personal.linkedin)) {
+      translatedData.personal.linkedin = normalizeLinkedIn(formData.personal.linkedin)
       hasTranslations = true
     }
 
