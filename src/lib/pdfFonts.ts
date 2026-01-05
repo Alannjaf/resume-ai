@@ -3,10 +3,10 @@
  * Supports Kurdish Sorani, Arabic, and English text rendering
  */
 
-import { Font } from '@react-pdf/renderer';
-import { hasArabicKurdishChars } from './languageDetection';
-import path from 'path';
-import fs from 'fs';
+import { Font } from "@react-pdf/renderer";
+import { hasArabicKurdishChars } from "./languageDetection";
+import path from "path";
+import fs from "fs";
 
 // Font registration flag to prevent multiple registrations
 let fontsRegistered = false;
@@ -19,25 +19,27 @@ let fontRegistrationError: Error | null = null;
 function getFontSource(fontFileName: string): string {
   // Try local file path first (works in local dev and some deployment environments)
   try {
-    const fontPath = path.join(process.cwd(), 'public', 'fonts', fontFileName);
+    const fontPath = path.join(process.cwd(), "public", "fonts", fontFileName);
     if (fs.existsSync(fontPath)) {
       return fontPath;
     }
   } catch {
     // File system access failed, will use HTTP URL
   }
-  
+
   // Fallback to HTTP URL (works in serverless/production environments)
   // Use the original Google Fonts CDN URL as fallback
   const fontUrlMap: Record<string, string> = {
-    'noto-sans-arabic-regular.woff2': 'https://fonts.gstatic.com/s/notosansarabic/v18/nwpxtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlhQ5l3sQWIHPqzCfyGyfuXqA.woff2',
-    'noto-sans-arabic-bold.woff2': 'https://fonts.gstatic.com/s/notosansarabic/v18/nwpxtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlhQ5l3sQWIHPqzCfyGyfuXqA.woff2',
+    "noto-sans-arabic-regular.woff2":
+      "https://fonts.gstatic.com/s/notosansarabic/v18/nwpxtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlhQ5l3sQWIHPqzCfyGyfuXqA.woff2",
+    "noto-sans-arabic-bold.woff2":
+      "https://fonts.gstatic.com/s/notosansarabic/v18/nwpxtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlhQ5l3sQWIHPqzCfyGyfuXqA.woff2",
   };
-  
+
   if (fontUrlMap[fontFileName]) {
     return fontUrlMap[fontFileName];
   }
-  
+
   throw new Error(`Font source not found for: ${fontFileName}`);
 }
 
@@ -57,29 +59,31 @@ export async function registerPDFFonts(): Promise<void> {
   try {
     // Register Noto Sans Arabic - supports Kurdish Sorani, Arabic, and Latin characters
     // Uses local file paths when available, falls back to HTTP URLs for serverless/production
-    const regularFontSrc = getFontSource('noto-sans-arabic-regular.woff2');
-    const boldFontSrc = getFontSource('noto-sans-arabic-bold.woff2');
-    
+    const regularFontSrc = getFontSource("noto-sans-arabic-regular.woff2");
+    const boldFontSrc = getFontSource("noto-sans-arabic-bold.woff2");
+
     Font.register({
-      family: 'NotoSansArabic',
+      family: "NotoSansArabic",
       fonts: [
         {
           src: regularFontSrc,
-          fontWeight: 'normal',
+          fontWeight: "normal",
         },
         {
           src: boldFontSrc,
-          fontWeight: 'bold',
+          fontWeight: "bold",
         },
       ],
     });
-    
+
     fontsRegistered = true;
-    console.log('PDF fonts registered successfully');
+    console.log("PDF fonts registered successfully");
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    fontRegistrationError = error instanceof Error ? error : new Error(errorMessage);
-    console.error('Failed to register PDF fonts:', error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    fontRegistrationError =
+      error instanceof Error ? error : new Error(errorMessage);
+    console.error("Failed to register PDF fonts:", error);
     throw fontRegistrationError; // Re-throw to let callers handle the error
   }
 }
@@ -90,17 +94,17 @@ export async function registerPDFFonts(): Promise<void> {
  */
 export function getFontFamily(text: string | null | undefined): string {
   if (!text) {
-    return 'NotoSansArabic'; // Default to Unicode-supporting font
+    return "NotoSansArabic"; // Default to Unicode-supporting font
   }
 
   // Check if text contains Arabic/Kurdish characters
   if (hasArabicKurdishChars(text)) {
-    return 'NotoSansArabic';
+    return "NotoSansArabic";
   }
 
   // For English text, we can still use NotoSansArabic as it supports Latin
   // This ensures consistent Unicode support across all languages
-  return 'NotoSansArabic';
+  return "NotoSansArabic";
 }
 
 /**
@@ -114,37 +118,39 @@ export function initializePDFFonts(): void {
   }
 
   if (fontRegistrationError) {
-    console.warn('Font registration previously failed, attempting again...');
+    console.warn("Font registration previously failed, attempting again...");
     fontRegistrationError = null;
   }
 
   try {
     // Register Noto Sans Arabic - supports Kurdish Sorani, Arabic, and Latin characters
     // Uses local file paths when available, falls back to HTTP URLs for serverless/production
-    const regularFontSrc = getFontSource('noto-sans-arabic-regular.woff2');
-    const boldFontSrc = getFontSource('noto-sans-arabic-bold.woff2');
-    
+    const regularFontSrc = getFontSource("noto-sans-arabic-regular.woff2");
+    const boldFontSrc = getFontSource("noto-sans-arabic-bold.woff2");
+
     Font.register({
-      family: 'NotoSansArabic',
+      family: "NotoSansArabic",
       fonts: [
         {
           src: regularFontSrc,
-          fontWeight: 'normal',
+          fontWeight: "normal",
         },
         {
           src: boldFontSrc,
-          fontWeight: 'bold',
+          fontWeight: "bold",
         },
       ],
     });
 
     fontsRegistered = true;
-    console.log('PDF fonts initialized successfully');
+    console.log("PDF fonts initialized successfully");
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    fontRegistrationError = error instanceof Error ? error : new Error(errorMessage);
-    console.error('Failed to initialize PDF fonts:', error);
-    console.error('Font registration error details:', errorMessage);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error";
+    fontRegistrationError =
+      error instanceof Error ? error : new Error(errorMessage);
+    console.error("Failed to initialize PDF fonts:", error);
+    console.error("Font registration error details:", errorMessage);
     // Don't throw here - let the PDF generation attempt continue
     // The error will be logged and may cause rendering issues, but won't crash the process
   }
@@ -156,4 +162,3 @@ export function initializePDFFonts(): void {
 export function areFontsRegistered(): boolean {
   return fontsRegistered;
 }
-
