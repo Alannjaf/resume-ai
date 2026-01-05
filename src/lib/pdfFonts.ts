@@ -13,10 +13,10 @@ let fontsRegistered = false;
 let fontRegistrationError: Error | null = null;
 
 /**
- * Get local font file as buffer for server-side use
- * @react-pdf/renderer's Font.register() accepts file paths, but buffers are more reliable on server-side
+ * Get local font file path for server-side use
+ * @react-pdf/renderer's Font.register() accepts file paths as strings
  */
-function getLocalFontBuffer(fontFileName: string): Buffer {
+function getLocalFontPath(fontFileName: string): string {
   // For server-side, use absolute path from project root
   const fontPath = path.join(process.cwd(), 'public', 'fonts', fontFileName);
   
@@ -25,8 +25,7 @@ function getLocalFontBuffer(fontFileName: string): Buffer {
     throw new Error(`Font file not found: ${fontPath}`);
   }
   
-  // Read font file as buffer for reliable server-side font loading
-  return fs.readFileSync(fontPath);
+  return fontPath;
 }
 
 /**
@@ -44,19 +43,19 @@ export async function registerPDFFonts(): Promise<void> {
 
   try {
     // Register Noto Sans Arabic - supports Kurdish Sorani, Arabic, and Latin characters
-    // Using local font files as buffers for reliable server-side rendering
-    const regularFontBuffer = getLocalFontBuffer('noto-sans-arabic-regular.woff2');
-    const boldFontBuffer = getLocalFontBuffer('noto-sans-arabic-bold.woff2');
+    // Using local font file paths for reliable server-side rendering
+    const regularFontPath = getLocalFontPath('noto-sans-arabic-regular.woff2');
+    const boldFontPath = getLocalFontPath('noto-sans-arabic-bold.woff2');
     
     Font.register({
       family: 'NotoSansArabic',
       fonts: [
         {
-          src: regularFontBuffer,
+          src: regularFontPath,
           fontWeight: 'normal',
         },
         {
-          src: boldFontBuffer,
+          src: boldFontPath,
           fontWeight: 'bold',
         },
       ],
@@ -108,19 +107,19 @@ export function initializePDFFonts(): void {
 
   try {
     // Register Noto Sans Arabic - supports Kurdish Sorani, Arabic, and Latin characters
-    // Using local font files as buffers for reliable server-side rendering
-    const regularFontBuffer = getLocalFontBuffer('noto-sans-arabic-regular.woff2');
-    const boldFontBuffer = getLocalFontBuffer('noto-sans-arabic-bold.woff2');
+    // Using local font file paths for reliable server-side rendering
+    const regularFontPath = getLocalFontPath('noto-sans-arabic-regular.woff2');
+    const boldFontPath = getLocalFontPath('noto-sans-arabic-bold.woff2');
     
     Font.register({
       family: 'NotoSansArabic',
       fonts: [
         {
-          src: regularFontBuffer,
+          src: regularFontPath,
           fontWeight: 'normal',
         },
         {
-          src: boldFontBuffer,
+          src: boldFontPath,
           fontWeight: 'bold',
         },
       ],
