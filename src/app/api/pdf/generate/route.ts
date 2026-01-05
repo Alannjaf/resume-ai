@@ -71,6 +71,25 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // Validate resume data structure
+    if (!resumeData.personal) {
+      resumeData.personal = {
+        fullName: '',
+        email: '',
+        phone: '',
+        location: '',
+        linkedin: '',
+        website: '',
+        title: '',
+        profileImage: '',
+        dateOfBirth: '',
+        gender: '',
+        nationality: '',
+        maritalStatus: '',
+        country: ''
+      };
+    }
+
     // Initialize fonts for Unicode support (Kurdish Sorani, Arabic, English)
     initializePDFFonts();
 
@@ -107,9 +126,11 @@ export async function POST(request: NextRequest) {
       watermarked: shouldWatermark,
       mimeType: 'application/pdf'
     });
-  } catch {
+  } catch (error) {
+    console.error('PDF generation error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Failed to generate PDF' },
+      { error: `Failed to generate PDF: ${errorMessage}` },
       { status: 500 }
     );
   }

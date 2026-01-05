@@ -174,10 +174,17 @@ export async function GET(
       }
     });
 
+    // Validate that we have at least some data
+    if (!transformedData.personal || (!transformedData.personal.fullName && !transformedData.personal.email)) {
+      console.warn(`Resume ${id} has incomplete personal information`);
+    }
+
     return NextResponse.json(transformedData);
-  } catch {
+  } catch (error) {
+    console.error(`Error fetching resume ${id}:`, error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: `Internal Server Error: ${errorMessage}` },
       { status: 500 }
     );
   }

@@ -43,6 +43,33 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Template not found' }, { status: 404 });
     }
 
+    // Validate resume data before generating PDF
+    if (!resumeData || typeof resumeData !== 'object') {
+      return NextResponse.json(
+        { error: 'Invalid resume data provided' },
+        { status: 400 }
+      );
+    }
+
+    // Ensure personal info exists (required for PDF generation)
+    if (!resumeData.personal) {
+      resumeData.personal = {
+        fullName: '',
+        email: '',
+        phone: '',
+        location: '',
+        linkedin: '',
+        website: '',
+        title: '',
+        profileImage: '',
+        dateOfBirth: '',
+        gender: '',
+        nationality: '',
+        maritalStatus: '',
+        country: ''
+      };
+    }
+
     // Generate PDF blob
     const pdfDoc = pdf(React.createElement(templateComponent.type, templateComponent.props));
     const blob = await pdfDoc.toBlob();
@@ -63,9 +90,11 @@ export async function POST(request: NextRequest) {
         'X-Frame-Options': 'SAMEORIGIN',
       },
     });
-  } catch {
+  } catch (error) {
+    console.error('PDF generation error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: 'Failed to generate preview PDF' },
+      { error: `Failed to generate preview PDF: ${errorMessage}` },
       { status: 500 }
     );
   }

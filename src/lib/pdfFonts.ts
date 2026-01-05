@@ -57,7 +57,7 @@ export function getFontFamily(text: string | null | undefined): string {
   }
 
   // For English text, we can still use NotoSansArabic as it supports Latin
-  // Or use Helvetica for better performance with pure English
+  // This ensures consistent Unicode support across all languages
   return 'NotoSansArabic';
 }
 

@@ -1,8 +1,9 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { ResumeStatus } from '@prisma/client';
 import { Search } from 'lucide-react';
-import { getAllTemplates } from '@/lib/templates';
+import { getAllTemplates, TemplateInfo } from '@/lib/templates';
 
 interface ResumeFiltersProps {
   search: string;
@@ -13,6 +14,12 @@ interface ResumeFiltersProps {
   onTemplateChange: (template: string) => void;
 }
 
+interface TemplatesByTier {
+  free: Array<TemplateInfo & { tier: 'free' }>;
+  basic: Array<TemplateInfo & { tier: 'basic' }>;
+  pro: Array<TemplateInfo & { tier: 'pro' }>;
+}
+
 export function ResumeFilters({
   search,
   status,
@@ -20,7 +27,35 @@ export function ResumeFilters({
   onSearchChange,
   onStatusChange,
   onTemplateChange}: ResumeFiltersProps) {
-  const templates = getAllTemplates();
+  const [templates, setTemplates] = useState<TemplateInfo[]>(getAllTemplates());
+
+  // Fetch templates from API to ensure we have all available templates
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      try {
+        const response = await fetch('/api/templates');
+        if (response.ok) {
+          const data: TemplatesByTier = await response.json();
+          // Combine all templates from all tiers
+          const allTemplates = [
+            ...(data.free || []),
+            ...(data.basic || []),
+            ...(data.pro || [])
+          ];
+          // Remove duplicates by id and map to TemplateInfo format
+          const uniqueTemplates = Array.from(
+            new Map(allTemplates.map(t => [t.id, { id: t.id, name: t.name, description: t.description, category: t.category }])).values()
+          );
+          setTemplates(uniqueTemplates.length > 0 ? uniqueTemplates : getAllTemplates());
+        }
+      } catch {
+        // Fallback to hardcoded templates if API fails
+        setTemplates(getAllTemplates());
+      }
+    };
+
+    fetchTemplates();
+  }, []);
   
   return (
     <div className="space-y-4">
