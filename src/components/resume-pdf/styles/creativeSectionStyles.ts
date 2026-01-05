@@ -15,7 +15,7 @@ export const sectionStyles = StyleSheet.create({
 
   // Section containers
   section: {
-    marginBottom: 25},
+    marginBottom: 20},
 
   sectionTitleContainer: {
     marginBottom: 15,

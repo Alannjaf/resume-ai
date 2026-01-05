@@ -49,7 +49,8 @@ export const sidebarStyles = StyleSheet.create({
   gpa: {
     fontSize: 9,
     color: '#059669',
-    fontWeight: 'bold'},
+    fontWeight: 'bold',
+    marginBottom: 6},
 
   achievements: {
     fontSize: 9,

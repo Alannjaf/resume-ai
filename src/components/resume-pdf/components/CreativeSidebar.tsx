@@ -32,11 +32,11 @@ export const CreativeSidebar: React.FC<CreativeSidebarProps> = ({ data }) => {
 
       {/* Education Section */}
       {data.education && data.education.length > 0 && (
-        <View style={sectionStyles.section}>
+        <View style={sectionStyles.section} wrap={false}>
           {data.education.map((edu, index) => {
             if (index === 0) {
               return (
-                <View key={edu.id} style={sidebarStyles.educationItem}>
+                <View key={edu.id} style={sidebarStyles.educationItem} wrap={false}>
                   <View wrap={false}>
                     <View style={sectionStyles.sectionTitleContainer}>
                       <Text style={sectionStyles.sectionTitle}>Education</Text>
@@ -51,7 +51,7 @@ export const CreativeSidebar: React.FC<CreativeSidebarProps> = ({ data }) => {
                     {edu.gpa && <Text style={sidebarStyles.gpa}>GPA: {edu.gpa}</Text>}
                   </View>
                   {edu.achievements && (
-                    <View style={{ marginTop: 2 }}>
+                    <View style={{ marginTop: 8 }}>
                       {parseHtmlToPdf(edu.achievements, { 
                         text: { fontSize: 9, color: '#4b5563', lineHeight: 1.4 }
                       }).elements}
@@ -70,7 +70,7 @@ export const CreativeSidebar: React.FC<CreativeSidebarProps> = ({ data }) => {
                   </Text>
                   {edu.gpa && <Text style={sidebarStyles.gpa}>GPA: {edu.gpa}</Text>}
                   {edu.achievements && (
-                    <View style={{ marginTop: 2 }}>
+                    <View style={{ marginTop: 8 }}>
                       {parseHtmlToPdf(edu.achievements, { 
                         text: { fontSize: 9, color: '#4b5563', lineHeight: 1.4 }
                       }).elements}
