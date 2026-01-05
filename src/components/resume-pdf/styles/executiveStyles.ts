@@ -6,7 +6,7 @@ export const executiveStyles = StyleSheet.create({
     paddingBottom: 35,
     paddingHorizontal: 40,
     backgroundColor: '#ffffff',
-    fontFamily: 'NotoSansArabic',
+    fontFamily: 'Helvetica',
     lineHeight: 1.4},
 
   // Header Styles

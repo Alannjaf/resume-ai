@@ -16,7 +16,7 @@ export const elegantStyles = StyleSheet.create({
     paddingBottom: 40,
     paddingHorizontal: 45,
     backgroundColor: colors.white,
-    fontFamily: 'NotoSansArabic',
+    fontFamily: 'Helvetica',
     lineHeight: 1.4,
     fontSize: 10},
 

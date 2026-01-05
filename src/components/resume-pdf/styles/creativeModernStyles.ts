@@ -17,7 +17,7 @@ export const creativeModernStyles = StyleSheet.create({
     paddingBottom: 30,
     paddingHorizontal: 35,
     backgroundColor: colors.white,
-    fontFamily: 'NotoSansArabic',
+    fontFamily: 'Helvetica',
     fontSize: 10,
     lineHeight: 1.4,
   },

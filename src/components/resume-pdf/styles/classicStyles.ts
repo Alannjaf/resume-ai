@@ -17,7 +17,7 @@ export const classicStyles = StyleSheet.create({
     paddingBottom: 40,
     paddingHorizontal: 50,
     backgroundColor: colors.white,
-    fontFamily: 'NotoSansArabic',
+    fontFamily: 'Helvetica',
     fontSize: 11,
     lineHeight: 1.5,
   },
