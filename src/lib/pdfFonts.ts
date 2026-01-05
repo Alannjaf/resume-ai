@@ -13,34 +13,23 @@ let fontsRegistered = false;
 let fontRegistrationError: Error | null = null;
 
 /**
- * Get font source - tries local file first, falls back to HTTP URL
+ * Get font source - only uses local files (HTTP URLs cause fontkit parsing errors)
  * Uses TTF format for better fontkit compatibility (WOFF2 causes crashes)
+ * Returns null if local file is not available (caller should skip registration)
  */
-function getFontSource(fontFileName: string): string {
-  // Try local file path first (works in local dev and some deployment environments)
+function getFontSource(fontFileName: string): string | null {
+  // Only use local file paths - HTTP URLs cause "Unknown font format" errors
+  // in serverless environments because fontkit cannot parse fonts from URLs directly
   try {
     const fontPath = path.join(process.cwd(), "public", "fonts", fontFileName);
     if (fs.existsSync(fontPath)) {
       return fontPath;
     }
   } catch {
-    // File system access failed, will use HTTP URL
+    // File system access failed
   }
 
-  // Fallback to HTTP URL (for serverless/production environments)
-  // Using GitHub raw URLs for TTF files - more reliable than Google Fonts CDN for WOFF2
-  const fontUrlMap: Record<string, string> = {
-    "noto-sans-arabic-regular-static.ttf":
-      "https://github.com/google/fonts/raw/main/ofl/notosansarabic/static/NotoSansArabic-Regular.ttf",
-    "noto-sans-arabic-bold-static.ttf":
-      "https://github.com/google/fonts/raw/main/ofl/notosansarabic/static/NotoSansArabic-Bold.ttf",
-  };
-
-  if (fontUrlMap[fontFileName]) {
-    return fontUrlMap[fontFileName];
-  }
-
-  throw new Error(`Font source not found for: ${fontFileName}`);
+  return null; // No local file available
 }
 
 /**
@@ -61,6 +50,10 @@ export async function registerPDFFonts(): Promise<void> {
     // Uses TTF format for better fontkit compatibility
     const regularFontSrc = getFontSource("noto-sans-arabic-regular-static.ttf");
     const boldFontSrc = getFontSource("noto-sans-arabic-bold-static.ttf");
+
+    if (!regularFontSrc || !boldFontSrc) {
+      throw new Error("Local font files not found");
+    }
 
     Font.register({
       family: "NotoSansArabic",
@@ -119,8 +112,9 @@ export function getFontFamily(text: string | null | undefined): string {
  * This is a simpler version that doesn't require async
  * Note: Font registration in @react-pdf/renderer should happen before any PDF generation
  *
- * Uses TTF format for better compatibility with fontkit (WOFF2 causes crashes).
- * Will attempt to use HTTP URLs for TTF files if local files are not available.
+ * IMPORTANT: Only uses local font files. HTTP URLs cause "Unknown font format" errors
+ * because fontkit cannot parse fonts directly from URLs in serverless environments.
+ * In serverless/production, fonts will not be registered and system fonts will be used.
  */
 export function initializePDFFonts(): void {
   if (fontsRegistered) {
@@ -134,13 +128,25 @@ export function initializePDFFonts(): void {
     return; // Don't retry if it failed before - the font files are likely invalid
   }
 
+  // Only register fonts if we have local files
+  // HTTP URLs cause fontkit parsing errors ("Unknown font format")
+  const regularFontSrc = getFontSource("noto-sans-arabic-regular-static.ttf");
+  const boldFontSrc = getFontSource("noto-sans-arabic-bold-static.ttf");
+
+  if (!regularFontSrc || !boldFontSrc) {
+    console.warn(
+      "Local font files not found. Skipping custom font registration."
+    );
+    console.warn(
+      "PDF generation will use system default fonts (Helvetica). Kurdish/Arabic text may not render correctly."
+    );
+    return; // Skip registration - use system fonts
+  }
+
   try {
     // Register Noto Sans Arabic - supports Kurdish Sorani, Arabic, and Latin characters
     // Using TTF format (more compatible with fontkit than WOFF2)
-    // Will try local files first, fall back to GitHub raw URLs for TTF
-    const regularFontSrc = getFontSource("noto-sans-arabic-regular-static.ttf");
-    const boldFontSrc = getFontSource("noto-sans-arabic-bold-static.ttf");
-
+    // Only using local file paths - HTTP URLs are not supported
     Font.register({
       family: "NotoSansArabic",
       fonts: [
