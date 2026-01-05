@@ -13,19 +13,32 @@ let fontsRegistered = false;
 let fontRegistrationError: Error | null = null;
 
 /**
- * Get local font file path for server-side use
- * @react-pdf/renderer's Font.register() accepts file paths as strings
+ * Get font source - tries local file first, falls back to HTTP URL
+ * This works in both local development (file paths) and production/serverless (HTTP URLs)
  */
-function getLocalFontPath(fontFileName: string): string {
-  // For server-side, use absolute path from project root
-  const fontPath = path.join(process.cwd(), 'public', 'fonts', fontFileName);
-  
-  // Verify file exists
-  if (!fs.existsSync(fontPath)) {
-    throw new Error(`Font file not found: ${fontPath}`);
+function getFontSource(fontFileName: string): string {
+  // Try local file path first (works in local dev and some deployment environments)
+  try {
+    const fontPath = path.join(process.cwd(), 'public', 'fonts', fontFileName);
+    if (fs.existsSync(fontPath)) {
+      return fontPath;
+    }
+  } catch {
+    // File system access failed, will use HTTP URL
   }
   
-  return fontPath;
+  // Fallback to HTTP URL (works in serverless/production environments)
+  // Use the original Google Fonts CDN URL as fallback
+  const fontUrlMap: Record<string, string> = {
+    'noto-sans-arabic-regular.woff2': 'https://fonts.gstatic.com/s/notosansarabic/v18/nwpxtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlhQ5l3sQWIHPqzCfyGyfuXqA.woff2',
+    'noto-sans-arabic-bold.woff2': 'https://fonts.gstatic.com/s/notosansarabic/v18/nwpxtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlhQ5l3sQWIHPqzCfyGyfuXqA.woff2',
+  };
+  
+  if (fontUrlMap[fontFileName]) {
+    return fontUrlMap[fontFileName];
+  }
+  
+  throw new Error(`Font source not found for: ${fontFileName}`);
 }
 
 /**
@@ -43,19 +56,19 @@ export async function registerPDFFonts(): Promise<void> {
 
   try {
     // Register Noto Sans Arabic - supports Kurdish Sorani, Arabic, and Latin characters
-    // Using local font file paths for reliable server-side rendering
-    const regularFontPath = getLocalFontPath('noto-sans-arabic-regular.woff2');
-    const boldFontPath = getLocalFontPath('noto-sans-arabic-bold.woff2');
+    // Uses local file paths when available, falls back to HTTP URLs for serverless/production
+    const regularFontSrc = getFontSource('noto-sans-arabic-regular.woff2');
+    const boldFontSrc = getFontSource('noto-sans-arabic-bold.woff2');
     
     Font.register({
       family: 'NotoSansArabic',
       fonts: [
         {
-          src: regularFontPath,
+          src: regularFontSrc,
           fontWeight: 'normal',
         },
         {
-          src: boldFontPath,
+          src: boldFontSrc,
           fontWeight: 'bold',
         },
       ],
@@ -107,19 +120,19 @@ export function initializePDFFonts(): void {
 
   try {
     // Register Noto Sans Arabic - supports Kurdish Sorani, Arabic, and Latin characters
-    // Using local font file paths for reliable server-side rendering
-    const regularFontPath = getLocalFontPath('noto-sans-arabic-regular.woff2');
-    const boldFontPath = getLocalFontPath('noto-sans-arabic-bold.woff2');
+    // Uses local file paths when available, falls back to HTTP URLs for serverless/production
+    const regularFontSrc = getFontSource('noto-sans-arabic-regular.woff2');
+    const boldFontSrc = getFontSource('noto-sans-arabic-bold.woff2');
     
     Font.register({
       family: 'NotoSansArabic',
       fonts: [
         {
-          src: regularFontPath,
+          src: regularFontSrc,
           fontWeight: 'normal',
         },
         {
-          src: boldFontPath,
+          src: boldFontSrc,
           fontWeight: 'bold',
         },
       ],
