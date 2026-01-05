@@ -122,7 +122,6 @@ function InteractiveTemplateCard({
           relative w-56 md:w-64 h-72 md:h-80 
           rounded-xl shadow-2xl border
           transition-all duration-300 ease-out
-          will-change-transform
           ${
             isFeatured
               ? "bg-gradient-to-br from-white to-blue-50/30 border-2 border-blue-200"
@@ -142,6 +141,7 @@ function InteractiveTemplateCard({
           transformStyle: "preserve-3d",
           backfaceVisibility: "hidden",
           WebkitBackfaceVisibility: "hidden",
+          willChange: isHovered ? 'transform' : 'auto',
           boxShadow: isHovered
             ? `0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(59, 130, 246, 0.1), 0 0 50px -10px rgba(59, 130, 246, ${shadowIntensity / 100})`
             : "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
@@ -175,20 +175,23 @@ export function Hero() {
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-indigo-50"></div>
 
-        {/* Animated gradient orbs */}
-        <div className="absolute -top-40 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 opacity-20 blur-3xl animate-pulse"></div>
+        {/* Animated gradient orbs - optimized with will-change */}
+        <div 
+          className="absolute -top-40 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 opacity-20 blur-3xl animate-pulse"
+          style={{ willChange: 'opacity' }}
+        ></div>
         <div
           className="absolute -bottom-40 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-indigo-400 to-purple-600 opacity-20 blur-3xl animate-pulse"
-          style={{ animationDelay: "1s" }}
+          style={{ animationDelay: "1s", willChange: 'opacity' }}
         ></div>
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-purple-400 to-pink-400 opacity-10 blur-3xl animate-pulse"
-          style={{ animationDelay: "2s" }}
+          style={{ animationDelay: "2s", willChange: 'opacity' }}
         ></div>
 
-        {/* Animated particles */}
-        <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
+        {/* Animated particles - reduced count for performance */}
+        <div className="absolute inset-0" style={{ contentVisibility: 'auto' }}>
+          {[...Array(10)].map((_, i) => (
             <div
               key={i}
               className="absolute w-1 h-1 bg-blue-400 rounded-full opacity-30 animate-float"
@@ -197,6 +200,7 @@ export function Hero() {
                 top: `${Math.random() * 100}%`,
                 animationDelay: `${Math.random() * 3}s`,
                 animationDuration: `${3 + Math.random() * 4}s`,
+                willChange: 'transform',
               }}
             ></div>
           ))}
@@ -304,7 +308,7 @@ export function Hero() {
           </div>
 
           {/* Enhanced 3D Interactive Resume Preview */}
-          <div className="mt-20 max-w-6xl mx-auto">
+          <div className="mt-20 max-w-6xl mx-auto" style={{ contentVisibility: 'auto' }}>
             <div className="flex flex-wrap justify-center items-center gap-6 lg:gap-8 -space-x-4 lg:-space-x-8">
               {/* Resume Card 1 - Modern Template (Left, rotated right) */}
               <div className="relative z-0 hover:z-20 transition-z duration-300">

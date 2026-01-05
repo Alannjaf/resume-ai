@@ -32,6 +32,7 @@ export function Logo({ className = '', size = 'md', showText = true }: LogoProps
         height={logoHeights[size]}
         className="object-contain"
         priority
+        sizes="(max-width: 768px) 120px, 160px"
       />
     </div>
   )

@@ -6,9 +6,10 @@ import Image from 'next/image'
 interface TemplateThumbnailProps {
   templateId: string
   className?: string
+  priority?: boolean
 }
 
-export function TemplateThumbnail({ templateId, className = '' }: TemplateThumbnailProps) {
+export function TemplateThumbnail({ templateId, className = '', priority = false }: TemplateThumbnailProps) {
   const getThumbnailSrc = () => {
     switch (templateId) {
       case 'modern':
@@ -71,7 +72,8 @@ export function TemplateThumbnail({ templateId, className = '' }: TemplateThumbn
         width={300}
         height={400}
         className="w-full h-full object-cover"
-        priority
+        priority={priority}
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       />
     </div>
   )
