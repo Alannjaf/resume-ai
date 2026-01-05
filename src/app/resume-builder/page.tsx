@@ -100,6 +100,39 @@ function ResumeBuilderContent() {
     queueSave()
   }, [setSelectedTemplate, queueSave])
 
+  // Preview handler - triggers translation before opening preview
+  const handlePreview = useCallback(async () => {
+    // Check if there's non-English content that needs translation
+    if (hasNonEnglishContent(formData)) {
+      setIsAutoTranslating(true)
+      
+      try {
+        const translatedData = await autoTranslateToEnglish(formData)
+        setFormData(translatedData)
+        
+        // Force save the translated data immediately before preview
+        if (resumeId) {
+          await fetch(`/api/resumes/${resumeId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: resumeTitle,
+              template: selectedTemplate,
+              formData: translatedData
+            })
+          })
+        }
+      } catch {
+        toast.error(t('pages.resumeBuilder.messages.translationError'))
+      } finally {
+        setIsAutoTranslating(false)
+      }
+    }
+    
+    // Open preview modal after translation
+    setShowPreview(true)
+  }, [hasNonEnglishContent, formData, autoTranslateToEnglish, setFormData, resumeId, resumeTitle, selectedTemplate, setIsAutoTranslating, t])
+
   // Navigation handlers
   const handleNext = useCallback(async () => {
     if (currentSection < formSections.length - 1) {
@@ -353,7 +386,7 @@ function ResumeBuilderContent() {
             break
           case 'p':
             event.preventDefault()
-            setShowPreview(true)
+            handlePreview()
             break
         }
       } else {
@@ -380,7 +413,7 @@ function ResumeBuilderContent() {
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [handleSave, handlePrevious, handleNext])
+  }, [handleSave, handlePrevious, handleNext, handlePreview])
 
   if (isLoading) {
     return (
@@ -453,7 +486,8 @@ function ResumeBuilderContent() {
               <Button 
                 variant="outline" 
                 size="sm"
-                onClick={() => setShowPreview(true)}
+                onClick={handlePreview}
+                disabled={isAutoTranslating}
               >
                 <Eye className="h-4 w-4 mr-2" />
                 {t('pages.resumeBuilder.actions.preview')}
@@ -541,7 +575,7 @@ function ResumeBuilderContent() {
                 setSelectedTemplate={setSelectedTemplateWithSave}
                 onPreviewTemplate={(templateId) => {
                   setSelectedTemplateWithSave(templateId)
-                  setShowPreview(true)
+                  handlePreview()
                 }}
                 summaryTextareaRef={summaryTextareaRef}
                 formSections={formSections}
@@ -561,7 +595,7 @@ function ResumeBuilderContent() {
                   {t('pages.resumeBuilder.actions.previous')}
                 </Button>
                 {currentSection === formSections.length - 1 ? (
-                  <Button onClick={() => setShowPreview(true)}>
+                  <Button onClick={handlePreview} disabled={isAutoTranslating}>
                     <Eye className="h-4 w-4 mr-2" />
                     {t('pages.resumeBuilder.actions.viewResume')}
                   </Button>

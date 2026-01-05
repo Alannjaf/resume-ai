@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { ResumeData } from '@/types/resume'
-import { isNonEnglishContent } from '@/lib/languageDetection'
+import { isNonEnglishContent, hasArabicIndicNumerals, normalizePhoneNumber } from '@/lib/languageDetection'
 import { useLanguage } from '@/contexts/LanguageContext'
 import toast from 'react-hot-toast'
 
@@ -8,14 +8,17 @@ export function useAutoTranslation() {
   const { t } = useLanguage()
   const [isAutoTranslating, setIsAutoTranslating] = useState(false)
 
-  // Quick check if form data contains any non-English content
+  // Quick check if form data contains any non-English content or needs normalization
   const hasNonEnglishContent = useCallback((formData: ResumeData): boolean => {
-    // Personal information
+    // Personal information - text fields
     if (formData.personal.fullName && isNonEnglishContent(formData.personal.fullName)) return true
     if (formData.personal.title && isNonEnglishContent(formData.personal.title)) return true
     if (formData.personal.location && isNonEnglishContent(formData.personal.location)) return true
     if (formData.personal.nationality && isNonEnglishContent(formData.personal.nationality)) return true
     if (formData.personal.country && isNonEnglishContent(formData.personal.country)) return true
+    
+    // Phone number - check for Arabic-Indic numerals
+    if (formData.personal.phone && hasArabicIndicNumerals(formData.personal.phone)) return true
 
     // Professional summary
     if (formData.summary && isNonEnglishContent(formData.summary)) return true
@@ -69,7 +72,16 @@ export function useAutoTranslation() {
 
   const autoTranslateToEnglish = useCallback(async (formData: ResumeData): Promise<ResumeData> => {
     const translatedData = { ...formData }
+    // Deep clone personal to avoid mutation issues
+    translatedData.personal = { ...formData.personal }
     let hasTranslations = false
+
+    // First, normalize phone number if it contains Arabic-Indic numerals
+    // This is done locally without AI, just numeral conversion
+    if (formData.personal.phone && hasArabicIndicNumerals(formData.personal.phone)) {
+      translatedData.personal.phone = normalizePhoneNumber(formData.personal.phone)
+      hasTranslations = true
+    }
 
     try {
       // Collect all content that needs translation

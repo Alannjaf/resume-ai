@@ -84,3 +84,65 @@ export function shouldShowTranslateButton(text: string): boolean {
   if (!text || text.trim().length < 2) return false // Must have at least 2 characters
   return isNonEnglishContent(text)
 }
+
+// Arabic-Indic numerals (٠١٢٣٤٥٦٧٨٩) to Western numerals (0123456789)
+const ARABIC_INDIC_NUMERALS: Record<string, string> = {
+  '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
+  '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9'
+}
+
+// Extended Arabic-Indic numerals (used in Persian/Urdu)
+const EXTENDED_ARABIC_NUMERALS: Record<string, string> = {
+  '۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4',
+  '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9'
+}
+
+/**
+ * Checks if text contains Arabic-Indic numerals
+ */
+export function hasArabicIndicNumerals(text: string): boolean {
+  if (!text) return false
+  // Check for both Arabic-Indic (٠-٩) and Extended Arabic-Indic (۰-۹)
+  return /[\u0660-\u0669\u06F0-\u06F9]/.test(text)
+}
+
+/**
+ * Converts Arabic-Indic numerals to Western numerals
+ * Handles both standard Arabic-Indic (٠-٩) and Extended (۰-۹) numerals
+ */
+export function convertArabicIndicToWestern(text: string): string {
+  if (!text) return text
+  
+  let result = text
+  
+  // Convert standard Arabic-Indic numerals
+  for (const [arabic, western] of Object.entries(ARABIC_INDIC_NUMERALS)) {
+    result = result.replace(new RegExp(arabic, 'g'), western)
+  }
+  
+  // Convert extended Arabic-Indic numerals (Persian/Urdu)
+  for (const [arabic, western] of Object.entries(EXTENDED_ARABIC_NUMERALS)) {
+    result = result.replace(new RegExp(arabic, 'g'), western)
+  }
+  
+  return result
+}
+
+/**
+ * Normalizes a phone number by converting Arabic-Indic numerals to Western
+ * and removing any non-phone characters except + and spaces
+ */
+export function normalizePhoneNumber(phone: string): string {
+  if (!phone) return phone
+  
+  // First convert Arabic-Indic numerals to Western
+  let normalized = convertArabicIndicToWestern(phone)
+  
+  // Keep only digits, +, spaces, and common phone separators
+  normalized = normalized.replace(/[^\d+\s\-().]/g, '')
+  
+  // Clean up multiple spaces
+  normalized = normalized.replace(/\s+/g, ' ').trim()
+  
+  return normalized
+}
