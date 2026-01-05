@@ -35,6 +35,7 @@ export async function GET(
     }
 
     // Parse personalInfo as JSON if it's stored as JSON
+    // JSON.parse() preserves UTF-8 encoding, including Kurdish Sorani and Arabic characters
     const defaultPersonalInfo: PersonalInfo = {
       fullName: '',
       email: '',
@@ -48,7 +49,8 @@ export async function GET(
     if (resume.personalInfo) {
       try {
         personalInfo = typeof resume.personalInfo === 'string' ? JSON.parse(resume.personalInfo) : resume.personalInfo;
-      } catch {
+      } catch (parseError) {
+        console.warn(`Failed to parse personalInfo for resume ${id}:`, parseError);
         personalInfo = defaultPersonalInfo;
       }
     }
@@ -179,6 +181,7 @@ export async function GET(
       console.warn(`Resume ${id} has incomplete personal information`);
     }
 
+    // NextResponse.json() automatically handles UTF-8 encoding for Unicode characters (Kurdish, Arabic, etc.)
     return NextResponse.json(transformedData);
   } catch (error) {
     console.error(`Error fetching resume ${id}:`, error);

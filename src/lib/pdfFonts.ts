@@ -5,9 +5,29 @@
 
 import { Font } from '@react-pdf/renderer';
 import { hasArabicKurdishChars } from './languageDetection';
+import path from 'path';
+import fs from 'fs';
 
 // Font registration flag to prevent multiple registrations
 let fontsRegistered = false;
+let fontRegistrationError: Error | null = null;
+
+/**
+ * Get local font file as buffer for server-side use
+ * @react-pdf/renderer's Font.register() accepts file paths, but buffers are more reliable on server-side
+ */
+function getLocalFontBuffer(fontFileName: string): Buffer {
+  // For server-side, use absolute path from project root
+  const fontPath = path.join(process.cwd(), 'public', 'fonts', fontFileName);
+  
+  // Verify file exists
+  if (!fs.existsSync(fontPath)) {
+    throw new Error(`Font file not found: ${fontPath}`);
+  }
+  
+  // Read font file as buffer for reliable server-side font loading
+  return fs.readFileSync(fontPath);
+}
 
 /**
  * Register fonts that support Kurdish Sorani, Arabic, and English
@@ -18,27 +38,37 @@ export async function registerPDFFonts(): Promise<void> {
     return;
   }
 
+  if (fontRegistrationError) {
+    throw fontRegistrationError;
+  }
+
   try {
     // Register Noto Sans Arabic - supports Kurdish Sorani, Arabic, and Latin characters
-    // Using Google Fonts CDN - the font supports all required scripts
+    // Using local font files as buffers for reliable server-side rendering
+    const regularFontBuffer = getLocalFontBuffer('noto-sans-arabic-regular.woff2');
+    const boldFontBuffer = getLocalFontBuffer('noto-sans-arabic-bold.woff2');
+    
     Font.register({
       family: 'NotoSansArabic',
       fonts: [
         {
-          src: 'https://fonts.gstatic.com/s/notosansarabic/v18/nwpxtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlhQ5l3sQWIHPqzCfyGyfuXqA.woff2',
+          src: regularFontBuffer,
           fontWeight: 'normal',
         },
         {
-          src: 'https://fonts.gstatic.com/s/notosansarabic/v18/nwpxtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlhQ5l3sQWIHPqzCfyGyfuXqA.woff2',
+          src: boldFontBuffer,
           fontWeight: 'bold',
         },
       ],
     });
     
     fontsRegistered = true;
+    console.log('PDF fonts registered successfully');
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    fontRegistrationError = error instanceof Error ? error : new Error(errorMessage);
     console.error('Failed to register PDF fonts:', error);
-    // Continue with default fonts if registration fails
+    throw fontRegistrationError; // Re-throw to let callers handle the error
   }
 }
 
@@ -71,29 +101,47 @@ export function initializePDFFonts(): void {
     return;
   }
 
+  if (fontRegistrationError) {
+    console.warn('Font registration previously failed, attempting again...');
+    fontRegistrationError = null;
+  }
+
   try {
     // Register Noto Sans Arabic - supports Kurdish Sorani, Arabic, and Latin characters
-    // Note: If the CDN URL doesn't work, you may need to download the font file
-    // and serve it locally or use a different CDN
+    // Using local font files as buffers for reliable server-side rendering
+    const regularFontBuffer = getLocalFontBuffer('noto-sans-arabic-regular.woff2');
+    const boldFontBuffer = getLocalFontBuffer('noto-sans-arabic-bold.woff2');
+    
     Font.register({
       family: 'NotoSansArabic',
       fonts: [
         {
-          src: 'https://fonts.gstatic.com/s/notosansarabic/v18/nwpxtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlhQ5l3sQWIHPqzCfyGyfuXqA.woff2',
+          src: regularFontBuffer,
           fontWeight: 'normal',
         },
         {
-          src: 'https://fonts.gstatic.com/s/notosansarabic/v18/nwpxtLGrOAZMl5nJ_wfgRg3DrWFZWsnVBJ_sS6tlqHHFlhQ5l3sQWIHPqzCfyGyfuXqA.woff2',
+          src: boldFontBuffer,
           fontWeight: 'bold',
         },
       ],
     });
 
     fontsRegistered = true;
+    console.log('PDF fonts initialized successfully');
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    fontRegistrationError = error instanceof Error ? error : new Error(errorMessage);
     console.error('Failed to initialize PDF fonts:', error);
-    // If font registration fails, we'll fall back to default fonts
-    // The styles will use 'NotoSansArabic' but it may fall back to system fonts
+    console.error('Font registration error details:', errorMessage);
+    // Don't throw here - let the PDF generation attempt continue
+    // The error will be logged and may cause rendering issues, but won't crash the process
   }
+}
+
+/**
+ * Check if fonts are successfully registered
+ */
+export function areFontsRegistered(): boolean {
+  return fontsRegistered;
 }
 

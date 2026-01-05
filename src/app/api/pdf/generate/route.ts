@@ -6,7 +6,7 @@ import { generateWatermarkedPDF } from '@/lib/watermarkedTemplate';
 import { pdf } from '@react-pdf/renderer';
 import { prisma } from '@/lib/prisma';
 import { ResumeData } from '@/types/resume';
-import { initializePDFFonts } from '@/lib/pdfFonts';
+import { initializePDFFonts, areFontsRegistered } from '@/lib/pdfFonts';
 import React from 'react';
 
 type Action = 'preview' | 'download';
@@ -92,6 +92,12 @@ export async function POST(request: NextRequest) {
 
     // Initialize fonts for Unicode support (Kurdish Sorani, Arabic, English)
     initializePDFFonts();
+    
+    // Log font registration status for debugging
+    const fontsRegistered = areFontsRegistered();
+    if (!fontsRegistered) {
+      console.warn('Fonts not registered - PDF generation may fail for Kurdish/Arabic text');
+    }
 
     // Generate PDF
     if (shouldWatermark) {
@@ -129,6 +135,17 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('PDF generation error:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    
+    // Log additional context for font-related errors
+    if (errorMessage.includes('font') || errorMessage.includes('Font')) {
+      console.error('Font-related error detected. Font registration status:', areFontsRegistered());
+    }
+    
+    if (errorStack) {
+      console.error('Error stack:', errorStack);
+    }
+    
     return NextResponse.json(
       { error: `Failed to generate PDF: ${errorMessage}` },
       { status: 500 }

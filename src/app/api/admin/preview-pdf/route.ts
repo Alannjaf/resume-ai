@@ -3,7 +3,7 @@ import { auth } from '@clerk/nextjs/server';
 import { prisma } from '@/lib/prisma';
 import { getTemplate } from '@/lib/getTemplate';
 import { pdf } from '@react-pdf/renderer';
-import { initializePDFFonts } from '@/lib/pdfFonts';
+import { initializePDFFonts, areFontsRegistered } from '@/lib/pdfFonts';
 import React from 'react';
 
 export async function POST(request: NextRequest) {
@@ -35,6 +35,12 @@ export async function POST(request: NextRequest) {
 
     // Initialize fonts for Unicode support (Kurdish Sorani, Arabic, English)
     initializePDFFonts();
+    
+    // Log font registration status for debugging
+    const fontsRegistered = areFontsRegistered();
+    if (!fontsRegistered) {
+      console.warn('Fonts not registered - PDF generation may fail for Kurdish/Arabic text');
+    }
 
     // Generate PDF without watermark for admin users
     const templateComponent = getTemplate(template, resumeData);
@@ -91,8 +97,19 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('PDF generation error:', error);
+    console.error('Admin PDF generation error:', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    
+    // Log additional context for font-related errors
+    if (errorMessage.includes('font') || errorMessage.includes('Font')) {
+      console.error('Font-related error detected. Font registration status:', areFontsRegistered());
+    }
+    
+    if (errorStack) {
+      console.error('Error stack:', errorStack);
+    }
+    
     return NextResponse.json(
       { error: `Failed to generate preview PDF: ${errorMessage}` },
       { status: 500 }
