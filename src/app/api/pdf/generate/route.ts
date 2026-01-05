@@ -9,6 +9,31 @@ import { ResumeData } from '@/types/resume';
 import { initializePDFFonts, areFontsRegistered } from '@/lib/pdfFonts';
 import React from 'react';
 
+/**
+ * Normalize Arabic-Indic numerals (٠-٩) to Western numerals (0-9)
+ * This helps ensure phone numbers are handled correctly by PDF renderer
+ */
+function normalizePhoneNumber(phone: string | undefined | null): string {
+  if (!phone || typeof phone !== 'string') return '';
+  
+  // Map Arabic-Indic numerals to Western numerals
+  const arabicIndicMap: Record<string, string> = {
+    '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4',
+    '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9'
+  };
+  
+  return phone.replace(/[٠-٩]/g, (char) => arabicIndicMap[char] || char);
+}
+
+/**
+ * Sanitize string field - ensure it's a valid string
+ */
+function sanitizeStringField(value: unknown, defaultValue: string = ''): string {
+  if (value === null || value === undefined) return defaultValue;
+  if (typeof value === 'string') return value;
+  return String(value);
+}
+
 type Action = 'preview' | 'download';
 
 interface RequestBody {
@@ -71,7 +96,7 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Validate resume data structure
+    // Validate and sanitize resume data structure
     if (!resumeData.personal) {
       resumeData.personal = {
         fullName: '',
@@ -90,6 +115,38 @@ export async function POST(request: NextRequest) {
       };
     }
 
+    // Sanitize and normalize personal info fields
+    resumeData.personal = {
+      ...resumeData.personal,
+      fullName: sanitizeStringField(resumeData.personal.fullName),
+      email: sanitizeStringField(resumeData.personal.email),
+      phone: normalizePhoneNumber(resumeData.personal.phone), // Normalize Arabic-Indic numerals
+      location: sanitizeStringField(resumeData.personal.location),
+      linkedin: sanitizeStringField(resumeData.personal.linkedin),
+      website: sanitizeStringField(resumeData.personal.website),
+      title: sanitizeStringField(resumeData.personal.title),
+      profileImage: sanitizeStringField(resumeData.personal.profileImage),
+      dateOfBirth: sanitizeStringField(resumeData.personal.dateOfBirth),
+      gender: sanitizeStringField(resumeData.personal.gender),
+      nationality: sanitizeStringField(resumeData.personal.nationality),
+      maritalStatus: sanitizeStringField(resumeData.personal.maritalStatus),
+      country: sanitizeStringField(resumeData.personal.country),
+    };
+
+    // Sanitize summary
+    resumeData.summary = sanitizeStringField(resumeData.summary);
+
+    // Log resume data structure for debugging (sanitized - no sensitive data)
+    console.log('PDF generation started:', {
+      template,
+      action,
+      hasPersonalInfo: !!resumeData.personal?.fullName,
+      personalInfoFields: resumeData.personal ? Object.keys(resumeData.personal) : [],
+      summaryLength: resumeData.summary?.length || 0,
+      experienceCount: resumeData.experience?.length || 0,
+      educationCount: resumeData.education?.length || 0,
+    });
+
     // Initialize fonts for Unicode support (Kurdish Sorani, Arabic, English)
     initializePDFFonts();
     
@@ -99,25 +156,45 @@ export async function POST(request: NextRequest) {
       console.warn('Fonts not registered - PDF generation may fail for Kurdish/Arabic text');
     }
 
-    // Generate PDF
-    if (shouldWatermark) {
-      // Generate watermarked PDF for restricted templates
-      const watermarkedPDFBytes = await generateWatermarkedPDF(template, resumeData);
-      buffer = watermarkedPDFBytes.buffer.slice(
-        watermarkedPDFBytes.byteOffset,
-        watermarkedPDFBytes.byteOffset + watermarkedPDFBytes.byteLength
-      ) as ArrayBuffer;
-    } else {
-      // Generate clean PDF for accessible templates
-      const templateComponent = getTemplate(template, resumeData);
-      
-      if (!templateComponent) {
-        return NextResponse.json({ error: 'Template not found' }, { status: 404 });
-      }
+    // Generate PDF with detailed error handling for each step
+    try {
+      if (shouldWatermark) {
+        // Generate watermarked PDF for restricted templates
+        console.log('Generating watermarked PDF...');
+        const watermarkedPDFBytes = await generateWatermarkedPDF(template, resumeData);
+        buffer = watermarkedPDFBytes.buffer.slice(
+          watermarkedPDFBytes.byteOffset,
+          watermarkedPDFBytes.byteOffset + watermarkedPDFBytes.byteLength
+        ) as ArrayBuffer;
+        console.log('Watermarked PDF generated successfully');
+      } else {
+        // Generate clean PDF for accessible templates
+        console.log('Getting template component...');
+        const templateComponent = getTemplate(template, resumeData);
+        
+        if (!templateComponent) {
+          console.error('Template component not found for template:', template);
+          return NextResponse.json({ error: 'Template not found' }, { status: 404 });
+        }
 
-      const pdfDoc = pdf(React.createElement(templateComponent.type, templateComponent.props));
-      const blob = await pdfDoc.toBlob();
-      buffer = await blob.arrayBuffer();
+        console.log('Creating PDF document...');
+        const pdfDoc = pdf(React.createElement(templateComponent.type, templateComponent.props));
+        
+        console.log('Generating PDF blob...');
+        const blob = await pdfDoc.toBlob();
+        console.log('Converting PDF blob to buffer...');
+        buffer = await blob.arrayBuffer();
+        console.log('PDF generation completed successfully');
+      }
+    } catch (pdfError) {
+      console.error('Error during PDF generation step:', pdfError);
+      const pdfErrorMessage = pdfError instanceof Error ? pdfError.message : 'Unknown PDF generation error';
+      const pdfErrorStack = pdfError instanceof Error ? pdfError.stack : undefined;
+      console.error('PDF generation error message:', pdfErrorMessage);
+      if (pdfErrorStack) {
+        console.error('PDF generation error stack:', pdfErrorStack);
+      }
+      throw pdfError; // Re-throw to be caught by outer try-catch
     }
     
     // Convert buffer to base64 for secure transmission
@@ -133,18 +210,30 @@ export async function POST(request: NextRequest) {
       mimeType: 'application/pdf'
     });
   } catch (error) {
-    console.error('PDF generation error:', error);
+    console.error('PDF generation error (top level):', error);
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     const errorStack = error instanceof Error ? error.stack : undefined;
+    const errorName = error instanceof Error ? error.name : 'Error';
+    
+    // Log detailed error information
+    console.error('Error details:', {
+      name: errorName,
+      message: errorMessage,
+      hasStack: !!errorStack,
+    });
     
     // Log additional context for font-related errors
-    if (errorMessage.includes('font') || errorMessage.includes('Font')) {
+    if (errorMessage.includes('font') || errorMessage.includes('Font') || errorName.includes('Font')) {
       console.error('Font-related error detected. Font registration status:', areFontsRegistered());
     }
     
+    // Log full error stack
     if (errorStack) {
-      console.error('Error stack:', errorStack);
+      console.error('Full error stack:', errorStack);
     }
+    
+    // Log error as string for additional context
+    console.error('Error string representation:', String(error));
     
     return NextResponse.json(
       { error: `Failed to generate PDF: ${errorMessage}` },
