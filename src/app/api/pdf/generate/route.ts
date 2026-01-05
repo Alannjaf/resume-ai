@@ -6,6 +6,7 @@ import { generateWatermarkedPDF } from '@/lib/watermarkedTemplate';
 import { pdf } from '@react-pdf/renderer';
 import { prisma } from '@/lib/prisma';
 import { ResumeData } from '@/types/resume';
+import { initializePDFFonts } from '@/lib/pdfFonts';
 import React from 'react';
 
 type Action = 'preview' | 'download';
@@ -69,6 +70,9 @@ export async function POST(request: NextRequest) {
         data: { exportCount: { increment: 1 } }
       });
     }
+
+    // Initialize fonts for Unicode support (Kurdish Sorani, Arabic, English)
+    initializePDFFonts();
 
     // Generate PDF
     if (shouldWatermark) {

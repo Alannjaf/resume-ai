@@ -24,7 +24,7 @@ export function AdminResumePreview({
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [zoom, setZoom] = useState(1);
-  const [viewMode, setViewMode] = useState<'pdf' | 'html'>('html'); // Start with HTML by default
+  const [viewMode, setViewMode] = useState<'pdf' | 'html'>('pdf'); // Start with PDF by default
   const pdfUrlRef = useRef<string | null>(null);
 
   const generatePDF = async () => {

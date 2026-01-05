@@ -18,7 +18,7 @@ export const creativeArtisticStyles = StyleSheet.create({
     paddingBottom: 65,
     paddingHorizontal: 35,
     backgroundColor: colors.background,
-    fontFamily: 'Helvetica',
+    fontFamily: 'NotoSansArabic',
     fontSize: 10,
     lineHeight: 1.4},
 

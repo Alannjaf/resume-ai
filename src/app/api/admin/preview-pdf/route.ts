@@ -3,6 +3,7 @@ import { auth } from '@clerk/nextjs/server';
 import { prisma } from '@/lib/prisma';
 import { getTemplate } from '@/lib/getTemplate';
 import { pdf } from '@react-pdf/renderer';
+import { initializePDFFonts } from '@/lib/pdfFonts';
 import React from 'react';
 
 export async function POST(request: NextRequest) {
@@ -31,6 +32,9 @@ export async function POST(request: NextRequest) {
     if (!resumeData || !template) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
+
+    // Initialize fonts for Unicode support (Kurdish Sorani, Arabic, English)
+    initializePDFFonts();
 
     // Generate PDF without watermark for admin users
     const templateComponent = getTemplate(template, resumeData);

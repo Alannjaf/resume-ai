@@ -16,7 +16,7 @@ export const minimalistStyles = StyleSheet.create({
     paddingBottom: 50,
     paddingHorizontal: 60, 
     backgroundColor: colors.white,
-    fontFamily: 'Helvetica',
+    fontFamily: 'NotoSansArabic',
     fontSize: 10,
     lineHeight: 1.5},
 

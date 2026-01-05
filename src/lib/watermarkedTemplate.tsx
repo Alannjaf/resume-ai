@@ -1,6 +1,7 @@
 import { pdf } from '@react-pdf/renderer';
 import { ResumeData } from '../types/resume';
 import { PDFDocument, rgb, degrees } from 'pdf-lib';
+import { initializePDFFonts } from './pdfFonts';
 import React from 'react';
 import EnhancedModernTemplate from '../components/resume-pdf/EnhancedModernTemplate';
 import { CreativeTemplate } from '../components/resume-pdf/CreativeTemplate';
@@ -80,6 +81,9 @@ export const addWatermarkToPDF = async (pdfBytes: Uint8Array): Promise<Uint8Arra
 
 // Generate watermarked PDF using actual template
 export const generateWatermarkedPDF = async (template: string, data: ResumeData): Promise<Uint8Array> => {
+  // Initialize fonts for Unicode support (Kurdish Sorani, Arabic, English)
+  initializePDFFonts();
+  
   // Get the actual template component
   const templateComponent = getTemplateComponent(template, data);
   

@@ -2,6 +2,7 @@
 
 import { ResumeStatus } from '@prisma/client';
 import { Search } from 'lucide-react';
+import { getAllTemplates } from '@/lib/templates';
 
 interface ResumeFiltersProps {
   search: string;
@@ -19,6 +20,8 @@ export function ResumeFilters({
   onSearchChange,
   onStatusChange,
   onTemplateChange}: ResumeFiltersProps) {
+  const templates = getAllTemplates();
+  
   return (
     <div className="space-y-4">
       <div className="relative">
@@ -65,11 +68,11 @@ export function ResumeFilters({
                      focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="">All Templates</option>
-            <option value="modern">Modern</option>
-            <option value="classic">Classic</option>
-            <option value="minimal">Minimal</option>
-            <option value="creative">Creative</option>
-            <option value="professional">Professional</option>
+            {templates.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.name}
+              </option>
+            ))}
           </select>
         </div>
       </div>

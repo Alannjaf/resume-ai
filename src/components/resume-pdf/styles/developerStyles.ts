@@ -18,7 +18,7 @@ const colors = {
 export const styles = StyleSheet.create({
   // Page setup
   page: {
-    fontFamily: 'Courier',
+    fontFamily: 'NotoSansArabic',
     fontSize: 11,
     paddingTop: 35,
     paddingBottom: 35,
@@ -277,5 +277,5 @@ export const styles = StyleSheet.create({
   demographicsText: {
     fontSize: 8,
     color: colors.secondary,
-    fontFamily: 'Courier',
+    fontFamily: 'NotoSansArabic',
     lineHeight: 1.2}})

@@ -3,6 +3,7 @@ import { auth } from '@clerk/nextjs/server';
 import { checkUserLimits } from '@/lib/db';
 import { getTemplate } from '@/lib/getTemplate';
 import { pdf } from '@react-pdf/renderer';
+import { initializePDFFonts } from '@/lib/pdfFonts';
 import React from 'react';
 
 export async function GET(request: NextRequest) {
@@ -36,6 +37,9 @@ export async function GET(request: NextRequest) {
 
     // Check if user has access to the template
     const hasAccess = limits.availableTemplates?.includes(template) || false;
+    
+    // Initialize fonts for Unicode support (Kurdish Sorani, Arabic, English)
+    initializePDFFonts();
     
     // Generate PDF (watermark will be handled via CSS overlay on client)
     const templateComponent = getTemplate(template, resumeData);

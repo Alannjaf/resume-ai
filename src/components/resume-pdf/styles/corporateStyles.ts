@@ -17,7 +17,7 @@ export const corporateStyles = StyleSheet.create({
     paddingBottom: 30,
     paddingHorizontal: 35,
     backgroundColor: colors.white,
-    fontFamily: 'Helvetica',
+    fontFamily: 'NotoSansArabic',
     fontSize: 10,
     lineHeight: 1.4,
   },

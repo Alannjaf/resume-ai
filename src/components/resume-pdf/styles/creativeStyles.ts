@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     paddingBottom: 30,
     paddingLeft: 40,
     paddingRight: 40,
-    fontFamily: 'Helvetica',
+    fontFamily: 'NotoSansArabic',
     position: 'relative'},
 
   // Artistic background elements

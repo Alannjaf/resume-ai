@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
   page: {
     flexDirection: 'column',
     backgroundColor: '#ffffff',
-    fontFamily: 'Helvetica',
+    fontFamily: 'NotoSansArabic',
     fontSize: 10,
     lineHeight: 1.4,
     color: '#1a1a1a',
