@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/button';
 import { ResumeFilters } from './ResumeFilters';
 import { ResumeTable } from './ResumeTable';
 import { Pagination } from '@/components/ui/Pagination';
-import { ResumeDetailsModal } from './ResumeDetailsModal';
+import { AdminResumePreview } from './AdminResumePreview';
+import { ResumeData } from '@/types/resume';
 import { useDebounce } from '@/hooks/useDebounce';
 
 interface ResumeWithUser {
@@ -38,7 +39,9 @@ export function ResumeManagement() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [selectedResume, setSelectedResume] = useState<ResumeWithUser | null>(null);
+  const [previewResumeData, setPreviewResumeData] = useState<ResumeData | null>(null);
+  const [previewResumeInfo, setPreviewResumeInfo] = useState<{ id: string; title: string; template: string } | null>(null);
+  const [isLoadingPreview, setIsLoadingPreview] = useState(false);
   
   const debouncedSearch = useDebounce(search, 500);
 
@@ -106,6 +109,31 @@ export function ResumeManagement() {
       fetchResumes();
     } catch {
       toast.error('Failed to delete resumes');
+    }
+  };
+
+  const handleViewResume = async (resume: ResumeWithUser) => {
+    setIsLoadingPreview(true);
+    try {
+      const response = await fetch(`/api/admin/resumes/${resume.id}/preview`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch resume data');
+      }
+      
+      const data = await response.json();
+      setPreviewResumeData(data);
+      setPreviewResumeInfo({
+        id: resume.id,
+        title: resume.title,
+        template: resume.template
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to load resume preview';
+      toast.error(message);
+      // Fallback to opening in new tab
+      window.open(`/resumes/${resume.id}`, '_blank');
+    } finally {
+      setIsLoadingPreview(false);
     }
   };
 
@@ -198,7 +226,7 @@ export function ResumeManagement() {
               selectedIds={selectedIds}
               onSelectId={handleSelectId}
               onSelectAll={handleSelectAll}
-              onViewResume={setSelectedResume}
+              onViewResume={handleViewResume}
               onDeleteResume={(id) => handleDeleteResumes([id])}
             />
 
@@ -213,11 +241,28 @@ export function ResumeManagement() {
         )}
       </Card>
 
-      {selectedResume && (
-        <ResumeDetailsModal
-          resume={selectedResume}
-          onClose={() => setSelectedResume(null)}
+      {/* Preview Modal */}
+      {previewResumeData && previewResumeInfo && (
+        <AdminResumePreview
+          isOpen={true}
+          onClose={() => {
+            setPreviewResumeData(null);
+            setPreviewResumeInfo(null);
+          }}
+          data={previewResumeData}
+          template={previewResumeInfo.template}
+          resumeTitle={previewResumeInfo.title}
         />
+      )}
+
+      {/* Loading overlay for preview */}
+      {isLoadingPreview && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          <div className="bg-white rounded-lg p-6 flex flex-col items-center gap-4">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+            <p className="text-gray-700">Loading resume preview...</p>
+          </div>
+        </div>
       )}
     </div>
   );
